@@ -100,7 +100,7 @@ const Player = () => {
             setCurrentTime(audioRef.current.currentTime);
             setDuration(audioRef.current.duration);
         };
-        audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
+        audioRef?.current?.addEventListener('timeupdate', handleTimeUpdate);
 
     
         // if (audioRef.current) {
