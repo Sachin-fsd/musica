@@ -9,9 +9,21 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-slider": "^1.2.0",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@react-spring/web": "^9.7.4",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "embla-carousel-react": "^8.1.8",
+    "lucide-react": "^0.424.0",
+    "next": "14.2.5",
+    "nextjs-toploader": "^1.6.12",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.5"
+    "react-toastify": "^10.0.5",
+    "tailwind-merge": "^2.4.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "postcss": "^8",
