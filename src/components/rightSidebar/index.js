@@ -8,11 +8,9 @@ import RightSidebarCarouselSliderList from './RightSidebar-Carousel-SliderList';
 import { useContext } from 'react';
 import { UserContext } from '@/context';
 
-
 const RightSidebar = () => {
-    
     return (
-        <div className="w-1/4 h-full bg-fuchsia-200 rounded-s-lg p-4 flex flex-col justify-between">
+        <div className="w-full sm:w-2/5 md:w-1/4 h-full bg-fuchsia-200 rounded-s-lg p-4 flex flex-col justify-between">
             <div className="song-carousel-container overflow-hidden flex-grow">
                 <RightSidebarCarouselSliderList />
             </div>

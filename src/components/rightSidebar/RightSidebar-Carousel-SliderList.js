@@ -1,47 +1,47 @@
 'use client'
 import { UserContext } from "@/context";
-import { Slider } from "../ui/slider"
-import SongCarousel from "./songCarousel"
-import SongsListComponent from "./songsList"
+import { Slider } from "../ui/slider";
+import SongCarousel from "./songCarousel";
+import SongsListComponent from "./songsList";
 import { useContext, useEffect } from "react";
-import { songs } from '@/utils/cachedSongs'
 
 const RightSidebarCarouselSliderList = () => {
-    const { currentTime, duration, handleSeek, songList,setSongList } = useContext(UserContext);
+    const { currentTime, duration, handleSeek, songList } = useContext(UserContext);
 
-    // setSongList("songList",songList)
-    // console.log()
     const formatTime = (time) => {
         const minutes = Math.floor(time / 60);
         const seconds = Math.floor(time % 60);
         return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     };
 
-    useEffect(()=>{
-        console.log("currentTime",currentTime)
-    },[currentTime])
-
     return (
-        <div>
-            <div className="">
+        <div className="flex flex-col h-full">
+            {/* Carousel - takes up a small portion */}
+            <div className="flex-none mb-2">
                 <SongCarousel songs={songList} />
             </div>
-            <div className="mb-2">
-                <Slider 
-                    onValueChange={handleSeek} 
-                    value={[currentTime]} 
-                    max={duration} 
-                    className="px-3 pt-3 mb-2 shadow-lg" 
+
+            {/* Slider - also takes up a small portion */}
+            <div className="flex-none mb-4">
+                <Slider
+                    onValueChange={handleSeek}
+                    value={[currentTime]}
+                    max={duration}
+                    className="px-3 pt-3 shadow-lg"
                 />
-                <div className="flex items-center justify-between m-0">
+                <div className="flex items-center justify-between mt-1">
                     <span className="text-xs">{formatTime(currentTime)}</span>
                     <span className="text-xs">{formatTime(duration)}</span>
                 </div>
             </div>
-            <SongsListComponent songsList={songList} />
+
+            {/* Songs List - takes up the remaining space */}
+            <div className="flex-1 overflow-y-auto">
+                <SongsListComponent songsList={songList} />
+            </div>
         </div>
     );
 };
 
-
-export default RightSidebarCarouselSliderList
+export default RightSidebarCarouselSliderList;
+ 

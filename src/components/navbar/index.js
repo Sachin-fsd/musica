@@ -9,7 +9,7 @@ const Navbar = () => {
     const router = useRouter();
 
     const handleSearch = (e) => {
-        console.log("searchQuery",searchQuery)
+        // console.log("searchQuery",searchQuery)
         if (searchQuery.trim()) {
             router.push(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
         }
@@ -22,7 +22,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between p-4 bg-white">
             {/* Left-most text */}
             <div className="text-lg font-semibold glow-primary font-serif">
-                Good morning, Sachin
+                Welcome
             </div>
 
             {/* Search area */}

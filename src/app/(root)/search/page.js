@@ -16,7 +16,7 @@ export default async function SearchPage({ searchParams }) {
         // NextTopLoader.start();  // Start the loader
         // Fetch songs using SearchSongsAction
         const songResults = await SearchSongsAction(query);
-        console.log("searchResults1", songResults);
+        // console.log("searchResults1", songResults);
 
 
         if (songResults && songResults.success) {

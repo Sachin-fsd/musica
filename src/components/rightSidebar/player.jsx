@@ -115,18 +115,6 @@ const Player = () => {
     }, [audioRef.current]);
 
 
-
-    // useEffect(() => {
-    //     if (currentSong) {
-    //         audioRef.current.src = currentSong.downloadUrl[4].url;
-    //         if (playing) {
-    //             audioRef.current.play();
-    //         } else {
-    //             audioRef.current.pause();
-    //         }
-    //     }
-    // }, [currentSong]);
-
     useEffect(() => {
         if (currentSong) {
             try {

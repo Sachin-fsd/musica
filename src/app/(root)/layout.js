@@ -5,7 +5,7 @@ import UserState from "@/context";
 
 export default function RootLayout({ children }) {
     return (
-        <UserState>                            {/* userContext that stores information of song  */}
+        <UserState> {/* userContext that stores information of song */}
             <div className="flex h-screen">
                 <LeftSidebar />
                 <div className="flex flex-col flex-grow">
@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
                         <div className="flex-grow overflow-y-scroll">
                             {children}
                         </div>
-                        <RightSidebar />
+                        <RightSidebar className="w-1/4 min-w-[240px]" />
                     </div>
                 </div>
             </div>

@@ -24,12 +24,12 @@ export async function playAndFetchSuggestions(song, context) {
         }
         // Step 2: Fetch related songs in the background
         const response = await SearchSongSuggestionAction(song.id);
-        console.log("response related songs",response)
+        // console.log("response related songs",response)
         if (response.success) {
             setSongList(prevList => [song, ...response.data]);
             setCurrentIndex(0)
         }
-        console.log("songList",songList)
+        // console.log("songList",songList)
 
     } catch (error) {
         console.log(error);

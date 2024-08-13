@@ -1,13 +1,11 @@
-
 import SongBar from "../songBar";
 
 const SongsListComponent = ({ songsList }) => {
-    
     return (
-        <div className="h-40 overflow-auto scrollbar-hide p-1 pb-3">
+        <div className="overflow-auto p-1 pb-3 scrollbar-custom">
             {songsList.map((song, index) => (
-                <div key={index}>
-                    <SongBar song={song} index={index}/>
+                <div key={index} className="w-full">
+                    <SongBar song={song} index={index} />
                 </div>
             ))}
         </div>

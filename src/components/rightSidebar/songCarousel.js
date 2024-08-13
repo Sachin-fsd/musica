@@ -47,7 +47,6 @@ const SongCarousel = ({ songs }) => {
     useEffect(() => {
         // console.log(setCurrentSong)
         setCurrentSong(songs[currentIndex])
-        console.log(currentIndex, currentSong, songs[currentIndex])
     }, [currentIndex])
 
     useEffect(() => {

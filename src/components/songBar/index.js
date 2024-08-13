@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { Plus } from "lucide-react";
 import { Label } from "../ui/label";
@@ -11,12 +11,6 @@ import { decodeHtml } from "@/utils";
 const SongBar = ({ song, index }) => {
     const { setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId } = useContext(UserContext);
 
-
-    const formatSinger = (singer) => {
-        const newSinger = singer.split(",")[0];
-        return newSinger;
-    };
-
     const handlePlusClick = () => {
         const songExists = songList.find(s => s.id === song.id);
         if (!songExists) {
@@ -27,11 +21,10 @@ const SongBar = ({ song, index }) => {
 
     const handleClick = async() => {
         try {
-        const context = { setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId }
-
-        const response = await playAndFetchSuggestions(song,context)
+            const context = { setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId }
+            await playAndFetchSuggestions(song, context);
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     }
 
@@ -50,18 +43,18 @@ const SongBar = ({ song, index }) => {
 
     return (
         <div 
-            className={`flex justify-between items-center py-1 border-b border-gray-200 cursor-pointer rounded-lg`}
+            className="flex justify-between items-center py-1 border-b border-gray-200 cursor-pointer rounded-lg w-full"
         >
             {song.image[0].url ? (
                 <img src={song.image[0].url} className="w-10 h-10 rounded object-cover mr-4" alt={`${song.name} cover`} onClick={handleClick}/>
             ) : (
                 <Skeleton className="w-10 h-10 rounded object-cover mr-4" />
             )}
-            <div className="flex-1">
+            <div className="flex-1 max-w-[70%] overflow-x-hidden"> {/* Adjust the max width to prevent overflow */}
                 {song.name ? (
                     <Label className="font-bold text-cyan-950 truncate text-sm cursor-pointer" onClick={handleClick}>{decodeHtml(song.name)}</Label>
                 ) : (
-                    <Skeleton className=" min-h-2 p-2 m-2" />
+                    <Skeleton className="min-h-2 p-2 m-2" />
                 )}
                 {song?.artists?.primary[0]?.name ? (
                     <p className="text-xs text-gray-600 truncate">{song.artists.primary[0].name}</p>

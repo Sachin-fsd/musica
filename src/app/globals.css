@@ -127,7 +127,23 @@
   overflow: -moz-scrollbars-none;
   -ms-overflow-style: none;
 }
-
-.scrollbar-hide::-webkit-scrollbar {
-  width: 0 !important
+.scrollbar-custom {
+  scrollbar-width: thin;
+  scrollbar-color: red transparent; /* Firefox */
 }
+
+/* For WebKit browsers like Chrome, Safari */
+.scrollbar-custom::-webkit-scrollbar {
+  width: 8px;
+  height: 8px; /* Ensure the height is set for horizontal scrollbars */
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background-color: red;
+  border-radius: 10px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: transparent;
+}
+
