@@ -55,7 +55,7 @@ export default async function SearchPage({ searchParams }) {
         </div>
     )
     return (
-        <div className="flex-grow bg-white p-8">
+        <div className="flex-grow bg-white p-6">
             <div>
                 <SongsSearchResultsComponent querySongs={searchResults.songs} />
             </div>

@@ -43,14 +43,14 @@ const SongBar = ({ song, index }) => {
 
     return (
         <div 
-            className="flex justify-between items-center py-1 border-b border-gray-200 cursor-pointer rounded-lg w-full"
+            className="flex justify-between items-center py-1 border-gray-200 rounded-lg w-full"
         >
             {song.image[0].url ? (
-                <img src={song.image[0].url} className="w-10 h-10 rounded object-cover mr-4" alt={`${song.name} cover`} onClick={handleClick}/>
+                <img src={song.image[0].url} className="w-10 h-10 rounded object-cover cursor-pointer mr-3" alt={`${song.name} cover`} onClick={handleClick}/>
             ) : (
-                <Skeleton className="w-10 h-10 rounded object-cover mr-4" />
+                <Skeleton className="w-10 h-10 rounded object-cover" />
             )}
-            <div className="flex-1 max-w-[70%] overflow-x-hidden"> {/* Adjust the max width to prevent overflow */}
+            <div className="flex-1 overflow-x-hidden cursor-pointer"> {/* Adjust the max width to prevent overflow */}
                 {song.name ? (
                     <Label className="font-bold text-cyan-950 truncate text-sm cursor-pointer" onClick={handleClick}>{decodeHtml(song.name)}</Label>
                 ) : (

@@ -6,7 +6,7 @@ import { Ellipsis } from 'lucide-react';
 const HomePage = () => {
 
   return (
-    <div className="flex-grow bg-white p-8">
+    <div className="flex-grow bg-white p-1 md:p-5">
       <div className='flex flex-col md:flex-row justify-between items-start gap-5'>
         <div className='flex-1 w-full md:w-auto'>
           <div className='flex justify-between items-center'>

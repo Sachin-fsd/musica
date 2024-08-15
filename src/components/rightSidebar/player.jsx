@@ -1,12 +1,13 @@
 'use client'
 
 import { UserContext } from '@/context';
-import { Download, Loader, Pause, Play, Repeat, StepBack, StepForward } from 'lucide-react';
+import { Download, Loader, Pause, Play, Repeat, SkipBack, SkipBackIcon, SkipForward, StepBack, StepForward } from 'lucide-react';
 import { useContext, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import { Button } from '../ui/button';
+import { useToast } from '../ui/use-toast';
 
 const Player = () => {
+    const { toast } = useToast()
     const [isDownloading, setIsDownloading] = useState(false);
 
     const { currentSong,
@@ -41,9 +42,10 @@ const Player = () => {
     };
 
     const downloadSong = async () => {
+        console.log("downloaduRL", currentSong.downloadUrl[4])
         setIsDownloading(true);
         try {
-            const response = await fetch(currentSong.downloadUrl);
+            const response = await fetch(currentSong.downloadUrl[4].url);
             if (!response.ok) {
                 throw new Error('Download failed');
             }
@@ -54,15 +56,19 @@ const Player = () => {
             a.download = `${currentSong.name}.mp3`;
             a.click();
             URL.revokeObjectURL(url);
-            toast.success('Downloaded');
+            toast({
+                title: "Song Downloaded",
+            })
         } catch (error) {
             console.error("Download error:", error);
-            toast.error('Failed to download');
+            toast({
+                title: "Downloaded Failed...",
+            })
         } finally {
             setIsDownloading(false);
         }
     };
-    
+
 
     const loopSong = () => {
         audioRef.current.loop = !audioRef.current.loop;
@@ -84,11 +90,11 @@ const Player = () => {
         };
         // audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
 
-    
+
         // if (audioRef.current) {
         //     audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
         // }
-    
+
         return () => {
             if (audioRef.current) {
                 audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
@@ -102,11 +108,11 @@ const Player = () => {
         };
         audioRef?.current?.addEventListener('timeupdate', handleTimeUpdate);
 
-    
+
         // if (audioRef.current) {
         //     audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
         // }
-    
+
         return () => {
             if (audioRef.current) {
                 audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
@@ -129,8 +135,8 @@ const Player = () => {
                 setPlaying(false);
             }
         }
-    }, [currentSong]);    
-    
+    }, [currentSong]);
+
 
     useEffect(() => {
         const handleSongEnd = () => {
@@ -171,7 +177,7 @@ const Player = () => {
                     <Repeat className={`${isLooping ? "" : "opacity-50"} `} />
                 </Button>
                 <Button variant="ghost" className="p-0 m-0" onClick={changeLeft}>
-                    <StepBack />
+                    <SkipBack />
                 </Button>
                 <Button variant="ghost" className="p-0" onClick={togglePlayPause}>
                     {playing ? (
@@ -181,7 +187,7 @@ const Player = () => {
                     )}
                 </Button>
                 <Button variant="ghost" className="p-0" onClick={changeRight}>
-                    <StepForward />
+                    <SkipForward />
                 </Button>
                 <Button variant="ghost" className="p-0" onClick={downloadSong}>
                     {isDownloading ? (
@@ -196,3 +202,11 @@ const Player = () => {
 };
 
 export default Player;
+
+{/* <Button variant="ghost" className="p-2 bg-pink-500 rounded-full text-white shadow-md hover:bg-pink-600" onClick={togglePlayPause}>
+    {playing ? (
+        <Pause className="w-6 h-6" />
+    ) : (
+        <Play className="w-6 h-6" />
+    )}
+</Button> */}

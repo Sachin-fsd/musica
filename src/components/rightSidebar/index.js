@@ -1,26 +1,22 @@
-import { Download, Play, Repeat, StepBack, StepForward, Wifi, Speaker } from 'lucide-react';
-import { Slider } from '../ui/slider';
-import SongCarousel from './songCarousel';
-import { Button } from '../ui/button';
-import SongsList from './songsList';
+// components/RightSidebar.js
+
+import { Wifi, Speaker } from 'lucide-react';
 import Player from './player';
 import RightSidebarCarouselSliderList from './RightSidebar-Carousel-SliderList';
-import { useContext } from 'react';
-import { UserContext } from '@/context';
 
 const RightSidebar = () => {
     return (
-        <div className="w-full sm:w-2/5 md:w-1/4 h-full bg-fuchsia-200 rounded-s-lg p-4 flex flex-col justify-between">
-            <div className="song-carousel-container overflow-hidden flex-grow">
+        <div className="w-full h-full bg-fuchsia-200 rounded-t-lg p-4 flex flex-col">
+            <div className="song-carousel-container overflow-hidden flex-grow mb-4">
                 <RightSidebarCarouselSliderList />
             </div>
-            <div className="">
+            <div className="flex flex-col gap-4">
                 <Player />
-                <div className="p-2 mt-2">
-                    <div className="flex p-3 justify-between items-center text-white bg-purple-800 rounded-xl">
-                        <Wifi className='size-5' />
+                <div className="p-2">
+                    <div className="flex p-3 justify-between items-center text-white bg-purple-800 rounded-lg">
+                        <Wifi className='w-5 h-5' />
                         <p className="text-xs">Connection Status</p>
-                        <Speaker className='size-5' />
+                        <Speaker className='w-5 h-5' />
                     </div>
                 </div>
             </div>

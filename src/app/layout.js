@@ -1,8 +1,8 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
 import NextTopLoader from "nextjs-toploader";
+import { Toaster } from "@/components/ui/toaster";
+import { ThemeProvider } from "@/components/themeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,6 +15,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
+        {/* <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          // enableSystem
+          disableTransitionOnChange
+        > */}
           <NextTopLoader
             color="hsl(253 91% 58%)"
             initialPosition={0.08}
@@ -32,7 +38,8 @@ export default function RootLayout({ children }) {
           />
           {/* <NextTopLoader /> */}
           {children}
-          <ToastContainer />
+          <Toaster />
+        {/* </ThemeProvider> */}
       </body>
     </html>
   );

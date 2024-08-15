@@ -1,25 +1,53 @@
-// components/Navbar.js
 'use client'
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from "@/components/ui/sheet"; // Import Sheet components
+import { Menu, X } from "lucide-react";
+import LeftSidebarIcons from "../leftSidebar/leftSidebarIcons";
+import { Button } from "../ui/button";
 
 const Navbar = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const router = useRouter();
 
     const handleSearch = (e) => {
-        // console.log("searchQuery",searchQuery)
         if (searchQuery.trim()) {
             router.push(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
         }
-        // if (e.key === 'Enter' && searchQuery.trim()) {
-        //     router.push(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
-        // }
     };
 
     return (
         <div className="flex items-center justify-between p-4 bg-white">
+            {/* Menu button on small screens */}
+            <div className="block md:hidden">
+                <Sheet>
+                    <SheetTrigger asChild>
+                        <button className="p-2">
+                            <Menu />
+                        </button>
+                    </SheetTrigger>
+                    <SheetContent side="left" className="w-1/2 sm:w-1/2 p-4">
+                        {/* Header with custom close button and site name */}
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="font-semibold text-lg">
+                                Musi<span className="text-slate-700">ca</span>
+                            </div>
+                            <div>
+                                <SheetClose asChild>
+                                    <Button variant="ghost" aria-label="Close">
+                                        <X className="w-6 h-6 text-gray-400" />
+                                    </Button>
+                                </SheetClose>
+                            </div>
+                        </div>
+                        {/* Left Sidebar Icons */}
+                        <LeftSidebarIcons />
+                    </SheetContent>
+                </Sheet>
+            </div>
+
             {/* Left-most text */}
             <div className="text-lg font-semibold glow-primary font-serif">
                 Welcome
@@ -63,12 +91,11 @@ const Navbar = () => {
                         <path d="M17 12H7" />
                     </svg>
                 </div>
-                <div className="w-10 h-9 bg-white rounded-lg overflow-hidden cursor-pointer p-1 custom-shadow hover:scale-110 transition-transform duration-200">
-                    <svg className="w-full h-full object-cover lucide lucide-circle-user-round" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M18 20a6 6 0 0 0-12 0" />
-                        <circle cx="12" cy="10" r="4" />
-                        <circle cx="12" cy="12" r="10" />
-                    </svg>
+                <div className=" bg-white rounded-lg overflow-hidden cursor-pointer p-1 custom-shadow hover:scale-110 transition-transform duration-200">
+                    <Avatar>
+                        <AvatarImage src="https://github.com/shadcn.png" />
+                        <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
                 </div>
             </div>
         </div>
