@@ -7,61 +7,34 @@ import { Label } from "@/components/ui/label";
 
 export default async function SearchPage({ searchParams }) {
     const query = searchParams.query;
-    // console.log("query", query);
-
     let searchResults = {};
 
-    // Perform server-side fetching using server action
     if (query) {
-        // NextTopLoader.start();  // Start the loader
-        // Fetch songs using SearchSongsAction
         const songResults = await SearchSongsAction(query);
-        // console.log("searchResults1", songResults);
-
 
         if (songResults && songResults.success) {
             searchResults.songs = songResults.data;
         }
 
-        // console.log("searchResults", searchResults);
-        if (!songResults.success) return <p>No Song Found</p>
-        // NextTopLoader.done();  // Stop the loader
+        if (!songResults.success) return <p>No Song Found</p>;
     }
 
-    //for global search
-    // if (query) {
-    //     // NextTopLoader.start();  // Start the loader
-    //     // Fetch songs using SearchSongsAction
-    //     const songResults = await SearchGlobalAction(query);
-    //     console.log("searchResults1", songResults);
-
-
-    //     if (songResults && songResults.success) {
-    //         searchResults.topQuery = songResults.data.topQuery;
-    //         searchResults.songs = songResults.data.songs;
-    //         searchResults.albums = songResults.data.albums;
-    //         searchResults.artists = songResults.data.artists;
-    //         searchResults.playlists = songResults.data.playlists;
-    //     }
-
-    //     // console.log("searchResults", searchResults);
-    //     if (!songResults.success) return <p>No Song Found</p>
-    //     // NextTopLoader.done();  // Stop the loader
-    // }
-
-    if(!query) return (
-        <div>
-            <Label className="text-lg font-bold">Search A Song...</Label>
-        </div>
-    )
-    return (
-        <div className="flex-grow bg-white p-6">
+    if (!query) {
+        return (
             <div>
+                <Label className="text-lg font-bold">Search A Song...</Label>
+            </div>
+        );
+    }
+
+    return (
+        <div className="flex-grow bg-white p-6 overflow-x-hidden"> {/* Ensure no x-scroll */}
+            <div className="max-w-full overflow-x-hidden"> {/* Ensure no x-scroll */}
                 <SongsSearchResultsComponent querySongs={searchResults.songs} />
             </div>
         </div>
-        // <div className="flex-grow bg-white p-8">
-        //     {/* {query && <h1>Search results for "{query}"</h1>} */}
+        // Uncomment and adjust the following code if global search is needed
+        // <div className="flex-grow bg-white p-8 overflow-x-hidden">
         //     <div className="mb-4">
         //         <SongsSearchResultsComponent querySongs={searchResults.songs} />
         //     </div>
@@ -71,17 +44,14 @@ export default async function SearchPage({ searchParams }) {
         //     <div className="mb-4">
         //         <ArtistsSearchResultsComponent queryArtists={searchResults.artists} />
         //     </div>
-        //     <div className="mb-4">
+        //     <div className="mb-4 overflow-x-hidden">
         //         <div>Playlists</div>
-        //         {
-        //             searchResults.playlists.results.map((playlist, index) => (
-        //                 <div key={index}>
-        //                     <PlaylistSearchResultBar playlist={playlist} index={index} />
-        //                 </div>
-        //             ))
-        //         }
+        //         {searchResults.playlists?.results?.map((playlist, index) => (
+        //             <div key={index}>
+        //                 <PlaylistSearchResultBar playlist={playlist} index={index} />
+        //             </div>
+        //         ))}
         //     </div>
-
         // </div>
     );
 }

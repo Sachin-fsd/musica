@@ -30,11 +30,26 @@ export const leftIcons = [
 
 
 export function decodeHtml(html) {
-    return html
+    // Decode HTML entities
+    let decodedString = html
         .replace(/&quot;/g, '"')
         .replace(/&#039;/g, "'")
         .replace(/&amp;/g, '&')
         .replace(/&lt;/g, '<')
         .replace(/&gt;/g, '>')
         .replace(/&nbsp;/g, ' ');
+
+    // Check screen width and truncate for small screens
+    if (typeof window !== "undefined") {
+        const screenWidth = window.innerWidth;
+
+        if (screenWidth <= 640) { // Tailwind 'sm' breakpoint is 640px
+            const maxLength = Math.floor(screenWidth / 12); // Adjust this factor as needed
+            if (decodedString.length > maxLength) {
+                decodedString = decodedString.substring(0, maxLength) + '...';
+            }
+        }
+    }
+
+    return decodedString;
 }

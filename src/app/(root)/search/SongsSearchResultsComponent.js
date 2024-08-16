@@ -16,7 +16,7 @@ const SongsSearchResultsComponent = ({ querySongs }) => {
     // }
 
     return (
-        <div className="flex flex-col space-y-4 w-full"> {/* Ensure full width */}
+        <div className="flex flex-col space-y-4 w-full overflow-x-hidden"> {/* Ensure full width */}
             <div className="label-heading">
                 <Label className="text-lg font-bold">Songs</Label>
             </div>

@@ -9,6 +9,7 @@ import { playAndFetchSuggestions } from "@/utils/playAndFetchSuggestionUtils";
 import { decodeHtml } from "@/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { Button } from "../ui/button";
+import Marquee from "react-fast-marquee";
 
 const SongBar = ({ song, index }) => {
     const { setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId } = useContext(UserContext);
@@ -23,7 +24,7 @@ const SongBar = ({ song, index }) => {
 
     const handleClick = async () => {
         try {
-            const context = { setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId }
+            const context = { setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId };
             await playAndFetchSuggestions(song, context);
         } catch (error) {
             console.log(error);
@@ -52,21 +53,25 @@ const SongBar = ({ song, index }) => {
             ) : (
                 <Skeleton className="w-10 h-10 rounded object-cover" />
             )}
-            <div className="flex-1 overflow-x-hidden cursor-pointer"> {/* Adjust the max width to prevent overflow */}
+            <div className="flex-1 overflow-hidden cursor-pointer"> {/* Adjusted max-width to prevent overflow */}
                 {song.name ? (
-                    <Label className="font-bold text-cyan-950 truncate text-sm cursor-pointer" onClick={handleClick}>{decodeHtml(song.name)}</Label>
+                    <Label className="font-bold text-cyan-950 truncate text-sm cursor-pointer whitespace-nowrap overflow-hidden text-ellipsis" onClick={handleClick}>
+                        {/* <Marquee gradient={false}> */}
+                            {decodeHtml(song.name)}
+                        {/* </Marquee> */}
+                    </Label>
                 ) : (
                     <Skeleton className="min-h-2 p-2 m-2" />
                 )}
                 {song?.artists?.primary[0]?.name ? (
-                    <p className="text-xs text-gray-600 truncate">{song.artists.primary[0].name}</p>
+                    <p className="text-xs text-gray-600 truncate whitespace-nowrap overflow-hidden text-ellipsis">{song.artists.primary[0].name}</p>
                 ) : null}
             </div>
             <TooltipProvider>
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        <Button variant="ghost">
-                            <Plus className="text-gray-500 hover:text-gray-700 cursor-pointer size-5" onClick={handlePlusClick} />
+                        <Button variant="ghost" onClick={handlePlusClick}>
+                            <Plus className="text-gray-500 hover:text-gray-700 cursor-pointer size-5" />
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent>

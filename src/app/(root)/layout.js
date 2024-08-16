@@ -13,11 +13,6 @@ export default function RootLayout({ children }) {
                     <LeftSidebar />
                 </div>
 
-                {/* Sheet for small screens */}
-                <div className="block md:hidden">
-                    {/* Your Sheet code for small screens */}
-                </div>
-
                 <div className="flex flex-col flex-grow">
                     <Navbar />
                     <div className="flex flex-grow overflow-hidden">
