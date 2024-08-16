@@ -7,6 +7,8 @@ import { useContext } from "react";
 import { UserContext } from "@/context";
 import { playAndFetchSuggestions } from "@/utils/playAndFetchSuggestionUtils";
 import { decodeHtml } from "@/utils";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
+import { Button } from "../ui/button";
 
 const SongBar = ({ song, index }) => {
     const { setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId } = useContext(UserContext);
@@ -19,7 +21,7 @@ const SongBar = ({ song, index }) => {
         }
     }
 
-    const handleClick = async() => {
+    const handleClick = async () => {
         try {
             const context = { setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId }
             await playAndFetchSuggestions(song, context);
@@ -42,11 +44,11 @@ const SongBar = ({ song, index }) => {
     if (!song || !song.downloadUrl || !song.downloadUrl[4].url) return null;
 
     return (
-        <div 
+        <div
             className="flex justify-between items-center py-1 border-gray-200 rounded-lg w-full"
         >
             {song.image[0].url ? (
-                <img src={song.image[0].url} className="w-10 h-10 rounded object-cover cursor-pointer mr-3" alt={`${song.name} cover`} onClick={handleClick}/>
+                <img src={song.image[0].url} className="w-10 h-10 rounded object-cover cursor-pointer mr-3" alt={`${song.name} cover`} onClick={handleClick} />
             ) : (
                 <Skeleton className="w-10 h-10 rounded object-cover" />
             )}
@@ -60,7 +62,18 @@ const SongBar = ({ song, index }) => {
                     <p className="text-xs text-gray-600 truncate">{song.artists.primary[0].name}</p>
                 ) : null}
             </div>
-            <Plus className="text-gray-500 hover:text-gray-700 cursor-pointer size-5" onClick={handlePlusClick}/>
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button variant="ghost">
+                            <Plus className="text-gray-500 hover:text-gray-700 cursor-pointer size-5" onClick={handlePlusClick} />
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Add to queue</p>
+                    </TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
         </div>
     );
 };

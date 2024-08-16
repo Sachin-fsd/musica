@@ -6,32 +6,31 @@ import { Ellipsis } from 'lucide-react';
 const HomePage = () => {
 
   return (
-    <div className="flex-grow bg-white p-3 md:p-5">
-      <div className='flex flex-col md:flex-row justify-between items-start gap-5'>
-        <div className='flex-1 w-full md:w-auto'>
-          <div className='flex justify-between items-center'>
-            <Label className="p-2 text-lg text-sky-900 font-bold">Top Charts</Label>
-            <Ellipsis className='p-1 border rounded-xl opacity-50'/>
+    <div className="flex-grow bg-gray-100 p-4 md:p-6">
+      <div className='flex flex-col md:flex-row gap-6'>
+        {/* Top Charts Section */}
+        <div className='flex-1'>
+          <div className='flex items-center justify-between mb-4'>
+            <Label className="text-xl font-bold text-sky-900">Quick picks</Label>
+            <Ellipsis className='p-2 border border-gray-300 rounded-full text-gray-600' />
           </div>
-          <div>
+          <div className='space-y-4'>
             {Array.from({ length: 4 }).map((_, index) => (
-              <div key={index}>
-                <SongBar song={songs[index]} index={index}/>
-              </div>
+              <SongBar key={index} song={songs[index]} index={index} />
             ))}
           </div>
         </div>
-        <div className='flex-1 w-full md:w-auto p-2'>
-          <div className='flex justify-between items-center'>
-            <Label className="p-2 text-lg text-sky-900 font-bold">Listen Again</Label>
-            <Ellipsis className='p-1 border rounded-xl opacity-50'/>
+
+        {/* Listen Again Section */}
+        <div className='flex-1'>
+          <div className='flex items-center justify-between mb-4'>
+            <Label className="text-xl font-bold text-sky-900">For You</Label>
+            <Ellipsis className='p-2 border border-gray-300 rounded-full text-gray-600' />
           </div>
-          <div>
+          <div className='space-y-4'>
             {songs.length >= 8 ? (
               Array.from({ length: 4 }).map((_, index) => (
-                <div key={index}>
-                  <SongBar song={songs[index + 4]} index={index + 4}/>
-                </div>
+                <SongBar key={index + 4} song={songs[index + 4]} index={index + 4} />
               ))
             ) : null}
           </div>
