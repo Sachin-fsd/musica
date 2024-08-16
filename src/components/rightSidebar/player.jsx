@@ -5,6 +5,7 @@ import { Download, Loader, Pause, Play, Repeat, SkipBack, SkipBackIcon, SkipForw
 import { useContext, useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import { useToast } from '../ui/use-toast';
+import { togglePlayPause } from '@/utils/audiofunctions';
 
 const Player = () => {
     const { toast } = useToast()
@@ -30,15 +31,6 @@ const Player = () => {
         const minutes = Math.floor(time / 60);
         const seconds = Math.floor(time % 60);
         return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    };
-
-    const togglePlayPause = () => {
-        if (playing) {
-            audioRef.current.pause();
-        } else {
-            audioRef.current.play();
-        }
-        setPlaying(!playing);
     };
 
     const downloadSong = async () => {
@@ -83,95 +75,88 @@ const Player = () => {
         audioRef.current.currentTime = audioRef.current.currentTime - 10;
     };
 
-    useEffect(() => {
-        const handleTimeUpdate = () => {
-            setCurrentTime(audioRef.current.currentTime);
-            setDuration(audioRef.current.duration);
-        };
-        // audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
+    // useEffect(() => {
+    //     console.log("currentSong",currentSong, audioRef.current,playing)
+    //     const handleTimeUpdate = () => {
+    //         setCurrentTime(audioRef.current.currentTime);
+    //         setDuration(audioRef.current.duration);
+    //     };
+    //     // audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
 
 
-        // if (audioRef.current) {
-        //     audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
-        // }
+    //     // if (audioRef.current) {
+    //     //     audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
+    //     // }
 
-        return () => {
-            if (audioRef.current) {
-                audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
-            }
-        };
-    }, []);
-    useEffect(() => {
-        const handleTimeUpdate = () => {
-            setCurrentTime(audioRef.current.currentTime);
-            setDuration(audioRef.current.duration);
-        };
-        audioRef?.current?.addEventListener('timeupdate', handleTimeUpdate);
-
-
-        // if (audioRef.current) {
-        //     audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
-        // }
-
-        return () => {
-            if (audioRef.current) {
-                audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
-            }
-        };
-    }, [audioRef.current]);
+    //     return () => {
+    //         if (audioRef.current) {
+    //             audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
+    //         }
+    //     };
+    // }, []);
+    // useEffect(() => {
+    //     const handleTimeUpdate = () => {
+    //         setCurrentTime(audioRef.current.currentTime);
+    //         setDuration(audioRef.current.duration);
+    //     };
+    //     audioRef?.current?.addEventListener('timeupdate', handleTimeUpdate);
 
 
-    useEffect(() => {
-        if (currentSong) {
-            try {
-                audioRef.current.src = currentSong.downloadUrl[4].url;
-                if (playing) {
-                    audioRef.current.play();
-                } else {
-                    audioRef.current.pause();
-                }
-            } catch (error) {
-                console.error("Error playing the song:", error);
-                setPlaying(false);
-            }
-        }
-    }, [currentSong]);
+    //     // if (audioRef.current) {
+    //     //     audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
+    //     // }
+
+    //     return () => {
+    //         if (audioRef.current) {
+    //             audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
+    //         }
+    //     };
+    // }, [audioRef.current]);
 
 
-    useEffect(() => {
-        const handleSongEnd = () => {
-            if (!isLooping) {
-                // Move to the next song in the list
-                const nextIndex = (currentIndex + 1) % songList.length;
-                setCurrentIndex(nextIndex);
-                setCurrentSong(songList[nextIndex]);
-                setPlaying(true);
-            }
-        };
+    // useEffect(() => {
+    //     if (currentSong) {
+    //         try {
+    //             audioRef.current.src = currentSong.downloadUrl[4].url;
+    //             if (playing) {
+    //                 audioRef.current.play();
+    //             } else {
+    //                 audioRef.current.pause();
+    //             }
+    //         } catch (error) {
+    //             console.error("Error playing the song:", error);
+    //             setPlaying(false);
+    //         }
+    //     }
+    // }, [currentSong]);
 
-        audioRef?.current?.addEventListener('ended', handleSongEnd);
 
-        return () => {
-            if (audioRef.current) {
-                audioRef.current.removeEventListener('ended', handleSongEnd);
-            }
-        };
-    }, [isLooping, currentIndex, songList, setCurrentIndex, setCurrentSong]);
+    // useEffect(() => {
+    //     const handleSongEnd = () => {
+    //         if (!isLooping) {
+    //             // Move to the next song in the list
+    //             const nextIndex = (currentIndex + 1) % songList.length;
+    //             setCurrentIndex(nextIndex);
+    //             setCurrentSong(songList[nextIndex]);
+    //             setPlaying(true);
+    //         }
+    //     };
+
+    //     audioRef?.current?.addEventListener('ended', handleSongEnd);
+
+    //     return () => {
+    //         if (audioRef.current) {
+    //             audioRef.current.removeEventListener('ended', handleSongEnd);
+    //         }
+    //     };
+    // }, [isLooping, currentIndex, songList, setCurrentIndex, setCurrentSong]);
+
+    useEffect(()=>{
+        console.log("here",playing,audioRef,audioRef.current,currentSong,currentTime)
+    },[playing,audioRef,audioRef.current,currentSong,duration])
 
     return (
         <div>
-            {currentSong && (
-                <audio
-                    onPlay={() => setPlaying(true)}
-                    onPause={() => setPlaying(false)}
-                    onLoadedData={() => {
-                        setDuration(audioRef.current.duration);
-                    }}
-                    ref={audioRef}
-                ></audio>
-            )}
-
-
             <div className="p-1 flex justify-between items-center">
                 <Button variant="ghost" className="p-0" onClick={loopSong}>
                     <Repeat className={`${isLooping ? "" : "opacity-50"} `} />
@@ -179,7 +164,7 @@ const Player = () => {
                 <Button variant="ghost" className="p-0 m-0" onClick={changeLeft}>
                     <SkipBack />
                 </Button>
-                <Button variant="ghost" className="p-0" onClick={togglePlayPause}>
+                <Button variant="ghost" className="p-0" onClick={()=>togglePlayPause({playing,audioRef,setPlaying})}>
                     {playing ? (
                         <Pause className="bg-pink-500 p-2 rounded-lg text-white size-9" />
                     ) : (
@@ -202,11 +187,3 @@ const Player = () => {
 };
 
 export default Player;
-
-{/* <Button variant="ghost" className="p-2 bg-pink-500 rounded-full text-white shadow-md hover:bg-pink-600" onClick={togglePlayPause}>
-    {playing ? (
-        <Pause className="w-6 h-6" />
-    ) : (
-        <Play className="w-6 h-6" />
-    )}
-</Button> */}

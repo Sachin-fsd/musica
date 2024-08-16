@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Sheet, SheetClose, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "../ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Bell, Menu, MessageSquareText, Search, X } from "lucide-react";
@@ -29,11 +29,13 @@ const Navbar = () => {
                             <Menu />
                         </button>
                     </SheetTrigger>
-                    <SheetContent side="left" className="w-3/4 p-4">
+                    <SheetContent side="left" className="w-3/4 p-4" aria-describedby="this is the left sidebar" >
                         <div className="flex items-center justify-between mb-4">
-                            <div className="font-semibold text-lg">
-                                Musi<span className="text-slate-700">ca</span>
-                            </div>
+                            <SheetTitle>
+                                <div className="font-semibold text-lg">
+                                    Musi<span className="text-slate-700">ca</span>
+                                </div>
+                            </SheetTitle>
                             <SheetClose asChild>
                                 <Button variant="ghost" aria-label="Close">
                                     <X className="w-6 h-6 text-gray-400" />
@@ -58,7 +60,7 @@ const Navbar = () => {
                     <form className="max-w-xs mx-auto" onSubmit={(e) => { e.preventDefault(); handleSearch(searchQuery); }}>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 flex items-center pl-3 cursor-pointer">
-                               <Search />
+                                <Search />
                             </div>
                             <input
                                 type="search"
@@ -79,7 +81,7 @@ const Navbar = () => {
                             <Search className="w-6 h-6 " />
                         </button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-full max-w-xs">
+                    <PopoverContent className="w-full max-w-xs" aria-describedby="this is the search input area" >
                         <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
                             <input
                                 type="search"
@@ -98,7 +100,7 @@ const Navbar = () => {
 
             {/* Icons and Profile photo */}
             <div className="flex items-center space-x-4">
-                
+
                 <button className="p-2 custom-shadow">
                     <Bell />
                 </button>

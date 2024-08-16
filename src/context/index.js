@@ -1,7 +1,7 @@
 'use client'
 
 import { songs } from "@/utils/cachedSongs";
-import { createContext, useRef, useState } from "react";
+import { createContext, useRef, useState, useEffect } from "react";
 
 export const UserContext = createContext(null);
 
@@ -21,6 +21,56 @@ export default function UserState({ children }) {
         audioRef.current.currentTime = seekTime;
         setCurrentTime(seekTime);
     };
+
+    useEffect(() => {
+        const handleTimeUpdate = () => {
+            setCurrentTime(audioRef.current.currentTime);
+            setDuration(audioRef.current.duration);
+        };
+
+        audioRef?.current?.addEventListener('timeupdate', handleTimeUpdate);
+
+        return () => {
+            if (audioRef.current) {
+                audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
+            }
+        };
+    }, [audioRef.current]);
+
+    useEffect(() => {
+        const handleSongEnd = () => {
+            if (!isLooping) {
+                const nextIndex = (currentIndex + 1) % songList.length;
+                setCurrentIndex(nextIndex);
+                setCurrentSong(songList[nextIndex]);
+                setPlaying(true);
+            }
+        };
+
+        audioRef?.current?.addEventListener('ended', handleSongEnd);
+
+        return () => {
+            if (audioRef.current) {
+                audioRef.current.removeEventListener('ended', handleSongEnd);
+            }
+        };
+    }, [isLooping, currentIndex, songList, setCurrentIndex, setCurrentSong]);
+
+    useEffect(() => {
+        if (currentSong) {
+            try {
+                audioRef.current.src = currentSong.downloadUrl[4].url;
+                if (playing) {
+                    audioRef.current.play();
+                } else {
+                    audioRef.current.pause();
+                }
+            } catch (error) {
+                console.error("Error playing the song:", error);
+                setPlaying(false);
+            }
+        }
+    }, [currentSong]);
 
     let value = {
         currentSong,
@@ -46,6 +96,13 @@ export default function UserState({ children }) {
     return (
         <UserContext.Provider value={value}>
             {children}
+            <audio
+                ref={audioRef}
+                onPlay={() => setPlaying(true)}
+                onPause={() => setPlaying(false)}
+                onLoadedData={() => setDuration(audioRef.current.duration)}
+                loop={isLooping}
+            />
         </UserContext.Provider>
     );
 }

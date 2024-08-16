@@ -1,7 +1,7 @@
 // components/BottomPlayer.js
 'use client'
 import { UserContext } from "@/context";
-import { Play, Pause, StepForward, X, ChevronDown } from "lucide-react";
+import { Play, Pause, StepForward, ChevronDown } from "lucide-react";
 import { useContext } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { Label } from "../ui/label";
@@ -9,18 +9,13 @@ import { decodeHtml } from "@/utils";
 import { Button } from "../ui/button";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import RightSidebar from "../rightSidebar";
+import { togglePlayPause } from "@/utils/audiofunctions";
+import { Progress } from "./BottomProgressBar";
+
 
 const Bottombar = () => {
-    const { currentSong, playing, setCurrentIndex, songList, currentIndex, setCurrentSong, setPlaying, audioRef } = useContext(UserContext);
 
-    const togglePlayPause = () => {
-        if (playing) {
-            audioRef.current.pause();
-        } else {
-            audioRef.current.play();
-        }
-        setPlaying(!playing);
-    };
+    const { currentSong, playing, setCurrentIndex, songList, currentIndex, setCurrentSong, setPlaying, audioRef, handleSeek, currentTime, duration } = useContext(UserContext);
 
     const handleNextSong = () => {
         const nextIndex = (currentIndex + 1) % songList.length;
@@ -41,28 +36,55 @@ const Bottombar = () => {
     }
 
     return (
-        <div className="fixed bottom-0 left-0 w-full bg-gray-900 text-white shadow-lg p-4 flex items-center justify-between">
-            <Sheet >
+        <div className="fixed bottom-0 left-0 w-full bg-gray-900 text-white shadow-lg p-4 pt-0 flex flex-col items-center justify-between">
+
+            <div className="w-full pb-1">
+                <Progress
+                    value={currentTime}
+                    max={duration}
+                    className=" bg-gray-600 rounded-full"
+                    trackClassName="bg-gray-700"
+                    indicatorClassName="bg-pink-500"
+                />
+            </div>
+
+            <Sheet>
                 {/* Song Image and Info */}
-                <SheetTrigger asChild>
-                    <div className="flex items-center space-x-4 cursor-pointer">
-                        {currentSong.image[0].url ? (
-                            <img src={currentSong.image[0].url} className="w-12 h-12 rounded-lg object-cover" alt={`${currentSong.name} cover`} />
-                        ) : (
-                            <Skeleton className="w-12 h-12 rounded-lg bg-gray-700" />
-                        )}
-                        <div className="flex flex-col overflow-hidden">
-                            {currentSong.name ? (
-                                <Label className="font-semibold text-gray-100 truncate text-base">{decodeHtml(currentSong.name)}</Label>
+                <div className="flex w-full items-center justify-between">
+                    <SheetTrigger asChild>
+                        <div className="flex items-center space-x-4 cursor-pointer">
+                            {currentSong.image[0].url ? (
+                                <img src={currentSong.image[0].url} className="w-12 h-12 rounded-lg object-cover" alt={`${currentSong.name} cover`} />
                             ) : (
-                                <Skeleton className="w-32 h-4 mb-1 bg-gray-700" />
+                                <Skeleton className="w-12 h-12 rounded-lg bg-gray-700" />
                             )}
-                            {currentSong?.artists?.primary[0]?.name ? (
-                                <p className="text-sm text-gray-400 truncate">{currentSong.artists.primary[0].name}</p>
-                            ) : null}
+                            <div className="flex flex-col overflow-hidden">
+                                {currentSong.name ? (
+                                    <Label className="font-semibold text-gray-100 truncate text-base cursor-pointer">{decodeHtml(currentSong.name)}</Label>
+                                ) : (
+                                    <Skeleton className="w-32 h-4 mb-1 bg-gray-700" />
+                                )}
+                                {currentSong?.artists?.primary[0]?.name ? (
+                                    <p className="text-sm text-gray-400 truncate">{currentSong.artists.primary[0].name}</p>
+                                ) : null}
+                            </div>
                         </div>
+                    </SheetTrigger>
+
+                    <div className="flex items-center space-x-4">
+                        <Button variant="ghost" className="p-2 bg-pink-500 rounded-full text-white shadow-md hover:bg-pink-600" onClick={() => togglePlayPause({ playing, audioRef, setPlaying })}>
+                            {playing ? (
+                                <Pause className="w-6 h-6" />
+                            ) : (
+                                <Play className="w-6 h-6" />
+                            )}
+                        </Button>
+                        <Button variant="ghost" className="p-2 bg-gray-700 rounded-full text-white shadow-md hover:bg-gray-800" onClick={handleNextSong}>
+                            <StepForward className="w-6 h-6" />
+                        </Button>
                     </div>
-                </SheetTrigger>
+
+                </div>
                 <SheetContent side="bottom" className="h-full w-full bg-gray-900 rounded-t-lg" >
                     <div className="flex flex-col h-full">
                         <div className="flex justify-between items-center mb-4">
@@ -79,18 +101,7 @@ const Bottombar = () => {
                 </SheetContent>
 
                 {/* Play/Pause and Next Buttons */}
-                <div className="flex items-center space-x-4">
-                    <Button variant="ghost" className="p-2 bg-pink-500 rounded-full text-white shadow-md hover:bg-pink-600" onClick={togglePlayPause}>
-                        {playing ? (
-                            <Pause className="w-6 h-6" />
-                        ) : (
-                            <Play className="w-6 h-6" />
-                        )}
-                    </Button>
-                    <Button variant="ghost" className="p-2 bg-gray-700 rounded-full text-white shadow-md hover:bg-gray-800" onClick={handleNextSong}>
-                        <StepForward className="w-6 h-6" />
-                    </Button>
-                </div>
+
             </Sheet>
         </div>
     );
