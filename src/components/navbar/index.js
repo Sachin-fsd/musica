@@ -20,11 +20,12 @@ import SuggestedSongsList from "../searchPage/suggestedSongsList";
 const Navbar = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const { loading, setLoading } = useContext(UserContext);
+    // const [loading, setLoading] = useState(false)
     const [autocompleteSongs, setAutocompleteSongs] = useState([]);
     const [isSuggestionSelected, setIsSuggestionSelected] = useState(false); // New state flag
     const router = useRouter();
 
-    const handleSearch = async () => {
+    const handleSearch = async (searchQuery) => {
         if (searchQuery.trim()) {
             try {
                 setLoading(true);
@@ -32,8 +33,6 @@ const Navbar = () => {
                 setAutocompleteSongs([]); // Clear suggestions after searching
             } catch (error) {
                 console.error("Failed to perform search:", error);
-            } finally {
-                setLoading(false);
             }
         }
     };
@@ -50,11 +49,15 @@ const Navbar = () => {
         [isSuggestionSelected]
     );
 
+    useEffect(()=>{
+        console.log("navbar",loading)
+    },[loading])
+
     const handleSuggestionClick = (song) => {
         setIsSuggestionSelected(true); // Set the flag to true when a suggestion is clicked
         setAutocompleteSongs([]); // Clear the suggestions
         setSearchQuery(song.name);
-        handleSearch(); // Perform the search with the selected song
+        handleSearch(song.name); // Perform the search with the selected song
     };
 
     // Trigger search suggestions on input change
@@ -105,9 +108,9 @@ const Navbar = () => {
             {/* Search area with popover */}
             <div className="flex-grow mx-8 max-w-lg">
                 <div className="hidden md:block">
-                    <form className="max-w-xs mx-auto" onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
+                    <form className="max-w-xs mx-auto" onSubmit={(e) => { e.preventDefault(); handleSearch(searchQuery); }}>
                         <div className="relative">
-                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 cursor-pointer" onClick={handleSearch}>
+                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 cursor-pointer" onClick={()=>handleSearch(searchQuery)}>
                                 <Search />
                             </div>
                             <input
@@ -146,7 +149,7 @@ const Navbar = () => {
                     </PopoverTrigger>
                     <PopoverContent className="w-full max-w-xs justify-center items-center" aria-describedby="this is the search input area">
                         <div>
-                            <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
+                            <form onSubmit={(e) => { e.preventDefault(); handleSearch(searchQuery); }}>
                                 <input
                                     type="search"
                                     id="popover-search"

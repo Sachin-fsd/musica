@@ -1,5 +1,4 @@
 'use client'
-
 import { songs } from "@/utils/cachedSongs";
 import { createContext, useRef, useState, useEffect } from "react";
 
@@ -15,12 +14,31 @@ export default function UserState({ children }) {
     const [isLooping, setIsLooping] = useState(false);
     const audioRef = useRef(null);
     const [songList, setSongList] = useState(songs);
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
 
     const handleSeek = (e) => {
         const seekTime = e[0];
         audioRef.current.currentTime = seekTime;
         setCurrentTime(seekTime);
+    };
+
+    // Function to get the appropriate quality URL based on internet speed
+    const getQualityUrl = (song) => {
+        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        // console.log("connection",connection)
+        const speed = connection ? connection.downlink : 10; // Assume 10 Mbps if unable to detect
+        // console.log("speed",speed)
+        if (speed > 3) {
+            return song.downloadUrl[4].url; // 320kbps
+        } else if (speed > 1.5) {
+            return song.downloadUrl[3].url; // 160kbps
+        } else if (speed > 0.75) {
+            return song.downloadUrl[2].url; // 96kbps
+        } else if (speed > 0.3) {
+            return song.downloadUrl[1].url; // 48kbps
+        } else {
+            return song.downloadUrl[0].url; // 12kbps
+        }
     };
 
     useEffect(() => {
@@ -60,7 +78,8 @@ export default function UserState({ children }) {
     useEffect(() => {
         if (currentSong) {
             try {
-                audioRef.current.src = currentSong.downloadUrl[4].url;
+                const qualityUrl = getQualityUrl(currentSong);
+                audioRef.current.src = qualityUrl;
                 if (playing) {
                     audioRef.current.play();
                 } else {
@@ -72,6 +91,48 @@ export default function UserState({ children }) {
             }
         }
     }, [currentSong]);
+
+    useEffect(() => {
+        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+        const updateSongQuality = () => {
+            if (currentSong && connection) {
+                let qualityUrl;
+                if (connection.downlink > 2) { // High speed
+                    qualityUrl = currentSong.downloadUrl.find(urlObj => urlObj.quality === "320kbps")?.url;
+                } else if (connection.downlink > 1) { // Medium speed
+                    qualityUrl = currentSong.downloadUrl.find(urlObj => urlObj.quality === "160kbps")?.url;
+                } else if (connection.downlink > 0.5) { // Low speed
+                    qualityUrl = currentSong.downloadUrl.find(urlObj => urlObj.quality === "96kbps")?.url;
+                } else { // Very low speed
+                    qualityUrl = currentSong.downloadUrl.find(urlObj => urlObj.quality === "12kbps")?.url;
+                }
+
+                if (qualityUrl) {
+                    audioRef.current.src = qualityUrl;
+                    if (playing) {
+                        audioRef.current.play();
+                    }
+                }
+            }
+        };
+
+        // Initial quality adjustment
+        updateSongQuality();
+
+        // Listen for changes in the connection
+        if (connection) {
+            connection.addEventListener('change', updateSongQuality);
+        }
+
+        // Cleanup listener on component unmount
+        return () => {
+            if (connection) {
+                connection.removeEventListener('change', updateSongQuality);
+            }
+        };
+    }, [currentSong, playing, audioRef]);
+
 
     let value = {
         currentSong,
@@ -90,9 +151,9 @@ export default function UserState({ children }) {
         setCurrentIndex,
         setSongList,
         songList,
-        currentId, 
+        currentId,
         setCurrentId,
-        loading, 
+        loading,
         setLoading
     };
 
