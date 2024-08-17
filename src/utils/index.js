@@ -29,7 +29,7 @@ export const leftIcons = [
 ]
 
 
-export function decodeHtml(html, size) {
+export function decodeHtml(html, size=16) {
     // Decode HTML entities
     let decodedString = html
         .replace(/&quot;/g, '"')
@@ -44,10 +44,8 @@ export function decodeHtml(html, size) {
         const screenWidth = window.innerWidth;
 
         if (screenWidth <= 640) { // Tailwind 'sm' breakpoint is 640px
-            let maxLength =  Math.floor(screenWidth / 12); // Adjust this factor as needed
-            if (size) {
-                maxLength = Math.floor(screenWidth / size); 
-            } 
+            let maxLength =  Math.floor(screenWidth / size); // Adjust this factor as needed
+            
             if (decodedString.length > maxLength) {
                 decodedString = decodedString.substring(0, maxLength) + '...';
             }

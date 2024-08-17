@@ -15,7 +15,7 @@ const RightSidebar = () => {
                 <div className="p-2">
                     <div className="flex p-3 justify-between items-center text-white bg-purple-800 rounded-lg">
                         <Wifi className='w-5 h-5' />
-                        <p className="text-xs">Connection Status</p>
+                        <p className="text-xs">Connection Status: Good</p>
                         <Speaker className='w-5 h-5' />
                     </div>
                 </div>
