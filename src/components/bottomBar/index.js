@@ -43,8 +43,8 @@ const Bottombar = () => {
                     value={currentTime}
                     max={duration}
                     className=" bg-gray-600 rounded-full"
-                    trackClassName="bg-gray-700"
-                    indicatorClassName="bg-pink-500"
+                    trackclassname="bg-gray-700"
+                    indicatorclassname="bg-pink-500"
                 />
             </div>
 

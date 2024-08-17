@@ -14,22 +14,19 @@ export async function playAndFetchSuggestions(song, context) {
             setCurrentSong(song);
             setPlaying(true);
             setCurrentId(song.id);
-            // audioRef.current.play();
         } else {
             const existingIndex = songList.findIndex(s => s.id === song.id);
             setCurrentIndex(existingIndex);
             setCurrentSong(songList[existingIndex]);
             setPlaying(true);
-            // audioRef.current.play();
         }
+
         // Step 2: Fetch related songs in the background
         const response = await SearchSongSuggestionAction(song.id);
-        // console.log("response related songs",response)
         if (response.success) {
             setSongList(prevList => [song, ...response.data]);
-            setCurrentIndex(0)
+            setCurrentIndex(0);
         }
-        // console.log("songList",songList)
 
     } catch (error) {
         console.log(error);
@@ -39,4 +36,3 @@ export async function playAndFetchSuggestions(song, context) {
         }
     }
 }
-

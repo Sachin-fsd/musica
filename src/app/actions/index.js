@@ -50,25 +50,30 @@ export async function SearchSongsAction(songId) {
         } // Return null or handle error state as needed
     }
 }
-
-export async function SearchSongSuggestionAction(songId){
+export async function SearchSongSuggestionAction(songId) {
     try {
+        const cacheKey = `songSuggestions_${songId}`;
+        const cachedData = localStorage.getItem(cacheKey);
+        if (cachedData) {
+            return JSON.parse(cachedData);
+        }
+
         const response = await fetch(`https://saavn.dev/api/songs/${songId}/suggestions`);
         if (!response.ok) {
             throw new Error('Failed to fetch songs');
         }
-        const data = await response.json(); // Parse JSON data from response
-        if(!data.success){
-            return null
-        }
-        // console.log("data",data)
+        const data = await response.json();
 
-        return data; // Return the parsed data
+        if (data.success) {
+            localStorage.setItem(cacheKey, JSON.stringify(data));
+            return data;
+        }
+        return null;
     } catch (error) {
         console.error('Error fetching songs:', error);
         return {
             msg: "Song Not Found",
-            ok:false
-        } 
+            ok: false
+        }
     }
 }

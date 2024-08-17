@@ -34,7 +34,7 @@ const Player = () => {
     };
 
     const downloadSong = async () => {
-        console.log("downloaduRL", currentSong.downloadUrl[4])
+        // console.log("downloaduRL", currentSong.downloadUrl[4])
         setIsDownloading(true);
         try {
             const response = await fetch(currentSong.downloadUrl[4].url);
@@ -150,10 +150,6 @@ const Player = () => {
     //         }
     //     };
     // }, [isLooping, currentIndex, songList, setCurrentIndex, setCurrentSong]);
-
-    useEffect(()=>{
-        console.log("here",playing,audioRef,audioRef.current,currentSong,currentTime)
-    },[playing,audioRef,audioRef.current,currentSong,duration])
 
     return (
         <div>

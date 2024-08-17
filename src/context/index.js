@@ -15,6 +15,7 @@ export default function UserState({ children }) {
     const [isLooping, setIsLooping] = useState(false);
     const audioRef = useRef(null);
     const [songList, setSongList] = useState(songs);
+    const [loading, setLoading] = useState(false)
 
     const handleSeek = (e) => {
         const seekTime = e[0];
@@ -90,7 +91,9 @@ export default function UserState({ children }) {
         setSongList,
         songList,
         currentId, 
-        setCurrentId
+        setCurrentId,
+        loading, 
+        setLoading
     };
 
     return (

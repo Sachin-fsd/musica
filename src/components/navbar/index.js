@@ -1,23 +1,71 @@
 'use client';
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useContext, useState, useEffect, useCallback } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "../ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { Bell, Menu, MessageSquareText, Search, X } from "lucide-react";
+import { Bell, Loader2, Menu, MessageSquareText, Search, X } from "lucide-react";
 import LeftSidebarIcons from "../leftSidebar/leftSidebarIcons";
+import { UserContext } from "@/context";
+import { SearchSongsAction } from "@/app/actions";
+import SearchSuggestions, { SuggestionCard } from "../searchPage/suggestedSongsList";
+import { debounce } from "lodash";
+import { Label } from "../ui/label";
+import { Separator } from "../ui/separator";
+import { decodeHtml } from "@/utils";
+import SuggestedSongsList from "../searchPage/suggestedSongsList";
 
 const Navbar = () => {
     const [searchQuery, setSearchQuery] = useState("");
+    const { loading, setLoading } = useContext(UserContext);
+    const [autocompleteSongs, setAutocompleteSongs] = useState([]);
+    const [isSuggestionSelected, setIsSuggestionSelected] = useState(false); // New state flag
     const router = useRouter();
 
-    const handleSearch = () => {
+    const handleSearch = async () => {
         if (searchQuery.trim()) {
-            router.push(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
+            try {
+                setLoading(true);
+                router.push(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
+                setAutocompleteSongs([]); // Clear suggestions after searching
+            } catch (error) {
+                console.error("Failed to perform search:", error);
+            } finally {
+                setLoading(false);
+            }
         }
     };
+
+    const handleSearchSuggestions = useCallback(
+        debounce(async (query) => {
+            if (query.trim() && !isSuggestionSelected) { // Only fetch suggestions if a suggestion wasn't just selected
+                const songResults = await SearchSongsAction(query);
+                if (songResults && songResults.success) {
+                    setAutocompleteSongs(songResults.data.results);
+                }
+            }
+        }, 300), // 300ms debounce delay
+        [isSuggestionSelected]
+    );
+
+    const handleSuggestionClick = (song) => {
+        setIsSuggestionSelected(true); // Set the flag to true when a suggestion is clicked
+        setAutocompleteSongs([]); // Clear the suggestions
+        setSearchQuery(song.name);
+        handleSearch(); // Perform the search with the selected song
+    };
+
+    // Trigger search suggestions on input change
+    useEffect(() => {
+        if (searchQuery && !isSuggestionSelected) {
+            handleSearchSuggestions(searchQuery);
+        } else if (!searchQuery) {
+            setAutocompleteSongs([]); // Clear suggestions if input is empty
+        }
+        setIsSuggestionSelected(false); // Reset the flag after handling the effect
+    }, [searchQuery]);
 
     return (
         <div className="flex items-center justify-between p-4 bg-white shadow-md">
@@ -29,7 +77,7 @@ const Navbar = () => {
                             <Menu />
                         </button>
                     </SheetTrigger>
-                    <SheetContent side="left" className="w-3/4 p-4" aria-describedby="this is the left sidebar" >
+                    <SheetContent side="left" className="w-3/4 p-4" aria-describedby="this is the left sidebar">
                         <div className="flex items-center justify-between mb-4">
                             <SheetTitle>
                                 <div className="font-semibold text-lg">
@@ -57,9 +105,9 @@ const Navbar = () => {
             {/* Search area with popover */}
             <div className="flex-grow mx-8 max-w-lg">
                 <div className="hidden md:block">
-                    <form className="max-w-xs mx-auto" onSubmit={(e) => { e.preventDefault(); handleSearch(searchQuery); }}>
+                    <form className="max-w-xs mx-auto" onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
                         <div className="relative">
-                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 cursor-pointer">
+                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 cursor-pointer" onClick={handleSearch}>
                                 <Search />
                             </div>
                             <input
@@ -72,35 +120,66 @@ const Navbar = () => {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 autoComplete="off"
                             />
+                            <div className="absolute inset-y-0 right-0 flex items-center pr-1">
+                                {loading && <Loader2 className="animate-spin text-gray-500" />}
+                            </div>
+                            {/* Suggestion list for large screens */}
+                            {autocompleteSongs && autocompleteSongs.length > 0 && (
+                                <div className="absolute z-50 w-full bg-white border-gray-300 rounded-lg shadow-lg mt-1">
+                                    {autocompleteSongs.map((song, index) => (
+                                        <SuggestionCard
+                                            key={index}
+                                            song={song}
+                                            onClick={() => handleSuggestionClick(song)}
+                                        />
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </form>
                 </div>
                 <Popover className="md:hidden">
                     <PopoverTrigger asChild className="md:hidden">
                         <button className="p-2">
-                            <Search className="w-6 h-6 " />
+                            <Search className="w-6 h-6" />
                         </button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-full max-w-xs" aria-describedby="this is the search input area" >
-                        <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
-                            <input
-                                type="search"
-                                id="popover-search"
-                                className="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
-                                placeholder="Search for songs..."
-                                required
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                autoComplete="off"
-                            />
-                        </form>
+                    <PopoverContent className="w-full max-w-xs justify-center items-center" aria-describedby="this is the search input area">
+                        <div>
+                            <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
+                                <input
+                                    type="search"
+                                    id="popover-search"
+                                    className="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+                                    placeholder="Search for songs..."
+                                    required
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    autoComplete="off"
+                                />
+                            </form>
+                        </div>
+                        <div className="absolute top-1/3 right-5 ">
+                            {loading && <Loader2 className="animate-spin text-gray-500" />}
+                        </div>
+                        <div>
+                            <div>
+                                {autocompleteSongs && autocompleteSongs.length > 0 && autocompleteSongs.map((song, index) => (
+                                    <SuggestionCard
+                                        key={index}
+                                        song={song}
+                                        onClick={() => handleSuggestionClick(song)}
+                                    />
+                                ))}
+                            </div>
+                            {/* <SuggestedSongsList autocompleteSongs={autocompleteSongs} handleSuggestionClick={handleSuggestionClick} /> */}
+                        </div>
                     </PopoverContent>
                 </Popover>
             </div>
 
             {/* Icons and Profile photo */}
             <div className="flex items-center space-x-4">
-
                 <button className="p-2 custom-shadow">
                     <Bell />
                 </button>
