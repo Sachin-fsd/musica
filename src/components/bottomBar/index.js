@@ -21,7 +21,8 @@ const Bottombar = () => {
         const nextIndex = (currentIndex + 1) % songList.length;
         setCurrentIndex(nextIndex);
         setCurrentSong(songList[nextIndex]);
-        setPlaying(true);
+        if(playing)setPlaying(true);
+        
     };
 
     if (!currentSong) {
@@ -72,14 +73,14 @@ const Bottombar = () => {
                     </SheetTrigger>
 
                     <div className="flex items-center space-x-4">
-                        <Button variant="ghost" className="p-2 bg-pink-500 rounded-full text-white shadow-md hover:bg-pink-600" onClick={() => togglePlayPause({ playing, audioRef, setPlaying })}>
+                        <Button variant="simple" className="p-2 bg-pink-500 rounded-full text-white shadow-md hover:bg-pink-600 hover:text-accent-foreground" onClick={() => togglePlayPause({ playing, audioRef, setPlaying })}>
                             {playing ? (
                                 <Pause className="w-6 h-6" />
                             ) : (
                                 <Play className="w-6 h-6" />
                             )}
                         </Button>
-                        <Button variant="ghost" className="p-2 bg-gray-700 rounded-full text-white shadow-md hover:bg-gray-800" onClick={handleNextSong}>
+                        <Button variant="simple" className="p-2 bg-gray-700 rounded-full text-white shadow-md hover:bg-gray-800 hover:text-accent-foreground" onClick={handleNextSong}>
                             <StepForward className="w-6 h-6" />
                         </Button>
                     </div>

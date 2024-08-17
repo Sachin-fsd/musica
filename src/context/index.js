@@ -25,12 +25,22 @@ export default function UserState({ children }) {
 
     // Function to get the appropriate quality URL based on internet speed
     useEffect(() => {
+        // const updatePositionState = () => {
+        //     if ("setPositionState" in navigator.mediaSession) {
+        //         // console.log("navigator.mediaSession",navigator.mediaSession)
+        //       navigator.mediaSession.setPositionState({
+        //         duration: audioRef.current.duration || 0 ,
+        //         playbackRate: audioRef.current.playbackRate || 1,
+        //         position: audioRef.current.currentTime || 0,
+        //       });
+        //     }
+        //   };
         const handleTimeUpdate = () => {
             setCurrentTime(audioRef.current.currentTime);
             setDuration(audioRef.current.duration);
         };
 
-        audioRef?.current?.addEventListener('timeupdate', handleTimeUpdate);
+        audioRef?.current?.addEventListener('timeupdate',handleTimeUpdate );
 
         return () => {
             if (audioRef.current) {
@@ -38,6 +48,7 @@ export default function UserState({ children }) {
             }
         };
     }, [audioRef.current]);
+
 
     useEffect(() => {
         const handleSongEnd = () => {
@@ -59,52 +70,92 @@ export default function UserState({ children }) {
     }, [isLooping, currentIndex, songList, setCurrentIndex, setCurrentSong]);
 
 
-    const adjustQualityAndPlay = () => {
-        if (currentSong && navigator.connection) {
-            const speed = navigator.connection.downlink;
-            let qualityUrl;
+    const determineConnectionStatus = (speed) => {
+        if (speed > 3) return "Great";
+        if (speed > 1.5) return "Best";
+        if (speed > 0.75) return "Good";
+        if (speed > 0.3) return "Poor";
+        return "Worst";
+    };
 
-            if (speed > 3) {
-                qualityUrl = currentSong.downloadUrl[4].url;
-                setConnectionStatus("Great")
-            }
-            else if (speed > 1.5) {
-                qualityUrl = currentSong.downloadUrl[3].url;
-                setConnectionStatus("Best")
-            }
-            else if (speed > 0.75) {
-                qualityUrl = currentSong.downloadUrl[2].url;
-                setConnectionStatus("Good")
-            
-            }
-            else if (speed > 0.3) {
-                qualityUrl = currentSong.downloadUrl[1].url;
-                setConnectionStatus("Poor")
-            }
-            else {
-                qualityUrl = currentSong.downloadUrl[0].url;
-                setConnectionStatus("Worst")
-            }
+    const adjustQuality = () => {
+        if (!currentSong || !navigator.connection) return;
+        const speed = navigator.connection.downlink;
+        const qualityUrl = speed > 3 ? currentSong.downloadUrl[4].url
+            : speed > 1.5 ? currentSong.downloadUrl[3].url
+                : speed > 0.75 ? currentSong.downloadUrl[2].url
+                    : speed > 0.3 ? currentSong.downloadUrl[1].url
+                        : currentSong.downloadUrl[0].url;
 
-            audioRef.current.src = qualityUrl;
-            if (playing) audioRef.current.play();
-        }
+        setConnectionStatus(determineConnectionStatus(speed));
+        return qualityUrl;
     };
 
     useEffect(() => {
         if (!currentSong) return;
-    
-        const handleConnectionChange = () => adjustQualityAndPlay();
-    
-        // Adjust quality and play when the song changes or the connection changes
-        adjustQualityAndPlay();
-    
+
+        //chnage the title as song changes;
+
+        // Adjust quality only when the song changes
+        const qualityUrl = adjustQuality();
+        if (qualityUrl) audioRef.current.src = qualityUrl;
         if (navigator.connection) {
-            navigator.connection.addEventListener('change', handleConnectionChange);
-            return () => navigator.connection.removeEventListener('change', handleConnectionChange);
+            setConnectionStatus(determineConnectionStatus(navigator.connection.downlink));
+        }
+
+        // Prevent song from auto-playing when paused
+        if (playing) {
+            audioRef.current.play();
+        }
+
+    }, [currentSong]);
+
+    useEffect(() => {
+        if (currentSong && playing) {
+            document.title = `${currentSong?.name} - Musica NextGen`;
+        } else {
+            document.title = `Musica NextGen Music`;
+        }
+
+        if ("mediaSession" in navigator) {
+            navigator.mediaSession.playbackState = playing ? "playing" : "paused";
+          }
+    }, [playing])
+
+    useEffect(() => {
+        if ("mediaSession" in navigator && currentSong) {
+
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: currentSong.name,
+                artist: currentSong.artists.primary[0].name,
+                album: currentSong.album?.name,
+                artwork: [
+                    {
+                        src: currentSong.image[2].url, // URL to the song's image
+                        sizes: "500x500", // Image size
+                        type: "image/jpg", // Or image/jpeg depending on your file
+                    },
+                ],
+            });
+
+            // Set media controls for play, pause, etc.
+            navigator.mediaSession.setActionHandler("play", () => {
+                audioRef.current.play();
+                setPlaying(true);
+            });
+            navigator.mediaSession.setActionHandler("pause", () => {
+                audioRef.current.pause();
+                setPlaying(false);
+            });
+            navigator.mediaSession.setActionHandler("seekbackward", () => {
+                audioRef.current.currentTime = Math.max(audioRef.current.currentTime - 10, 0);
+            });
+            navigator.mediaSession.setActionHandler("seekforward", () => {
+                audioRef.current.currentTime = Math.min(audioRef.current.currentTime + 10, audioRef.current.duration);
+            });
         }
     }, [currentSong]);
-    
+
     let value = {
         currentSong,
         setCurrentSong,
@@ -126,7 +177,7 @@ export default function UserState({ children }) {
         setCurrentId,
         loading,
         setLoading,
-        connectionStatus, 
+        connectionStatus,
         setConnectionStatus
     };
 

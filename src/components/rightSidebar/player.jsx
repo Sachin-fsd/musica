@@ -45,7 +45,7 @@ const Player = () => {
             const url = URL.createObjectURL(data);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `${currentSong.name}.mp3`;
+            a.download = `${currentSong.name}`;
             a.click();
             URL.revokeObjectURL(url);
             toast({
@@ -75,106 +75,30 @@ const Player = () => {
         audioRef.current.currentTime = audioRef.current.currentTime - 10;
     };
 
-    // useEffect(() => {
-    //     console.log("currentSong",currentSong, audioRef.current,playing)
-    //     const handleTimeUpdate = () => {
-    //         setCurrentTime(audioRef.current.currentTime);
-    //         setDuration(audioRef.current.duration);
-    //     };
-    //     // audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
-
-
-    //     // if (audioRef.current) {
-    //     //     audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
-    //     // }
-
-    //     return () => {
-    //         if (audioRef.current) {
-    //             audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
-    //         }
-    //     };
-    // }, []);
-    // useEffect(() => {
-    //     const handleTimeUpdate = () => {
-    //         setCurrentTime(audioRef.current.currentTime);
-    //         setDuration(audioRef.current.duration);
-    //     };
-    //     audioRef?.current?.addEventListener('timeupdate', handleTimeUpdate);
-
-
-    //     // if (audioRef.current) {
-    //     //     audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
-    //     // }
-
-    //     return () => {
-    //         if (audioRef.current) {
-    //             audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
-    //         }
-    //     };
-    // }, [audioRef.current]);
-
-
-    // useEffect(() => {
-    //     if (currentSong) {
-    //         try {
-    //             audioRef.current.src = currentSong.downloadUrl[4].url;
-    //             if (playing) {
-    //                 audioRef.current.play();
-    //             } else {
-    //                 audioRef.current.pause();
-    //             }
-    //         } catch (error) {
-    //             console.error("Error playing the song:", error);
-    //             setPlaying(false);
-    //         }
-    //     }
-    // }, [currentSong]);
-
-
-    // useEffect(() => {
-    //     const handleSongEnd = () => {
-    //         if (!isLooping) {
-    //             // Move to the next song in the list
-    //             const nextIndex = (currentIndex + 1) % songList.length;
-    //             setCurrentIndex(nextIndex);
-    //             setCurrentSong(songList[nextIndex]);
-    //             setPlaying(true);
-    //         }
-    //     };
-
-    //     audioRef?.current?.addEventListener('ended', handleSongEnd);
-
-    //     return () => {
-    //         if (audioRef.current) {
-    //             audioRef.current.removeEventListener('ended', handleSongEnd);
-    //         }
-    //     };
-    // }, [isLooping, currentIndex, songList, setCurrentIndex, setCurrentSong]);
-
     return (
         <div>
             <div className="p-1 flex justify-between items-center">
-                <Button variant="ghost" className="p-0" onClick={loopSong}>
-                    <Repeat className={`${isLooping ? "" : "opacity-50"} `} />
+                <Button variant={isLooping ? "secondary" : "simple"} className="p-0" onClick={loopSong}>
+                    <Repeat />
                 </Button>
-                <Button variant="ghost" className="p-0 m-0" onClick={changeLeft}>
+                <Button variant="simple" className="p-0 m-0" onClick={changeLeft}>
                     <SkipBack />
                 </Button>
                 <Button variant="ghost" className="p-0" onClick={()=>togglePlayPause({playing,audioRef,setPlaying})}>
                     {playing ? (
-                        <Pause className="bg-pink-500 p-2 rounded-lg text-white size-9" />
+                        <Pause className="bg-pink-500 p-2 rounded-lg text-white size-10" />
                     ) : (
-                        <Play className="bg-pink-500 p-2 rounded-lg text-white size-9" />
+                        <Play className="bg-pink-500 p-2 rounded-lg text-white size-10" />
                     )}
                 </Button>
-                <Button variant="ghost" className="p-0" onClick={changeRight}>
+                <Button variant="simple" className="p-0" onClick={changeRight}>
                     <SkipForward />
                 </Button>
-                <Button variant="ghost" className="p-0" onClick={downloadSong}>
+                <Button variant={isDownloading ? "secondary" : "simple"} className="p-0" onClick={downloadSong}>
                     {isDownloading ? (
                         <Loader className='animate-spin' />
                     ) : (
-                        <Download className="opacity-50" />
+                        <Download />
                     )}
                 </Button>
             </div>
