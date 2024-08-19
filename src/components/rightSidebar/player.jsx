@@ -1,37 +1,22 @@
 'use client'
 
 import { UserContext } from '@/context';
-import { Download, Loader, Pause, Play, Repeat, SkipBack, SkipBackIcon, SkipForward, StepBack, StepForward } from 'lucide-react';
+import { ChevronsLeft, ChevronsRight, Download, Loader, Pause, Play, Repeat, Repeat1, SkipBack, SkipBackIcon, SkipForward, StepBack, StepForward } from 'lucide-react';
 import { useContext, useEffect, useState } from 'react';
 import { Button } from '../ui/button';
-import { useToast } from '../ui/use-toast';
 import { togglePlayPause } from '@/utils/audiofunctions';
+import { toast } from 'sonner';
 
 const Player = () => {
-    const { toast } = useToast()
     const [isDownloading, setIsDownloading] = useState(false);
 
     const { currentSong,
-        setCurrentSong,
         playing,
         setPlaying,
-        currentTime,
-        setCurrentTime,
-        duration,
-        setDuration,
         isLooping,
         setIsLooping,
         audioRef,
-        handleSeek,
-        songList,
-        currentIndex,
-        setCurrentIndex } = useContext(UserContext);
-
-    const formatTime = (time) => {
-        const minutes = Math.floor(time / 60);
-        const seconds = Math.floor(time % 60);
-        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    };
+    } = useContext(UserContext);
 
     const downloadSong = async () => {
         // console.log("downloaduRL", currentSong.downloadUrl[4])
@@ -48,14 +33,10 @@ const Player = () => {
             a.download = `${currentSong.name}`;
             a.click();
             URL.revokeObjectURL(url);
-            toast({
-                title: "Song Downloaded",
-            })
+            toast.success("Song Downloaded")
         } catch (error) {
             console.error("Download error:", error);
-            toast({
-                title: "Downloaded Failed...",
-            })
+            toast.error("Downloaded Failed...")
         } finally {
             setIsDownloading(false);
         }
@@ -78,13 +59,16 @@ const Player = () => {
     return (
         <div>
             <div className="p-1 flex justify-between items-center">
-                <Button variant={isLooping ? "secondary" : "simple"} className="p-0" onClick={loopSong}>
-                    <Repeat />
+                <Button variant="simple" className="p-0" onClick={loopSong}>
+                    {
+                        isLooping ? <Repeat1 /> : <Repeat />
+                    }
+
                 </Button>
                 <Button variant="simple" className="p-0 m-0" onClick={changeLeft}>
-                    <SkipBack />
+                    <ChevronsLeft />
                 </Button>
-                <Button variant="ghost" className="p-0" onClick={()=>togglePlayPause({playing,audioRef,setPlaying})}>
+                <Button variant="ghost" className="p-0" onClick={() => togglePlayPause({ playing, audioRef, setPlaying })}>
                     {playing ? (
                         <Pause className="bg-pink-500 p-2 rounded-lg text-white size-10" />
                     ) : (
@@ -92,7 +76,7 @@ const Player = () => {
                     )}
                 </Button>
                 <Button variant="simple" className="p-0" onClick={changeRight}>
-                    <SkipForward />
+                    <ChevronsRight/>
                 </Button>
                 <Button variant={isDownloading ? "secondary" : "simple"} className="p-0" onClick={downloadSong}>
                     {isDownloading ? (

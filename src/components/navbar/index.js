@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "../ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { Bell, Loader2, Menu, MessageSquareText, Search, X } from "lucide-react";
+import { Bell, Loader2, Menu, MessageSquareText, Radar, Search, X } from "lucide-react";
 import LeftSidebarIcons from "../leftSidebar/leftSidebarIcons";
 import { UserContext } from "@/context";
 import { SearchSongsAction } from "@/app/actions";
@@ -16,6 +16,8 @@ import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import { decodeHtml } from "@/utils";
 import SuggestedSongsList from "../searchPage/suggestedSongsList";
+import LongPressTooltip from "../songBar/longPressTooltip";
+import Link from "next/link";
 
 const Navbar = () => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -49,9 +51,9 @@ const Navbar = () => {
         [isSuggestionSelected]
     );
 
-    useEffect(()=>{
-        console.log("navbar",loading)
-    },[loading])
+    useEffect(() => {
+        console.log("navbar", loading)
+    }, [loading])
 
     const handleSuggestionClick = (song) => {
         setIsSuggestionSelected(true); // Set the flag to true when a suggestion is clicked
@@ -110,7 +112,7 @@ const Navbar = () => {
                 <div className="hidden md:block">
                     <form className="max-w-xs mx-auto" onSubmit={(e) => { e.preventDefault(); handleSearch(searchQuery); }}>
                         <div className="relative">
-                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 cursor-pointer" onClick={()=>handleSearch(searchQuery)}>
+                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 cursor-pointer" onClick={() => handleSearch(searchQuery)}>
                                 <Search />
                             </div>
                             <input
@@ -184,7 +186,11 @@ const Navbar = () => {
             {/* Icons and Profile photo */}
             <div className="flex items-center space-x-4">
                 <button className="p-2 custom-shadow">
-                    <Bell />
+                    <LongPressTooltip tooltipText="Jam">
+                        <Link href={"/"}> 
+                            <Radar />
+                        </Link>
+                    </LongPressTooltip>
                 </button>
                 <button className="p-2 custom-shadow">
                     <MessageSquareText />

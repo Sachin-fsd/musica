@@ -1,9 +1,9 @@
-import { SearchSongSuggestionAction } from "@/app/actions";
+import { SearchSongSuggestionAction} from "@/app/actions";
 
 
 export async function playAndFetchSuggestions(song, context) {
     try {
-        const { setCurrentIndex, setCurrentSong, setSongList, songList, setPlaying, audioRef, setCurrentId } = context;
+        const { setCurrentIndex, setCurrentSong, setSongList, songList, setPlaying, audioRef, setCurrentId, currentSong,} = context;
 
         const songExists = songList.find(s => s.id === song.id);
 
@@ -27,6 +27,8 @@ export async function playAndFetchSuggestions(song, context) {
             setSongList(prevList => [song, ...response.data]);
             setCurrentIndex(0);
         }
+       
+        return {msg:"ok",ok:true}
 
     } catch (error) {
         console.log(error);

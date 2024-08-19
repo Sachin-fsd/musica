@@ -45,14 +45,8 @@ const SongCarousel = ({ songs }) => {
         setCurrentIndex((prevIndex) => (prevIndex === songs.length - 1 ? 0 : prevIndex + 1));
     };
     useEffect(() => {
-        // console.log(setCurrentSong)
         setCurrentSong(songs[currentIndex])
     }, [currentIndex])
-
-    useEffect(() => {
-        setCurrentSong(songs[currentIndex])
-        // console.log(currentIndex, currentSong, songs[currentIndex])
-    }, [])
 
     const formatSingers = (song) => {
         if (!song.artists || !song.artists.primary) return '';

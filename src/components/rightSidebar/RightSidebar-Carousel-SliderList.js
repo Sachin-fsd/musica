@@ -37,7 +37,7 @@ const RightSidebarCarouselSliderList = () => {
 
             {/* Songs List - takes up the remaining space */}
             <div className="flex-1 overflow-y-auto">
-                <SongsListComponent songsList={songList} />
+                <SongsListComponent songList={songList} />
             </div>
         </div>
     );

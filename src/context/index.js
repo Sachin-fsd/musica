@@ -17,24 +17,14 @@ export default function UserState({ children }) {
     const [loading, setLoading] = useState(false);
     const [connectionStatus, setConnectionStatus] = useState("")
 
+
     const handleSeek = (e) => {
         const seekTime = e[0];
         audioRef.current.currentTime = seekTime;
         setCurrentTime(seekTime);
     };
 
-    // Function to get the appropriate quality URL based on internet speed
     useEffect(() => {
-        // const updatePositionState = () => {
-        //     if ("setPositionState" in navigator.mediaSession) {
-        //         // console.log("navigator.mediaSession",navigator.mediaSession)
-        //       navigator.mediaSession.setPositionState({
-        //         duration: audioRef.current.duration || 0 ,
-        //         playbackRate: audioRef.current.playbackRate || 1,
-        //         position: audioRef.current.currentTime || 0,
-        //       });
-        //     }
-        //   };
         const handleTimeUpdate = () => {
             setCurrentTime(audioRef.current.currentTime);
             setDuration(audioRef.current.duration);
@@ -178,7 +168,7 @@ export default function UserState({ children }) {
         loading,
         setLoading,
         connectionStatus,
-        setConnectionStatus
+        setConnectionStatus,
     };
 
     return (
@@ -188,7 +178,9 @@ export default function UserState({ children }) {
                 ref={audioRef}
                 onPlay={() => setPlaying(true)}
                 onPause={() => setPlaying(false)}
-                onLoadedData={() => setDuration(audioRef.current.duration)}
+                onLoadedData={() => {
+                    // audioRef.current.currentTime = currentTime;
+                    setDuration(audioRef.current.duration)}}
                 loop={isLooping}
             />
         </UserContext.Provider>

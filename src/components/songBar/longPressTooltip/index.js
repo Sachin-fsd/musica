@@ -2,7 +2,6 @@
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import React, { useState, useEffect } from 'react';
-// import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const LongPressTooltip = ({ onLongPress, children, tooltipText }) => {
     const [pressTimer, setPressTimer] = useState(null);
@@ -21,6 +20,15 @@ const LongPressTooltip = ({ onLongPress, children, tooltipText }) => {
         setShowTooltip(false);
     };
 
+    const handleMouseEnter = () => {
+        setShowTooltip(true);
+    };
+
+    const handleMouseLeave = () => {
+        setShowTooltip(false);
+        endPress();
+    };
+
     useEffect(() => {
         return () => clearTimeout(pressTimer); // Clean up timer on unmount
     }, [pressTimer]);
@@ -29,7 +37,8 @@ const LongPressTooltip = ({ onLongPress, children, tooltipText }) => {
         <div
             onMouseDown={startPress}
             onMouseUp={endPress}
-            onMouseLeave={endPress}
+            onMouseLeave={handleMouseLeave}
+            onMouseEnter={handleMouseEnter}
             onTouchStart={startPress}
             onTouchEnd={endPress}
             onTouchCancel={endPress}

@@ -2,12 +2,12 @@ import SongBar from "../songBar";
 import { Separator } from "../ui/separator";
 // import { ScrollArea } from "../ui/scroll-area";
 
-const SongsListComponent = ({ songsList }) => {
+const SongsListComponent = ({ songList }) => {
     return (
         <div className="overflow-auto p-1 pb-3">
-            {songsList.map((song, index) => (
+            {songList.map((song, index) => (
                 <div key={index} className="w-full">
-                    <SongBar song={song} index={index} />
+                    <SongBar song={song}/>
                     <Separator />
                 </div>
             ))}

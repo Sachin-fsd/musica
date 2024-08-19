@@ -1,20 +1,21 @@
-'use client'
+'use client';
+import { toast } from "sonner"
 
-import { Plus } from "lucide-react";
+import { EllipsisVertical, ListMusic, Plus, Trash2 } from "lucide-react";
 import { Label } from "../ui/label";
 import { Skeleton } from "../ui/skeleton";
 import { useContext, useState, useCallback, useEffect } from "react";
 import { UserContext } from "@/context";
 import { playAndFetchSuggestions } from "@/utils/playAndFetchSuggestionUtils";
 import { decodeHtml } from "@/utils";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 import { Button } from "../ui/button";
 import Marquee from "react-fast-marquee";
 import { debounce } from "lodash";
 import LongPressTooltip from "./longPressTooltip";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
-const SongBar = ({ song, index }) => {
-    const { setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId, loading, setLoading } = useContext(UserContext);
+const SongBar = ({ song }) => {
+    const { currentSong, setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId, loading, setLoading, } = useContext(UserContext);
     const [decodedName, setDecodedName] = useState(song?.name || "");
 
     useEffect(() => {
@@ -29,30 +30,69 @@ const SongBar = ({ song, index }) => {
             const newSongList = [...songList, song];
             setSongList(newSongList);
         }
-    }
-
-    const formatSingers = () => {
-        if (!song.artists || !song.artists.primary) return '';
-
-        // Join artist names with a comma
-        const singers = song.artists.primary.map(artist => artist.name).join(', ');
-        return singers;
-    }
+    };
 
     const handleClick = useCallback(() => {
         setLoading(true);
-
         debounce(async () => {
             try {
-                const context = { setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId };
+                const context = { setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId, currentSong};
                 await playAndFetchSuggestions(song, context);
+                
             } catch (error) {
-                console.log(error);
+                console.error(error);
             } finally {
                 setLoading(false);
             }
         }, 300)();
     }, [song, setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId]);
+
+    
+
+    const handleRemoveSong = () => {
+        // Prevent removing the current song
+        if (songList[currentIndex].id === song.id) {
+            toast.error("Cannot remove the currently playing song")
+            return;
+        }
+
+        if (songList.length > 3) {
+            const updatedSongList = songList.filter((s, index) => {
+                // If the first song is being removed and the last song is the current song,
+                // adjust the currentIndex to prevent an index mismatch.
+                if (index === 0 && currentIndex === songList.length - 1) {
+                    setCurrentIndex((prevIndex) => prevIndex - 1);
+                }
+                return s.id !== song.id;
+            });
+
+            // If the first song is removed, set the currentIndex to 0 to make the new first song the current one.
+            if (currentIndex === 0 && song.id === songList[0].id) {
+                setCurrentIndex(0);
+            }
+
+            setSongList(updatedSongList);
+        } else {
+            toast.warning("Minimum 3 songs required");
+        }
+    };
+
+
+
+    const handleAddNextSong = () => {
+        console.log("currentIndex1", currentIndex)
+        // Remove the song from its current position
+        const updatedList = songList.filter(s => s.id !== song.id);
+
+        // Insert the song at the current index
+        updatedList.splice(currentIndex + 1, 0, song);
+
+        // Update the song list
+        setSongList(updatedList);
+        console.log("currentIndex2", currentIndex)
+
+    };
+
 
     if (!song) {
         return (
@@ -86,11 +126,35 @@ const SongBar = ({ song, index }) => {
                     <p className="text-xs text-gray-600 truncate whitespace-nowrap overflow-hidden text-ellipsis">{song.artists?.primary[0]?.name}</p>
                 ) : null}
             </div>
-            <LongPressTooltip onLongPress={handlePlusClick} tooltipText="Add to queue">
-                <Button variant="ghost" disabled={loading}>
-                    <Plus className="text-gray-500 hover:text-gray-700 cursor-pointer size-5" />
-                </Button>
-            </LongPressTooltip>
+            <Label variant="simple" disabled={loading}>
+                {
+                    songList.find(s => s.id === song.id) ? (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="simple">
+                                    <EllipsisVertical className="text-gray-500 hover:text-gray-700 cursor-pointer size-5" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-56">
+                                <DropdownMenuGroup>
+                                    <DropdownMenuItem onClick={handleRemoveSong} className="bg-red-300">
+                                        <Trash2 className="mr-2 h-4 w-4 " />
+                                        <span>Remove from queue</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={handleAddNextSong}>
+                                        <ListMusic className="mr-2 h-4 w-4" />
+                                        <span>Play next</span>
+                                    </DropdownMenuItem>
+                                </DropdownMenuGroup>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    ) : (
+                        <LongPressTooltip tooltipText="Add to queue">
+                            <Plus onClick={handlePlusClick} className="text-gray-500 hover:text-gray-700 cursor-pointer size-5 mr-3" />
+                        </LongPressTooltip>
+                    )
+                }
+            </Label>
         </div>
     );
 };

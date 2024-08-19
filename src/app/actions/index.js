@@ -1,4 +1,3 @@
-// actions/index.js (assuming it's inside src/app/actions)
 
 export async function SearchGlobalAction(song) {
     // console.log("song",song)
@@ -10,7 +9,7 @@ export async function SearchGlobalAction(song) {
         }
 
         const data = await response.json(); // Parse JSON data from response
-        if(!data.success){
+        if (!data.success) {
             return null
         }
         // console.log("data",data)
@@ -20,14 +19,14 @@ export async function SearchGlobalAction(song) {
         console.error('Error fetching songs:', error);
         return {
             msg: "Song Not Found",
-            ok:false
+            ok: false
         } // Return null or handle error state as needed
     }
 }
 
 
 export async function SearchSongsAction(songId) {
-    // console.log("song",song)
+    // console.log("local env",process.env.FETCH_SONG_URL)
     try {
         const response = await fetch(`https://saavn.dev/api/search/songs?query=${encodeURIComponent(songId)}`);
 
@@ -36,7 +35,7 @@ export async function SearchSongsAction(songId) {
         }
 
         const data = await response.json(); // Parse JSON data from response
-        if(!data.success){
+        if (!data.success) {
             return null
         }
         // console.log("data",data)
@@ -46,7 +45,7 @@ export async function SearchSongsAction(songId) {
         console.error('Error fetching songs:', error);
         return {
             msg: "Song Not Found",
-            ok:false
+            ok: false
         } // Return null or handle error state as needed
     }
 }

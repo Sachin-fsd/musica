@@ -1,3 +1,4 @@
+import TopArtists from '@/components/homePage/TopArtists';
 import SongBar from '@/components/songBar';
 import { Label } from '@/components/ui/label';
 import { songs } from '@/utils/cachedSongs';
@@ -16,7 +17,9 @@ const HomePage = () => {
           </div>
           <div className='space-y-4'>
             {Array.from({ length: 4 }).map((_, index) => (
-              <SongBar key={index} song={songs[index]} index={index} />
+              <div className='bg-gray-500 rounded-lg'>
+                <SongBar key={index} song={songs[index]} index={index} />
+              </div>
             ))}
           </div>
         </div>
@@ -36,6 +39,11 @@ const HomePage = () => {
           </div>
         </div>
       </div>
+
+      {/* Top Artists Section */}
+      {/* <div className="mt-6">
+        <TopArtists />
+      </div> */}
     </div>
   );
 }
