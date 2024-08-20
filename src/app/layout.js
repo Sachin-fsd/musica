@@ -3,7 +3,8 @@ import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
 import { ThemeProvider } from "@/components/themeProvider";
 import { Toaster } from "@/components/ui/sonner";
-
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/react"
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -39,6 +40,8 @@ export default function RootLayout({ children }) {
           {/* <NextTopLoader /> */}
           {children}
           <Toaster />
+          <SpeedInsights/>
+          <Analytics/>
         {/* </ThemeProvider> */}
       </body>
     </html>
