@@ -6,7 +6,7 @@ export const UserContext = createContext(null);
 
 export default function UserState({ children }) {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [currentSong, setCurrentSong] = useState(null);
+    const [currentSong, setCurrentSong] = useState(songs[0]);
     const [currentId, setCurrentId] = useState(null);
     const [playing, setPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);

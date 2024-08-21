@@ -18,6 +18,7 @@ import { decodeHtml } from "@/utils";
 import SuggestedSongsList from "../searchPage/suggestedSongsList";
 import LongPressTooltip from "../songBar/longPressTooltip";
 import Link from "next/link";
+import Image from "next/image";
 
 const Navbar = () => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -187,7 +188,7 @@ const Navbar = () => {
             <div className="flex items-center space-x-4">
                 <button className="p-2 custom-shadow">
                     <LongPressTooltip tooltipText="Jam">
-                        <Link href={"/"}> 
+                        <Link href={"/"}>
                             <Radar />
                         </Link>
                     </LongPressTooltip>
@@ -207,3 +208,6 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+{/* <Image src="https://github.com/shadcn.png" height="20px" width=""/> */}
+

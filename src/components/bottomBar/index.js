@@ -11,6 +11,7 @@ import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import RightSidebar from "../rightSidebar";
 import { togglePlayPause } from "@/utils/audiofunctions";
 import { Progress } from "./BottomProgressBar";
+import Image from "next/image";
 
 
 const Bottombar = () => {
@@ -55,7 +56,8 @@ const Bottombar = () => {
                     <SheetTrigger asChild>
                         <div className="flex items-center space-x-4 cursor-pointer">
                             {currentSong.image[0].url ? (
-                                <img src={currentSong.image[0].url} className="w-12 h-12 rounded-lg object-cover" alt={`${currentSong.name} cover`} />
+                                // <img src={currentSong.image[0].url} className="w-12 h-12 rounded-lg object-cover" alt={`${currentSong.name} cover`} />
+                                <Image src={currentSong.image[0].url} height="48" width="48" loading="lazy" className="rounded-lg object-cover" alt={`${currentSong.name} cover`}/>
                             ) : (
                                 <Skeleton className="w-12 h-12 rounded-lg bg-gray-700" />
                             )}

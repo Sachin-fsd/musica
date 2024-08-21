@@ -13,6 +13,7 @@ import Marquee from "react-fast-marquee";
 import { debounce } from "lodash";
 import LongPressTooltip from "./longPressTooltip";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import Image from "next/image";
 
 const SongBar = ({ song }) => {
     const { currentSong, setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId, loading, setLoading, } = useContext(UserContext);
@@ -105,12 +106,13 @@ const SongBar = ({ song }) => {
         );
     }
 
-    if (!song || !song.downloadUrl || !song.downloadUrl[4]?.url) return null;
+    // if (!song || !song.downloadUrl || !song.downloadUrl[4]?.url) return null;
 
     return (
         <div className="flex justify-between items-center py-1 border-gray-200 rounded-lg w-full">
             {song.image[0]?.url ? (
-                <img src={song.image[0].url} className="w-10 h-10 rounded object-cover cursor-pointer mr-3" alt={`${decodedName} cover`} onClick={handleClick} />
+                // <img src={song.image[0].url} className="w-10 h-10 rounded object-cover cursor-pointer mr-3" alt={`${decodedName} cover`} onClick={handleClick} />
+                <Image src={song.image[0].url} height={40} width={40} loading="lazy" className="rounded object-cover cursor-pointer mr-3" alt={`${decodedName} cover`} onClick={handleClick}/>
             ) : (
                 <Skeleton className="w-10 h-10 rounded object-cover" />
             )}
