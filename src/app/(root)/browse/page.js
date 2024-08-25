@@ -13,7 +13,7 @@ const HomePage = () => {
 
 
   return (
-    <div className="flex-grow bg-gray-100 p-4 md:p-5">
+    <div className=" bg-gray-100 p-4 md:p-5 mb-20 md:mb-0">
 
       {/* Top Songs */}
 
@@ -25,9 +25,9 @@ const HomePage = () => {
         <AlbumContent />
       </div>
       
-      <div>
+      {/* <div>
         <TopSongs />
-      </div>
+      </div> */}
 
       {/* Top Albums Section */}
       {/* <div>

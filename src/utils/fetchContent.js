@@ -1,6 +1,6 @@
 export async function fetchTrendingAlbums() {
     try {
-        const response = await fetch('http://localhost:3000/api/trendingAlbums');
+        const response = await fetch(`${process.env.PRODUCTION_URL}/api/trendingAlbums`);
         // console.log("reponse from server-side",response)
 
         const data = await response.json();
@@ -19,7 +19,7 @@ export async function fetchTrendingAlbums() {
 
 export async function fetchTopAlbumsOfYear() {
     try {
-        const response = await fetch('http://localhost:3000/api/top-albums-of-year');
+        const response = await fetch(`${process.env.PRODUCTION_URL}/api/top-albums-of-year`);
         // console.log("reponse from server-side",response)
 
         const data = await response.json();

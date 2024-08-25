@@ -101,9 +101,9 @@ const AlbumBar = ({ album }) => {
             </div>
             {/* <div className="w-full text-center mt-2">
                 {album.title ? (
-                    <Label className="font-bold text-cyan-950 truncate text-[2%] cursor-pointer">
+                    <p className="bg-red-300 font-bold text-cyan-950 truncate  cursor-pointer w-min">
                         {truncateTitle(album.title)}
-                    </Label>
+                    </p>
                 ) : (
                     <Skeleton className="h-4 w-full rounded" />
                 )}
