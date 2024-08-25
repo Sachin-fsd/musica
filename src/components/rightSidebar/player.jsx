@@ -16,6 +16,8 @@ const Player = () => {
         isLooping,
         setIsLooping,
         audioRef,
+        handlePrev,
+        handleNext
     } = useContext(UserContext);
 
     const downloadSong = async () => {
@@ -48,14 +50,6 @@ const Player = () => {
         setIsLooping(!isLooping);
     };
 
-    const changeRight = () => {
-        audioRef.current.currentTime = audioRef.current.currentTime + 10;
-    };
-
-    const changeLeft = () => {
-        audioRef.current.currentTime = audioRef.current.currentTime - 10;
-    };
-
     return (
         <div>
             <div className="p-1 flex justify-between items-center">
@@ -65,8 +59,8 @@ const Player = () => {
                     }
 
                 </Button>
-                <Button variant="simple" className="p-0 m-0" onClick={changeLeft}>
-                    <ChevronsLeft />
+                <Button variant="simple" className="p-0 m-0" onClick={handlePrev}>
+                    <SkipBack />
                 </Button>
                 <Button variant="ghost" className="p-0" onClick={() => togglePlayPause({ playing, audioRef, setPlaying })}>
                     {playing ? (
@@ -75,8 +69,8 @@ const Player = () => {
                         <Play className="bg-pink-500 p-2 rounded-lg text-white size-10" />
                     )}
                 </Button>
-                <Button variant="simple" className="p-0" onClick={changeRight}>
-                    <ChevronsRight/>
+                <Button variant="simple" className="p-0" onClick={handleNext}>
+                    <SkipForward/>
                 </Button>
                 <Button variant={isDownloading ? "secondary" : "simple"} className="p-0" onClick={downloadSong}>
                     {isDownloading ? (

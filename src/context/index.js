@@ -187,6 +187,8 @@ export default function UserState({ children }) {
         setLoading,
         connectionStatus,
         setConnectionStatus,
+        handleNext,
+        handlePrev
     };
 
     return (
