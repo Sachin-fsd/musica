@@ -185,8 +185,8 @@ const Navbar = () => {
             </div>
 
             {/* Icons and Profile photo */}
-            <div className="flex items-center space-x-4">
-                <button className="p-2 custom-shadow">
+            <div className="flex items-center justify-evenly">
+                {/* <button className="p-2 custom-shadow">
                     <LongPressTooltip tooltipText="Jam">
                         <Link href={"/"}>
                             <Radar />
@@ -195,7 +195,7 @@ const Navbar = () => {
                 </button>
                 <button className="p-2 custom-shadow">
                     <MessageSquareText />
-                </button>
+                </button> */}
                 <div className="rounded-full overflow-hidden">
                     <Avatar>
                         <AvatarImage src="https://github.com/shadcn.png" />

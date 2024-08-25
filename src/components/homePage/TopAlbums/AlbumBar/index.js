@@ -1,57 +1,115 @@
-import { Label } from "@/components/ui/label"
-import { Skeleton } from "@/components/ui/skeleton"
-import Image from "next/image"
+// import { Label } from "@/components/ui/label";
+// import { Skeleton } from "@/components/ui/skeleton";
+// import Image from "next/image";
 
-const AlbumBar = ({song}) => {
+// const AlbumBar = ({ album }) => {
+//     // Function to truncate the title if it exceeds a certain length
+//     const truncateTitle = (title, maxLength = 20) => {
+//         return title.length > maxLength ? `${title.substring(0, maxLength)}...` : title;
+//     };
+
+//     return (
+//         <div className="flex flex-col items-center border-gray-200 rounded-lg w-full">
+//             <div className="relative w-full pb-[100%]">
+//                 {album.image ? (
+//                     <Image
+//                         src={album.image}
+//                         alt={`${album.name} cover`}
+//                         fill
+//                         loading="lazy"
+//                         quality={100}
+//                         className="absolute top-0 left-0 rounded object-cover cursor-pointer"
+//                     />
+//                 ) : (
+//                     <Skeleton className="absolute top-0 left-0 w-full h-full rounded" />
+//                 )}
+//             </div>
+//             <div className="w-full text-center mt-2">
+//                 {album.title ? (
+//                     <Label className="font-bold text-cyan-950 truncate text-xs cursor-pointer">
+//                         {truncateTitle(album.title)}
+//                     </Label>
+//                 ) : (
+//                     <Skeleton className="h-4 w-full rounded" />
+//                 )}
+//             </div>
+//         </div>
+//     );
+// };
+
+// export default AlbumBar;
+
+'use client'
+
+import { GetAlbumSongsByIdAction } from "@/app/actions";
+import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
+import { UserContext } from "@/context";
+import { debounce } from "lodash";
+import Image from "next/image";
+import { useCallback, useContext } from "react";
+
+const AlbumBar = ({ album }) => {
+
+    const { setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading
+
+    } = useContext(UserContext)
+
+    // Function to truncate the title if it exceeds a certain length
+    const truncateTitle = (title, maxLength = 20) => {
+        return title.length > maxLength ? `${title.substring(0, maxLength)}...` : title;
+    };
+
+    const handleAlbumClick = useCallback(() => {
+        setLoading(true);
+        debounce(async () => {
+            try {
+                const data = await GetAlbumSongsByIdAction(album.id);
+                if (data.success) {
+                    console.log(data)
+                    setSongList(data.data.songs)
+                    setCurrentIndex(0);
+                    setCurrentSong(data.data.songs[0]);
+                    setPlaying(true);
+                    setCurrentId(data.data.songs[0].id);
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
+        }, 300)();
+    }, [setCurrentIndex, setSongList, setCurrentSong, setPlaying, setCurrentId]);
+
+
     return (
-        <div className="flex flex-col justify-between items-center py-1 border-gray-200 rounded-lg w-full">
-            {song.image[0].url ? (
-                // <img src={song.image[0].url} className="w-10 h-10 rounded object-cover cursor-pointer mr-3" alt={`${decodedName} cover`} onClick={handleClick} />
-                <Image src={song.image[1].url} height={140} width={140} loading="lazy" quality={100} className="rounded object-cover cursor-pointer mr-3"   />
-            ) : (
-                <Skeleton className="w-10 h-10 rounded object-cover" />
-            )}
-            <div className="flex-1 overflow-hidden cursor-pointer">
-                {true ? (
-                    <Label className="font-bold text-cyan-950 truncate text-sm cursor-pointer whitespace-nowrap overflow-hidden text-ellipsis">
-                        {song.name}
+        <div className="flex flex-col items-center border-gray-200 rounded-lg w-full" onClick={handleAlbumClick}>
+            <div className="relative w-full pb-[100%]">
+                {album.image ? (
+                    <Image
+                        src={album.image}
+                        alt={`${album.name} cover`}
+                        fill
+                        loading="lazy"
+                        quality={100}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="absolute top-0 left-0 w-full h-full rounded object-cover cursor-pointer"
+                    />
+                ) : (
+                    <Skeleton className="absolute top-0 left-0 w-full h-full rounded" />
+                )}
+            </div>
+            {/* <div className="w-full text-center mt-2">
+                {album.title ? (
+                    <Label className="font-bold text-cyan-950 truncate text-[2%] cursor-pointer">
+                        {truncateTitle(album.title)}
                     </Label>
                 ) : (
-                    <Skeleton className="min-h-2 p-2 m-2" />
+                    <Skeleton className="h-4 w-full rounded" />
                 )}
-                
-            </div>
-            {/* <Label variant="simple" disabled={loading}>
-                {
-                    songList.find(s => s.id === song.id) ? (
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="simple">
-                                    <EllipsisVertical className="text-gray-500 hover:text-gray-700 cursor-pointer size-5" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-56">
-                                <DropdownMenuGroup>
-                                    <DropdownMenuItem onClick={handleRemoveSong} className="bg-red-300">
-                                        <Trash2 className="mr-2 h-4 w-4 " />
-                                        <span>Remove from queue</span>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={handleAddNextSong}>
-                                        <ListMusic className="mr-2 h-4 w-4" />
-                                        <span>Play next</span>
-                                    </DropdownMenuItem>
-                                </DropdownMenuGroup>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    ) : (
-                        <LongPressTooltip tooltipText="Add to queue">
-                            <Plus onClick={handlePlusClick} className="text-gray-500 hover:text-gray-700 cursor-pointer size-5 mr-3" />
-                        </LongPressTooltip>
-                    )
-                }
-            </Label> */}
+            </div> */}
         </div>
-    )
-}
+    );
+};
 
-export default AlbumBar
+export default AlbumBar;

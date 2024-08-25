@@ -1,3 +1,4 @@
+import { all_top_playlists } from "@/utils/cachedSongs";
 
 export async function SearchGlobalAction(song) {
     // console.log("song",song)
@@ -49,6 +50,8 @@ export async function SearchSongsAction(songId) {
         } // Return null or handle error state as needed
     }
 }
+
+
 export async function SearchSongSuggestionAction(songId) {
     try {
         const cacheKey = `songSuggestions_${songId}`;
@@ -76,3 +79,37 @@ export async function SearchSongSuggestionAction(songId) {
         }
     }
 }
+
+
+export async function GetAlbumSongsByIdAction(albumId) {
+    try {
+        const cacheKey = `album_${albumId}`;
+        const cachedData = localStorage.getItem(cacheKey);
+        if (cachedData) {
+            return JSON.parse(cachedData);
+        }
+        const response = await fetch(`https://saavn.dev/api/albums?id=${albumId}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch songs');
+        }
+        const data = await response.json();
+
+        if (data.success) {
+            localStorage.setItem(cacheKey, JSON.stringify(data));
+            return data;
+        }
+        return {
+            msg: "Not Found",
+            ok: false
+        };
+    } catch (error) {
+        console.error('Error fetching songs:', error);
+        return {
+            msg: "Song Not Found",
+            ok: false
+        }
+    }
+}
+
+
+

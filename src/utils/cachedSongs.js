@@ -1624,3 +1624,49 @@ export const songs = [
         ]
     },
 ]
+
+
+export const all_top_playlists = {
+    top_searches: "https://www.jiosaavn.com/api.php?__call=content.getTopSearches&ctx=web6dot0&api_version=4&_format=json&_marker=0",          // [9 items-albums,artist] check=type id, title,image
+    new_releases: "https://www.jiosaavn.com/api.php?__call=reco.getAlbumReco&api_version=4&_format=json&_marker=0&ctx=web6dot0&albumid=57129653", //[15 items-albums] id, title, image
+    trending_albums: "https://www.jiosaavn.com/api.php?__call=content.getTrending&api_version=4&_format=json&_marker=0&ctx=web6dot0&entity_type=album&entity_language=hindi", //[23 items-albums] id, title, image
+    top_albums_of_year: "https://www.jiosaavn.com/api.php?__call=search.topAlbumsoftheYear&api_version=4&_format=json&_marker=0&ctx=web6dot0&album_year=2024&album_lang=hindi"  //[23 items-albums] id, title, image
+}
+
+export const mega_menu = "https://www.jiosaavn.com/api.php?__call=webapi.getBrowseHoverDetails&is_entity_page=true&language=hindi&api_version=4&_format=json&_marker=0"
+/*
+{new_releases:[9 albums]  perma_url, title
+top_artists: [9 artists]  perma_url, title
+top_playlists: [9 playlists] perma_url, title
+}
+*/
+
+export const mega_menu_2 = "https://www.jiosaavn.com/api.php?__call=webapi.getFooterDetails&language=hindi&api_version=4&_format=json&_marker=0"
+
+/*
+{
+album:[9 albums] id, title
+artist
+playlist
+}
+*/
+
+export const mega_menu_3 = "https://www.jiosaavn.com/api.php?__call=webapi.getLaunchData&api_version=4&_format=json&_marker=0&ctx=web6dot0"
+
+/*
+{
+artist_recos:[19 albums] id, image, title
+charts: [7 playlists] id, title, image
+global_config. weekly_top_songs_listid. hindi: id, title, image (playlist)
+new_albums : [19 albums]  id, title, image
+new_trending : [23 album] id, title, image
+promo:vx:data:68 : [6 playlist] id, title, image
+promo:vx:data:76 : [6 playlist] id, title, image
+promo:vx:data:107 : [6 playlist] id, title, image
+promo:vx:data:113 : [6 playlist] id, title, image
+promo:vx:data:116 : [6 playlist] id, title, image
+promo:vx:data:142 : [6 playlist] id, title, image
+promo:vx:data:185 : [6 playlist] id, title, image
+top_playlists :  [11 playlist] id, image, title
+}
+*/

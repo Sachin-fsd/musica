@@ -69,81 +69,13 @@
   }
 }
 
-
-.carousel-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.5s ease;
+/* Hide scrollbar on large screens */
+@media (min-width: 1024px) {
+  .hide-scrollbar {
+      -ms-overflow-style: none;  /* Internet Explorer 10+ */
+      scrollbar-width: none;  /* Firefox */
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+      display: none;  /* Safari and Chrome */
+  }
 }
-
-.carousel-item {
-  transition: transform 0.5s ease, opacity 0.5s ease;
-}
-
-.carousel-item.center {
-  transform: scale(1.25);
-  z-index: 20;
-}
-
-.carousel-item.slide-left,
-.carousel-item.slide-right {
-  transition: transform 0.5s ease, opacity 0.5s ease;
-}
-
-.move-left .carousel-item.center {
-  transform: translateX(-100%) scale(0.9);
-  opacity: 0.5;
-}
-
-.move-left .carousel-item:nth-child(1) {
-  transform: translateX(100%) scale(1.25);
-  opacity: 1;
-  z-index: 20;
-}
-
-.move-right .carousel-item.center {
-  transform: translateX(100%) scale(0.9);
-  opacity: 0.5;
-}
-
-.move-right .carousel-item:nth-child(3) {
-  transform: translateX(-100%) scale(1.25);
-  opacity: 1;
-  z-index: 20;
-}
-
-.carousel-item:nth-child(1),
-.carousel-item:nth-child(3) {
-  transform: translateX(0);
-  opacity: 1;
-  z-index: 20;
-}
-
-.scrollbar-hide {
-  overflow: -moz-scrollbars-none;
-  -ms-overflow-style: none;
-}
-.scrollbar-custom {
-  scrollbar-width: thin;
-  scrollbar-color: red transparent; /* Firefox */
-}
-
-/* For WebKit browsers like Chrome, Safari */
-.scrollbar-custom::-webkit-scrollbar {
-  width: 8px;
-  height: 8px; /* Ensure the height is set for horizontal scrollbars */
-}
-
-.scrollbar-custom::-webkit-scrollbar-thumb {
-  background-color: red;
-  border-radius: 10px;
-}
-
-.scrollbar-custom::-webkit-scrollbar-track {
-  background: transparent;
-}
-

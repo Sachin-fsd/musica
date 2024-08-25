@@ -5,7 +5,7 @@ import { Ellipsis } from 'lucide-react'
 
 const TopSongs = () => {
     return (
-        <div className='flex flex-col lg:flex-row gap-6'>
+        <div className='flex flex-col lg:flex-row gap-6 mt-4'>
             {/* Top Charts Section */}
             <div className='flex-1'>
                 <div className='flex items-center justify-between mb-4'>

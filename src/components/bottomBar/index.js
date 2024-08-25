@@ -26,19 +26,22 @@ const Bottombar = () => {
         
     };
 
-    if (!currentSong) {
-        return (
-            <div className="flex justify-between items-center py-1 border-b border-gray-300 bg-gray-100">
-                <Skeleton className="w-12 h-12 rounded-lg object-cover mr-4" />
-                <div className="flex-1">
-                    <Label className="font-bold text-gray-800 truncate text-sm"></Label>
-                </div>
-            </div>
-        );
+    // if (!currentSong) {
+    //     return (
+    //         <div className="flex justify-between items-center flex-grow py-1 border-b border-gray-300 bg-gray-100">
+    //             <Skeleton className="w-12 h-12 rounded-lg object-cover mr-4" />
+    //             <div className="flex-1">
+    //                 <Label className="font-bold text-gray-800 truncate text-sm"></Label>
+    //             </div>
+    //         </div>
+    //     );
+    // }
+    if(!currentSong){
+        return null
     }
 
     return (
-        <div className="fixed bottom-0 left-0 w-full bg-gray-900 text-white shadow-lg p-4 pt-0 flex flex-col items-center justify-between">
+        <div className="fixed bottom-0 left-0 w-full bg-gray-900 text-white shadow-lg p-4 pt-0 flex flex-col items-center justify-between flex-grow">
 
             <div className="w-full pb-1">
                 <Progress

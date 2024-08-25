@@ -30,7 +30,7 @@ export default function UserState({ children }) {
             setDuration(audioRef.current.duration);
         };
 
-        audioRef?.current?.addEventListener('timeupdate',handleTimeUpdate );
+        audioRef?.current?.addEventListener('timeupdate', handleTimeUpdate);
 
         return () => {
             if (audioRef.current) {
@@ -109,8 +109,16 @@ export default function UserState({ children }) {
 
         if ("mediaSession" in navigator) {
             navigator.mediaSession.playbackState = playing ? "playing" : "paused";
-          }
+        }
     }, [playing])
+
+    const handlePrev = () => {
+        setCurrentIndex((prevIndex) => (prevIndex === 0 ? songs.length - 1 : prevIndex - 1));
+    };
+
+    const handleNext = () => {
+        setCurrentIndex((prevIndex) => (prevIndex === songs.length - 1 ? 0 : prevIndex + 1));
+    };
 
     useEffect(() => {
         if ("mediaSession" in navigator && currentSong) {
@@ -137,12 +145,22 @@ export default function UserState({ children }) {
                 audioRef.current.pause();
                 setPlaying(false);
             });
-            navigator.mediaSession.setActionHandler("seekbackward", () => {
-                audioRef.current.currentTime = Math.max(audioRef.current.currentTime - 10, 0);
+
+            navigator.mediaSession.setActionHandler('nexttrack', () => {
+                handleNext();
             });
-            navigator.mediaSession.setActionHandler("seekforward", () => {
-                audioRef.current.currentTime = Math.min(audioRef.current.currentTime + 10, audioRef.current.duration);
+
+            navigator.mediaSession.setActionHandler('previoustrack', () => {
+                handlePrev();
             });
+            // navigator.mediaSession.setActionHandler("seekbackward", () => {
+            //     audioRef.current.currentTime = Math.max(audioRef.current.currentTime - 10, 0);
+            // });
+            // navigator.mediaSession.setActionHandler("seekforward", () => {
+            //     audioRef.current.currentTime = Math.min(audioRef.current.currentTime + 10, audioRef.current.duration);
+            // });
+
+
         }
     }, [currentSong]);
 
@@ -180,7 +198,8 @@ export default function UserState({ children }) {
                 onPause={() => setPlaying(false)}
                 onLoadedData={() => {
                     // audioRef.current.currentTime = currentTime;
-                    setDuration(audioRef.current.duration)}}
+                    setDuration(audioRef.current.duration)
+                }}
                 loop={isLooping}
             />
         </UserContext.Provider>
