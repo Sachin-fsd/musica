@@ -79,11 +79,3 @@
       display: none;  /* Safari and Chrome */
   }
 }
-
-.imgBorder{
-  border: 1px solid red;
-}
-
-.bordr{
-  border: 1px solid blue;
-}

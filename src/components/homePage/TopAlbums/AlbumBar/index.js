@@ -1,12 +1,12 @@
 'use client'
 
-import { GetAlbumSongsByIdAction, SearchSongSuggestionAction } from "@/app/actions";
+import { GetAlbumSongsByIdAction } from "@/app/actions";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { UserContext } from "@/context";
-import { debounce } from "lodash";
 import Image from "next/image";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext } from "react";
+import { debounce } from "lodash";
 
 const AlbumBar = ({ album }) => {
     const { setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading, setIsLooping } = useContext(UserContext);
@@ -15,33 +15,36 @@ const AlbumBar = ({ album }) => {
         return title.length > maxLength ? `${title.substring(0, maxLength)}...` : title;
     };
 
-    const handleAlbumClick = useCallback(() => {
-        setLoading(true);
-        debounce(async () => {
-            try {
-                const data = await GetAlbumSongsByIdAction(album.id);
-                if (data.success) {
-                    setSongList(data.data.songs);
-                    setCurrentIndex(0);
-                    setCurrentSong(data.data.songs[0]);
-                    setPlaying(true);
-                    setCurrentId(data.data.songs[0].id);
+    // Define a debounced function
+    const fetchAlbumSongs = useCallback(debounce(async (albumId) => {
+        try {
+            setLoading(true);
+            const data = await GetAlbumSongsByIdAction(albumId);
+            if (data.success) {
+                setSongList(data.data.songs);
+                setCurrentIndex(0);
+                setCurrentSong(data.data.songs[0]);
+                setPlaying(true);
+                setCurrentId(data.data.songs[0].id);
 
-                    if (data.data.songs.length === 1) {
-                        setIsLooping(true)
-                    }
+                if (data.data.songs.length === 1) {
+                    setIsLooping(true);
                 }
-            } catch (error) {
-                console.error("Error fetching album songs:", error);
-            } finally {
-                setLoading(false);
             }
-        }, 300)();
-    }, [album.id, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading]);
+        } catch (error) {
+            console.error("Error fetching album songs:", error);
+        } finally {
+            setLoading(false);
+        }
+    }, 300), [setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading, setIsLooping]);
+
+    const handleAlbumClick = () => {
+        fetchAlbumSongs(album.id);
+    };
 
     return (
         <div
-            className="flex flex-col items-center border border-gray-200 rounded-lg overflow-hidden w-full cursor-pointer transition-transform transform"
+            className="flex flex-col items-center border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden w-full cursor-pointer transition-transform transform hover:scale-101"
             onClick={handleAlbumClick}
         >
             <div className="relative w-full pb-[100%]">
@@ -49,7 +52,7 @@ const AlbumBar = ({ album }) => {
                     {album.image ? (
                         <Image
                             src={album.image}
-                            alt={`${album.name} cover`}
+                            alt={`${album.title} cover`}
                             fill
                             loading="lazy"
                             quality={100}
@@ -63,7 +66,7 @@ const AlbumBar = ({ album }) => {
             </div>
             <div className="w-full text-center mt-2 px-2">
                 {album.title ? (
-                    <Label className="font-bold text-gray-800 truncate text-sm">
+                    <Label className="font-bold text-gray-800 dark:text-gray-300 truncate text-sm">
                         {truncateTitle(album.title)}
                     </Label>
                 ) : (

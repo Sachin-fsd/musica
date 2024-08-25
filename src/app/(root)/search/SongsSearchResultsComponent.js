@@ -7,35 +7,27 @@ import { Separator } from "@/components/ui/separator";
 import { UserContext } from "@/context";
 import { useContext, useEffect } from "react";
 
-
 const SongsSearchResultsComponent = ({ querySongs }) => {
+    const { setLoading } = useContext(UserContext);
 
-    // let searchResults = localStorage.getItem("searchResults") || [];
-    // console.log("searchResults",searchResults)
-
-    // if (!searchResults || searchResults.length === 0) {
-    //     return <p>No results found.</p>;
-    // }
-    const {setLoading} = useContext(UserContext)
-
-    useEffect(()=>{
-        setLoading(false)
-    },[querySongs])
+    useEffect(() => {
+        setLoading(false);
+    }, [querySongs]);
 
     return (
-        <div className="flex flex-col space-y-4 w-full overflow-x-hidden"> {/* Ensure full width */}
+        <div className="flex flex-col space-y-4 w-full overflow-x-hidden bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
             <div className="label-heading">
                 <Label className="text-lg font-bold">Songs</Label>
             </div>
             {querySongs?.results.length > 0 ? (
-                querySongs?.results.map((song, index) => (
-                    <div key={index} className="w-full ">
+                querySongs.results.map((song, index) => (
+                    <div key={index} className="w-full">
                         <SongBar song={song} index={index} />
-                        <Separator/>
+                        <Separator />
                     </div>
                 ))
             ) : (
-                <p>No song Found</p>
+                <p>No songs found</p>
             )}
         </div>
     );

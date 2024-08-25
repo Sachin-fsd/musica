@@ -1,13 +1,20 @@
+import { Menu } from "lucide-react";
 import LeftSidebarIcons from "./leftSidebarIcons";
 
 const LeftSidebar = () => {
     return (
-        <div className="flex flex-col p-4 h-screen bg-gradient-to-r from-slate-100 to-white
-                        w-1/10 sm:w-1/12 md:w-1/14 lg:w-1/16 min-w-[50px]">
-            <div className="flex-shrink-0 cursor-pointer">
-                <p className="font-semibold">Musi<span className="text-slate-700">ca</span></p>
-            </div>
-            <div className="flex-grow flex items-center">
+        <div
+            className="
+        flex flex-col  p-4 h-screen justify-center items-center
+        bg-white dark:bg-black
+        border-r border-gray-200 dark:border-gray-700
+        w-16 sm:w-20 md:w-24 lg:w-28
+      "
+        >
+            {/* <div className="flex-shrink-0 cursor-pointer mb-8">
+                <Menu className="text-2xl font-bold text-gray-800 dark:text-gray-100" />
+            </div> */}
+            <div className="flex-grow flex flex-col items-center space-y-6">
                 <LeftSidebarIcons />
             </div>
         </div>

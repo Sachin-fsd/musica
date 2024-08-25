@@ -14,17 +14,17 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       </head>
       <body className={`${inter.className} min-h-screen overflow-x-hidden `}>
-        {/* <ThemeProvider
+        <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           // enableSystem
           disableTransitionOnChange
-        > */}
+        >
         <NextTopLoader
           color="hsl(253 91% 58%)"
           initialPosition={0.08}
@@ -45,7 +45,7 @@ export default function RootLayout({ children }) {
         <Toaster />
         <SpeedInsights />
         <Analytics />
-        {/* </ThemeProvider> */}
+        </ThemeProvider>
       </body>
     </html>
   );
