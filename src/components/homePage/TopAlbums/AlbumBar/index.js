@@ -1,15 +1,15 @@
 'use client'
 
-import { GetAlbumSongsByIdAction } from "@/app/actions";
+import { GetAlbumSongsByIdAction, SearchSongSuggestionAction } from "@/app/actions";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { UserContext } from "@/context";
 import { debounce } from "lodash";
 import Image from "next/image";
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useState } from "react";
 
 const AlbumBar = ({ album }) => {
-    const { setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading } = useContext(UserContext);
+    const { setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading, setIsLooping } = useContext(UserContext);
 
     const truncateTitle = (title, maxLength = 15) => {
         return title.length > maxLength ? `${title.substring(0, maxLength)}...` : title;
@@ -26,6 +26,10 @@ const AlbumBar = ({ album }) => {
                     setCurrentSong(data.data.songs[0]);
                     setPlaying(true);
                     setCurrentId(data.data.songs[0].id);
+
+                    if (data.data.songs.length === 1) {
+                        setIsLooping(true)
+                    }
                 }
             } catch (error) {
                 console.error("Error fetching album songs:", error);

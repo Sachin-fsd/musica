@@ -113,12 +113,25 @@ export default function UserState({ children }) {
     }, [playing])
 
     const handlePrev = () => {
-        setCurrentIndex((prevIndex) => (prevIndex === 0 ? songs.length - 1 : prevIndex - 1));
+        setCurrentIndex((prevIndex) => {
+            // If there's only one song, stay on the same song
+            if (songList.length === 1) {
+                return prevIndex;
+            }
+            return (prevIndex === 0 ? songs.length - 1 : prevIndex - 1);
+        });
     };
 
     const handleNext = () => {
-        setCurrentIndex((prevIndex) => (prevIndex === songs.length - 1 ? 0 : prevIndex + 1));
+        setCurrentIndex((prevIndex) => {
+            // If there's only one song, stay on the same song
+            if (songList.length === 1) {
+                return prevIndex;
+            }
+            return (prevIndex === songs.length - 1 ? 0 : prevIndex + 1);
+        });
     };
+
 
     useEffect(() => {
         if ("mediaSession" in navigator && currentSong) {
