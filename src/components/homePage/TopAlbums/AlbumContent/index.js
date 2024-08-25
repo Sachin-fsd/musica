@@ -1,20 +1,31 @@
 import { fetchTopAlbumsOfYear, fetchTrendingAlbums } from "@/utils/fetchContent";
 import TopAlbums from "..";
 
-const AlbumContent = async() => {
-    const trendingAlbums = await fetchTrendingAlbums(); 
-    const topAlbumsoftheYear = await fetchTopAlbumsOfYear();
-    // console.log("trendingAlbums",trendingAlbums)
-    return (
-        <div>
-            <div>
-                <TopAlbums heading={"Trending Albums"} albums={trendingAlbums}/>
-            </div>
-            <div>
-                <TopAlbums heading={"Top Albums Of Year"} albums={topAlbumsoftheYear}/>
-            </div>
-        </div>
-    )
-}
+const AlbumContent = async () => {
+    try {
+        const [trendingAlbums, topAlbumsOfTheYear] = await Promise.all([
+            fetchTrendingAlbums(),
+            fetchTopAlbumsOfYear(),
+        ]);
 
-export default AlbumContent
+        return (
+            <div>
+                <div>
+                    <TopAlbums heading={"Trending Albums"} albums={trendingAlbums || []} />
+                </div>
+                <div>
+                    <TopAlbums heading={"Top Albums Of Year"} albums={topAlbumsOfTheYear || []} />
+                </div>
+            </div>
+        );
+    } catch (error) {
+        console.error("Error fetching album data:", error);
+        return (
+            <div>
+                <p>Failed to load albums. Please try again later.</p>
+            </div>
+        );
+    }
+};
+
+export default AlbumContent;
