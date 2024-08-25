@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
         </div>
 
             */}
-            <div className="flex h-screen w-screen sm:max-w-full flex-grow  overflow-hidden">
+            <div className="flex h-screen w-screen sm:max-w-full flex-grow overflow-hidden">
                 {/* LeftSidebar only for medium and large screens */}
                 <div className="hidden md:block">
                     <LeftSidebar />
