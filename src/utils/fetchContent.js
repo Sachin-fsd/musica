@@ -5,7 +5,7 @@ const BASE_URL =
 
 export async function fetchTrendingAlbums() {
     try {
-        const response = await fetch(`${BASE_URL}/api/trendingAlbums`);
+        const response = await fetch(`${BASE_URL}/api/trending-albums`);
 
         const data = await response.json();
 
