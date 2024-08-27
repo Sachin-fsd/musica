@@ -21,7 +21,8 @@ const SongBar = ({ song}) => {
 
     useEffect(() => {
         if (song && song.name) {
-            setDecodedName(decodeHtml(song.name));
+            
+            setDecodedName(decodeHtml(song.name).substring(0,20));
         }
     }, [song]);
 
@@ -105,7 +106,7 @@ const SongBar = ({ song}) => {
     }
 
     return (
-        <div className={`flex justify-between items-center p-2 bg-white dark:bg-gray-900 rounded-lg shadow-md w-full ${song.id===currentSong.id ? "outline outline-1 outline-purple-500" : ""}`}>
+        <div className={`flex justify-between items-center p-2 bg-white dark:bg-gray-900 rounded-lg shadow-md w-full ${song.id===currentSong?.id ? "outline outline-1 outline-purple-500" : ""}`}>
             {song.image[0]?.url ? (
                 <Image
                     src={song.image[0].url}

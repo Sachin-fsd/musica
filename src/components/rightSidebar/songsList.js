@@ -2,6 +2,7 @@ import SongBar from "../songBar";
 import { Separator } from "../ui/separator";
 
 const SongsListComponent = ({ songList }) => {
+    if(!songList || songList.length===0) return null
     return (
         <div className="overflow-auto p-1 pb-3 ">
             {songList.map((song, index) => (

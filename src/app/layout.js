@@ -2,9 +2,11 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
 import { ThemeProvider } from "@/components/themeProvider";
-import { Toaster } from "@/components/ui/sonner";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
+import { Toaster } from "sonner";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -43,6 +45,7 @@ export default function RootLayout({ children }) {
         {/* <NextTopLoader /> */}
         {children}
         <Toaster />
+        <ToastContainer />
         <SpeedInsights />
         <Analytics />
         </ThemeProvider>
