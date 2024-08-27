@@ -15,7 +15,7 @@ import LongPressTooltip from "./longPressTooltip";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import Image from "next/image";
 
-const SongBar = ({ song }) => {
+const SongBar = ({ song}) => {
     const { currentSong, setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId, loading, setLoading, } = useContext(UserContext);
     const [decodedName, setDecodedName] = useState(song?.name || "");
 
@@ -81,7 +81,6 @@ const SongBar = ({ song }) => {
 
 
     const handleAddNextSong = () => {
-        console.log("currentIndex1", currentIndex)
         // Remove the song from its current position
         const updatedList = songList.filter(s => s.id !== song.id);
 
@@ -90,7 +89,6 @@ const SongBar = ({ song }) => {
 
         // Update the song list
         setSongList(updatedList);
-        console.log("currentIndex2", currentIndex)
 
     };
 
@@ -107,7 +105,7 @@ const SongBar = ({ song }) => {
     }
 
     return (
-        <div className="flex justify-between items-center p-2 bg-white dark:bg-gray-900 rounded-lg shadow-md w-full">
+        <div className={`flex justify-between items-center p-2 bg-white dark:bg-gray-900 rounded-lg shadow-md w-full ${song.id===currentSong.id ? "outline outline-1 outline-purple-500" : ""}`}>
             {song.image[0]?.url ? (
                 <Image
                     src={song.image[0].url}

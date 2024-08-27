@@ -39,3 +39,23 @@ export async function fetchTopAlbumsOfYear() {
         return null;
     }
 }
+
+export async function fetchAlbumsByLink(link) {
+    try {
+        // const response = await fetch(`${BASE_URL}/api/trending-albums?link=${link}`);
+        const response = await fetch(link)
+        // const contentType = response.headers.get("content-type");
+        // if (!response.ok || !contentType || !contentType.includes("application/json")) {
+        //     console.error('Unexpected response format:', await response.text());
+        //     return null;
+        // }
+        // console.log(response)
+        const data = await response.json();
+        // console.log("data",data)
+
+        return data;
+    } catch (error) {
+        console.error('Error fetching trending albums:', error);
+        return null;
+    }
+}

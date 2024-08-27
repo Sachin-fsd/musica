@@ -28,6 +28,7 @@
     "@vercel/speed-insights": "^1.0.12",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "cmdk": "^1.0.0",
     "embla-carousel-react": "^8.1.8",
     "input-otp": "^1.2.4",
     "lodash": "^4.17.21",

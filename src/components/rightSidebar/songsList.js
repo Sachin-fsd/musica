@@ -6,7 +6,7 @@ const SongsListComponent = ({ songList }) => {
         <div className="overflow-auto p-1 pb-3 ">
             {songList.map((song, index) => (
                 <div key={index} className="w-full ">
-                    <SongBar song={song} />
+                    <SongBar song={song}/>
                     {index < songList.length - 1 && <Separator className="my-2" />} 
                 </div>
             ))}

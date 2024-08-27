@@ -1670,3 +1670,20 @@ promo:vx:data:185 : [6 playlist] id, title, image
 top_playlists :  [11 playlist] id, image, title
 }
 */
+
+export const All_Albums = [
+  
+    {
+        heading: "Top Albums of Year",
+        link: all_top_playlists.top_albums_of_year
+    },
+    {
+        heading: "New Releases",
+        link: all_top_playlists.new_releases
+    },
+    {
+        heading: "Top Searches",
+        link: all_top_playlists.top_searches
+    }
+
+]

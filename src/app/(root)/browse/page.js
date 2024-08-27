@@ -23,15 +23,10 @@ const HomePage = () => {
         <AlbumContent />
       </div>
 
-      {/* Uncomment sections as needed */}
-
       {/* <div>
-        <TopAlbums />
+        <MegaMenu />
       </div> */}
 
-      {/* <div className="mt-6">
-        <TopArtists />
-      </div> */}
     </div>
   );
 }

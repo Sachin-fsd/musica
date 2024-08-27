@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
         </div>
 
         {/* RightSidebar only for medium and large screens */}
-        <div className="hidden md:block md:row-span-2 w-full min-w-[20%] ">
+        <div className="hidden md:block md:row-span-2 w-full min-w-[20%] max-w-[95%]">
           <RightSidebar />
         </div>
 

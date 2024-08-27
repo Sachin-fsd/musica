@@ -1,4 +1,4 @@
-import { all_top_playlists } from "@/utils/cachedSongs";
+'use server'
 
 export async function SearchGlobalAction(song) {
     // console.log("song",song)
@@ -54,11 +54,7 @@ export async function SearchSongsAction(songId) {
 
 export async function SearchSongSuggestionAction(songId) {
     try {
-        const cacheKey = `songSuggestions_${songId}`;
-        const cachedData = localStorage.getItem(cacheKey);
-        if (cachedData) {
-            return JSON.parse(cachedData);
-        }
+
 
         const response = await fetch(`https://saavn.dev/api/songs/${songId}/suggestions`);
         if (!response.ok) {
@@ -67,7 +63,6 @@ export async function SearchSongSuggestionAction(songId) {
         const data = await response.json();
 
         if (data.success) {
-            localStorage.setItem(cacheKey, JSON.stringify(data));
             return data;
         }
         return null;
@@ -83,11 +78,7 @@ export async function SearchSongSuggestionAction(songId) {
 
 export async function GetAlbumSongsByIdAction(albumId) {
     try {
-        const cacheKey = `album_${albumId}`;
-        const cachedData = localStorage.getItem(cacheKey);
-        if (cachedData) {
-            return JSON.parse(cachedData);
-        }
+
         const response = await fetch(`https://saavn.dev/api/albums?id=${albumId}`);
         if (!response.ok) {
             throw new Error('Failed to fetch songs');
@@ -95,7 +86,34 @@ export async function GetAlbumSongsByIdAction(albumId) {
         const data = await response.json();
 
         if (data.success) {
-            localStorage.setItem(cacheKey, JSON.stringify(data));
+            return data;
+        }
+        return {
+            msg: "Not Found",
+            ok: false
+        };
+    } catch (error) {
+        console.error('Error fetching songs:', error);
+        return {
+            msg: "Song Not Found",
+            ok: false
+        }
+    }
+}
+
+
+export async function GetSongsByIdAction(type, id) {
+    try {
+
+        // console.log("server",type,id)
+        const response = await fetch(`https://saavn.dev/api/${type}s?id=${id}`);
+        // console.log(response)
+        if (!response.ok) {
+            throw new Error('Failed to fetch songs');
+        }
+        const data = await response.json();
+
+        if (data.success) {
             return data;
         }
         return {
@@ -113,3 +131,22 @@ export async function GetAlbumSongsByIdAction(albumId) {
 
 
 
+export async function fetchAlbumsByLinkAction(link) {
+    try {
+        // const response = await fetch(`${BASE_URL}/api/trending-albums?link=${link}`);
+        const response = await fetch(link)
+        // const contentType = response.headers.get("content-type");
+        // if (!response.ok || !contentType || !contentType.includes("application/json")) {
+        //     console.error('Unexpected response format:', await response.text());
+        //     return null;
+        // }
+        // console.log(response)
+        const data = await response.json();
+        // console.log("data",data)
+
+        return data;
+    } catch (error) {
+        console.error('Error fetching trending albums:', error);
+        return null;
+    }
+}

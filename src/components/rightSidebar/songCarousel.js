@@ -122,7 +122,7 @@ const SongCarousel = ({ songs }) => {
             </div>
             {songs && (
                 <div className='mt-5 text-center'>
-                    <p className='font-semibold font-mono truncate max-w-xs mx-auto'>{decodeHtml(songs[currentIndex].name)}</p> {/* Decode HTML here */}
+                    <p className='font-semibold font-mono truncate max-w-xs mx-auto'>{decodeHtml(songs[currentIndex].name, 30)}</p> {/* Decode HTML here */}
                     <p className='font-extralight font-mono text-gray-600 text-xs truncate max-w-xs mx-auto'>{decodeHtml(formatSingers(songs[currentIndex]))}</p> {/* Decode HTML here */}
                 </div>
             )}

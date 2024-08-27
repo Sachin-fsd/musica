@@ -1,0 +1,93 @@
+"use client"
+
+import { Check, ChevronsUpDown, Cog } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { useContext, useState } from "react"
+import { UserContext } from "@/context"
+import { Label } from "@/components/ui/label"
+
+const qualities = [
+  { value: "low", label: "Low" },
+  { value: "medium", label: "Medium" },
+  { value: "average", label: "Average" },
+  { value: "high", label: "High" },
+  { value: "very_high", label: "Very High" },
+]
+
+export default function AdjustSongQuality() {
+  const { setManualQuality } = useContext(UserContext)
+  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState("")
+
+  const handleSelect = (currentValue) => {
+    const newValue = currentValue === value ? "" : currentValue
+    setValue(newValue)
+    setManualQuality(newValue)  // Set the manual quality
+    setOpen(false)
+  }
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}
+      className=""
+    >
+      <PopoverTrigger asChild
+      className="cursor-pointer"
+      >
+        <Label
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="flex md:flex-col items-center w-full p-2 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 hover:scale-105 transition-transform duration-200 ease-in-out group"
+        >
+          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300">
+            <Cog />
+          </div>
+          <span
+            className="md:text-xs text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300  font-bold"
+          >
+            Quality
+          </span>
+        </Label>
+      </PopoverTrigger>
+      <PopoverContent className="w-[200px] p-0">
+        <Command>
+          <CommandList>
+            <CommandEmpty>No quality found.</CommandEmpty>
+            <CommandGroup>
+              {qualities.map((quality) => (
+                <CommandItem
+                  key={quality.value}
+                  value={quality.value}
+                  onSelect={handleSelect}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      value === quality.value ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                  {quality.label}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  )
+}

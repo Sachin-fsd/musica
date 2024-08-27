@@ -1,4 +1,5 @@
 'use client'
+import { SearchSongSuggestionAction } from "@/app/actions";
 import { songs } from "@/utils/cachedSongs";
 import { createContext, useRef, useState, useEffect } from "react";
 
@@ -16,14 +17,24 @@ export default function UserState({ children }) {
     const [songList, setSongList] = useState(songs);
     const [loading, setLoading] = useState(false);
     const [connectionStatus, setConnectionStatus] = useState("")
-
-
+    const [manualQuality, setManualQuality] = useState(""); // State for manual quality selection
+    // handle seek of slider
     const handleSeek = (e) => {
         const seekTime = e[0];
         audioRef.current.currentTime = seekTime;
         setCurrentTime(seekTime);
     };
 
+    const togglePlayPause = () => {
+        if (playing) {
+            audioRef.current.pause();
+        } else {
+            audioRef.current.play();
+        }
+        setPlaying(!playing);
+    };
+
+    // update audioref with song 
     useEffect(() => {
         const handleTimeUpdate = () => {
             setCurrentTime(audioRef.current.currentTime);
@@ -39,7 +50,21 @@ export default function UserState({ children }) {
         };
     }, [audioRef.current]);
 
+    // if album ends add related songs at end
+    useEffect(() => {
+        const addRelatedSongs = async () => {
+            if (currentIndex === songList.length - 1) {
+                const response = await SearchSongSuggestionAction(currentSong.id);
+                if (response.success) {
+                    setSongList((prevList) => [...prevList, ...response.data]);
+                }
+            }
+        };
 
+        addRelatedSongs();
+    }, [currentIndex, songList, currentSong]);
+
+    // handles song end
     useEffect(() => {
         const handleSongEnd = () => {
             if (!isLooping) {
@@ -60,6 +85,7 @@ export default function UserState({ children }) {
     }, [isLooping, currentIndex, songList, setCurrentIndex, setCurrentSong]);
 
 
+    // Function to determine connection status based on speed
     const determineConnectionStatus = (speed) => {
         if (speed > 3) return "Great";
         if (speed > 1.5) return "Best";
@@ -68,28 +94,66 @@ export default function UserState({ children }) {
         return "Worst";
     };
 
+    // Function to adjust the song quality
     const adjustQuality = () => {
         if (!currentSong || !navigator.connection) return;
-        const speed = navigator.connection.downlink;
-        const qualityUrl = speed > 3 ? currentSong.downloadUrl[4].url
-            : speed > 1.5 ? currentSong.downloadUrl[3].url
-                : speed > 0.75 ? currentSong.downloadUrl[2].url
-                    : speed > 0.3 ? currentSong.downloadUrl[1].url
-                        : currentSong.downloadUrl[0].url;
 
-        setConnectionStatus(determineConnectionStatus(speed));
+        let qualityUrl;
+
+        if (manualQuality) {
+            // If manual quality is selected, use it
+            const qualityIndex = {
+                low: 0,
+                medium: 1,
+                average: 2,
+                high: 3,
+                very_high: 4
+            }[manualQuality];
+            qualityUrl = currentSong.downloadUrl[qualityIndex].url;
+        } else {
+            // If no manual quality is selected, adjust based on network speed
+            const speed = navigator.connection.downlink;
+            qualityUrl = speed > 3 ? currentSong.downloadUrl[4].url
+                : speed > 1.5 ? currentSong.downloadUrl[3].url
+                    : speed > 0.75 ? currentSong.downloadUrl[2].url
+                        : speed > 0.3 ? currentSong.downloadUrl[1].url
+                            : currentSong.downloadUrl[0].url;
+
+            setConnectionStatus(determineConnectionStatus(speed));
+        }
+
         return qualityUrl;
     };
 
+    // spacebar to pause and play music
+    useEffect(() => {
+        const handleSpacebar = (e) => {
+            // Check if the spacebar is pressed and no input elements are focused
+            if (e.code === "Space" && !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) {
+                e.preventDefault(); // Prevent any default spacebar action
+                // play pause function here
+                togglePlayPause()
+            }
+        };
+
+        window.addEventListener("keydown", handleSpacebar);
+
+        return () => {
+            window.removeEventListener("keydown", handleSpacebar);
+        };
+    }, [playing]);
+
+
+    // play song on a quality
     useEffect(() => {
         if (!currentSong) return;
-
-        //chnage the title as song changes;
 
         // Adjust quality only when the song changes
         const qualityUrl = adjustQuality();
         if (qualityUrl) audioRef.current.src = qualityUrl;
-        if (navigator.connection) {
+
+        if (navigator.connection && !manualQuality) {
+            // Update connection status only if the quality is not manually selected
             setConnectionStatus(determineConnectionStatus(navigator.connection.downlink));
         }
 
@@ -98,8 +162,10 @@ export default function UserState({ children }) {
             audioRef.current.play();
         }
 
-    }, [currentSong]);
+    }, [currentSong, manualQuality]);  // Depend on manualQuality as well
 
+
+    // when song is playing add its name to site title
     useEffect(() => {
         if (currentSong && playing) {
             document.title = `${currentSong?.name} - Musica NextGen`;
@@ -132,7 +198,7 @@ export default function UserState({ children }) {
         });
     };
 
-
+    // for notification song player
     useEffect(() => {
         if ("mediaSession" in navigator && currentSong) {
 
@@ -166,12 +232,7 @@ export default function UserState({ children }) {
             navigator.mediaSession.setActionHandler('previoustrack', () => {
                 handlePrev();
             });
-            // navigator.mediaSession.setActionHandler("seekbackward", () => {
-            //     audioRef.current.currentTime = Math.max(audioRef.current.currentTime - 10, 0);
-            // });
-            // navigator.mediaSession.setActionHandler("seekforward", () => {
-            //     audioRef.current.currentTime = Math.min(audioRef.current.currentTime + 10, audioRef.current.duration);
-            // });
+
 
 
         }
@@ -201,7 +262,10 @@ export default function UserState({ children }) {
         connectionStatus,
         setConnectionStatus,
         handleNext,
-        handlePrev
+        handlePrev,
+        manualQuality,
+        setManualQuality,
+        togglePlayPause
     };
 
     return (

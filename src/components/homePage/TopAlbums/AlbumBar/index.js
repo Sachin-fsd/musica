@@ -1,6 +1,6 @@
 'use client'
 
-import { GetAlbumSongsByIdAction } from "@/app/actions";
+import { GetAlbumSongsByIdAction, GetSongsByIdAction } from "@/app/actions";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { UserContext } from "@/context";
@@ -16,20 +16,20 @@ const AlbumBar = ({ album }) => {
     };
 
     // Define a debounced function
-    const fetchAlbumSongs = useCallback(debounce(async (albumId) => {
+    const fetchAlbumSongs = useCallback(debounce(async (type,id) => {
         try {
             setLoading(true);
-            const data = await GetAlbumSongsByIdAction(albumId);
+        // console.log("client",type,id)
+
+            const data = await GetSongsByIdAction(type,id);
+            
             if (data.success) {
-                setSongList(data.data.songs);
+                setSongList(data.data.songs || data.data.topSongs);
                 setCurrentIndex(0);
                 setCurrentSong(data.data.songs[0]);
                 setPlaying(true);
                 setCurrentId(data.data.songs[0].id);
 
-                if (data.data.songs.length === 1) {
-                    setIsLooping(true);
-                }
             }
         } catch (error) {
             console.error("Error fetching album songs:", error);
@@ -39,7 +39,9 @@ const AlbumBar = ({ album }) => {
     }, 300), [setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading, setIsLooping]);
 
     const handleAlbumClick = () => {
-        fetchAlbumSongs(album.id);
+        // if(album.type==="artist"){
+        // }
+        fetchAlbumSongs(album.type,album.id);
     };
 
     return (

@@ -24,9 +24,8 @@ import { ThemeSwitch } from "../themeSwitch";
 const Navbar = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const { loading, setLoading } = useContext(UserContext);
-    // const [loading, setLoading] = useState(false)
     const [autocompleteSongs, setAutocompleteSongs] = useState([]);
-    const [isSuggestionSelected, setIsSuggestionSelected] = useState(false); // New state flag
+    const [isSuggestionSelected, setIsSuggestionSelected] = useState(false);
     const router = useRouter();
 
     const handleSearch = async (searchQuery) => {
@@ -34,7 +33,7 @@ const Navbar = () => {
             try {
                 setLoading(true);
                 router.push(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
-                setAutocompleteSongs([]); // Clear suggestions after searching
+                setAutocompleteSongs([]);
             } catch (error) {
                 console.error("Failed to perform search:", error);
             }
@@ -43,83 +42,76 @@ const Navbar = () => {
 
     const handleSearchSuggestions = useCallback(
         debounce(async (query) => {
-            if (query.trim() && !isSuggestionSelected) { // Only fetch suggestions if a suggestion wasn't just selected
+            if (query.trim() && !isSuggestionSelected) {
                 const songResults = await SearchSongsAction(query);
                 if (songResults && songResults.success) {
                     setAutocompleteSongs(songResults.data.results);
                 }
             }
-        }, 300), // 300ms debounce delay
+        }, 300),
         [isSuggestionSelected]
     );
 
-    useEffect(() => {
-        console.log("navbar", loading)
-    }, [loading])
-
     const handleSuggestionClick = (song) => {
-        setIsSuggestionSelected(true); // Set the flag to true when a suggestion is clicked
-        setAutocompleteSongs([]); // Clear the suggestions
+        setIsSuggestionSelected(true);
+        setAutocompleteSongs([]);
         setSearchQuery(song.name);
-        handleSearch(song.name); // Perform the search with the selected song
+        handleSearch(song.name);
     };
 
-    // Trigger search suggestions on input change
     useEffect(() => {
         if (searchQuery && !isSuggestionSelected) {
             handleSearchSuggestions(searchQuery);
         } else if (!searchQuery) {
-            setAutocompleteSongs([]); // Clear suggestions if input is empty
+            setAutocompleteSongs([]);
         }
-        setIsSuggestionSelected(false); // Reset the flag after handling the effect
+        setIsSuggestionSelected(false);
     }, [searchQuery]);
 
     return (
         <div className="flex items-center justify-between p-4 bg-gray-200 dark:bg-slate-950 shadow-md">
-            {/* Menu button on small screens */}
-            <div className="block md:hidden">
-                <Sheet>
-                    <SheetTrigger asChild>
-                        <button className="p-2">
-                            <Menu className="text-gray-900 dark:text-gray-300" />
-                        </button>
-                    </SheetTrigger>
-                    <SheetContent side="left" className="w-3/4 p-4 dark:bg-gray-800" aria-describedby="this is the left sidebar">
-                        <div className="flex items-center justify-between mb-4">
-                            <SheetTitle>
-                                <div className="flex-shrink-0 cursor-pointer mb-8">
-                                    <p className="text-2xl font-bold text-gray-800 dark:text-gray-100">
-                                        Musi<span className="text-blue-500">ca</span>
-                                    </p>
-                                </div>
-                            </SheetTitle>
-                            <SheetClose asChild>
-                                {/* <Button variant="ghost" aria-label="Close">
-                                    <X className="w-6 h-6 text-gray-400 dark:text-gray-500" />
-                                </Button> */}
-                                <Button className="flex-shrink-0 cursor-pointer mb-8">
-                                    <X className="text-2xl font-bold text-gray-800 bg-transparent" />
-                                </Button>
-                            </SheetClose>
-                        </div>
-                        <LeftSidebarIcons />
-                    </SheetContent>
-                </Sheet>
-            </div>
 
-            {/* Welcome text or site name */}
-            <div className="flex items-center space-x-4">
-                <div className="flex-shrink-0 cursor-pointer pb-0">
+            <div className="flex items-center">
+                <div className="block md:hidden">
+                    <Sheet>
+                        <SheetTrigger asChild>
+                            <button className="p-2">
+                                <Menu className="text-gray-900 dark:text-gray-300" />
+                            </button>
+                        </SheetTrigger>
+                        <SheetContent side="left" className="w-3/4 p-4 dark:bg-gray-800">
+                            <div className="flex items-center justify-between mb-4">
+                                <SheetTitle>
+                                    <div className="cursor-pointer mb-8">
+                                        <p className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+                                            Musi<span className="text-blue-500">ca</span>
+                                        </p>
+                                    </div>
+                                </SheetTitle>
+                                <SheetClose asChild>
+                                    <Button
+                                        className="cursor-pointer mb-8 bg-transparent hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md transition-all duration-200"
+                                    >
+                                        <X className="text-2xl font-bold text-gray-900 dark:text-gray-100" />
+                                    </Button>
+
+                                </SheetClose>
+                            </div>
+                            <LeftSidebarIcons />
+                        </SheetContent>
+                    </Sheet>
+                </div>
+
+                <div className="ml-2 md:ml-4 cursor-pointer">
                     <p className="text-2xl font-bold text-gray-800 dark:text-gray-100">
                         Musi<span className="text-blue-500">ca</span>
                     </p>
                 </div>
             </div>
 
-            {/* Search area with popover */}
-            <div className="flex-grow mx-8 max-w-lg">
+            <div className="flex-grow mx-4 md:mx-8 max-w-lg">
                 <div className="hidden md:block">
-                    <form className="max-w-xs mx-auto" onSubmit={(e) => { e.preventDefault(); handleSearch(searchQuery); }}>
+                    <form onSubmit={(e) => { e.preventDefault(); handleSearch(searchQuery); }}>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 flex items-center pl-3 cursor-pointer" onClick={() => handleSearch(searchQuery)}>
                                 <Search className="text-gray-900 dark:text-gray-300" />
@@ -137,7 +129,7 @@ const Navbar = () => {
                             <div className="absolute inset-y-0 right-0 flex items-center pr-1">
                                 {loading && <Loader2 className="animate-spin text-gray-500 dark:text-gray-400" />}
                             </div>
-                            {/* Suggestion list for large screens */}
+
                             {autocompleteSongs && autocompleteSongs.length > 0 && (
                                 <div className="absolute z-50 w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 rounded-lg shadow-lg mt-1">
                                     {autocompleteSongs.map((song, index) => (
@@ -152,13 +144,16 @@ const Navbar = () => {
                         </div>
                     </form>
                 </div>
+            </div>
+
+            <div className="flex items-center">
                 <Popover className="md:hidden">
-                    <PopoverTrigger asChild className="md:hidden">
+                    <PopoverTrigger asChild>
                         <button className="p-2">
                             <Search className="w-6 h-6 text-gray-900 dark:text-gray-300" />
                         </button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-full max-w-xs justify-center items-center dark:bg-gray-800" aria-describedby="this is the search input area">
+                    <PopoverContent className="w-full max-w-sm dark:bg-gray-800 ">
                         <div>
                             <form onSubmit={(e) => { e.preventDefault(); handleSearch(searchQuery); }}>
                                 <input
@@ -177,38 +172,23 @@ const Navbar = () => {
                             {loading && <Loader2 className="animate-spin text-gray-500 dark:text-gray-400" />}
                         </div>
                         <div>
-                            <div>
-                                {autocompleteSongs && autocompleteSongs.length > 0 && autocompleteSongs.map((song, index) => (
-                                    <SuggestionCard
-                                        key={index}
-                                        song={song}
-                                        onClick={() => handleSuggestionClick(song)}
-                                    />
-                                ))}
-                            </div>
+                            {autocompleteSongs && autocompleteSongs.length > 0 && autocompleteSongs.map((song, index) => (
+                                <SuggestionCard
+                                    key={index}
+                                    song={song}
+                                    onClick={() => handleSuggestionClick(song)}
+                                />
+                            ))}
                         </div>
                     </PopoverContent>
                 </Popover>
-            </div>
 
-            {/* Icons and Profile photo */}
-            <div className="flex items-center justify-evenly ">
-                <div className="mr-4 rounded-full overflow-hidden">
+                <div className="ml-4 md:ml-6">
                     <ThemeSwitch />
-                </div>
-                <div className="rounded-full overflow-hidden">
-                    <Avatar>
-                        <AvatarImage src="https://github.com/shadcn.png" />
-                        <AvatarFallback className="text-gray-900 dark:text-gray-300">CN</AvatarFallback>
-                    </Avatar>
                 </div>
             </div>
         </div>
     );
-
 };
 
 export default Navbar;
-
-{/* <Image src="https://github.com/shadcn.png" height="20px" width=""/> */ }
-

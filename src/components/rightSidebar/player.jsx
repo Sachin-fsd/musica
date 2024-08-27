@@ -4,7 +4,6 @@ import { UserContext } from '@/context';
 import { ChevronsLeft, ChevronsRight, Download, Loader, Pause, Play, Repeat, Repeat1, SkipBack, SkipBackIcon, SkipForward, StepBack, StepForward } from 'lucide-react';
 import { useContext, useEffect, useState } from 'react';
 import { Button } from '../ui/button';
-import { togglePlayPause } from '@/utils/audiofunctions';
 import { toast } from 'sonner';
 
 const Player = () => {
@@ -17,7 +16,8 @@ const Player = () => {
         setIsLooping,
         audioRef,
         handlePrev,
-        handleNext
+        handleNext,
+        togglePlayPause
     } = useContext(UserContext);
 
     const downloadSong = async () => {
@@ -62,7 +62,7 @@ const Player = () => {
                 <Button variant="simple" className="p-0 m-0" onClick={handlePrev}>
                     <SkipBack />
                 </Button>
-                <Button variant="ghost" className="p-0" onClick={() => togglePlayPause({ playing, audioRef, setPlaying })}>
+                <Button variant="ghost" className="p-0" onClick={togglePlayPause}>
                     {playing ? (
                         <Pause className="bg-pink-500 p-2 rounded-lg text-white size-10" />
                     ) : (
