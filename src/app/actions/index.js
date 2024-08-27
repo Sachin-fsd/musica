@@ -104,7 +104,22 @@ export async function GetAlbumSongsByIdAction(albumId) {
 
 export async function GetSongsByIdAction(type, id) {
     try {
-                  
+        if (type === "song") {
+            const response = await fetch(`https://saavn.dev/api/${type}s/${id}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch songs');
+            }
+            const data = await response.json();
+
+            if (data.success) {
+                return data;
+            }
+            return {
+                msg: "Not Found",
+                ok: false
+            };
+        }
+
         // console.log("server",type,id)
         const response = await fetch(`https://saavn.dev/api/${type}s?id=${id}`);
         // console.log(response)
