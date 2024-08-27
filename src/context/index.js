@@ -9,14 +9,14 @@ export const UserContext = createContext(null);
 
 export default function UserState({ children }) {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [currentSong, setCurrentSong] = useState(null);
+    const [currentSong, setCurrentSong] = useState(songs[0]);
     const [currentId, setCurrentId] = useState(null);
     const [playing, setPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [isLooping, setIsLooping] = useState(false);
     const audioRef = useRef(null);
-    const [songList, setSongList] = useState([]);
+    const [songList, setSongList] = useState(songs);
     const [loading, setLoading] = useState(false);
     const [connectionStatus, setConnectionStatus] = useState("")
     const [manualQuality, setManualQuality] = useState(""); // State for manual quality selection

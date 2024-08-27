@@ -11,52 +11,6 @@ import { songs as defaultSongs } from '@/utils/cachedSongs';  // Import your def
 const SongContent = () => {
     const { songList, setSongList, setCurrentIndex, setCurrentSong, setCurrentId } = useContext(UserContext);
 
-    useEffect(() => {
-        const playRandomSong = async () => {
-            const toastId = toast.loading("Loading a random song...");
-
-            try {
-                const randomLinkIndex = Math.floor(Math.random() * All_Albums.length);
-                const selectedLink = All_Albums[randomLinkIndex].link;
-
-                console.log("selectedLink", selectedLink);
-
-                const albums = await fetchAlbumsByLinkAction(selectedLink);
-
-                console.log("albums", albums);
-
-                if (albums && albums.length > 0) {
-                    const randomAlbumIndex = Math.floor(Math.random() * albums.length);
-                    const selectedAlbum = albums[randomAlbumIndex];
-                    console.log("selectedAlbum", selectedAlbum);
-                    const data = await GetSongsByIdAction(selectedAlbum.type, selectedAlbum.id);
-                    console.log("data", data);
-                    if (data.success) {
-                        console.log("data.data", data.data);
-                        const songs = data.data.songs || data.data.topSongs;
-                        console.log("songs", songs);
-                        setSongList(songs);
-                        setCurrentIndex(0);
-                        setCurrentSong(songs[0]);
-                        setCurrentId(songs[0].id);
-                        toast.update(toastId, { render: "Song loaded successfully!", type: "success", isLoading: false, autoClose: 2000 });
-                    } else {
-                        toast.update(toastId, { render: "Failed to load song!", type: "error", isLoading: false, autoClose: 2000 });
-                        setSongList(defaultSongs);  // Set default songs if loading fails
-                    }
-                } else {
-                    toast.update(toastId, { render: "No albums found!", type: "warning", isLoading: false, autoClose: 2000 });
-                    setSongList(defaultSongs);  // Set default songs if no albums are found
-                }
-            } catch (error) {
-                toast.update(toastId, { render: "An error occurred!", type: "error", isLoading: false, autoClose: 2000 });
-                setSongList(defaultSongs);  // Set default songs if an error occurs
-            }
-        };
-
-        playRandomSong();
-    }, []);
-
     // Create a copy of the songList and remove the last song if the length is odd
     if (!songList || songList.length === 0) {
         return null;
