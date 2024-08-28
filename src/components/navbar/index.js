@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useContext, useState, useEffect, useCallback } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+// import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "../ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
@@ -10,15 +10,14 @@ import { Bell, Loader2, Menu, MessageSquareText, Radar, Search, X } from "lucide
 import LeftSidebarIcons from "../leftSidebar/leftSidebarIcons";
 import { UserContext } from "@/context";
 import { SearchSongsAction } from "@/app/actions";
-import SearchSuggestions, { SuggestionCard } from "../searchPage/suggestedSongsList";
+import { SuggestionCard } from "../searchPage/suggestedSongsList";
 import { debounce } from "lodash";
-import { Label } from "../ui/label";
-import { Separator } from "../ui/separator";
+// import { Label } from "../ui/label";
+// import { Separator } from "../ui/separator";
 import { decodeHtml } from "@/utils";
-import SuggestedSongsList from "../searchPage/suggestedSongsList";
-import LongPressTooltip from "../songBar/longPressTooltip";
-import Link from "next/link";
-import Image from "next/image";
+// import LongPressTooltip from "../songBar/longPressTooltip";
+// import Link from "next/link";
+// import Image from "next/image";
 import { ThemeSwitch } from "../themeSwitch";
 
 const Navbar = () => {
@@ -29,6 +28,7 @@ const Navbar = () => {
     const [isSearchPopoverOpen, setIsSearchPopoverOpen] = useState(false)
     const router = useRouter();
 
+    // goes to searcg page with query
     const handleSearch = async (searchQuery) => {
         if (searchQuery.trim()) {
             try {
@@ -57,7 +57,7 @@ const Navbar = () => {
     const handleSuggestionClick = (song) => {
         setIsSuggestionSelected(true);
         setAutocompleteSongs([]);
-        setSearchQuery(song.name);
+        setSearchQuery(decodeHtml(song.name));
         handleSearch(song.name);
     };
 

@@ -3,7 +3,6 @@ import RightSidebar from "@/components/rightSidebar";
 import Navbar from "@/components/navbar";
 import UserState from "@/context";
 import Bottombar from "@/components/bottomBar";
-import { usePlayRandomSong } from "@/context/playRandomSong";
 
 export default function RootLayout({ children }) {
   return (

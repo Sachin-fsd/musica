@@ -10,7 +10,7 @@ export const UserContext = createContext(null);
 export default function UserState({ children }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentSong, setCurrentSong] = useState(songs[0]);
-    const [currentId, setCurrentId] = useState(null);
+    const [currentId, setCurrentId] = useState(songs[0].id);
     const [playing, setPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
@@ -52,10 +52,13 @@ export default function UserState({ children }) {
         };
     }, [audioRef.current]);
 
-    // if album ends add related songs at end
+    // // if album ends add related songs at end
     useEffect(() => {
+        const currentIndex = songList.findIndex(song => song.id === currentSong.id);
+
         const addRelatedSongs = async () => {
-            if (currentIndex === songList.length - 1) {
+            console.log("context add related song function ran")
+            if (currentIndex === songList.length - 1) { // Check if the current song is the last in the list
                 const response = await SearchSongSuggestionAction(currentSong.id);
                 if (response.success) {
                     setSongList((prevList) => [...prevList, ...response.data]);
@@ -63,8 +66,11 @@ export default function UserState({ children }) {
             }
         };
 
-        addRelatedSongs();
-    }, [currentIndex, songList, currentSong]);
+        if (currentIndex !== -1) { // Ensure the current song is in the list
+            addRelatedSongs();
+        }
+    }, [songList, currentSong]);
+
 
     // handles song end
     useEffect(() => {
@@ -115,14 +121,33 @@ export default function UserState({ children }) {
         } else {
             // If no manual quality is selected, adjust based on network speed
             const speed = navigator.connection.downlink;
-            qualityUrl = speed > 3 ? currentSong.downloadUrl[4].url
-                : speed > 1.5 ? currentSong.downloadUrl[3].url
-                    : speed > 0.75 ? currentSong.downloadUrl[2].url
-                        : speed > 0.3 ? currentSong.downloadUrl[1].url
-                            : currentSong.downloadUrl[0].url;
+            // qualityUrl = speed > 3 ? currentSong.downloadUrl[4].url
+            //     : speed > 1.5 ? currentSong.downloadUrl[3].url
+            //         : speed > 0.75 ? currentSong.downloadUrl[2].url
+            //             : speed > 0.3 ? currentSong.downloadUrl[1].url
+            //                 : currentSong.downloadUrl[0].url;
+
+            if (speed > 3) {
+                qualityUrl = currentSong.downloadUrl[4].url;
+                setManualQuality("very_high")
+            } else if (speed > 1.5) {
+                qualityUrl = currentSong.downloadUrl[3].url;
+                setManualQuality("high")
+            } else if (speed > 0.75) {
+                qualityUrl = currentSong.downloadUrl[2].url;
+                setManualQuality("average")
+            } else if (speed > 0.3) {
+                qualityUrl = currentSong.downloadUrl[1].url;
+                setManualQuality("medium")
+            } else {
+                qualityUrl = currentSong.downloadUrl[0].url;
+                setManualQuality("low")
+            }
 
             setConnectionStatus(determineConnectionStatus(speed));
         }
+
+
 
         return qualityUrl;
     };
@@ -150,9 +175,23 @@ export default function UserState({ children }) {
     useEffect(() => {
         if (!currentSong) return;
 
+        const audioElement = audioRef.current;
+
+        // Preserve the current playback position
+        const currentTime = audioElement.currentTime;
+
         // Adjust quality only when the song changes
         const qualityUrl = adjustQuality();
-        if (qualityUrl) audioRef.current.src = qualityUrl;
+        if (qualityUrl) {
+            // Update the audio source
+            audioElement.src = qualityUrl;
+
+            // Reload the audio element
+            audioElement.load();
+
+            // Seek to the previously stored playback position
+            audioElement.currentTime = currentTime;
+        }
 
         if (navigator.connection && !manualQuality) {
             // Update connection status only if the quality is not manually selected
@@ -161,10 +200,10 @@ export default function UserState({ children }) {
 
         // Prevent song from auto-playing when paused
         if (playing) {
-            audioRef.current.play();
+            audioElement.play();
         }
-
     }, [currentSong, manualQuality]);  // Depend on manualQuality as well
+
 
 
     // when song is playing add its name to site title
@@ -241,7 +280,7 @@ export default function UserState({ children }) {
     }, [currentSong]);
 
     // fetch random album then random song
-   
+
 
     let value = {
         currentSong,

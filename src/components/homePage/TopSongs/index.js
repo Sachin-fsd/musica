@@ -1,34 +1,25 @@
-'use client'
+'use client';
 
 import SongComponent from './SongComponent';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { UserContext } from '@/context';
-import { toast } from 'react-toastify';
-import { All_Albums } from '@/utils/cachedSongs';
-import { fetchAlbumsByLinkAction, GetSongsByIdAction } from '@/app/actions';
-import { songs as defaultSongs } from '@/utils/cachedSongs';  // Import your default songs
+import { songs as songList } from '@/utils/cachedSongs';
 
 const SongContent = () => {
-    const { songList, setSongList, setCurrentIndex, setCurrentSong, setCurrentId } = useContext(UserContext);
+    // const { songList } = useContext(UserContext);
 
-    // Create a copy of the songList and remove the last song if the length is odd
+    // Handle the case where songList is empty or undefined
     if (!songList || songList.length === 0) {
-        return null;
+        return (
+            <div className="text-center text-gray-500 dark:text-gray-400">
+                No songs available. Please try again later.
+            </div>
+        );
     }
-    const adjustedSongList = [...songList];
-    if (adjustedSongList.length % 2 !== 0) {
-        adjustedSongList.pop();
-    }
-
-    // Split the adjusted list into two equal halves
-    const halfLength = adjustedSongList.length / 2;
-    const firstHalf = adjustedSongList.slice(0, halfLength);
-    const secondHalf = adjustedSongList.slice(halfLength);
 
     return (
         <div className="flex flex-col lg:flex-row gap-6">
-            <SongComponent songs={firstHalf} heading={"Quick Picks"} />
-            <SongComponent songs={secondHalf} heading={"For You"} />
+            <SongComponent songs={songList} heading="Now Playing" />
         </div>
     );
 };

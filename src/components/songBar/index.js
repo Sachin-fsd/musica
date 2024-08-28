@@ -15,14 +15,36 @@ import LongPressTooltip from "./longPressTooltip";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import Image from "next/image";
 
-const SongBar = ({ song}) => {
-    const { currentSong, setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId, loading, setLoading, } = useContext(UserContext);
+const SongBar = ({ song, trimLength }) => {
+    const {
+        currentSong,
+        setCurrentIndex,
+        currentIndex,
+        setSongList,
+        songList,
+        setCurrentSong,
+        setPlaying,
+        audioRef,
+        setCurrentId,
+        loading,
+        setLoading,
+
+    } = useContext(UserContext);
     const [decodedName, setDecodedName] = useState(song?.name || "");
+    const [imageError, setImageError] = useState(false)
+
 
     useEffect(() => {
         if (song && song.name) {
-            
-            setDecodedName(decodeHtml(song.name).substring(0,20));
+            if (trimLength) {
+                setDecodedName(decodeHtml(song.name).substring(0, trimLength));
+
+            } 
+            else {
+
+                setDecodedName(decodeHtml(song.name));
+            }
+
         }
     }, [song]);
 
@@ -59,19 +81,10 @@ const SongBar = ({ song}) => {
         }
 
         if (songList.length > 3) {
-            const updatedSongList = songList.filter((s, index) => {
-                // If the first song is being removed and the last song is the current song,
-                // adjust the currentIndex to prevent an index mismatch.
-                if (index === 0 && currentIndex === songList.length - 1) {
-                    setCurrentIndex((prevIndex) => prevIndex - 1);
-                }
-                return s.id !== song.id;
-            });
+            const updatedSongList = songList.filter(s => s.id !== song.id);
 
-            // If the first song is removed, set the currentIndex to 0 to make the new first song the current one.
-            if (currentIndex === 0 && song.id === songList[0].id) {
-                setCurrentIndex(0);
-            }
+            const currentSongIndex = updatedSongList.findIndex(s => s.id === currentSong.id);
+            setCurrentIndex(currentSongIndex)
 
             setSongList(updatedSongList);
         } else {
@@ -82,16 +95,27 @@ const SongBar = ({ song}) => {
 
 
     const handleAddNextSong = () => {
-        // Remove the song from its current position
-        const updatedList = songList.filter(s => s.id !== song.id);
+        // Make a shallow copy of the current songList
+        const updatedList = [...songList];
 
-        // Insert the song at the current index
-        updatedList.splice(currentIndex + 1, 0, song);
+        // Find the actual index of the current song in the updated list
+        const currentSongIndex = updatedList.findIndex(s => s.id === currentSong?.id);
+
+        if (currentSongIndex === -1) return; // If current song is not found, exit the function
+
+        // Remove the desired song from its current position
+        const songIndex = updatedList.findIndex(s => s.id === song.id);
+        if (songIndex !== -1) {
+            updatedList.splice(songIndex, 1);
+        }
+
+        // Insert the song next to the current song
+        updatedList.splice(currentSongIndex + 1, 0, song);
 
         // Update the song list
         setSongList(updatedList);
-
     };
+
 
 
     if (!song) {
@@ -106,8 +130,8 @@ const SongBar = ({ song}) => {
     }
 
     return (
-        <div className={`flex justify-between items-center p-2 bg-white dark:bg-gray-900 rounded-lg shadow-md w-full ${song.id===currentSong?.id ? "outline outline-1 outline-purple-500" : ""}`}>
-            {song.image[0]?.url ? (
+        <div className={`flex justify-between items-center p-2 bg-white dark:bg-gray-900 rounded-lg shadow-md w-full ${song.id === currentSong?.id ? "outline outline-1 outline-purple-500" : ""}`}>
+            {song.image[0]?.url && !imageError ? (
                 <Image
                     src={song.image[0].url}
                     height={40}
@@ -116,6 +140,7 @@ const SongBar = ({ song}) => {
                     className="rounded object-cover cursor-pointer mr-3"
                     alt={`${decodedName} cover`}
                     onClick={handleClick}
+                    onError={() => setImageError(true)} // Set imageError to true on error
                 />
             ) : (
                 <Skeleton className="w-10 h-10 rounded object-cover" />

@@ -1,10 +1,7 @@
 import AlbumContent from '@/components/homePage/TopAlbums/AlbumContent';
 import SongContent from '@/components/homePage/TopSongs';
-import { PlayRandomSong } from '@/context/playRandomSong';
 
 const HomePage = () => {
-
-  // PlayRandomSong()
 
   return (
     // <div className="bg-gray-100 dark:bg-gray-900 p-4 md:p-5 mb-20 md:mb-0 text-gray-900 dark:text-gray-100">

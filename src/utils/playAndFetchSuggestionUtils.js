@@ -1,34 +1,22 @@
-import { SearchSongSuggestionAction} from "@/app/actions";
+import { SearchSongSuggestionAction } from "@/app/actions";
 
 
 export async function playAndFetchSuggestions(song, context) {
     try {
-        const { setCurrentIndex, setCurrentSong, setSongList, songList, setPlaying, audioRef, setCurrentId, currentSong,} = context;
+        const { setCurrentIndex, setCurrentSong, setSongList, songList, setPlaying, audioRef, setCurrentId, currentSong,currentIndex } = context;
 
-        const songExists = songList.find(s => s.id === song.id);
+        // const currentSongIndex = songList.findIndex(s=>s.id===currentSong.id);
 
-        // Step 1: Play the clicked song
-        if (!songExists) {
-            setSongList(prevList => [...prevList, song]);
-            setCurrentIndex(songList.length);
+
+            setSongList((prevList)=>[...prevList.slice(0,currentIndex+1), song])
+            setCurrentIndex(currentIndex+1);
             setCurrentSong(song);
             setPlaying(true);
             setCurrentId(song.id);
-        } else {
-            const existingIndex = songList.findIndex(s => s.id === song.id);
-            setCurrentIndex(existingIndex);
-            setCurrentSong(songList[existingIndex]);
-            setPlaying(true);
-        }
 
-        // Step 2: Fetch related songs in the background
-        const response = await SearchSongSuggestionAction(song.id);
-        if (response.success) {
-            setSongList(prevList => [song, ...response.data]);
-            setCurrentIndex(0);
-        }
-       
-        return {msg:"ok",ok:true}
+        
+
+        return { msg: "ok", ok: true }
 
     } catch (error) {
         console.log(error);

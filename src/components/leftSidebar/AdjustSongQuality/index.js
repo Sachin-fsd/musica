@@ -1,14 +1,12 @@
 "use client"
 
-import { Check, ChevronsUpDown, Cog } from "lucide-react"
-
+import { Check, Cog } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Command,
   CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
@@ -30,24 +28,17 @@ const qualities = [
 ]
 
 export default function AdjustSongQuality() {
-  const { setManualQuality } = useContext(UserContext)
+  const { setManualQuality, manualQuality } = useContext(UserContext)
   const [open, setOpen] = useState(false)
-  const [value, setValue] = useState("")
 
   const handleSelect = (currentValue) => {
-    const newValue = currentValue === value ? "" : currentValue
-    setValue(newValue)
-    setManualQuality(newValue)  // Set the manual quality
+    setManualQuality(currentValue)  // Set the manual quality
     setOpen(false)
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen}
-      className=""
-    >
-      <PopoverTrigger asChild
-      className="cursor-pointer"
-      >
+    <Popover open={open} onOpenChange={setOpen} className="">
+      <PopoverTrigger asChild className="cursor-pointer">
         <Label
           variant="outline"
           role="combobox"
@@ -57,9 +48,7 @@ export default function AdjustSongQuality() {
           <div className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300">
             <Cog />
           </div>
-          <span
-            className="md:text-xs text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300  font-bold"
-          >
+          <span className="md:text-xs text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300 font-bold">
             Quality
           </span>
         </Label>
@@ -73,12 +62,16 @@ export default function AdjustSongQuality() {
                 <CommandItem
                   key={quality.value}
                   value={quality.value}
-                  onSelect={handleSelect}
+                  onSelect={() => handleSelect(quality.value)}
+                  className={cn(
+                    "p-2 rounded-md",
+                    manualQuality === quality.value ? "bg-accent" : ""
+                  )}
                 >
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === quality.value ? "opacity-100" : "opacity-0"
+                      manualQuality === quality.value ? "opacity-100" : "opacity-0"
                     )}
                   />
                   {quality.label}

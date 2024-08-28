@@ -85,6 +85,7 @@ const Bottombar = () => {
                                     <ChevronDown className="text-2xl font-bold text-gray-900 dark:text-gray-100" />
                                 </Button>
                             </SheetClose>
+                            
                         </div>
                         <div className="flex-1 overflow-hidden">
                             <RightSidebar />
