@@ -26,6 +26,7 @@ const Navbar = () => {
     const { loading, setLoading } = useContext(UserContext);
     const [autocompleteSongs, setAutocompleteSongs] = useState([]);
     const [isSuggestionSelected, setIsSuggestionSelected] = useState(false);
+    const [isSearchPopoverOpen, setIsSearchPopoverOpen] = useState(false)
     const router = useRouter();
 
     const handleSearch = async (searchQuery) => {
@@ -34,6 +35,7 @@ const Navbar = () => {
                 setLoading(true);
                 router.push(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
                 setAutocompleteSongs([]);
+                setIsSearchPopoverOpen(false)
             } catch (error) {
                 console.error("Failed to perform search:", error);
             }
@@ -146,14 +148,14 @@ const Navbar = () => {
                 </div>
             </div>
 
-            <div className="flex items-center">
-                <Popover className="md:hidden">
+            <div className="flex items-center justify-center">
+                <Popover className="md:hidden" open={isSearchPopoverOpen} onOpenChange={setIsSearchPopoverOpen}>
                     <PopoverTrigger asChild>
-                        <button className="p-2">
+                        <button className="p-2 md:hidden">
                             <Search className="w-6 h-6 text-gray-900 dark:text-gray-300" />
                         </button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-full max-w-sm dark:bg-gray-800 ">
+                    <PopoverContent className=" dark:bg-gray-800 ">
                         <div>
                             <form onSubmit={(e) => { e.preventDefault(); handleSearch(searchQuery); }}>
                                 <input
@@ -187,6 +189,7 @@ const Navbar = () => {
                     <ThemeSwitch />
                 </div>
             </div>
+
         </div>
     );
 };

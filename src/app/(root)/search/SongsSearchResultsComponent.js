@@ -8,6 +8,9 @@ import { UserContext } from "@/context";
 import { useContext, useEffect } from "react";
 
 const SongsSearchResultsComponent = ({ querySongs }) => {
+    useEffect(()=>{
+        console.log("querySongs",querySongs)
+    },[])
     const { setLoading } = useContext(UserContext);
 
     useEffect(() => {
