@@ -202,9 +202,30 @@ export default function UserState({ children }) {
         if (playing) {
             audioElement.play();
         }
-    }, [currentSong, manualQuality]);  // Depend on manualQuality as well
+    }, [manualQuality]);  // Depend on manualQuality as well
 
 
+    // when current song changes
+    useEffect(() => {
+        if (!currentSong) return;
+
+        // Adjust quality only when the song changes
+        const qualityUrl = adjustQuality();
+        if (qualityUrl) {
+            audioRef.current.src = qualityUrl;
+        }
+
+        if (navigator.connection && !manualQuality) {
+            // Update connection status only if the quality is not manually selected
+            setConnectionStatus(determineConnectionStatus(navigator.connection.downlink));
+        }
+
+        // Prevent song from auto-playing when paused
+        if (playing) {
+            audioRef.current.play();
+        }
+
+    }, [currentSong]); 
 
     // when song is playing add its name to site title
     useEffect(() => {
