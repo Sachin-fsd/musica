@@ -13,9 +13,9 @@ const HomePage = () => {
       </div>
 
       {/* Album Content Section */}
-      {/* <div>
+      <div>
         <AlbumContent />
-      </div> */}
+      </div>
 
       {/* <div>
         <MegaMenu />

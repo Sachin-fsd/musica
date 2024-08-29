@@ -143,7 +143,7 @@ const SongBar = ({ song, trimLength }) => {
                     onError={() => setImageError(true)} // Set imageError to true on error
                 />
             ) : (
-                <Skeleton className="w-10 h-10 rounded object-cover" />
+                <Skeleton className="w-10 h-10 rounded object-cover mr-3" />
             )}
             <div className="flex-1 overflow-hidden cursor-pointer">
                 {decodedName ? (

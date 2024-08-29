@@ -7,42 +7,23 @@ import { UserContext } from "@/context";
 import Image from "next/image";
 import { useCallback, useContext } from "react";
 import { debounce } from "lodash";
+import { fetchAlbumSongs } from "@/utils/playAndFetchSuggestionUtils";
 
 const AlbumBar = ({ album }) => {
-    const { setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading, setIsLooping } = useContext(UserContext);
+    const {currentSong,currentIndex ,songList ,setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading, setIsLooping } = useContext(UserContext);
 
     const truncateTitle = (title, maxLength = 15) => {
         return title.length > maxLength ? `${title.substring(0, maxLength)}...` : title;
     };
 
     // Define a debounced function
-    const fetchAlbumSongs = useCallback(debounce(async (type,id) => {
-        try {
-            setLoading(true);
-        // console.log("client",type,id)
-
-            const data = await GetSongsByIdAction(type,id);
-            
-            if (data.success) {
-                setSongList(data.data.songs || data.data.topSongs);
-                setCurrentIndex(0);
-                setCurrentSong(data.data.songs[0]);
-                setPlaying(true);
-                setCurrentId(data.data.songs[0].id);
-
-            }
-        } catch (error) {
-            console.error("Error fetching album songs:", error);
-        } finally {
-            setLoading(false);
-        }
-    }, 300), [setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading, setIsLooping]);
-
-    const handleAlbumClick = () => {
-        // if(album.type==="artist"){
-        // }
-        fetchAlbumSongs(album.type,album.id);
-    };
+    
+    const handleAlbumClick = useCallback(debounce(() => {
+        console.log("songList",songList)
+        const context =  {currentSong,currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId}
+        fetchAlbumSongs(album.type, album.id, context);
+    }, 300), [album.type, album.id, fetchAlbumSongs]);
+    
 
     return (
         <div
