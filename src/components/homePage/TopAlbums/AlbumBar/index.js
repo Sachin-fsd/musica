@@ -5,12 +5,14 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { UserContext } from "@/context";
 import Image from "next/image";
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useState } from "react";
 import { debounce } from "lodash";
 import { fetchAlbumSongs } from "@/utils/playAndFetchSuggestionUtils";
 
 const AlbumBar = ({ album }) => {
     const {currentSong,currentIndex ,songList ,setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading, setIsLooping } = useContext(UserContext);
+
+    const [imageError, setImageError] = useState(false)
 
     const truncateTitle = (title, maxLength = 15) => {
         return title.length > maxLength ? `${title.substring(0, maxLength)}...` : title;
@@ -22,7 +24,7 @@ const AlbumBar = ({ album }) => {
         console.log("songList",songList)
         const context =  {currentSong,currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId}
         fetchAlbumSongs(album.type, album.id, context);
-    }, 300), [album.type, album.id, fetchAlbumSongs]);
+    }, 300), [album.type, album.id, fetchAlbumSongs, songList]);
     
 
     return (
@@ -32,7 +34,7 @@ const AlbumBar = ({ album }) => {
         >
             <div className="relative w-full pb-[100%]">
                 <div className="absolute top-0 left-0 w-full h-full transition-opacity duration-300 hover:opacity-80">
-                    {album.image ? (
+                    {album.image && !imageError ? (
                         <img
                             src={album.image}
                             alt={`${album.title} cover`}
@@ -41,6 +43,7 @@ const AlbumBar = ({ album }) => {
                             quality={100}
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             className="absolute top-0 left-0 w-full h-full rounded object-cover"
+                            onError={() => setImageError(true)} // Set imageError to true on error
                         />
                     ) : (
                         <Skeleton className="absolute top-0 left-0 w-full h-full rounded" />

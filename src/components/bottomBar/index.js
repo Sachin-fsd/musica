@@ -13,6 +13,7 @@ import Image from "next/image";
 
 const Bottombar = () => {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
+    const [imageError, setImageError] = useState(false)
 
     const { togglePlayPause, currentSong, playing, setCurrentIndex, songList, currentIndex, setCurrentSong, setPlaying, audioRef, handleSeek, currentTime, duration } = useContext(UserContext);
 
@@ -46,8 +47,15 @@ const Bottombar = () => {
                 <div className="flex w-full items-center justify-between">
                     <SheetTrigger asChild>
                         <div className="flex items-center space-x-4 cursor-pointer">
-                            {currentSong.image[0].url ? (
-                                <img src={currentSong.image[0].url} height="48" width="48" loading="lazy" className="rounded-lg object-cover" alt={`${currentSong.name} cover`} />
+                            {currentSong.image[0].url && !imageError ? (
+                                <img
+                                    src={currentSong.image[0].url}
+                                    height="48"
+                                    width="48"
+                                    loading="lazy"
+                                    className="rounded-lg object-cover"
+                                    alt={`${currentSong.name} cover`}
+                                    onError={() => setImageError(true)} />
                             ) : (
                                 <Skeleton className="w-12 h-12 rounded-lg bg-gray-700" />
                             )}
@@ -85,7 +93,7 @@ const Bottombar = () => {
                                     <ChevronDown className="text-2xl font-bold text-gray-900 dark:text-gray-100" />
                                 </Button>
                             </SheetClose>
-                            
+
                         </div>
                         <div className="flex-1 overflow-hidden">
                             <RightSidebar />
