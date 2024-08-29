@@ -36,7 +36,7 @@ const AlbumBar = ({ album }) => {
                         <img
                             src={album.image}
                             alt={`${album.title} cover`}
-                            fill
+                            fill="true"
                             loading="lazy"
                             quality={100}
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

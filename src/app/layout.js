@@ -12,6 +12,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
   title: "Musica NextGen Music",
   description: "Made with 💖 ",
+  icons : {
+    icon: 'public\favicon.svg'
+  }
 };
 
 export default function RootLayout({ children }) {
