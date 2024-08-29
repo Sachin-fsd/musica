@@ -33,7 +33,7 @@ const AlbumBar = ({ album }) => {
             <div className="relative w-full pb-[100%]">
                 <div className="absolute top-0 left-0 w-full h-full transition-opacity duration-300 hover:opacity-80">
                     {album.image ? (
-                        <Image
+                        <img
                             src={album.image}
                             alt={`${album.title} cover`}
                             fill

@@ -132,7 +132,7 @@ const SongBar = ({ song, trimLength }) => {
     return (
         <div className={`flex justify-between items-center p-2 bg-white dark:bg-gray-900 rounded-lg shadow-md w-full ${song.id === currentSong?.id ? "outline outline-1 outline-purple-500" : ""}`}>
             {song.image[0]?.url && !imageError ? (
-                <Image
+                <img
                     src={song.image[0].url}
                     height={40}
                     width={40}
