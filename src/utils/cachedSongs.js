@@ -1,472 +1,462 @@
 export const songs = [
     {
-        "id": "BeXBcbVK",
-        "name": "Believer",
+        "id": "1xqHQw3J",
+        "name": "Faded",
         "type": "song",
-        "year": "2018",
+        "year": "2015",
         "releaseDate": null,
-        "duration": 202,
-        "label": "Kid Ina Korner / Interscope",
+        "duration": 212,
+        "label": "Kreatell Music",
         "explicitContent": false,
-        "playCount": 80383355,
+        "playCount": 126932300,
         "language": "english",
         "hasLyrics": false,
         "lyricsId": null,
-        "url": "https://www.jiosaavn.com/song/believer/Mg0zcxdSYXg",
-        "copyright": "℗ 2017 KIDinaKORNER/Interscope Records",
+        "url": "https://www.jiosaavn.com/song/faded/QRAaeSVHBHk",
+        "copyright": "(P) 2015 Kreatell Music under exclusive license to Sony Music Entertainment Sweden AB",
         "album": {
-            "id": "13435951",
-            "name": "Evolve",
-            "url": "https://www.jiosaavn.com/album/evolve/gvCWqZLfVbs_"
+            "id": "10027005",
+            "name": "Faded",
+            "url": "https://www.jiosaavn.com/album/faded/B6ufo1iqJP0_"
         },
         "artists": {
             "primary": [
                 {
-                    "id": "599452",
-                    "name": "Imagine Dragons",
+                    "id": "1335467",
+                    "name": "Alan Walker",
                     "role": "primary_artists",
                     "image": [
                         {
                             "quality": "50x50",
-                            "url": "https://c.saavncdn.com/artists/Imagine_Dragons_50x50.jpg"
+                            "url": "https://c.saavncdn.com/artists/Alan_Walker_003_20231116095443_50x50.jpg"
                         },
                         {
                             "quality": "150x150",
-                            "url": "https://c.saavncdn.com/artists/Imagine_Dragons_150x150.jpg"
+                            "url": "https://c.saavncdn.com/artists/Alan_Walker_003_20231116095443_150x150.jpg"
                         },
                         {
                             "quality": "500x500",
-                            "url": "https://c.saavncdn.com/artists/Imagine_Dragons_500x500.jpg"
+                            "url": "https://c.saavncdn.com/artists/Alan_Walker_003_20231116095443_500x500.jpg"
                         }
                     ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/imagine-dragons-songs/f0aFxsa231o_"
+                    "url": "https://www.jiosaavn.com/artist/alan-walker-songs/wbWcxgUNzyo_"
                 }
             ],
             "featured": [],
             "all": [
                 {
-                    "id": "599453",
-                    "name": "Dan Reynolds",
+                    "id": "1335467",
+                    "name": "Alan Walker",
                     "role": "music",
                     "image": [
                         {
                             "quality": "50x50",
-                            "url": "https://c.saavncdn.com/048/Skipping-Stones-English-2018-20180620230710-50x50.jpg"
+                            "url": "https://c.saavncdn.com/artists/Alan_Walker_003_20231116095443_50x50.jpg"
                         },
                         {
                             "quality": "150x150",
-                            "url": "https://c.saavncdn.com/048/Skipping-Stones-English-2018-20180620230710-150x150.jpg"
+                            "url": "https://c.saavncdn.com/artists/Alan_Walker_003_20231116095443_150x150.jpg"
                         },
                         {
                             "quality": "500x500",
-                            "url": "https://c.saavncdn.com/048/Skipping-Stones-English-2018-20180620230710-500x500.jpg"
+                            "url": "https://c.saavncdn.com/artists/Alan_Walker_003_20231116095443_500x500.jpg"
                         }
                     ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/dan-reynolds-songs/xoeLrr0aTEU_"
+                    "url": "https://www.jiosaavn.com/artist/alan-walker-songs/wbWcxgUNzyo_"
                 },
                 {
-                    "id": "599454",
-                    "name": "Wayne Sermon",
+                    "id": "822579",
+                    "name": "Jesper Borgen",
                     "role": "music",
                     "image": [],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/wayne-sermon-songs/,WHkVDnJnD8_"
+                    "url": "https://www.jiosaavn.com/artist/jesper-borgen-songs/2odnY,ZN-jQ_"
                 },
                 {
-                    "id": "599455",
-                    "name": "Ben Mckee",
+                    "id": "1425075",
+                    "name": "Anders Frøen",
                     "role": "music",
                     "image": [],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/ben-mckee-songs/EA7FaJms-k8_"
+                    "url": "https://www.jiosaavn.com/artist/anders-froen-songs/Wj4QA5E85tc_"
                 },
                 {
-                    "id": "914898",
-                    "name": "Daniel Platzman",
-                    "role": "music",
-                    "image": [
-                        {
-                            "quality": "50x50",
-                            "url": "https://c.saavncdn.com/883/Best-F-r-iends-Original-Motion-Picture-Soundtrack-English-2019-20190128215540-50x50.jpg"
-                        },
-                        {
-                            "quality": "150x150",
-                            "url": "https://c.saavncdn.com/883/Best-F-r-iends-Original-Motion-Picture-Soundtrack-English-2019-20190128215540-150x150.jpg"
-                        },
-                        {
-                            "quality": "500x500",
-                            "url": "https://c.saavncdn.com/883/Best-F-r-iends-Original-Motion-Picture-Soundtrack-English-2019-20190128215540-500x500.jpg"
-                        }
-                    ],
-                    "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/daniel-platzman-songs/hOWrEJ6eC9I_"
-                },
-                {
-                    "id": "683491",
-                    "name": "Robin Fredriksson",
+                    "id": "1625408",
+                    "name": "Gunnar Greve",
                     "role": "music",
                     "image": [],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/robin-fredriksson-songs/jRGk4sF83Ko_"
+                    "url": "https://www.jiosaavn.com/artist/gunnar-greve-songs/MYLcGokRN0w_"
                 },
                 {
-                    "id": "634862",
-                    "name": "Mattias Larsson",
-                    "role": "music",
-                    "image": [
-                        {
-                            "quality": "50x50",
-                            "url": "https://c.saavncdn.com/277/Kom-Swedish-2017-20171009155644-50x50.jpg"
-                        },
-                        {
-                            "quality": "150x150",
-                            "url": "https://c.saavncdn.com/277/Kom-Swedish-2017-20171009155644-150x150.jpg"
-                        },
-                        {
-                            "quality": "500x500",
-                            "url": "https://c.saavncdn.com/277/Kom-Swedish-2017-20171009155644-500x500.jpg"
-                        }
-                    ],
-                    "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/mattias-larsson-songs/d6thUM5GwSE_"
-                },
-                {
-                    "id": "633532",
-                    "name": "Justin Tranter",
-                    "role": "music",
-                    "image": [
-                        {
-                            "quality": "50x50",
-                            "url": "https://c.saavncdn.com/916/The-Lego-Batman-Movie-Original-Motion-Picture-Soundtrack-English-2017-50x50.jpg"
-                        },
-                        {
-                            "quality": "150x150",
-                            "url": "https://c.saavncdn.com/916/The-Lego-Batman-Movie-Original-Motion-Picture-Soundtrack-English-2017-150x150.jpg"
-                        },
-                        {
-                            "quality": "500x500",
-                            "url": "https://c.saavncdn.com/916/The-Lego-Batman-Movie-Original-Motion-Picture-Soundtrack-English-2017-500x500.jpg"
-                        }
-                    ],
-                    "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/justin-tranter-songs/MUdaah321CU_"
-                },
-                {
-                    "id": "599452",
-                    "name": "Imagine Dragons",
+                    "id": "1335467",
+                    "name": "Alan Walker",
                     "role": "singer",
                     "image": [
                         {
                             "quality": "50x50",
-                            "url": "https://c.saavncdn.com/artists/Imagine_Dragons_50x50.jpg"
+                            "url": "https://c.saavncdn.com/artists/Alan_Walker_003_20231116095443_50x50.jpg"
                         },
                         {
                             "quality": "150x150",
-                            "url": "https://c.saavncdn.com/artists/Imagine_Dragons_150x150.jpg"
+                            "url": "https://c.saavncdn.com/artists/Alan_Walker_003_20231116095443_150x150.jpg"
                         },
                         {
                             "quality": "500x500",
-                            "url": "https://c.saavncdn.com/artists/Imagine_Dragons_500x500.jpg"
+                            "url": "https://c.saavncdn.com/artists/Alan_Walker_003_20231116095443_500x500.jpg"
                         }
                     ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/imagine-dragons-songs/f0aFxsa231o_"
+                    "url": "https://www.jiosaavn.com/artist/alan-walker-songs/wbWcxgUNzyo_"
                 },
                 {
-                    "id": "599453",
-                    "name": "Dan Reynolds",
+                    "id": "1335467",
+                    "name": "Alan Walker",
                     "role": "lyricist",
                     "image": [
                         {
                             "quality": "50x50",
-                            "url": "https://c.saavncdn.com/048/Skipping-Stones-English-2018-20180620230710-50x50.jpg"
+                            "url": "https://c.saavncdn.com/artists/Alan_Walker_003_20231116095443_50x50.jpg"
                         },
                         {
                             "quality": "150x150",
-                            "url": "https://c.saavncdn.com/048/Skipping-Stones-English-2018-20180620230710-150x150.jpg"
+                            "url": "https://c.saavncdn.com/artists/Alan_Walker_003_20231116095443_150x150.jpg"
                         },
                         {
                             "quality": "500x500",
-                            "url": "https://c.saavncdn.com/048/Skipping-Stones-English-2018-20180620230710-500x500.jpg"
+                            "url": "https://c.saavncdn.com/artists/Alan_Walker_003_20231116095443_500x500.jpg"
                         }
                     ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/dan-reynolds-songs/xoeLrr0aTEU_"
+                    "url": "https://www.jiosaavn.com/artist/alan-walker-songs/wbWcxgUNzyo_"
                 },
                 {
-                    "id": "599454",
-                    "name": "Wayne Sermon",
+                    "id": "822579",
+                    "name": "Jesper Borgen",
                     "role": "lyricist",
                     "image": [],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/wayne-sermon-songs/,WHkVDnJnD8_"
+                    "url": "https://www.jiosaavn.com/artist/jesper-borgen-songs/2odnY,ZN-jQ_"
                 },
                 {
-                    "id": "599455",
-                    "name": "Ben Mckee",
+                    "id": "1425075",
+                    "name": "Anders Frøen",
                     "role": "lyricist",
                     "image": [],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/ben-mckee-songs/EA7FaJms-k8_"
+                    "url": "https://www.jiosaavn.com/artist/anders-froen-songs/Wj4QA5E85tc_"
                 },
                 {
-                    "id": "914898",
-                    "name": "Daniel Platzman",
-                    "role": "lyricist",
-                    "image": [
-                        {
-                            "quality": "50x50",
-                            "url": "https://c.saavncdn.com/883/Best-F-r-iends-Original-Motion-Picture-Soundtrack-English-2019-20190128215540-50x50.jpg"
-                        },
-                        {
-                            "quality": "150x150",
-                            "url": "https://c.saavncdn.com/883/Best-F-r-iends-Original-Motion-Picture-Soundtrack-English-2019-20190128215540-150x150.jpg"
-                        },
-                        {
-                            "quality": "500x500",
-                            "url": "https://c.saavncdn.com/883/Best-F-r-iends-Original-Motion-Picture-Soundtrack-English-2019-20190128215540-500x500.jpg"
-                        }
-                    ],
-                    "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/daniel-platzman-songs/hOWrEJ6eC9I_"
-                },
-                {
-                    "id": "683491",
-                    "name": "Robin Fredriksson",
+                    "id": "1625408",
+                    "name": "Gunnar Greve",
                     "role": "lyricist",
                     "image": [],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/robin-fredriksson-songs/jRGk4sF83Ko_"
-                },
-                {
-                    "id": "634862",
-                    "name": "Mattias Larsson",
-                    "role": "lyricist",
-                    "image": [
-                        {
-                            "quality": "50x50",
-                            "url": "https://c.saavncdn.com/277/Kom-Swedish-2017-20171009155644-50x50.jpg"
-                        },
-                        {
-                            "quality": "150x150",
-                            "url": "https://c.saavncdn.com/277/Kom-Swedish-2017-20171009155644-150x150.jpg"
-                        },
-                        {
-                            "quality": "500x500",
-                            "url": "https://c.saavncdn.com/277/Kom-Swedish-2017-20171009155644-500x500.jpg"
-                        }
-                    ],
-                    "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/mattias-larsson-songs/d6thUM5GwSE_"
-                },
-                {
-                    "id": "633532",
-                    "name": "Justin Tranter",
-                    "role": "lyricist",
-                    "image": [
-                        {
-                            "quality": "50x50",
-                            "url": "https://c.saavncdn.com/916/The-Lego-Batman-Movie-Original-Motion-Picture-Soundtrack-English-2017-50x50.jpg"
-                        },
-                        {
-                            "quality": "150x150",
-                            "url": "https://c.saavncdn.com/916/The-Lego-Batman-Movie-Original-Motion-Picture-Soundtrack-English-2017-150x150.jpg"
-                        },
-                        {
-                            "quality": "500x500",
-                            "url": "https://c.saavncdn.com/916/The-Lego-Batman-Movie-Original-Motion-Picture-Soundtrack-English-2017-500x500.jpg"
-                        }
-                    ],
-                    "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/justin-tranter-songs/MUdaah321CU_"
+                    "url": "https://www.jiosaavn.com/artist/gunnar-greve-songs/MYLcGokRN0w_"
                 }
             ]
         },
         "image": [
             {
                 "quality": "50x50",
-                "url": "https://c.saavncdn.com/248/Evolve-English-2017-20180716230950-50x50.jpg"
+                "url": "https://c.saavncdn.com/981/Faded-English-2015-50x50.jpg"
             },
             {
                 "quality": "150x150",
-                "url": "https://c.saavncdn.com/248/Evolve-English-2017-20180716230950-150x150.jpg"
+                "url": "https://c.saavncdn.com/981/Faded-English-2015-150x150.jpg"
             },
             {
                 "quality": "500x500",
-                "url": "https://c.saavncdn.com/248/Evolve-English-2017-20180716230950-500x500.jpg"
+                "url": "https://c.saavncdn.com/981/Faded-English-2015-500x500.jpg"
             }
         ],
         "downloadUrl": [
             {
                 "quality": "12kbps",
-                "url": "https://aac.saavncdn.com/248/a6b1b78b396245f712abda8f1daefee0_12.mp4"
+                "url": "https://aac.saavncdn.com/981/ff704210de1a556e6d59fe7241f94983_12.mp4"
             },
             {
                 "quality": "48kbps",
-                "url": "https://aac.saavncdn.com/248/a6b1b78b396245f712abda8f1daefee0_48.mp4"
+                "url": "https://aac.saavncdn.com/981/ff704210de1a556e6d59fe7241f94983_48.mp4"
             },
             {
                 "quality": "96kbps",
-                "url": "https://aac.saavncdn.com/248/a6b1b78b396245f712abda8f1daefee0_96.mp4"
+                "url": "https://aac.saavncdn.com/981/ff704210de1a556e6d59fe7241f94983_96.mp4"
             },
             {
                 "quality": "160kbps",
-                "url": "https://aac.saavncdn.com/248/a6b1b78b396245f712abda8f1daefee0_160.mp4"
+                "url": "https://aac.saavncdn.com/981/ff704210de1a556e6d59fe7241f94983_160.mp4"
             },
             {
                 "quality": "320kbps",
-                "url": "https://aac.saavncdn.com/248/a6b1b78b396245f712abda8f1daefee0_320.mp4"
+                "url": "https://aac.saavncdn.com/981/ff704210de1a556e6d59fe7241f94983_320.mp4"
             }
         ]
     },
 
     {
-        "id": "1nnqhygS",
-        "name": "Zara Zara",
+        "id": "iC3B-krh",
+        "name": "Love Me Like You Do (From &quot;Fifty Shades Of Grey&quot;)",
         "type": "song",
-        "year": "2001",
+        "year": "2015",
         "releaseDate": null,
-        "duration": 298,
-        "label": "Saregama",
+        "duration": 252,
+        "label": "Fifty Shades of Grey",
         "explicitContent": false,
-        "playCount": 33626854,
-        "language": "hindi",
-        "hasLyrics": true,
+        "playCount": 97958002,
+        "language": "english",
+        "hasLyrics": false,
         "lyricsId": null,
-        "url": "https://www.jiosaavn.com/song/zara-zara/QQYFQBxJUGA",
-        "copyright": "℗ 2001 Saregama India Ltd",
+        "url": "https://www.jiosaavn.com/song/love-me-like-you-do-from-fifty-shades-of-grey/GStYc1lbRVs",
+        "copyright": "℗ 2015 Polydor Ltd. (UK), under exclusive license to Republic Records, a division of UMG Recordings, Inc.",
         "album": {
-            "id": "34674623",
-            "name": "Rehnaa Hai Terre Dil Mein",
-            "url": "https://www.jiosaavn.com/album/rehnaa-hai-terre-dil-mein/aRmUBEEmBtA_"
+            "id": "1221944",
+            "name": "Fifty Shades Of Grey",
+            "url": "https://www.jiosaavn.com/album/fifty-shades-of-grey/Mn5rHFVIEgs_"
         },
         "artists": {
             "primary": [
                 {
-                    "id": "458970",
-                    "name": "Bombay Jayashri",
+                    "id": "568163",
+                    "name": "Ellie Goulding",
                     "role": "primary_artists",
                     "image": [
                         {
                             "quality": "50x50",
-                            "url": "https://c.saavncdn.com/artists/Bombay_Jayashri_50x50.jpg"
+                            "url": "https://c.saavncdn.com/artists/Ellie_Goulding_006_20221105190218_50x50.jpg"
                         },
                         {
                             "quality": "150x150",
-                            "url": "https://c.saavncdn.com/artists/Bombay_Jayashri_150x150.jpg"
+                            "url": "https://c.saavncdn.com/artists/Ellie_Goulding_006_20221105190218_150x150.jpg"
                         },
                         {
                             "quality": "500x500",
-                            "url": "https://c.saavncdn.com/artists/Bombay_Jayashri_500x500.jpg"
+                            "url": "https://c.saavncdn.com/artists/Ellie_Goulding_006_20221105190218_500x500.jpg"
                         }
                     ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/bombay-jayashri-songs/71gFGB2dgHg_"
+                    "url": "https://www.jiosaavn.com/artist/ellie-goulding-songs/NxG5XfmOqrA_"
                 }
             ],
             "featured": [],
             "all": [
                 {
-                    "id": "458970",
-                    "name": "Bombay Jayashri",
+                    "id": "511907",
+                    "name": "Max Martin",
                     "role": "music",
                     "image": [
                         {
                             "quality": "50x50",
-                            "url": "https://c.saavncdn.com/artists/Bombay_Jayashri_50x50.jpg"
+                            "url": "https://c.saavncdn.com/848/Beautiful-Day-English-2009-50x50.jpg"
                         },
                         {
                             "quality": "150x150",
-                            "url": "https://c.saavncdn.com/artists/Bombay_Jayashri_150x150.jpg"
+                            "url": "https://c.saavncdn.com/848/Beautiful-Day-English-2009-150x150.jpg"
                         },
                         {
                             "quality": "500x500",
-                            "url": "https://c.saavncdn.com/artists/Bombay_Jayashri_500x500.jpg"
+                            "url": "https://c.saavncdn.com/848/Beautiful-Day-English-2009-500x500.jpg"
                         }
                     ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/bombay-jayashri-songs/71gFGB2dgHg_"
+                    "url": "https://www.jiosaavn.com/artist/max-martin-songs/NuQcWCsPYYM_"
                 },
                 {
-                    "id": "455243",
-                    "name": "Harris Jayaraj",
+                    "id": "686217",
+                    "name": "Ali Payami",
                     "role": "music",
                     "image": [
                         {
                             "quality": "50x50",
-                            "url": "https://c.saavncdn.com/artists/Harris_Jayaraj_002_20230718071330_50x50.jpg"
+                            "url": "https://c.saavncdn.com/204/Blade-English-2008-20180718113443-50x50.jpg"
                         },
                         {
                             "quality": "150x150",
-                            "url": "https://c.saavncdn.com/artists/Harris_Jayaraj_002_20230718071330_150x150.jpg"
+                            "url": "https://c.saavncdn.com/204/Blade-English-2008-20180718113443-150x150.jpg"
                         },
                         {
                             "quality": "500x500",
-                            "url": "https://c.saavncdn.com/artists/Harris_Jayaraj_002_20230718071330_500x500.jpg"
+                            "url": "https://c.saavncdn.com/204/Blade-English-2008-20180718113443-500x500.jpg"
                         }
                     ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/harris-jayaraj-songs/flXnIQrphaE_"
+                    "url": "https://www.jiosaavn.com/artist/ali-payami-songs/Akn3r2NNn30_"
                 },
                 {
-                    "id": "455415",
-                    "name": "Sameer",
+                    "id": "598916",
+                    "name": "Ilya Salmanzadeh",
+                    "role": "music",
+                    "image": [],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/ilya-salmanzadeh-songs/p8r-EavMx,k_"
+                },
+                {
+                    "id": "531606",
+                    "name": "Savan Kotecha",
+                    "role": "music",
+                    "image": [],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/savan-kotecha-songs/ReYOxN49dUQ_"
+                },
+                {
+                    "id": "707698",
+                    "name": "Tove Lo",
+                    "role": "music",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/artists/Tove_Lo_20200218150027_50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/artists/Tove_Lo_20200218150027_150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/artists/Tove_Lo_20200218150027_500x500.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/tove-lo-songs/wBPjTKDNv9Q_"
+                },
+                {
+                    "id": "568163",
+                    "name": "Ellie Goulding",
+                    "role": "singer",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/artists/Ellie_Goulding_006_20221105190218_50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/artists/Ellie_Goulding_006_20221105190218_150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/artists/Ellie_Goulding_006_20221105190218_500x500.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/ellie-goulding-songs/NxG5XfmOqrA_"
+                },
+                {
+                    "id": "511907",
+                    "name": "Max Martin",
                     "role": "lyricist",
                     "image": [
                         {
                             "quality": "50x50",
-                            "url": "https://c.saavncdn.com/artists/Sameer-20170714064856_50x50.jpg"
+                            "url": "https://c.saavncdn.com/848/Beautiful-Day-English-2009-50x50.jpg"
                         },
                         {
                             "quality": "150x150",
-                            "url": "https://c.saavncdn.com/artists/Sameer-20170714064856_150x150.jpg"
+                            "url": "https://c.saavncdn.com/848/Beautiful-Day-English-2009-150x150.jpg"
                         },
                         {
                             "quality": "500x500",
-                            "url": "https://c.saavncdn.com/artists/Sameer-20170714064856_500x500.jpg"
+                            "url": "https://c.saavncdn.com/848/Beautiful-Day-English-2009-500x500.jpg"
                         }
                     ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/sameer-songs/zbXOIZIhW-8_"
+                    "url": "https://www.jiosaavn.com/artist/max-martin-songs/NuQcWCsPYYM_"
+                },
+                {
+                    "id": "686217",
+                    "name": "Ali Payami",
+                    "role": "lyricist",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/204/Blade-English-2008-20180718113443-50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/204/Blade-English-2008-20180718113443-150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/204/Blade-English-2008-20180718113443-500x500.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/ali-payami-songs/Akn3r2NNn30_"
+                },
+                {
+                    "id": "598916",
+                    "name": "Ilya Salmanzadeh",
+                    "role": "lyricist",
+                    "image": [],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/ilya-salmanzadeh-songs/p8r-EavMx,k_"
+                },
+                {
+                    "id": "531606",
+                    "name": "Savan Kotecha",
+                    "role": "lyricist",
+                    "image": [],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/savan-kotecha-songs/ReYOxN49dUQ_"
+                },
+                {
+                    "id": "707698",
+                    "name": "Tove Lo",
+                    "role": "lyricist",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/artists/Tove_Lo_20200218150027_50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/artists/Tove_Lo_20200218150027_150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/artists/Tove_Lo_20200218150027_500x500.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/tove-lo-songs/wBPjTKDNv9Q_"
                 }
             ]
         },
         "image": [
             {
                 "quality": "50x50",
-                "url": "https://c.saavncdn.com/724/Rehnaa-Hai-Terre-Dil-Mein-Hindi-2001-20220429143424-50x50.jpg"
+                "url": "https://c.saavncdn.com/391/Fifty-Shades-Of-Grey-English-2015-20191015072653-50x50.jpg"
             },
             {
                 "quality": "150x150",
-                "url": "https://c.saavncdn.com/724/Rehnaa-Hai-Terre-Dil-Mein-Hindi-2001-20220429143424-150x150.jpg"
+                "url": "https://c.saavncdn.com/391/Fifty-Shades-Of-Grey-English-2015-20191015072653-150x150.jpg"
             },
             {
                 "quality": "500x500",
-                "url": "https://c.saavncdn.com/724/Rehnaa-Hai-Terre-Dil-Mein-Hindi-2001-20220429143424-500x500.jpg"
+                "url": "https://c.saavncdn.com/391/Fifty-Shades-Of-Grey-English-2015-20191015072653-500x500.jpg"
             }
         ],
         "downloadUrl": [
             {
                 "quality": "12kbps",
-                "url": "https://aac.saavncdn.com/724/94ef89173720daf48d90c535f0e8c622_sar_12.mp4"
+                "url": "https://aac.saavncdn.com/391/d22dd7b77dcbf8512bc524527ad7a477_12.mp4"
             },
             {
                 "quality": "48kbps",
-                "url": "https://aac.saavncdn.com/724/94ef89173720daf48d90c535f0e8c622_sar_48.mp4"
+                "url": "https://aac.saavncdn.com/391/d22dd7b77dcbf8512bc524527ad7a477_48.mp4"
             },
             {
                 "quality": "96kbps",
-                "url": "https://aac.saavncdn.com/724/94ef89173720daf48d90c535f0e8c622_sar_96.mp4"
+                "url": "https://aac.saavncdn.com/391/d22dd7b77dcbf8512bc524527ad7a477_96.mp4"
             },
             {
                 "quality": "160kbps",
-                "url": "https://aac.saavncdn.com/724/94ef89173720daf48d90c535f0e8c622_sar_160.mp4"
+                "url": "https://aac.saavncdn.com/391/d22dd7b77dcbf8512bc524527ad7a477_160.mp4"
             },
             {
                 "quality": "320kbps",
-                "url": "https://aac.saavncdn.com/724/94ef89173720daf48d90c535f0e8c622_sar_320.mp4"
+                "url": "https://aac.saavncdn.com/391/d22dd7b77dcbf8512bc524527ad7a477_320.mp4"
             }
         ]
     },
@@ -666,195 +656,347 @@ export const songs = [
     },
 
     {
-        "id": "FB8WBiWv",
-        "name": "Sajni",
+        "id": "c6aiyeF8",
+        "name": "Titli",
         "type": "song",
-        "year": "2024",
+        "year": "2013",
         "releaseDate": null,
-        "duration": 170,
+        "duration": 351,
         "label": "T-Series",
         "explicitContent": false,
-        "playCount": 26131334,
+        "playCount": 13778430,
         "language": "hindi",
         "hasLyrics": true,
         "lyricsId": null,
-        "url": "https://www.jiosaavn.com/song/sajni/NipTZjZZYEU",
-        "copyright": "℗ 2024 Super Cassettes Industries Private Limited",
+        "url": "https://www.jiosaavn.com/song/titli/E14KWA1VcQs",
+        "copyright": "©  2013 T-Series",
         "album": {
-            "id": "51864941",
-            "name": "Laapataa Ladies",
-            "url": "https://www.jiosaavn.com/album/laapataa-ladies/fX0kVjD64lc_"
+            "id": "1141876",
+            "name": "Chennai Express",
+            "url": "https://www.jiosaavn.com/album/chennai-express/GcR7iFIi5gE_"
         },
         "artists": {
             "primary": [
                 {
-                    "id": "456775",
-                    "name": "Ram Sampath",
+                    "id": "459880",
+                    "name": "Vishal &amp; Shekhar",
                     "role": "primary_artists",
                     "image": [
                         {
                             "quality": "50x50",
-                            "url": "https://c.saavncdn.com/artists/Ram_Sampath_001_20200822042717_50x50.jpg"
+                            "url": "https://c.saavncdn.com/artists/Vishal-Shekhar_20191130071357_50x50.jpg"
                         },
                         {
                             "quality": "150x150",
-                            "url": "https://c.saavncdn.com/artists/Ram_Sampath_001_20200822042717_150x150.jpg"
+                            "url": "https://c.saavncdn.com/artists/Vishal-Shekhar_20191130071357_150x150.jpg"
                         },
                         {
                             "quality": "500x500",
-                            "url": "https://c.saavncdn.com/artists/Ram_Sampath_001_20200822042717_500x500.jpg"
+                            "url": "https://c.saavncdn.com/artists/Vishal-Shekhar_20191130071357_500x500.jpg"
                         }
                     ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/ram-sampath-songs/fLt,9HDD4xM_"
+                    "url": "https://www.jiosaavn.com/artist/vishal-shekhar-songs/8swM0KpGBus_"
                 },
                 {
-                    "id": "459320",
-                    "name": "Arijit Singh",
+                    "id": "1984879",
+                    "name": "Chinmayi Sripada",
                     "role": "primary_artists",
                     "image": [
                         {
                             "quality": "50x50",
-                            "url": "https://c.saavncdn.com/artists/Arijit_Singh_002_20230323062147_50x50.jpg"
+                            "url": "https://c.saavncdn.com/artists/Chinmayi_Sripaada_50x50.jpg"
                         },
                         {
                             "quality": "150x150",
-                            "url": "https://c.saavncdn.com/artists/Arijit_Singh_002_20230323062147_150x150.jpg"
+                            "url": "https://c.saavncdn.com/artists/Chinmayi_Sripaada_150x150.jpg"
                         },
                         {
                             "quality": "500x500",
-                            "url": "https://c.saavncdn.com/artists/Arijit_Singh_002_20230323062147_500x500.jpg"
+                            "url": "https://c.saavncdn.com/artists/Chinmayi_Sripaada_500x500.jpg"
                         }
                     ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/arijit-singh-songs/LlRWpHzy3Hk_"
+                    "url": "https://www.jiosaavn.com/artist/chinmayi-sripada-songs/dUPdrrGYfPk_"
                 },
                 {
-                    "id": "459433",
-                    "name": "Prashant Pandey",
+                    "id": "663191",
+                    "name": "Gopi Sunder",
                     "role": "primary_artists",
-                    "image": [],
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/artists/Gopi_Sundar_001_20190827112215_50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/artists/Gopi_Sundar_001_20190827112215_150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/artists/Gopi_Sundar_001_20190827112215_500x500.jpg"
+                        }
+                    ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/prashant-pandey-songs/74u-Y4an3y0_"
+                    "url": "https://www.jiosaavn.com/artist/gopi-sunder-songs/r9ZBBTODS48_"
                 }
             ],
             "featured": [],
             "all": [
                 {
-                    "id": "456775",
-                    "name": "Ram Sampath",
+                    "id": "459880",
+                    "name": "Vishal &amp; Shekhar",
                     "role": "music",
                     "image": [
                         {
                             "quality": "50x50",
-                            "url": "https://c.saavncdn.com/artists/Ram_Sampath_001_20200822042717_50x50.jpg"
+                            "url": "https://c.saavncdn.com/artists/Vishal-Shekhar_20191130071357_50x50.jpg"
                         },
                         {
                             "quality": "150x150",
-                            "url": "https://c.saavncdn.com/artists/Ram_Sampath_001_20200822042717_150x150.jpg"
+                            "url": "https://c.saavncdn.com/artists/Vishal-Shekhar_20191130071357_150x150.jpg"
                         },
                         {
                             "quality": "500x500",
-                            "url": "https://c.saavncdn.com/artists/Ram_Sampath_001_20200822042717_500x500.jpg"
+                            "url": "https://c.saavncdn.com/artists/Vishal-Shekhar_20191130071357_500x500.jpg"
                         }
                     ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/ram-sampath-songs/fLt,9HDD4xM_"
+                    "url": "https://www.jiosaavn.com/artist/vishal-shekhar-songs/8swM0KpGBus_"
                 },
                 {
-                    "id": "456775",
-                    "name": "Ram Sampath",
+                    "id": "1984879",
+                    "name": "Chinmayi Sripada",
                     "role": "singer",
                     "image": [
                         {
                             "quality": "50x50",
-                            "url": "https://c.saavncdn.com/artists/Ram_Sampath_001_20200822042717_50x50.jpg"
+                            "url": "https://c.saavncdn.com/artists/Chinmayi_Sripaada_50x50.jpg"
                         },
                         {
                             "quality": "150x150",
-                            "url": "https://c.saavncdn.com/artists/Ram_Sampath_001_20200822042717_150x150.jpg"
+                            "url": "https://c.saavncdn.com/artists/Chinmayi_Sripaada_150x150.jpg"
                         },
                         {
                             "quality": "500x500",
-                            "url": "https://c.saavncdn.com/artists/Ram_Sampath_001_20200822042717_500x500.jpg"
+                            "url": "https://c.saavncdn.com/artists/Chinmayi_Sripaada_500x500.jpg"
                         }
                     ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/ram-sampath-songs/fLt,9HDD4xM_"
+                    "url": "https://www.jiosaavn.com/artist/chinmayi-sripada-songs/dUPdrrGYfPk_"
                 },
                 {
-                    "id": "459320",
-                    "name": "Arijit Singh",
+                    "id": "663191",
+                    "name": "Gopi Sunder",
                     "role": "singer",
                     "image": [
                         {
                             "quality": "50x50",
-                            "url": "https://c.saavncdn.com/artists/Arijit_Singh_002_20230323062147_50x50.jpg"
+                            "url": "https://c.saavncdn.com/artists/Gopi_Sundar_001_20190827112215_50x50.jpg"
                         },
                         {
                             "quality": "150x150",
-                            "url": "https://c.saavncdn.com/artists/Arijit_Singh_002_20230323062147_150x150.jpg"
+                            "url": "https://c.saavncdn.com/artists/Gopi_Sundar_001_20190827112215_150x150.jpg"
                         },
                         {
                             "quality": "500x500",
-                            "url": "https://c.saavncdn.com/artists/Arijit_Singh_002_20230323062147_500x500.jpg"
+                            "url": "https://c.saavncdn.com/artists/Gopi_Sundar_001_20190827112215_500x500.jpg"
                         }
                     ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/arijit-singh-songs/LlRWpHzy3Hk_"
+                    "url": "https://www.jiosaavn.com/artist/gopi-sunder-songs/r9ZBBTODS48_"
                 },
                 {
-                    "id": "459433",
-                    "name": "Prashant Pandey",
-                    "role": "singer",
-                    "image": [],
-                    "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/prashant-pandey-songs/74u-Y4an3y0_"
-                },
-                {
-                    "id": "459433",
-                    "name": "Prashant Pandey",
+                    "id": "458681",
+                    "name": "Amitabh Bhattacharya",
                     "role": "lyricist",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/artists/Amitabh_Bhattacharya_000_20220916184017.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/artists/Amitabh_Bhattacharya_000_20220916184017.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/artists/Amitabh_Bhattacharya_000_20220916184017.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/amitabh-bhattacharya-songs/hsNRL6ZmJmo_"
+                },
+                {
+                    "id": "464345",
+                    "name": "Dr. Charulatha Mani",
+                    "role": "lyricist",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/artists/Charulatha_Mani_20190322072729_50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/artists/Charulatha_Mani_20190322072729_150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/artists/Charulatha_Mani_20190322072729_500x500.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/dr.-charulatha-mani-songs/66,cJ58O-gc_"
+                },
+                {
+                    "id": "672005",
+                    "name": "Madhumitha Mani",
+                    "role": "lyricist",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/213/Manadhil-Oru-Maatram-Tamil-2015-50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/213/Manadhil-Oru-Maatram-Tamil-2015-150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/213/Manadhil-Oru-Maatram-Tamil-2015-500x500.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/madhumitha-mani-songs/klpmV09oGXE_"
+                },
+                {
+                    "id": "461361",
+                    "name": "Shah Rukh Khan",
+                    "role": "starring",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/artists/Shah_Rukh_Khan_50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/artists/Shah_Rukh_Khan_150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/artists/Shah_Rukh_Khan_500x500.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/shah-rukh-khan-songs/tkXMVGTn-A0_"
+                },
+                {
+                    "id": "457931",
+                    "name": "Deepika Padukone",
+                    "role": "starring",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/artists/Deepika_Padukone_002_20220131100114_50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/artists/Deepika_Padukone_002_20220131100114_150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/artists/Deepika_Padukone_002_20220131100114_500x500.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/deepika-padukone-songs/36LfdYhYGvc_"
+                },
+                {
+                    "id": "456018",
+                    "name": "Satyaraj",
+                    "role": "starring",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/artists/Sathyaraj_20190904071339_50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/artists/Sathyaraj_20190904071339_150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/artists/Sathyaraj_20190904071339_500x500.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/satyaraj-songs/bXRd9ORla,o_"
+                },
+                {
+                    "id": "671837",
+                    "name": "Nikitandhir",
+                    "role": "starring",
                     "image": [],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/prashant-pandey-songs/74u-Y4an3y0_"
+                    "url": "https://www.jiosaavn.com/artist/nikitandhir-songs/dlD7HP7GvWI_"
+                },
+                {
+                    "id": "489004",
+                    "name": "Priya Mani",
+                    "role": "starring",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/artists/Priya_Mani_50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/artists/Priya_Mani_150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/artists/Priya_Mani_500x500.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/priya-mani-songs/TUVqNybA4Z8_"
                 }
             ]
         },
         "image": [
             {
                 "quality": "50x50",
-                "url": "https://c.saavncdn.com/252/Laapataa-Ladies-Hindi-2024-20240213151004-50x50.jpg"
+                "url": "https://c.saavncdn.com/525/Chennai-Express-2013-50x50.jpg"
             },
             {
                 "quality": "150x150",
-                "url": "https://c.saavncdn.com/252/Laapataa-Ladies-Hindi-2024-20240213151004-150x150.jpg"
+                "url": "https://c.saavncdn.com/525/Chennai-Express-2013-150x150.jpg"
             },
             {
                 "quality": "500x500",
-                "url": "https://c.saavncdn.com/252/Laapataa-Ladies-Hindi-2024-20240213151004-500x500.jpg"
+                "url": "https://c.saavncdn.com/525/Chennai-Express-2013-500x500.jpg"
             }
         ],
         "downloadUrl": [
             {
                 "quality": "12kbps",
-                "url": "https://aac.saavncdn.com/252/f53c1a90a2f35d67490badb846d8c849_12.mp4"
+                "url": "https://aac.saavncdn.com/525/635c9a67460d995998d32379af620aac_12.mp4"
             },
             {
                 "quality": "48kbps",
-                "url": "https://aac.saavncdn.com/252/f53c1a90a2f35d67490badb846d8c849_48.mp4"
+                "url": "https://aac.saavncdn.com/525/635c9a67460d995998d32379af620aac_48.mp4"
             },
             {
                 "quality": "96kbps",
-                "url": "https://aac.saavncdn.com/252/f53c1a90a2f35d67490badb846d8c849_96.mp4"
+                "url": "https://aac.saavncdn.com/525/635c9a67460d995998d32379af620aac_96.mp4"
             },
             {
                 "quality": "160kbps",
-                "url": "https://aac.saavncdn.com/252/f53c1a90a2f35d67490badb846d8c849_160.mp4"
+                "url": "https://aac.saavncdn.com/525/635c9a67460d995998d32379af620aac_160.mp4"
             },
             {
                 "quality": "320kbps",
-                "url": "https://aac.saavncdn.com/252/f53c1a90a2f35d67490badb846d8c849_320.mp4"
+                "url": "https://aac.saavncdn.com/525/635c9a67460d995998d32379af620aac_320.mp4"
             }
         ]
     },
@@ -1379,98 +1521,297 @@ export const songs = [
     },
 
     {
-        "id": "A2qpj77i",
-        "name": "SAANSH",
+        "id": "qOVmDCCQ",
+        "name": "Hasi (Female Version)",
         "type": "song",
-        "year": "2020",
+        "year": "2015",
         "releaseDate": null,
-        "duration": 298,
-        "label": "RKMedia Muzic",
+        "duration": 192,
+        "label": "Sony Music Entertainment India Pvt. Ltd.",
         "explicitContent": false,
-        "playCount": 154,
-        "language": "odia",
+        "playCount": 49941110,
+        "language": "hindi",
         "hasLyrics": false,
         "lyricsId": null,
-        "url": "https://www.jiosaavn.com/song/saansh/MVoaQR4HAFo",
-        "copyright": "℗ 2020 RKMedia",
+        "url": "https://www.jiosaavn.com/song/hasi-female-version/ASc9XDBzdGI",
+        "copyright": "(P) 2015 Sony Music Entertainment India Pvt. Ltd.",
         "album": {
-            "id": "25309887",
-            "name": "Khamoshiyan",
-            "url": "https://www.jiosaavn.com/album/khamoshiyan/NI-b06Ejc,s_"
+            "id": "1243478",
+            "name": "Hamari Adhuri Kahani (Original Motion Picture Soundtrack)",
+            "url": "https://www.jiosaavn.com/album/hamari-adhuri-kahani-original-motion-picture-soundtrack/DgoXBmqp6Mw_"
         },
         "artists": {
             "primary": [
                 {
-                    "id": "8539345",
-                    "name": "Tinku Jal",
+                    "id": "673215",
+                    "name": "Ami Mishra",
                     "role": "primary_artists",
-                    "image": [],
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/artists/Ami_Mishra_001_20230613121359_50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/artists/Ami_Mishra_001_20230613121359_150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/artists/Ami_Mishra_001_20230613121359_500x500.jpg"
+                        }
+                    ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/tinku-jal-songs/ftfTwCn3U9M_"
+                    "url": "https://www.jiosaavn.com/artist/ami-mishra-songs/KRFakH,TD7Q_"
+                },
+                {
+                    "id": "455130",
+                    "name": "Shreya Ghoshal",
+                    "role": "primary_artists",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/artists/Shreya_Ghoshal_006_20240318080459_50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/artists/Shreya_Ghoshal_006_20240318080459_150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/artists/Shreya_Ghoshal_006_20240318080459_500x500.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/shreya-ghoshal-songs/lIHlwHaxTZ0_"
+                },
+                {
+                    "id": "710601",
+                    "name": "Kunaal Vermaa",
+                    "role": "primary_artists",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/artists/Kunaal_Vermaa_001_20230613121244_50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/artists/Kunaal_Vermaa_001_20230613121244_150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/artists/Kunaal_Vermaa_001_20230613121244_500x500.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/kunaal-vermaa-songs/DGLdKvhUtpU_"
                 }
             ],
             "featured": [],
             "all": [
                 {
-                    "id": "8539345",
-                    "name": "Tinku Jal",
+                    "id": "673215",
+                    "name": "Ami Mishra",
                     "role": "music",
-                    "image": [],
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/artists/Ami_Mishra_001_20230613121359_50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/artists/Ami_Mishra_001_20230613121359_150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/artists/Ami_Mishra_001_20230613121359_500x500.jpg"
+                        }
+                    ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/tinku-jal-songs/ftfTwCn3U9M_"
+                    "url": "https://www.jiosaavn.com/artist/ami-mishra-songs/KRFakH,TD7Q_"
                 },
                 {
-                    "id": "9809085",
-                    "name": "Ankit Bhanja",
-                    "role": "music",
-                    "image": [],
+                    "id": "673215",
+                    "name": "Ami Mishra",
+                    "role": "singer",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/artists/Ami_Mishra_001_20230613121359_50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/artists/Ami_Mishra_001_20230613121359_150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/artists/Ami_Mishra_001_20230613121359_500x500.jpg"
+                        }
+                    ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/ankit-bhanja-songs/nXlWyb5UBfc_"
+                    "url": "https://www.jiosaavn.com/artist/ami-mishra-songs/KRFakH,TD7Q_"
                 },
                 {
-                    "id": "9809084",
-                    "name": "Ashok Suna",
+                    "id": "455130",
+                    "name": "Shreya Ghoshal",
+                    "role": "singer",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/artists/Shreya_Ghoshal_006_20240318080459_50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/artists/Shreya_Ghoshal_006_20240318080459_150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/artists/Shreya_Ghoshal_006_20240318080459_500x500.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/shreya-ghoshal-songs/lIHlwHaxTZ0_"
+                },
+                {
+                    "id": "710601",
+                    "name": "Kunaal Vermaa",
+                    "role": "singer",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/artists/Kunaal_Vermaa_001_20230613121244_50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/artists/Kunaal_Vermaa_001_20230613121244_150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/artists/Kunaal_Vermaa_001_20230613121244_500x500.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/kunaal-vermaa-songs/DGLdKvhUtpU_"
+                },
+                {
+                    "id": "710601",
+                    "name": "Kunaal Vermaa",
                     "role": "lyricist",
-                    "image": [],
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/artists/Kunaal_Vermaa_001_20230613121244_50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/artists/Kunaal_Vermaa_001_20230613121244_150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/artists/Kunaal_Vermaa_001_20230613121244_500x500.jpg"
+                        }
+                    ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/ashok-suna-songs/hOmfJbxIsWs_"
+                    "url": "https://www.jiosaavn.com/artist/kunaal-vermaa-songs/DGLdKvhUtpU_"
+                },
+                {
+                    "id": "458251",
+                    "name": "Emraan Hashmi",
+                    "role": "starring",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/artists/Emraan_Hashmi_002_20230228120108_50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/artists/Emraan_Hashmi_002_20230228120108_150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/artists/Emraan_Hashmi_002_20230228120108_500x500.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/emraan-hashmi-songs/M4ByRDEAbdI_"
+                },
+                {
+                    "id": "464504",
+                    "name": "Vidya Balan",
+                    "role": "starring",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/artists/Vidya_Balan_50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/artists/Vidya_Balan_150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/artists/Vidya_Balan_500x500.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/vidya-balan-songs/0kr4UhFOrkk_"
+                },
+                {
+                    "id": "702528",
+                    "name": "Rajkummar Rao",
+                    "role": "starring",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/artists/Rajkummar_Rao_50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/artists/Rajkummar_Rao_150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/artists/Rajkummar_Rao_500x500.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/rajkummar-rao-songs/r50Edk6TdEc_"
                 }
             ]
         },
         "image": [
             {
                 "quality": "50x50",
-                "url": "https://c.saavncdn.com/175/Khamoshiyan-Oriya-2020-20210212225233-50x50.jpg"
+                "url": "https://c.saavncdn.com/577/Hamari-Adhuri-Kahani-Hindi-2015-50x50.jpg"
             },
             {
                 "quality": "150x150",
-                "url": "https://c.saavncdn.com/175/Khamoshiyan-Oriya-2020-20210212225233-150x150.jpg"
+                "url": "https://c.saavncdn.com/577/Hamari-Adhuri-Kahani-Hindi-2015-150x150.jpg"
             },
             {
                 "quality": "500x500",
-                "url": "https://c.saavncdn.com/175/Khamoshiyan-Oriya-2020-20210212225233-500x500.jpg"
+                "url": "https://c.saavncdn.com/577/Hamari-Adhuri-Kahani-Hindi-2015-500x500.jpg"
             }
         ],
         "downloadUrl": [
             {
                 "quality": "12kbps",
-                "url": "https://aac.saavncdn.com/175/bc1eda7d41054b4ca37129d93597b3ac_12.mp4"
+                "url": "https://aac.saavncdn.com/656/a7bd9f27bab9ab2c9b5cbdec064b876a_12.mp4"
             },
             {
                 "quality": "48kbps",
-                "url": "https://aac.saavncdn.com/175/bc1eda7d41054b4ca37129d93597b3ac_48.mp4"
+                "url": "https://aac.saavncdn.com/656/a7bd9f27bab9ab2c9b5cbdec064b876a_48.mp4"
             },
             {
                 "quality": "96kbps",
-                "url": "https://aac.saavncdn.com/175/bc1eda7d41054b4ca37129d93597b3ac_96.mp4"
+                "url": "https://aac.saavncdn.com/656/a7bd9f27bab9ab2c9b5cbdec064b876a_96.mp4"
             },
             {
                 "quality": "160kbps",
-                "url": "https://aac.saavncdn.com/175/bc1eda7d41054b4ca37129d93597b3ac_160.mp4"
+                "url": "https://aac.saavncdn.com/656/a7bd9f27bab9ab2c9b5cbdec064b876a_160.mp4"
             },
             {
                 "quality": "320kbps",
-                "url": "https://aac.saavncdn.com/175/bc1eda7d41054b4ca37129d93597b3ac_320.mp4"
+                "url": "https://aac.saavncdn.com/656/a7bd9f27bab9ab2c9b5cbdec064b876a_320.mp4"
             }
         ]
     },
@@ -1672,7 +2013,7 @@ top_playlists :  [11 playlist] id, image, title
 */
 
 export const All_Albums = [
-  
+
     {
         heading: "Top Albums of Year",
         link: all_top_playlists.top_albums_of_year

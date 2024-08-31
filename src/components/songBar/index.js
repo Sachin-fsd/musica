@@ -30,6 +30,7 @@ const SongBar = ({ song, trimLength }) => {
         setLoading,
 
     } = useContext(UserContext);
+
     const [decodedName, setDecodedName] = useState(song?.name || "");
     const [imageError, setImageError] = useState(false)
 
@@ -39,10 +40,10 @@ const SongBar = ({ song, trimLength }) => {
             if (trimLength) {
                 setDecodedName(decodeHtml(song.name).substring(0, trimLength));
 
-            } 
+            }
             else {
 
-                setDecodedName(decodeHtml(song.name));
+                setDecodedName(decodeHtml(song.name).substring(0, 15));
             }
 
         }
@@ -92,7 +93,11 @@ const SongBar = ({ song, trimLength }) => {
         }
     };
 
-
+    function formatDuration(durationInSeconds) {
+        const minutes = Math.floor(durationInSeconds / 60);
+        const seconds = durationInSeconds % 60;
+        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }
 
     const handleAddNextSong = () => {
         // Make a shallow copy of the current songList
@@ -130,69 +135,86 @@ const SongBar = ({ song, trimLength }) => {
     }
 
     return (
-        <div className={`flex justify-between items-center p-2 bg-white dark:bg-gray-900 rounded-lg shadow-md w-full ${song.id === currentSong?.id ? "outline outline-1 outline-purple-500" : ""}`}>
-            {song.image[0]?.url && !imageError ? (
-                <img
-                    src={song.image[0].url}
-                    height={40}
-                    width={40}
-                    loading="lazy"
-                    className="rounded object-cover cursor-pointer mr-3"
-                    alt={`${decodedName} cover`}
-                    onClick={handleClick}
-                    onError={() => setImageError(true)} // Set imageError to true on error
-                />
-            ) : (
-                <Skeleton className="w-10 h-10 rounded object-cover mr-3" />
-            )}
-            <div className="flex-1 overflow-hidden cursor-pointer">
-                {decodedName ? (
-                    <Label
-                        className="font-bold text-gray-900 dark:text-gray-100 truncate text-sm cursor-pointer whitespace-nowrap overflow-hidden text-ellipsis"
-                        onClick={handleClick}
-                    >
-                        {decodedName}
-                    </Label>
+        <div
+            className={`flex justify-between items-center p-2 bg-white dark:bg-gray-900 rounded-lg shadow-md w-full transition-transform duration-200 ease-in-out ${song.id === currentSong?.id ? "outline outline-1 outline-purple-500" : ""
+                } hover:scale-[1.02] hover:bg-gray-100 dark:hover:bg-gray-800 sm:hover:scale-[1] sm:hover:bg-transparent`}
+        >
+            <div
+                className="flex items-center cursor-pointer mr-3"
+                onClick={handleClick}
+                style={{ flex: '1' }}
+            >
+                {song.image[0]?.url && !imageError ? (
+                    <img
+                        src={song.image[0].url}
+                        height={40}
+                        width={40}
+                        loading="lazy"
+                        className="rounded object-cover mr-3"
+                        alt={`${decodedName} cover`}
+                        onError={() => setImageError(true)}
+                    />
                 ) : (
-                    <Skeleton className="min-h-2 p-2 m-2" />
+                    <Skeleton className="w-10 h-10 rounded object-cover mr-3" />
                 )}
-                {song?.artists?.primary[0]?.name ? (
-                    <p className="text-xs text-gray-600 dark:text-gray-400 truncate whitespace-nowrap overflow-hidden text-ellipsis">
-                        {song.artists?.primary[0]?.name}
-                    </p>
-                ) : null}
+                <div className="flex-1 overflow-hidden">
+                    {decodedName ? (
+                        <Label
+                            className="cursor-pointer font-bold text-gray-900 dark:text-gray-100 truncate text-sm whitespace-nowrap overflow-hidden text-ellipsis"
+                        >
+                            {decodedName}
+                        </Label>
+                    ) : (
+                        <Skeleton className="min-h-2 p-2 m-2" />
+                    )}
+                    {song?.artists?.primary[0]?.name ? (
+                        <p className="text-xs text-gray-600 dark:text-gray-400 truncate whitespace-nowrap overflow-hidden text-ellipsis">
+                            {song.artists?.primary[0]?.name}
+                        </p>
+                    ) : null}
+                </div>
             </div>
-            <Label variant="simple" disabled={loading}>
-                {songList.find(s => s.id === song.id) ? (
-                    currentSong.id === song.id ? null : (
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="simple">
-                                    <EllipsisVertical className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 cursor-pointer size-5" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-56">
-                                <DropdownMenuGroup>
-                                    <DropdownMenuItem onClick={handleRemoveSong} className="bg-red-300 dark:bg-red-600">
-                                        <Trash2 className="mr-2 h-4 w-4" />
-                                        <span>Remove from queue</span>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={handleAddNextSong}>
-                                        <ListMusic className="mr-2 h-4 w-4" />
-                                        <span>Play next</span>
-                                    </DropdownMenuItem>
-                                </DropdownMenuGroup>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    )
-                ) : (
-                    <LongPressTooltip tooltipText="Add to queue">
-                        <Plus onClick={handlePlusClick} className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 cursor-pointer size-5 mr-3" />
-                    </LongPressTooltip>
-                )}
-            </Label>
+            <div className="flex items-center space-x-2">
+                {/* Song Duration */}
+                {
+                    song.id === currentSong.id ? null : <span className="text-xs text-gray-700 dark:text-gray-300 mr-1">
+                        {formatDuration(song.duration)}
+                    </span>
+                }
+
+                <Label variant="simple" disabled={loading}>
+                    {songList.find(s => s.id === song.id) ? (
+                        currentSong.id === song.id ? null : (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="simple">
+                                        <EllipsisVertical className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 cursor-pointer size-5" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-56">
+                                    <DropdownMenuGroup>
+                                        <DropdownMenuItem onClick={handleRemoveSong} className="bg-red-300 dark:bg-red-600">
+                                            <Trash2 className="mr-2 h-4 w-4" />
+                                            <span>Remove from queue</span>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={handleAddNextSong}>
+                                            <ListMusic className="mr-2 h-4 w-4" />
+                                            <span>Play next</span>
+                                        </DropdownMenuItem>
+                                    </DropdownMenuGroup>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        )
+                    ) : (
+                        <LongPressTooltip tooltipText="Add to queue">
+                            <Plus onClick={handlePlusClick} className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 cursor-pointer size-5" />
+                        </LongPressTooltip>
+                    )}
+                </Label>
+            </div>
         </div>
     );
+
 };
 
 export default SongBar;

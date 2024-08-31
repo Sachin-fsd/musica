@@ -1,4 +1,7 @@
-'use client';
+// components/Navbar.jsx
+
+"use client";
+
 
 import { useRouter } from "next/navigation";
 import { useContext, useState, useEffect, useCallback } from "react";
@@ -10,7 +13,6 @@ import { Bell, Loader2, Menu, MessageSquareText, Radar, Search, X } from "lucide
 import LeftSidebarIcons from "../leftSidebar/leftSidebarIcons";
 import { UserContext } from "@/context";
 import { SearchSongsAction } from "@/app/actions";
-import { SuggestionCard } from "../searchPage/suggestedSongsList";
 import { debounce } from "lodash";
 // import { Label } from "../ui/label";
 // import { Separator } from "../ui/separator";
@@ -19,124 +21,140 @@ import { decodeHtml } from "@/utils";
 // import Link from "next/link";
 // import Image from "next/image";
 import { ThemeSwitch } from "../themeSwitch";
+import { cn } from "@/lib/utils";
+import SuggestionCard from "../searchPage/suggestedSongsList";
+
 
 const Navbar = () => {
-    const [searchQuery, setSearchQuery] = useState("");
+    const router = useRouter();
     const { loading, setLoading } = useContext(UserContext);
+
+    const [searchQuery, setSearchQuery] = useState("");
     const [autocompleteSongs, setAutocompleteSongs] = useState([]);
     const [isSuggestionSelected, setIsSuggestionSelected] = useState(false);
-    const [isSearchPopoverOpen, setIsSearchPopoverOpen] = useState(false)
-    const router = useRouter();
+    const [isSearchPopoverOpen, setIsSearchPopoverOpen] = useState(false);
 
-    // goes to searcg page with query
-    const handleSearch = async (searchQuery) => {
-        if (searchQuery.trim()) {
+    // Handle Search Submission
+    const handleSearch = async (query) => {
+        if (query.trim()) {
             try {
                 setLoading(true);
-                router.push(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
+                router.push(`/search?query=${encodeURIComponent(query.trim())}`);
                 setAutocompleteSongs([]);
-                setIsSearchPopoverOpen(false)
+                setSearchQuery("");
             } catch (error) {
                 console.error("Failed to perform search:", error);
+            } finally {
+                setLoading(false);
             }
         }
     };
 
-    const handleSearchSuggestions = useCallback(
+    // Fetch Search Suggestions
+    const fetchSearchSuggestions = useCallback(
         debounce(async (query) => {
-            if (query.trim() && !isSuggestionSelected) {
+            setLoading(true)
+            if (query.trim()) {
                 const songResults = await SearchSongsAction(query);
                 if (songResults && songResults.success) {
                     setAutocompleteSongs(songResults.data.results);
                 }
+            } else {
+                setAutocompleteSongs([]);
             }
+            setLoading(false)
         }, 300),
-        [isSuggestionSelected]
+        []
     );
 
+    // Handle Suggestion Click
     const handleSuggestionClick = (song) => {
         setIsSuggestionSelected(true);
-        setAutocompleteSongs([]);
-        setSearchQuery(decodeHtml(song.name));
         handleSearch(song.name);
+        setIsSearchPopoverOpen(false)
     };
 
+    // Effect to Fetch Suggestions on Query Change
     useEffect(() => {
-        if (searchQuery && !isSuggestionSelected) {
-            handleSearchSuggestions(searchQuery);
-        } else if (!searchQuery) {
-            setAutocompleteSongs([]);
+        if (!isSuggestionSelected) {
+            fetchSearchSuggestions(searchQuery);
+        } else {
+            setIsSuggestionSelected(false);
         }
-        setIsSuggestionSelected(false);
-    }, [searchQuery]);
+    }, [searchQuery, isSuggestionSelected, fetchSearchSuggestions]);
 
     return (
-        <div className="flex items-center justify-between p-4 bg-gray-200 dark:bg-slate-950 shadow-md">
+        <nav className="bg-white dark:bg-gray-900 shadow">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between h-16">
+                    {/* Mobile Menu Button */}
+                    <div className="flex items-center">
+                        <Sheet>
+                            <SheetTrigger asChild>
+                                {/* <Button className="md:hidden p-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white focus:outline-none">
+                                    <Menu className="w-6 h-6" />
+                                </Button> */}
+                                <button className="p-2">
+                                    <Menu className="text-gray-900 dark:text-gray-300" />
+                                </button>
+                            </SheetTrigger>
+                            <SheetContent side="left" className="w-64 bg-white dark:bg-gray-800 p-4">
+                                <div className="flex items-center justify-between mb-6">
+                                    <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+                                        Musi<span className="text-blue-500">ca</span>
+                                    </h2>
+                                    <SheetTrigger asChild>
+                                        <button className="p-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white focus:outline-none">
+                                            <X className="w-6 h-6" />
+                                        </button>
+                                    </SheetTrigger>
+                                </div>
+                                <LeftSidebarIcons />
+                            </SheetContent>
+                        </Sheet>
+                        {/* Logo */}
+                        <div className=" md:flex items-center">
+                            <h1
+                                className="text-2xl font-bold text-gray-800 dark:text-white cursor-pointer"
+                                onClick={() => router.push("/")}
+                            >
+                                Musi<span className="text-blue-500">ca</span>
+                            </h1>
+                        </div>
+                    </div>
 
-            <div className="flex items-center">
-                <div className="block md:hidden">
-                    <Sheet>
-                        <SheetTrigger asChild>
-                            <button className="p-2">
-                                <Menu className="text-gray-900 dark:text-gray-300" />
-                            </button>
-                        </SheetTrigger>
-                        <SheetContent side="left" className="w-3/4 p-4 dark:bg-gray-800">
-                            <div className="flex items-center justify-between mb-4">
-                                <SheetTitle>
-                                    <div className="cursor-pointer mb-8">
-                                        <p className="text-2xl font-bold text-gray-800 dark:text-gray-100">
-                                            Musi<span className="text-blue-500">ca</span>
-                                        </p>
+                    {/* Search Bar */}
+                    <div className="flex-1 mx-4">
+                        <div className="hidden md:block relative">
+                            <form onSubmit={(e) => e.preventDefault()}>
+                                <div className="flex items-center justify-center">
+                                    <div className="relative w-[70%]">
+                                        <input
+                                            type="text"
+                                            className={cn(
+                                                "w-full py-2 pl-10 pr-4 text-sm rounded-md",
+                                                "bg-gray-100 dark:bg-gray-800",
+                                                "text-gray-700 dark:text-gray-300",
+                                                "focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            )}
+                                            placeholder="Search for songs..."
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                            onFocus={() => fetchSearchSuggestions(searchQuery)}
+                                        />
+                                        <Search className="absolute left-3 top-2.5 w-5 h-5 text-gray-500 dark:text-gray-400" />
+                                        {loading && (
+                                            <Loader2 className="absolute right-3 top-2.5 w-5 h-5 text-gray-500 dark:text-gray-400 animate-spin" />
+                                        )}
                                     </div>
-                                </SheetTitle>
-                                <SheetClose asChild>
-                                    <Button
-                                        className="cursor-pointer mb-8 bg-transparent hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md transition-all duration-200"
-                                    >
-                                        <X className="text-2xl font-bold text-gray-900 dark:text-gray-100" />
-                                    </Button>
-
-                                </SheetClose>
-                            </div>
-                            <LeftSidebarIcons />
-                        </SheetContent>
-                    </Sheet>
-                </div>
-
-                <div className="ml-2 md:ml-4 cursor-pointer">
-                    <p className="text-2xl font-bold text-gray-800 dark:text-gray-100">
-                        Musi<span className="text-blue-500">ca</span>
-                    </p>
-                </div>
-            </div>
-
-            <div className="flex-grow mx-4 md:mx-8 max-w-lg">
-                <div className="hidden md:block">
-                    <form onSubmit={(e) => { e.preventDefault(); handleSearch(searchQuery); }}>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 cursor-pointer" onClick={() => handleSearch(searchQuery)}>
-                                <Search className="text-gray-900 dark:text-gray-300" />
-                            </div>
-                            <input
-                                type="search"
-                                id="default-search"
-                                className="block w-full p-2 pl-10 text-sm text-gray-900 dark:text-gray-300 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
-                                placeholder="Search for songs..."
-                                required
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                autoComplete="off"
-                            />
-                            <div className="absolute inset-y-0 right-0 flex items-center pr-1">
-                                {loading && <Loader2 className="animate-spin text-gray-500 dark:text-gray-400" />}
-                            </div>
-
-                            {autocompleteSongs && autocompleteSongs.length > 0 && (
-                                <div className="absolute z-50 w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 rounded-lg shadow-lg mt-1">
-                                    {autocompleteSongs.map((song, index) => (
+                                </div>
+                            </form>
+                            {/* Suggestions Dropdown */}
+                            {autocompleteSongs.length > 0 && (
+                                <div className="absolute mt-2 w-full bg-white dark:bg-gray-800 rounded-md shadow-lg z-20 max-h-60 overflow-auto">
+                                    {autocompleteSongs.map((song) => (
                                         <SuggestionCard
-                                            key={index}
+                                            key={song.id}
                                             song={song}
                                             onClick={() => handleSuggestionClick(song)}
                                         />
@@ -144,53 +162,62 @@ const Navbar = () => {
                                 </div>
                             )}
                         </div>
-                    </form>
+                    </div>
+
+                    {/* Mobile Search & Theme Switch */}
+                    <div className="flex items-center justify-center">
+                        {/* Mobile Search */}
+                        <Popover open={isSearchPopoverOpen} onOpenChange={setIsSearchPopoverOpen}>
+                            <PopoverTrigger asChild>
+                                <button className="md:hidden p-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white focus:outline-none">
+                                    <Search className="w-6 h-6" />
+                                </button>
+                            </PopoverTrigger>
+                            <PopoverContent className="p-4 bg-white dark:bg-gray-800 mt-2 shadow-lg rounded-md">
+                                <form onSubmit={(e) => e.preventDefault()}>
+                                    <div className="relative">
+                                        <input
+                                            type="text"
+                                            className={cn(
+                                                "w-full py-2 pl-10 pr-4 text-sm rounded-md",
+                                                "bg-gray-100 dark:bg-gray-700",
+                                                "text-gray-700 dark:text-gray-300",
+                                                "focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            )}
+                                            placeholder="Search for songs..."
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                            onFocus={() => fetchSearchSuggestions(searchQuery)}
+                                        />
+                                        <Search className="absolute left-3 top-2.5 w-5 h-5 text-gray-500 dark:text-gray-400" />
+                                        {loading && (
+                                            <Loader2 className="absolute right-3 top-2.5 w-5 h-5 text-gray-500 dark:text-gray-400 animate-spin" />
+                                        )}
+                                    </div>
+                                </form>
+                                {/* Suggestions Dropdown */}
+                                {autocompleteSongs.length > 0 && (
+                                    <div className="mt-2 max-h-60 overflow-auto">
+                                        {autocompleteSongs.map((song) => (
+                                            <SuggestionCard
+                                                key={song.id}
+                                                song={song}
+                                                onClick={() => handleSuggestionClick(song)}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                            </PopoverContent>
+                        </Popover>
+
+                        {/* Theme Switch */}
+                        <div className="ml-4">
+                            <ThemeSwitch />
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <div className="flex items-center justify-center">
-                <Popover className="md:hidden" open={isSearchPopoverOpen} onOpenChange={setIsSearchPopoverOpen}>
-                    <PopoverTrigger asChild>
-                        <button className="p-2 md:hidden">
-                            <Search className="w-6 h-6 text-gray-900 dark:text-gray-300" />
-                        </button>
-                    </PopoverTrigger>
-                    <PopoverContent className=" dark:bg-gray-800 ">
-                        <div>
-                            <form onSubmit={(e) => { e.preventDefault(); handleSearch(searchQuery); }}>
-                                <input
-                                    type="search"
-                                    id="popover-search"
-                                    className="block w-full p-2 text-sm text-gray-900 dark:text-gray-300 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
-                                    placeholder="Search for songs..."
-                                    required
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    autoComplete="off"
-                                />
-                            </form>
-                        </div>
-                        <div className="absolute top-1/3 right-5">
-                            {loading && <Loader2 className="animate-spin text-gray-500 dark:text-gray-400" />}
-                        </div>
-                        <div>
-                            {autocompleteSongs && autocompleteSongs.length > 0 && autocompleteSongs.map((song, index) => (
-                                <SuggestionCard
-                                    key={index}
-                                    song={song}
-                                    onClick={() => handleSuggestionClick(song)}
-                                />
-                            ))}
-                        </div>
-                    </PopoverContent>
-                </Popover>
-
-                <div className="ml-4 md:ml-6">
-                    <ThemeSwitch />
-                </div>
-            </div>
-
-        </div>
+        </nav>
     );
 };
 

@@ -57,10 +57,10 @@ export default function UserState({ children }) {
         const currentIndex = songList.findIndex(song => song.id === currentSong.id);
 
         const addRelatedSongs = async () => {
-            console.log("context add related song function ran",songList, currentIndex)
+            // console.log("context add related song function ran",songList, currentIndex)
             if (currentIndex === songList.length - 1) { // Check if the current song is the last in the list
                 const response = await SearchSongSuggestionAction(currentSong.id);
-                console.log("response of context add related",response)
+                // console.log("response of context add related",response)
                 if (response.success) {
                     let relatedResults = response.data;
 
@@ -68,7 +68,7 @@ export default function UserState({ children }) {
                         relatedSong => !songList.some(song=>song.id === relatedSong.id)
                     )
 
-                    console.log("Related funxt in context",relatedResults)
+                    // console.log("Related funxt in context",relatedResults)
                     
                     setSongList((prevList) => [...prevList, ...relatedResults]);
                 }

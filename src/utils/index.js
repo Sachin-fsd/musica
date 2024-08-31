@@ -30,6 +30,7 @@ export const leftIcons = [
 
 
 export function decodeHtml(html, size=16) {
+    if(!html) return;
     // Decode HTML entities
     let decodedString = html
         .replace(/&quot;/g, '"')

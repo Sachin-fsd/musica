@@ -28,7 +28,7 @@ export default async function SearchPage({ searchParams }) {
     }
 
     return (
-        <div className="flex-grow bg-gray-100 dark:bg-gray-900 p-6 overflow-x-hidden"> {/* Ensure no x-scroll */}
+        <div className="flex-grow bg-gray-100 dark:bg-gray-900 p-4 overflow-x-hidden"> {/* Ensure no x-scroll */}
             <div className="max-w-full overflow-x-hidden"> {/* Ensure no x-scroll */}
                 <SongsSearchResultsComponent querySongs={searchResults.songs} />
             </div>

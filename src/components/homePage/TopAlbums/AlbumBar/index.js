@@ -8,9 +8,10 @@ import Image from "next/image";
 import { useCallback, useContext, useState } from "react";
 import { debounce } from "lodash";
 import { fetchAlbumSongs } from "@/utils/playAndFetchSuggestionUtils";
+import { Play } from "lucide-react"; // Import the Play icon
 
 const AlbumBar = ({ album }) => {
-    const {currentSong,currentIndex ,songList ,setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading, setIsLooping } = useContext(UserContext);
+    const { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading, setIsLooping } = useContext(UserContext);
 
     const [imageError, setImageError] = useState(false)
 
@@ -19,17 +20,14 @@ const AlbumBar = ({ album }) => {
     };
 
     // Define a debounced function
-    
     const handleAlbumClick = useCallback(debounce(() => {
-        console.log("songList",songList)
-        const context =  {currentSong,currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId}
+        const context = { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId }
         fetchAlbumSongs(album.type, album.id, context);
     }, 300), [album.type, album.id, fetchAlbumSongs, songList]);
-    
 
     return (
         <div
-            className="flex flex-col items-center border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden w-full cursor-pointer transition-transform transform hover:scale-101"
+            className="relative flex flex-col items-center border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden w-full cursor-pointer transition-transform transform hover:scale-101"
             onClick={handleAlbumClick}
         >
             <div className="relative w-full pb-[100%]">
@@ -48,6 +46,12 @@ const AlbumBar = ({ album }) => {
                     ) : (
                         <Skeleton className="absolute top-0 left-0 w-full h-full rounded" />
                     )}
+                </div>
+                {/* Play button overlay */}
+                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center opacity-0 transition-opacity duration-300 hover:opacity-100">
+                    <div className="bg-black bg-opacity-50 rounded-full p-2">
+                        <Play className="w-8 h-8 text-white" />
+                    </div>
                 </div>
             </div>
             <div className="w-full text-center mt-2 px-2">

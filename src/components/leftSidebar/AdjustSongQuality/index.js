@@ -27,6 +27,8 @@ const qualities = [
   { value: "very_high", label: "Very High" },
 ]
 
+const labels = {"low":"Low", "medium":"Medium", "average":"Average", "high":"High", "very_high": "Very High"}
+
 export default function AdjustSongQuality() {
   const { setManualQuality, manualQuality } = useContext(UserContext)
   const [open, setOpen] = useState(false)
@@ -51,6 +53,10 @@ export default function AdjustSongQuality() {
           <span className="md:text-xs text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300 font-bold">
             Quality
           </span>
+          <span className="md:text-xs text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300 font-bold whitespace-nowrap md:ml-0 ml-1">
+            {`(${labels[manualQuality]})`}
+          </span>
+          
         </Label>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
