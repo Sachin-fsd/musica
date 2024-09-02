@@ -71,7 +71,8 @@ export default function AdjustSongQuality() {
                   onSelect={() => handleSelect(quality.value)}
                   className={cn(
                     "p-2 rounded-md",
-                    manualQuality === quality.value ? "bg-accent" : ""
+                    manualQuality === quality.value ? "bg-accent" : "",
+                    "cursor-pointer "
                   )}
                 >
                   <Check

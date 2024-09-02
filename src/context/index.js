@@ -18,8 +18,8 @@ export default function UserState({ children }) {
     const audioRef = useRef(null);
     const [songList, setSongList] = useState(songs);
     const [loading, setLoading] = useState(false);
-    const [connectionStatus, setConnectionStatus] = useState("")
-    const [manualQuality, setManualQuality] = useState(""); // State for manual quality selection
+    const [searchResults, setSearchResults] = useState([])
+    const [manualQuality, setManualQuality] = useState("very_high"); // State for manual quality selection
     // handle seek of slider
     const handleSeek = (e) => {
         const seekTime = e[0];
@@ -101,21 +101,13 @@ export default function UserState({ children }) {
         };
     }, [isLooping, currentIndex, songList, setCurrentIndex, setCurrentSong]);
 
-
-    // Function to determine connection status based on speed
-    const determineConnectionStatus = (speed) => {
-        if (speed > 3) return "Great";
-        if (speed > 1.5) return "Best";
-        if (speed > 0.75) return "Good";
-        if (speed > 0.3) return "Poor";
-        return "Worst";
-    };
-
     // Function to adjust the song quality
     const adjustQuality = () => {
-        if (!currentSong || !navigator.connection) return;
+        if (!currentSong) return;
 
         let qualityUrl;
+
+        // console.log(currentSong, manualQuality, currentSong.downloadUrl[qualityIndex])
 
         if (manualQuality) {
             // If manual quality is selected, use it
@@ -126,37 +118,10 @@ export default function UserState({ children }) {
                 high: 3,
                 very_high: 4
             }[manualQuality];
-            qualityUrl = currentSong.downloadUrl[qualityIndex].url;
+            qualityUrl = currentSong.downloadUrl[qualityIndex]?.url;
         } else {
-            // If no manual quality is selected, adjust based on network speed
-            const speed = navigator.connection.downlink;
-            // qualityUrl = speed > 3 ? currentSong.downloadUrl[4].url
-            //     : speed > 1.5 ? currentSong.downloadUrl[3].url
-            //         : speed > 0.75 ? currentSong.downloadUrl[2].url
-            //             : speed > 0.3 ? currentSong.downloadUrl[1].url
-            //                 : currentSong.downloadUrl[0].url;
-
-            if (speed > 3) {
-                qualityUrl = currentSong.downloadUrl[4].url;
-                setManualQuality("very_high")
-            } else if (speed > 1.5) {
-                qualityUrl = currentSong.downloadUrl[3].url;
-                setManualQuality("high")
-            } else if (speed > 0.75) {
-                qualityUrl = currentSong.downloadUrl[2].url;
-                setManualQuality("average")
-            } else if (speed > 0.3) {
-                qualityUrl = currentSong.downloadUrl[1].url;
-                setManualQuality("medium")
-            } else {
-                qualityUrl = currentSong.downloadUrl[0].url;
-                setManualQuality("low")
-            }
-
-            setConnectionStatus(determineConnectionStatus(speed));
+            qualityUrl = currentSong.downloadUrl[4].url;
         }
-
-
 
         return qualityUrl;
     };
@@ -201,12 +166,6 @@ export default function UserState({ children }) {
             // Seek to the previously stored playback position
             audioElement.currentTime = currentTime;
         }
-
-        if (navigator.connection && !manualQuality) {
-            // Update connection status only if the quality is not manually selected
-            setConnectionStatus(determineConnectionStatus(navigator.connection.downlink));
-        }
-
         // Prevent song from auto-playing when paused
         if (playing) {
             audioElement.play();
@@ -222,11 +181,6 @@ export default function UserState({ children }) {
         const qualityUrl = adjustQuality();
         if (qualityUrl) {
             audioRef.current.src = qualityUrl;
-        }
-
-        if (navigator.connection && !manualQuality) {
-            // Update connection status only if the quality is not manually selected
-            setConnectionStatus(determineConnectionStatus(navigator.connection.downlink));
         }
 
         // Prevent song from auto-playing when paused
@@ -333,13 +287,13 @@ export default function UserState({ children }) {
         setCurrentId,
         loading,
         setLoading,
-        connectionStatus,
-        setConnectionStatus,
         handleNext,
         handlePrev,
         manualQuality,
         setManualQuality,
-        togglePlayPause
+        togglePlayPause,
+        searchResults, 
+        setSearchResults
     };
 
     return (

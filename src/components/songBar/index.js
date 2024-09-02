@@ -1,7 +1,7 @@
 'use client';
 import { toast } from "sonner"
 
-import { EllipsisVertical, ListMusic, Plus, Trash2 } from "lucide-react";
+import { EllipsisVertical, ListMusic, Play, Plus, Trash2 } from "lucide-react";
 import { Label } from "../ui/label";
 import { Skeleton } from "../ui/skeleton";
 import { useContext, useState, useCallback, useEffect } from "react";
@@ -43,7 +43,7 @@ const SongBar = ({ song, trimLength }) => {
             }
             else {
 
-                setDecodedName(decodeHtml(song.name).substring(0, 15));
+                setDecodedName(decodeHtml(song.name).substring(0, 20));
             }
 
         }
@@ -140,7 +140,7 @@ const SongBar = ({ song, trimLength }) => {
                 } hover:scale-[1.02] hover:bg-gray-100 dark:hover:bg-gray-800 sm:hover:scale-[1] sm:hover:bg-transparent`}
         >
             <div
-                className="flex items-center cursor-pointer mr-3"
+                className="relative flex items-center cursor-pointer mr-3"
                 onClick={handleClick}
                 style={{ flex: '1' }}
             >
@@ -169,10 +169,18 @@ const SongBar = ({ song, trimLength }) => {
                     )}
                     {song?.artists?.primary[0]?.name ? (
                         <p className="text-xs text-gray-600 dark:text-gray-400 truncate whitespace-nowrap overflow-hidden text-ellipsis">
-                            {song.artists?.primary[0]?.name}
+                            {decodeHtml(song.artists?.primary[0]?.name)}
                         </p>
                     ) : null}
                 </div>
+                {
+                    song.id === currentSong.id ? null : <div className="absolute top-0 left-0 flex items-center justify-center opacity-0 transition-opacity duration-300 hover:opacity-100">
+                        <div className="bg-black bg-opacity-50 rounded-full p-2 outline-slate-700">
+                            <Play className="p-1 text-white" />
+                        </div>
+                    </div>
+                }
+
             </div>
             <div className="flex items-center space-x-2">
                 {/* Song Duration */}
@@ -184,7 +192,7 @@ const SongBar = ({ song, trimLength }) => {
 
                 <Label variant="simple" disabled={loading}>
                     {songList.find(s => s.id === song.id) ? (
-                        currentSong.id === song.id ? null : (
+                        currentSong.id === song.id ? <span>playing</span> : (
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button variant="simple">

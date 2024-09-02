@@ -17,7 +17,7 @@ const SongComponent = ({ songs, heading }) => {
                     songs.map((song, index) => (
                         <div
                             key={index}
-                            className="p-2 border bg-gray-300 dark:bg-gray-800 rounded"
+                            className="p-2 border bg-gray-300 dark:bg-gray-800 rounded-lg"
                         >
                             <SongBar song={song} index={index} />
                         </div>

@@ -25,7 +25,7 @@ const SongsSearchResultsComponent = ({ querySongs }) => {
             {querySongs?.results.length > 0 ? (
                 querySongs.results.map((song, index) => (
                     <div key={index} className="w-full">
-                        <SongBar song={song} index={index} />
+                        <SongBar song={song} index={index} trimLength={25}/>
                         <Separator />
                     </div>
                 ))

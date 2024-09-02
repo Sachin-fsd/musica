@@ -1,7 +1,5 @@
-import { Wifi, Speaker } from 'lucide-react';
 import Player from './player';
 import RightSidebarCarouselSliderList from './RightSidebar-Carousel-SliderList';
-import ConnectionStatus from './connectionStatusComponent';
 
 const RightSidebar = () => {
     return (
@@ -11,9 +9,9 @@ const RightSidebar = () => {
             </div>
             <div className="flex flex-col gap-4">
                 <Player />
-                <div className="p-2">
+                {/* <div className="p-2">
                     <ConnectionStatus />
-                </div>
+                </div> */}
             </div>
         </div>
     );
