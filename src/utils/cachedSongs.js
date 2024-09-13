@@ -197,266 +197,324 @@ export const songs = [
     },
 
     {
-        "id": "iC3B-krh",
-        "name": "Love Me Like You Do (From &quot;Fifty Shades Of Grey&quot;)",
+        "id": "BeXBcbVK",
+        "name": "Believer",
         "type": "song",
-        "year": "2015",
+        "year": "2018",
         "releaseDate": null,
-        "duration": 252,
-        "label": "Fifty Shades of Grey",
+        "duration": 202,
+        "label": "Kid Ina Korner / Interscope",
         "explicitContent": false,
-        "playCount": 97958002,
+        "playCount": 81456242,
         "language": "english",
         "hasLyrics": false,
         "lyricsId": null,
-        "url": "https://www.jiosaavn.com/song/love-me-like-you-do-from-fifty-shades-of-grey/GStYc1lbRVs",
-        "copyright": "℗ 2015 Polydor Ltd. (UK), under exclusive license to Republic Records, a division of UMG Recordings, Inc.",
+        "url": "https://www.jiosaavn.com/song/believer/Mg0zcxdSYXg",
+        "copyright": "℗ 2017 KIDinaKORNER/Interscope Records",
         "album": {
-            "id": "1221944",
-            "name": "Fifty Shades Of Grey",
-            "url": "https://www.jiosaavn.com/album/fifty-shades-of-grey/Mn5rHFVIEgs_"
+            "id": "13435951",
+            "name": "Evolve",
+            "url": "https://www.jiosaavn.com/album/evolve/gvCWqZLfVbs_"
         },
         "artists": {
             "primary": [
                 {
-                    "id": "568163",
-                    "name": "Ellie Goulding",
+                    "id": "599452",
+                    "name": "Imagine Dragons",
                     "role": "primary_artists",
                     "image": [
                         {
                             "quality": "50x50",
-                            "url": "https://c.saavncdn.com/artists/Ellie_Goulding_006_20221105190218_50x50.jpg"
+                            "url": "https://c.saavncdn.com/artists/Imagine_Dragons_50x50.jpg"
                         },
                         {
                             "quality": "150x150",
-                            "url": "https://c.saavncdn.com/artists/Ellie_Goulding_006_20221105190218_150x150.jpg"
+                            "url": "https://c.saavncdn.com/artists/Imagine_Dragons_150x150.jpg"
                         },
                         {
                             "quality": "500x500",
-                            "url": "https://c.saavncdn.com/artists/Ellie_Goulding_006_20221105190218_500x500.jpg"
+                            "url": "https://c.saavncdn.com/artists/Imagine_Dragons_500x500.jpg"
                         }
                     ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/ellie-goulding-songs/NxG5XfmOqrA_"
+                    "url": "https://www.jiosaavn.com/artist/imagine-dragons-songs/f0aFxsa231o_"
                 }
             ],
             "featured": [],
             "all": [
                 {
-                    "id": "511907",
-                    "name": "Max Martin",
+                    "id": "599453",
+                    "name": "Dan Reynolds",
                     "role": "music",
                     "image": [
                         {
                             "quality": "50x50",
-                            "url": "https://c.saavncdn.com/848/Beautiful-Day-English-2009-50x50.jpg"
+                            "url": "https://c.saavncdn.com/048/Skipping-Stones-English-2018-20180620230710-50x50.jpg"
                         },
                         {
                             "quality": "150x150",
-                            "url": "https://c.saavncdn.com/848/Beautiful-Day-English-2009-150x150.jpg"
+                            "url": "https://c.saavncdn.com/048/Skipping-Stones-English-2018-20180620230710-150x150.jpg"
                         },
                         {
                             "quality": "500x500",
-                            "url": "https://c.saavncdn.com/848/Beautiful-Day-English-2009-500x500.jpg"
+                            "url": "https://c.saavncdn.com/048/Skipping-Stones-English-2018-20180620230710-500x500.jpg"
                         }
                     ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/max-martin-songs/NuQcWCsPYYM_"
+                    "url": "https://www.jiosaavn.com/artist/dan-reynolds-songs/xoeLrr0aTEU_"
                 },
                 {
-                    "id": "686217",
-                    "name": "Ali Payami",
-                    "role": "music",
-                    "image": [
-                        {
-                            "quality": "50x50",
-                            "url": "https://c.saavncdn.com/204/Blade-English-2008-20180718113443-50x50.jpg"
-                        },
-                        {
-                            "quality": "150x150",
-                            "url": "https://c.saavncdn.com/204/Blade-English-2008-20180718113443-150x150.jpg"
-                        },
-                        {
-                            "quality": "500x500",
-                            "url": "https://c.saavncdn.com/204/Blade-English-2008-20180718113443-500x500.jpg"
-                        }
-                    ],
-                    "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/ali-payami-songs/Akn3r2NNn30_"
-                },
-                {
-                    "id": "598916",
-                    "name": "Ilya Salmanzadeh",
+                    "id": "599454",
+                    "name": "Wayne Sermon",
                     "role": "music",
                     "image": [],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/ilya-salmanzadeh-songs/p8r-EavMx,k_"
+                    "url": "https://www.jiosaavn.com/artist/wayne-sermon-songs/,WHkVDnJnD8_"
                 },
                 {
-                    "id": "531606",
-                    "name": "Savan Kotecha",
+                    "id": "599455",
+                    "name": "Ben Mckee",
                     "role": "music",
                     "image": [],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/savan-kotecha-songs/ReYOxN49dUQ_"
+                    "url": "https://www.jiosaavn.com/artist/ben-mckee-songs/EA7FaJms-k8_"
                 },
                 {
-                    "id": "707698",
-                    "name": "Tove Lo",
+                    "id": "914898",
+                    "name": "Daniel Platzman",
                     "role": "music",
                     "image": [
                         {
                             "quality": "50x50",
-                            "url": "https://c.saavncdn.com/artists/Tove_Lo_20200218150027_50x50.jpg"
+                            "url": "https://c.saavncdn.com/883/Best-F-r-iends-Original-Motion-Picture-Soundtrack-English-2019-20190128215540-50x50.jpg"
                         },
                         {
                             "quality": "150x150",
-                            "url": "https://c.saavncdn.com/artists/Tove_Lo_20200218150027_150x150.jpg"
+                            "url": "https://c.saavncdn.com/883/Best-F-r-iends-Original-Motion-Picture-Soundtrack-English-2019-20190128215540-150x150.jpg"
                         },
                         {
                             "quality": "500x500",
-                            "url": "https://c.saavncdn.com/artists/Tove_Lo_20200218150027_500x500.jpg"
+                            "url": "https://c.saavncdn.com/883/Best-F-r-iends-Original-Motion-Picture-Soundtrack-English-2019-20190128215540-500x500.jpg"
                         }
                     ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/tove-lo-songs/wBPjTKDNv9Q_"
+                    "url": "https://www.jiosaavn.com/artist/daniel-platzman-songs/hOWrEJ6eC9I_"
                 },
                 {
-                    "id": "568163",
-                    "name": "Ellie Goulding",
+                    "id": "683491",
+                    "name": "Robin Fredriksson",
+                    "role": "music",
+                    "image": [],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/robin-fredriksson-songs/jRGk4sF83Ko_"
+                },
+                {
+                    "id": "634862",
+                    "name": "Mattias Larsson",
+                    "role": "music",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/277/Kom-Swedish-2017-20171009155644-50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/277/Kom-Swedish-2017-20171009155644-150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/277/Kom-Swedish-2017-20171009155644-500x500.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/mattias-larsson-songs/d6thUM5GwSE_"
+                },
+                {
+                    "id": "633532",
+                    "name": "Justin Tranter",
+                    "role": "music",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/916/The-Lego-Batman-Movie-Original-Motion-Picture-Soundtrack-English-2017-50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/916/The-Lego-Batman-Movie-Original-Motion-Picture-Soundtrack-English-2017-150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/916/The-Lego-Batman-Movie-Original-Motion-Picture-Soundtrack-English-2017-500x500.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/justin-tranter-songs/MUdaah321CU_"
+                },
+                {
+                    "id": "599452",
+                    "name": "Imagine Dragons",
                     "role": "singer",
                     "image": [
                         {
                             "quality": "50x50",
-                            "url": "https://c.saavncdn.com/artists/Ellie_Goulding_006_20221105190218_50x50.jpg"
+                            "url": "https://c.saavncdn.com/artists/Imagine_Dragons_50x50.jpg"
                         },
                         {
                             "quality": "150x150",
-                            "url": "https://c.saavncdn.com/artists/Ellie_Goulding_006_20221105190218_150x150.jpg"
+                            "url": "https://c.saavncdn.com/artists/Imagine_Dragons_150x150.jpg"
                         },
                         {
                             "quality": "500x500",
-                            "url": "https://c.saavncdn.com/artists/Ellie_Goulding_006_20221105190218_500x500.jpg"
+                            "url": "https://c.saavncdn.com/artists/Imagine_Dragons_500x500.jpg"
                         }
                     ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/ellie-goulding-songs/NxG5XfmOqrA_"
+                    "url": "https://www.jiosaavn.com/artist/imagine-dragons-songs/f0aFxsa231o_"
                 },
                 {
-                    "id": "511907",
-                    "name": "Max Martin",
+                    "id": "599453",
+                    "name": "Dan Reynolds",
                     "role": "lyricist",
                     "image": [
                         {
                             "quality": "50x50",
-                            "url": "https://c.saavncdn.com/848/Beautiful-Day-English-2009-50x50.jpg"
+                            "url": "https://c.saavncdn.com/048/Skipping-Stones-English-2018-20180620230710-50x50.jpg"
                         },
                         {
                             "quality": "150x150",
-                            "url": "https://c.saavncdn.com/848/Beautiful-Day-English-2009-150x150.jpg"
+                            "url": "https://c.saavncdn.com/048/Skipping-Stones-English-2018-20180620230710-150x150.jpg"
                         },
                         {
                             "quality": "500x500",
-                            "url": "https://c.saavncdn.com/848/Beautiful-Day-English-2009-500x500.jpg"
+                            "url": "https://c.saavncdn.com/048/Skipping-Stones-English-2018-20180620230710-500x500.jpg"
                         }
                     ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/max-martin-songs/NuQcWCsPYYM_"
+                    "url": "https://www.jiosaavn.com/artist/dan-reynolds-songs/xoeLrr0aTEU_"
                 },
                 {
-                    "id": "686217",
-                    "name": "Ali Payami",
-                    "role": "lyricist",
-                    "image": [
-                        {
-                            "quality": "50x50",
-                            "url": "https://c.saavncdn.com/204/Blade-English-2008-20180718113443-50x50.jpg"
-                        },
-                        {
-                            "quality": "150x150",
-                            "url": "https://c.saavncdn.com/204/Blade-English-2008-20180718113443-150x150.jpg"
-                        },
-                        {
-                            "quality": "500x500",
-                            "url": "https://c.saavncdn.com/204/Blade-English-2008-20180718113443-500x500.jpg"
-                        }
-                    ],
-                    "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/ali-payami-songs/Akn3r2NNn30_"
-                },
-                {
-                    "id": "598916",
-                    "name": "Ilya Salmanzadeh",
+                    "id": "599454",
+                    "name": "Wayne Sermon",
                     "role": "lyricist",
                     "image": [],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/ilya-salmanzadeh-songs/p8r-EavMx,k_"
+                    "url": "https://www.jiosaavn.com/artist/wayne-sermon-songs/,WHkVDnJnD8_"
                 },
                 {
-                    "id": "531606",
-                    "name": "Savan Kotecha",
+                    "id": "599455",
+                    "name": "Ben Mckee",
                     "role": "lyricist",
                     "image": [],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/savan-kotecha-songs/ReYOxN49dUQ_"
+                    "url": "https://www.jiosaavn.com/artist/ben-mckee-songs/EA7FaJms-k8_"
                 },
                 {
-                    "id": "707698",
-                    "name": "Tove Lo",
+                    "id": "914898",
+                    "name": "Daniel Platzman",
                     "role": "lyricist",
                     "image": [
                         {
                             "quality": "50x50",
-                            "url": "https://c.saavncdn.com/artists/Tove_Lo_20200218150027_50x50.jpg"
+                            "url": "https://c.saavncdn.com/883/Best-F-r-iends-Original-Motion-Picture-Soundtrack-English-2019-20190128215540-50x50.jpg"
                         },
                         {
                             "quality": "150x150",
-                            "url": "https://c.saavncdn.com/artists/Tove_Lo_20200218150027_150x150.jpg"
+                            "url": "https://c.saavncdn.com/883/Best-F-r-iends-Original-Motion-Picture-Soundtrack-English-2019-20190128215540-150x150.jpg"
                         },
                         {
                             "quality": "500x500",
-                            "url": "https://c.saavncdn.com/artists/Tove_Lo_20200218150027_500x500.jpg"
+                            "url": "https://c.saavncdn.com/883/Best-F-r-iends-Original-Motion-Picture-Soundtrack-English-2019-20190128215540-500x500.jpg"
                         }
                     ],
                     "type": "artist",
-                    "url": "https://www.jiosaavn.com/artist/tove-lo-songs/wBPjTKDNv9Q_"
+                    "url": "https://www.jiosaavn.com/artist/daniel-platzman-songs/hOWrEJ6eC9I_"
+                },
+                {
+                    "id": "683491",
+                    "name": "Robin Fredriksson",
+                    "role": "lyricist",
+                    "image": [],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/robin-fredriksson-songs/jRGk4sF83Ko_"
+                },
+                {
+                    "id": "634862",
+                    "name": "Mattias Larsson",
+                    "role": "lyricist",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/277/Kom-Swedish-2017-20171009155644-50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/277/Kom-Swedish-2017-20171009155644-150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/277/Kom-Swedish-2017-20171009155644-500x500.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/mattias-larsson-songs/d6thUM5GwSE_"
+                },
+                {
+                    "id": "633532",
+                    "name": "Justin Tranter",
+                    "role": "lyricist",
+                    "image": [
+                        {
+                            "quality": "50x50",
+                            "url": "https://c.saavncdn.com/916/The-Lego-Batman-Movie-Original-Motion-Picture-Soundtrack-English-2017-50x50.jpg"
+                        },
+                        {
+                            "quality": "150x150",
+                            "url": "https://c.saavncdn.com/916/The-Lego-Batman-Movie-Original-Motion-Picture-Soundtrack-English-2017-150x150.jpg"
+                        },
+                        {
+                            "quality": "500x500",
+                            "url": "https://c.saavncdn.com/916/The-Lego-Batman-Movie-Original-Motion-Picture-Soundtrack-English-2017-500x500.jpg"
+                        }
+                    ],
+                    "type": "artist",
+                    "url": "https://www.jiosaavn.com/artist/justin-tranter-songs/MUdaah321CU_"
                 }
             ]
         },
         "image": [
             {
                 "quality": "50x50",
-                "url": "https://c.saavncdn.com/391/Fifty-Shades-Of-Grey-English-2015-20191015072653-50x50.jpg"
+                "url": "https://c.saavncdn.com/248/Evolve-English-2017-20180716230950-50x50.jpg"
             },
             {
                 "quality": "150x150",
-                "url": "https://c.saavncdn.com/391/Fifty-Shades-Of-Grey-English-2015-20191015072653-150x150.jpg"
+                "url": "https://c.saavncdn.com/248/Evolve-English-2017-20180716230950-150x150.jpg"
             },
             {
                 "quality": "500x500",
-                "url": "https://c.saavncdn.com/391/Fifty-Shades-Of-Grey-English-2015-20191015072653-500x500.jpg"
+                "url": "https://c.saavncdn.com/248/Evolve-English-2017-20180716230950-500x500.jpg"
             }
         ],
         "downloadUrl": [
             {
                 "quality": "12kbps",
-                "url": "https://aac.saavncdn.com/391/d22dd7b77dcbf8512bc524527ad7a477_12.mp4"
+                "url": "https://aac.saavncdn.com/248/a6b1b78b396245f712abda8f1daefee0_12.mp4"
             },
             {
                 "quality": "48kbps",
-                "url": "https://aac.saavncdn.com/391/d22dd7b77dcbf8512bc524527ad7a477_48.mp4"
+                "url": "https://aac.saavncdn.com/248/a6b1b78b396245f712abda8f1daefee0_48.mp4"
             },
             {
                 "quality": "96kbps",
-                "url": "https://aac.saavncdn.com/391/d22dd7b77dcbf8512bc524527ad7a477_96.mp4"
+                "url": "https://aac.saavncdn.com/248/a6b1b78b396245f712abda8f1daefee0_96.mp4"
             },
             {
                 "quality": "160kbps",
-                "url": "https://aac.saavncdn.com/391/d22dd7b77dcbf8512bc524527ad7a477_160.mp4"
+                "url": "https://aac.saavncdn.com/248/a6b1b78b396245f712abda8f1daefee0_160.mp4"
             },
             {
                 "quality": "320kbps",
-                "url": "https://aac.saavncdn.com/391/d22dd7b77dcbf8512bc524527ad7a477_320.mp4"
+                "url": "https://aac.saavncdn.com/248/a6b1b78b396245f712abda8f1daefee0_320.mp4"
             }
         ]
     },
