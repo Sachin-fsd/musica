@@ -3,7 +3,7 @@
 export async function SearchGlobalAction(song) {
     // console.log("song",song)
     try {
-        const response = await fetch(`https://saavn.dev/api/search?query=${encodeURIComponent(song)}`);
+        const response = await fetch(`https://saavn-api-two.vercel.app/api/search?query=${encodeURIComponent(song)}`);
 
         if (!response.ok) {
             throw new Error('Failed to fetch songs');
@@ -29,7 +29,7 @@ export async function SearchGlobalAction(song) {
 export async function SearchSongsAction(songId) {
     // console.log("local env",process.env.FETCH_SONG_URL)
     try {
-        const response = await fetch(`https://saavn.dev/api/search/songs?query=${encodeURIComponent(songId)}`);
+        const response = await fetch(`https://saavn-api-two.vercel.app/api/search/songs?query=${encodeURIComponent(songId)}`);
 
         if (!response.ok) {
             throw new Error('Failed to fetch songs');
@@ -56,7 +56,7 @@ export async function SearchSongSuggestionAction(songId) {
     try {
 
 
-        const response = await fetch(`https://saavn.dev/api/songs/${songId}/suggestions`);
+        const response = await fetch(`https://saavn-api-two.vercel.app/api/songs/${songId}/suggestions`);
         if (!response.ok) {
             throw new Error('Failed to fetch songs');
         }
@@ -79,7 +79,7 @@ export async function SearchSongSuggestionAction(songId) {
 export async function GetAlbumSongsByIdAction(albumId) {
     try {
 
-        const response = await fetch(`https://saavn.dev/api/albums?id=${albumId}`);
+        const response = await fetch(`https://saavn-api-two.vercel.app/api/albums?id=${albumId}`);
         if (!response.ok) {
             throw new Error('Failed to fetch songs');
         }
@@ -105,7 +105,7 @@ export async function GetAlbumSongsByIdAction(albumId) {
 export async function GetSongsByIdAction(type, id) {
     try {
         if (type === "song") {
-            const response = await fetch(`https://saavn.dev/api/${type}s/${id}`);
+            const response = await fetch(`https://saavn-api-two.vercel.app/api/${type}s/${id}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch songs');
             }
@@ -121,7 +121,7 @@ export async function GetSongsByIdAction(type, id) {
         }
 
         // console.log("server",type,id)
-        const response = await fetch(`https://saavn.dev/api/${type}s?id=${id}`);
+        const response = await fetch(`https://saavn-api-two.vercel.app/api/${type}s?id=${id}`);
         // console.log(response)
         if (!response.ok) {
             throw new Error('Failed to fetch songs');
