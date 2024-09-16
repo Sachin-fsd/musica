@@ -5,12 +5,13 @@ import Link from "next/link";
 import AdjustSongQuality from "../AdjustSongQuality";
 import InstallPromptIcon from "../installApp/installPrompt";
 
-const LeftSidebarIcons = () => {
+const LeftSidebarIcons = ({ setIsSheetOpen }) => {
     return (
         <div className="flex flex-col items-center w-full">
             <div className="flex flex-col  items-centre space-y-4">
                 {leftIcons.map((icon) => (
                     <Link
+                        onClick={setIsSheetOpen ? ()=>setIsSheetOpen(false) : null}
                         key={icon.label}
                         href={icon.link}
                         className="flex md:flex-col items-center w-full p-2 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 hover:scale-105 transition-transform duration-200 ease-in-out group"
@@ -25,7 +26,7 @@ const LeftSidebarIcons = () => {
                         </span>
                     </Link>
                 ))}
-                <AdjustSongQuality />
+                <AdjustSongQuality setIsSheetOpen={setIsSheetOpen}/>
                 <InstallPromptIcon />
             </div>
         </div>

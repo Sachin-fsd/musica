@@ -28,7 +28,8 @@ const Navbar = () => {
     const [autocompleteSongs, setAutocompleteSongs] = useState([]);
     const [isSuggestionSelected, setIsSuggestionSelected] = useState(false);
     const [isSearchPopoverOpen, setIsSearchPopoverOpen] = useState(false);
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
+    const [isSheetOpen, setIsSheetOpen] = useState(false);
     const router = useRouter();
 
     // goes to searcg page with query
@@ -81,7 +82,7 @@ const Navbar = () => {
 
             <div className="flex items-center">
                 <div className="block md:hidden">
-                    <Sheet>
+                    <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                         <SheetTrigger asChild>
                             <button className="p-2">
                                 <Menu className="text-gray-900 dark:text-gray-300" />
@@ -105,7 +106,7 @@ const Navbar = () => {
 
                                 </SheetClose>
                             </div>
-                            <LeftSidebarIcons />
+                            <LeftSidebarIcons setIsSheetOpen={setIsSheetOpen}/>
                         </SheetContent>
                     </Sheet>
                 </div>

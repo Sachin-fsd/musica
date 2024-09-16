@@ -29,13 +29,14 @@ const qualities = [
 
 const labels = {"low":"Low", "medium":"Medium", "average":"Average", "high":"High", "very_high": "Very High"}
 
-export default function AdjustSongQuality() {
+export default function AdjustSongQuality({setIsSheetOpen}) {
   const { setManualQuality, manualQuality } = useContext(UserContext)
   const [open, setOpen] = useState(false)
 
   const handleSelect = (currentValue) => {
     setManualQuality(currentValue)  // Set the manual quality
-    setOpen(false)
+    setOpen(false);
+    setIsSheetOpen && setIsSheetOpen(false)
   }
 
   return (
