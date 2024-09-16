@@ -6,7 +6,7 @@ import { UserContext } from '@/context';
 import { songs as defaultSongs } from '@/utils/cachedSongs';
 
 const SongContent = () => {
-    const { setSongList, songList } = useContext(UserContext);
+    const { setSongList, songList, currentSong, setCurrentSong } = useContext(UserContext);
 
     useEffect(() => {
         let savedSongList = null;
@@ -24,6 +24,21 @@ const SongContent = () => {
             setSongList(defaultSongs);
         }
     }, [setSongList]);
+    
+    useEffect(() => {
+        let savedCurrentSong = null;
+        try {
+            const storedData = localStorage.getItem('currentSong');
+            savedCurrentSong = storedData ? JSON.parse(storedData) : null;
+        } catch (error) {
+            console.error("Error parsing currentsong from localStorage:", error);
+            localStorage.removeItem('currentSong'); // Remove invalid data
+        }
+
+        if (savedCurrentSong) {
+            setCurrentSong(savedCurrentSong);
+        } 
+    }, [setCurrentSong]);
 
     useEffect(() => {
         try {
@@ -32,6 +47,14 @@ const SongContent = () => {
             console.error("Error saving song list to localStorage:", error);
         }
     }, [songList]);
+
+    useEffect(() => {
+        try {
+            localStorage.setItem('currentSong', JSON.stringify(currentSong));
+        } catch (error) {
+            console.error("Error saving current song to localStorage:", error);
+        }
+    }, [currentSong]);
 
     if (!songList || songList.length === 0) {
         return (
