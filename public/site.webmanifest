@@ -1,6 +1,8 @@
 {
-    "name": "",
-    "short_name": "",
+    "name": "Musica Steel",
+    "short_name": "Musica",
+    "start_url": "/",
+    "orientation": "portrait",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
