@@ -3,6 +3,7 @@ import { leftIcons } from "@/utils";
 import { Cog } from "lucide-react";
 import Link from "next/link";
 import AdjustSongQuality from "../AdjustSongQuality";
+import InstallPromptIcon from "../installApp/installPrompt";
 
 const LeftSidebarIcons = () => {
     return (
@@ -25,6 +26,7 @@ const LeftSidebarIcons = () => {
                     </Link>
                 ))}
                 <AdjustSongQuality />
+                <InstallPromptIcon />
             </div>
         </div>
     );

@@ -305,7 +305,7 @@ export default function UserState({ children }) {
                 onPause={() => setPlaying(false)}
                 onLoadedData={() => {
                     // audioRef.current.currentTime = currentTime;
-                    setDuration(audioRef.current.duration)
+                    audioRef.current.duration ? setDuration(audioRef.current.duration) : setDuration(0)
                 }}
                 loop={isLooping}
             />

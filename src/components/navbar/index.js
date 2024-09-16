@@ -19,6 +19,8 @@ import { decodeHtml } from "@/utils";
 // import Link from "next/link";
 // import Image from "next/image";
 import { ThemeSwitch } from "../themeSwitch";
+import InstallPromptIcon from "../leftSidebar/installApp/installPrompt";
+import InstallPromptNav from "./installPromptNav";
 
 const Navbar = () => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -132,7 +134,7 @@ const Navbar = () => {
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 autoComplete="off"
                             />
-                            
+
                             <div className="absolute inset-y-0 right-6 flex items-center pr-1">
                                 {loading && <Loader2 className="animate-spin text-gray-500 dark:text-gray-400" />}
                             </div>
@@ -156,7 +158,7 @@ const Navbar = () => {
             <div className="flex items-center justify-center">
                 <Popover className="md:hidden" open={isSearchPopoverOpen} onOpenChange={setIsSearchPopoverOpen}>
                     <PopoverTrigger asChild>
-                        <button className="p-2 md:hidden">
+                        <button className="p-2 md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300">
                             <Search className="w-6 h-6 text-gray-900 dark:text-gray-300" />
                         </button>
                     </PopoverTrigger>
@@ -193,6 +195,10 @@ const Navbar = () => {
 
                 <div className="ml-4 md:ml-6">
                     <ThemeSwitch />
+                </div>
+
+                <div>
+                    <InstallPromptNav />
                 </div>
             </div>
 

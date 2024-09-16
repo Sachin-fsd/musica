@@ -31,7 +31,7 @@ const RightSidebarCarouselSliderList = () => {
                 />
                 <div className="flex items-center justify-between mt-1 text-gray-700 dark:text-gray-300">
                     <span className="text-xs">{formatTime(currentTime)}</span>
-                    <span className="text-xs">{formatTime(duration)}</span>
+                    <span className="text-xs">{duration ? formatTime(duration) : "Loading"}</span>
                 </div>
             </div>
 
