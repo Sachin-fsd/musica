@@ -1,14 +1,20 @@
-// src/components/InstallPromptIcon.js
 'use client';
 
 import { useState, useEffect } from 'react';
 import { Download } from "lucide-react"; // Lucide Download icon
+import { toast } from 'sonner';
 
 const InstallPromptIcon = () => {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isStandalone, setIsStandalone] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
+    const userAgent = window.navigator.userAgent;
+    
+    // Detect if the user is on iOS
+    setIsIOS(/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream);
+
     setIsStandalone(window.matchMedia("(display-mode: standalone)").matches);
 
     const handleBeforeInstallPrompt = (e) => {
@@ -24,7 +30,10 @@ const InstallPromptIcon = () => {
   }, []);
 
   const handleInstallClick = () => {
-    if (deferredPrompt) {
+    if (isIOS) {
+      // Show instructions for iOS users
+      toast("To install this app on your iOS device, tap the share button and then 'Add to Home Screen'.");
+    } else if (deferredPrompt) {
       deferredPrompt.prompt();
       deferredPrompt.userChoice.then(() => {
         setDeferredPrompt(null); // Clear the deferredPrompt after interaction

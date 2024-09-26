@@ -4,6 +4,7 @@ import { Cog } from "lucide-react";
 import Link from "next/link";
 import AdjustSongQuality from "../AdjustSongQuality";
 import InstallPromptIcon from "../installApp/installPrompt";
+import JamOnOff from "../jamOnOff";
 
 const LeftSidebarIcons = ({ setIsSheetOpen }) => {
     return (
@@ -28,6 +29,7 @@ const LeftSidebarIcons = ({ setIsSheetOpen }) => {
                 ))}
                 <AdjustSongQuality setIsSheetOpen={setIsSheetOpen}/>
                 <InstallPromptIcon />
+                <JamOnOff />
             </div>
         </div>
     );

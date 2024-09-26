@@ -79,7 +79,6 @@ const Navbar = () => {
 
     return (
         <div className="flex items-center justify-between p-4 bg-gray-200 dark:bg-slate-950 shadow-md">
-
             <div className="flex items-center">
                 <div className="block md:hidden">
                     <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
@@ -194,7 +193,7 @@ const Navbar = () => {
                     </PopoverContent>
                 </Popover>
 
-                <div className="ml-4 md:ml-6">
+                <div className="ml-2 md:ml-6">
                     <ThemeSwitch />
                 </div>
 

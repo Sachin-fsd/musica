@@ -1,3 +1,4 @@
+import JamComponent from '@/components/friendsJam';
 import SearchResults from '@/components/homePage/SearchResult';
 import AlbumContent from '@/components/homePage/TopAlbums/AlbumContent';
 import SongContent from '@/components/homePage/TopSongs';
@@ -12,6 +13,10 @@ const HomePage = () => {
       </div>
       <div>
         <SongContent />
+      </div>
+
+      <div>
+        <JamComponent />
       </div>
 
       {/* Album Content Section */}

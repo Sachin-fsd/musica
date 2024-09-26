@@ -20,6 +20,13 @@ export default function UserState({ children }) {
     const [loading, setLoading] = useState(false);
     const [searchResults, setSearchResults] = useState([])
     const [manualQuality, setManualQuality] = useState("very_high"); // State for manual quality selection
+    const [isJamChecked, setIsJamChecked] = useState(true);
+
+
+    // const handleJamToogle () => {
+    //     setIsChecked
+    // }
+
     // handle seek of slider
     const handleSeek = (e) => {
         const seekTime = e[0];
@@ -52,6 +59,17 @@ export default function UserState({ children }) {
         };
     }, [audioRef.current]);
 
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          // Generate a random index from 0 to i
+          const randomIndex = Math.floor(Math.random() * (i + 1));
+          
+          // Swap the current element with the random element
+          [array[i], array[randomIndex]] = [array[randomIndex], array[i]];
+        }
+        return array;
+      }
+
     // // if album ends add related songs at end
     useEffect(() => {
         const currentIndex = songList.findIndex(song => song.id === currentSong.id);
@@ -68,6 +86,7 @@ export default function UserState({ children }) {
                         relatedSong => !songList.some(song=>song.id === relatedSong.id)
                     )
 
+                    relatedResults = shuffleArray(relatedResults)
                     // console.log("Related funxt in context",relatedResults)
                     
                     setSongList((prevList) => [...prevList, ...relatedResults]);
@@ -293,7 +312,9 @@ export default function UserState({ children }) {
         setManualQuality,
         togglePlayPause,
         searchResults, 
-        setSearchResults
+        setSearchResults,
+        isJamChecked, 
+        setIsJamChecked
     };
 
     return (
