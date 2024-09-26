@@ -79,7 +79,6 @@ const JamComponent = () => {
         console.error('Error deleting jam row:', error);
       } else {
         console.log('Jam row deleted successfully.');
-        localStorage.removeItem('jam_code');
         set_jam_code(null);
       }
     }
