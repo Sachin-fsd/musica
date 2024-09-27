@@ -105,8 +105,26 @@ const JamComponent = () => {
         console.error('Error fetching active users:', error);
       } else {
         setActiveUsers(data);
+        data.map((user)=>{
+          if(new Date(user.last_updated).getTime()>Date.now()){
+            deleteOldRow(user.id)
+          }
+        })
       }
     };
+
+    async function deleteOldRow(id){
+      const { error } = await supabase
+      .from('jams')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error deleting jam row:', error);
+    } else {
+      console.log("SUccessfully deleted old rows")
+    }
+    }
 
     const updateRow = (updatedRow) => {
       if (connectedJamRef.current === updatedRow.code && lastUpdateSource.current !== updatedRow.code) {
@@ -233,3 +251,8 @@ const JamComponent = () => {
 };
 
 export default JamComponent;
+
+//block event loop
+//network request
+//long compitation
+//i/o operation
