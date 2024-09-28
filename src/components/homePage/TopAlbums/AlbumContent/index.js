@@ -15,7 +15,7 @@ const AlbumContent = async () => {
         )
 
         return (
-            <div className="p-2 mb-6 rounded-lg">
+            <div className="p-2 mb-4 rounded-lg">
                 {
                     albumData.map(({ heading, data }) => (
                         <div key={heading}>

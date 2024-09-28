@@ -27,11 +27,11 @@ const AlbumBar = ({ album }) => {
 
     return (
         <div
-            className="relative flex flex-col items-center border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden w-full cursor-pointer transition-transform transform hover:scale-101"
+            className="relative flex flex-col items-center border p-1 border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden w-full cursor-pointer transition-transform transform hover:scale-101"
             onClick={handleAlbumClick}
         >
             <div className="relative w-full pb-[100%]">
-                <div className="absolute top-0 left-0 w-full h-full transition-opacity duration-300 hover:opacity-80">
+                <div className="absolute  top-0 left-0 w-full h-full transition-opacity duration-300 hover:opacity-80">
                     {album.image && !imageError ? (
                         <img
                             src={album.image}
@@ -40,7 +40,7 @@ const AlbumBar = ({ album }) => {
                             loading="lazy"
                             quality={100}
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            className="absolute top-0 left-0 w-full h-full rounded object-cover"
+                            className="absolute top-0 left-0 w-full h-full rounded-md object-cover"
                             onError={() => setImageError(true)} // Set imageError to true on error
                         />
                     ) : (

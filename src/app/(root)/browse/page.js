@@ -15,19 +15,15 @@ const HomePage = () => {
         <SongContent />
       </div>
 
-      <div>
-        <JamComponent />
-      </div>
-
       {/* Album Content Section */}
       <div>
         <AlbumContent />
       </div>
 
-      {/* <div>
-        <MegaMenu />
-      </div> */}
-
+      <div>
+        <JamComponent />
+      </div>
+      
     </div>
   );
 }

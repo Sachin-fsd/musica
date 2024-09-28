@@ -106,7 +106,9 @@ const JamComponent = () => {
       } else {
         setActiveUsers(data);
         data.map((user)=>{
-          if(new Date(user.last_updated).getTime()>Date.now()){
+          // console.log(Date.now()-new Date(user.last_updated).getTime()>3600000)
+          if(Date.now()-new Date(user.last_updated).getTime()>3600000){
+            console.log("Old row found")
             deleteOldRow(user.id)
           }
         })
@@ -223,7 +225,7 @@ const JamComponent = () => {
   }
 
   return (
-    <div className="mt-4">
+    <div className="mt-4 mb-14 sm:mb-6">
       <h2 className="text-2xl font-semibold text-sky-900 dark:text-sky-300 mb-4">Jam Users</h2>
       <div className="flex flex-wrap gap-4">
         {activeUsers && activeUsers.length > 0 && activeUsers.map((user, index) => (
