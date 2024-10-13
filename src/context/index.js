@@ -8,15 +8,18 @@ import { toast } from "react-toastify";
 export const UserContext = createContext(null);
 
 export default function UserState({ children }) {
+
+    const savedSongList = JSON.parse(localStorage.getItem("songList")) || songs;
+
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [currentSong, setCurrentSong] = useState(songs[0]);
-    const [currentId, setCurrentId] = useState(songs[0].id);
+    const [currentSong, setCurrentSong] = useState(savedSongList[0]);
+    const [currentId, setCurrentId] = useState(savedSongList[0].id);
     const [playing, setPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [isLooping, setIsLooping] = useState(false);
     const audioRef = useRef(null);
-    const [songList, setSongList] = useState(songs);
+    const [songList, setSongList] = useState(savedSongList);
     const [loading, setLoading] = useState(false);
     const [searchResults, setSearchResults] = useState([])
     const [manualQuality, setManualQuality] = useState("very_high"); // State for manual quality selection

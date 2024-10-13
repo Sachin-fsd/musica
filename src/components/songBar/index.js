@@ -34,7 +34,6 @@ const SongBar = ({ song, trimLength }) => {
     const [decodedName, setDecodedName] = useState(song?.name || "");
     const [imageError, setImageError] = useState(false)
 
-
     useEffect(() => {
         if (song && song.name) {
             if (trimLength) {
@@ -71,8 +70,6 @@ const SongBar = ({ song, trimLength }) => {
             }
         }, 300)();
     }, [song, setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId]);
-
-
 
     const handleRemoveSong = () => {
         // Prevent removing the current song
@@ -121,8 +118,6 @@ const SongBar = ({ song, trimLength }) => {
         setSongList(updatedList);
     };
 
-
-
     if (!song) {
         return (
             <div className="flex justify-between items-center py-1 border-b border-gray-200 dark:border-gray-700">
@@ -137,7 +132,7 @@ const SongBar = ({ song, trimLength }) => {
     return (
         <div
             className={`flex justify-between items-center p-2 bg-white dark:bg-gray-900 rounded-lg shadow-md w-full transition-transform duration-200 ease-in-out ${song.id === currentSong?.id ? "outline outline-1 outline-purple-500" : ""
-                } hover:scale-[1.02] hover:bg-gray-100 dark:hover:bg-gray-800 sm:hover:scale-[1] sm:hover:bg-transparent`}
+                } md:hover:scale-[1.02] md:hover:bg-gray-100 dark:md:hover:bg-gray-800 sm:hover:scale-[1] sm:hover:bg-transparent`}
         >
             <div
                 className="relative flex items-center cursor-pointer mr-3"
@@ -174,7 +169,7 @@ const SongBar = ({ song, trimLength }) => {
                     ) : null}
                 </div>
                 {
-                    song.id === currentSong.id ? null : <div className="absolute top-0 left-0 flex items-center justify-center opacity-0 transition-opacity duration-300 hover:opacity-100">
+                    song.id === currentSong.id ? null : <div className="absolute top-0 left-0 flex items-center justify-center opacity-0 transition-opacity duration-300 md:hover:opacity-100">
                         <div className="bg-black bg-opacity-50 rounded-full p-2 outline-slate-700">
                             <Play className="p-1 text-white" />
                         </div>
@@ -196,7 +191,7 @@ const SongBar = ({ song, trimLength }) => {
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button variant="simple">
-                                        <EllipsisVertical className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 cursor-pointer size-5" />
+                                        <EllipsisVertical className="text-gray-500 dark:text-gray-300  cursor-pointer size-5" />
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="w-56">
@@ -215,7 +210,7 @@ const SongBar = ({ song, trimLength }) => {
                         )
                     ) : (
                         <LongPressTooltip tooltipText="Add to queue">
-                            <Plus onClick={handlePlusClick} className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 cursor-pointer size-5" />
+                            <Plus onClick={handlePlusClick} className="text-gray-500 dark:text-gray-300 md:hover:text-gray-700 dark:md:hover:text-gray-200 cursor-pointer size-5" />
                         </LongPressTooltip>
                     )}
                 </Label>

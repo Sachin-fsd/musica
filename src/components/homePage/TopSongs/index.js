@@ -8,22 +8,22 @@ import { songs as defaultSongs } from '@/utils/cachedSongs';
 const SongContent = () => {
     const { setSongList, songList, currentSong, setCurrentSong } = useContext(UserContext);
 
-    useEffect(() => {
-        let savedSongList = null;
-        try {
-            const storedData = localStorage.getItem('songList');
-            savedSongList = storedData ? JSON.parse(storedData) : null;
-        } catch (error) {
-            console.error("Error parsing song list from localStorage:", error);
-            localStorage.removeItem('songList'); // Remove invalid data
-        }
+    // useEffect(() => {
+    //     let savedSongList = null;
+    //     try {
+    //         const storedData = localStorage.getItem('songList');
+    //         savedSongList = storedData ? JSON.parse(storedData) : null;
+    //     } catch (error) {
+    //         console.error("Error parsing song list from localStorage:", error);
+    //         localStorage.removeItem('songList'); // Remove invalid data
+    //     }
 
-        if (savedSongList) {
-            setSongList(savedSongList);
-        } else {
-            setSongList(defaultSongs);
-        }
-    }, [setSongList]);
+    //     if (savedSongList) {
+    //         setSongList(savedSongList);
+    //     } else {
+    //         setSongList(defaultSongs);
+    //     }
+    // }, [setSongList]);
     
     useEffect(() => {
         let savedCurrentSong = null;
