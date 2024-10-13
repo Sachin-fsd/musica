@@ -8,6 +8,7 @@ import { decodeHtml } from "@/utils";
 import { Button } from "../ui/button";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import RightSidebar from "../rightSidebar";
+import { Progress } from "./BottomProgressBar";
 import { Slider } from "./BottomSlider";
 
 const Bottombar = () => {
@@ -18,30 +19,7 @@ const Bottombar = () => {
 
     useEffect(() => {
         if (window.innerWidth < 768) setIsSheetOpen(true);
-
-        // Back Button Logic for PWA
-        const handlePopState = (event) => {
-            if (isSheetOpen) {
-                // If the sheet is open, close it instead of navigating back
-                setIsSheetOpen(false);
-                // Push a new history state to avoid navigating back further
-                window.history.pushState(null, null, window.location.href);
-            }
-        };
-
-        // Add history state when the sheet opens
-        if (isSheetOpen) {
-            window.history.pushState(null, null, window.location.href);
-        }
-
-        // Listen for the back button event (popstate)
-        window.addEventListener('popstate', handlePopState);
-
-        // Clean up the event listener when component unmounts or sheet closes
-        return () => {
-            window.removeEventListener('popstate', handlePopState);
-        };
-    }, [isSheetOpen]);
+    }, []);
 
     const handleNextSong = () => {
         const nextIndex = (currentIndex + 1) % songList.length;
@@ -55,6 +33,13 @@ const Bottombar = () => {
     return (
         <div className="fixed bottom-0 left-0 w-full bg-gray-900 text-white shadow-lg p-4 pt-0 flex flex-col items-center justify-between flex-grow">
             <div className="w-full pb-1">
+                {/* <Progress
+                    value={currentTime}
+                    max={duration}
+                    className="bg-gray-600 rounded-full"
+                    trackclassname="bg-gray-700"
+                    indicatorclassname="bg-pink-500"
+                /> */}
                 <Slider
                     onValueChange={handleSeek}
                     value={[currentTime]}
@@ -114,6 +99,7 @@ const Bottombar = () => {
                                     <ChevronDown className="text-2xl font-bold text-gray-900 dark:text-gray-100" />
                                 </Button>
                             </SheetClose>
+
                         </div>
                         <div className="flex-1 overflow-hidden">
                             <RightSidebar />
