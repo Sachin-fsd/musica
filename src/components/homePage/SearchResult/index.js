@@ -19,12 +19,12 @@ const SearchResults = () => {
                     </Label>
                     <Plus onClick={()=>setSearchResults([])} className="cursor-pointer rotate-45 border border-gray-300 dark:border-gray-700 rounded-full text-gray-600 dark:text-gray-300" />
                 </div>
-                <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+                <div className="grid gap-4 grid-cols-1">
                     {searchResults && searchResults.length > 0 ? (
                         searchResults.map((song, index) => (
                             <div
                                 key={index}
-                                className="p-2 border bg-gray-300 dark:bg-gray-800 rounded"
+                                className=" bg-gray-300 dark:bg-gray-950 rounded"
                             >
                                 <SongBar song={song} index={index} />
                             </div>

@@ -9,11 +9,9 @@ import { UserContext } from "@/context";
 import { playAndFetchSuggestions } from "@/utils/playAndFetchSuggestionUtils";
 import { decodeHtml } from "@/utils";
 import { Button } from "../ui/button";
-import Marquee from "react-fast-marquee";
 import { debounce } from "lodash";
 import LongPressTooltip from "./longPressTooltip";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import Image from "next/image";
 
 const SongBar = ({ song, trimLength }) => {
     const {
@@ -131,7 +129,7 @@ const SongBar = ({ song, trimLength }) => {
 
     return (
         <div
-            className={`flex justify-between items-center p-2 bg-white dark:bg-gray-900 rounded-lg shadow-md w-full transition-transform duration-200 ease-in-out ${song.id === currentSong?.id ? "outline outline-1 outline-purple-500" : ""
+            className={`flex justify-between items-center p-2 bg-white dark:bg-slate-950 rounded-lg shadow-md w-full transition-transform duration-200 ease-in-out ${song.id === currentSong?.id ? "outline outline-1 outline-purple-500" : ""
                 } md:hover:scale-[1.02] md:hover:bg-gray-100 dark:md:hover:bg-gray-800 sm:hover:scale-[1] sm:hover:bg-transparent`}
         >
             <div
@@ -139,11 +137,11 @@ const SongBar = ({ song, trimLength }) => {
                 onClick={handleClick}
                 style={{ flex: '1' }}
             >
-                {song.image[0]?.url && !imageError ? (
+                {song.image[1]?.url && !imageError ? (
                     <img
-                        src={song.image[0].url}
-                        height={40}
-                        width={40}
+                        src={song.image[1].url}
+                        height={45}
+                        width={45}
                         loading="lazy"
                         className="rounded object-cover mr-3"
                         alt={`${decodedName} cover`}
@@ -155,7 +153,7 @@ const SongBar = ({ song, trimLength }) => {
                 <div className="flex-1 overflow-hidden">
                     {decodedName ? (
                         <Label
-                            className="cursor-pointer font-bold text-gray-900 dark:text-gray-100 truncate text-sm whitespace-nowrap overflow-hidden text-ellipsis"
+                            className="cursor-pointer font-medium text-gray-900 dark:text-gray-100 truncate text-sm whitespace-nowrap overflow-hidden text-ellipsis"
                         >
                             {decodedName}
                         </Label>
@@ -164,7 +162,7 @@ const SongBar = ({ song, trimLength }) => {
                     )}
                     {song?.artists?.primary[0]?.name ? (
                         <p className="text-xs text-gray-600 dark:text-gray-400 truncate whitespace-nowrap overflow-hidden text-ellipsis">
-                            {decodeHtml(song.artists?.primary[0]?.name)}
+                            {decodeHtml(song.artists?.primary[0]?.name)} <span className="">•</span> <span> {decodeHtml(song.album?.name, 80)}</span>
                         </p>
                     ) : null}
                 </div>

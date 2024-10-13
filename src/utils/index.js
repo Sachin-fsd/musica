@@ -44,13 +44,13 @@ export function decodeHtml(html, size=16) {
     if (typeof window !== "undefined") {
         const screenWidth = window.innerWidth;
 
-        if (screenWidth <= 640) { // Tailwind 'sm' breakpoint is 640px
+        // if (screenWidth <= 640) { // Tailwind 'sm' breakpoint is 640px
             let maxLength =  Math.floor(screenWidth / size); // Adjust this factor as needed
             
             if (decodedString.length > maxLength) {
                 decodedString = decodedString.substring(0, maxLength) + '...';
             }
-        }
+        // }
     }
 
     return decodedString;

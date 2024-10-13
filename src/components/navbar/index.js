@@ -49,8 +49,12 @@ const Navbar = () => {
     const handleSearchSuggestions = useCallback(
         debounce(async (query) => {
             if (query.trim() && !isSuggestionSelected) {
-                const songResults = await SearchSongsAction(query);
-                if (songResults && songResults.success) {
+                let songResults = await SearchSongsAction(query);
+                if(songResults && songResults.success && songResults.data.results.length===0){
+                    query = query.split(" ")[0];
+                    songResults = await SearchSongsAction(query);
+                }
+                if (songResults && songResults.success ) {
                     setSearchResults(songResults.data.results)
                     setLoading(false)
                     // setAutocompleteSongs(songResults.data.results);
