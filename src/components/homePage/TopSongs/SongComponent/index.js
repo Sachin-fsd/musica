@@ -12,7 +12,7 @@ const SongComponent = ({ songs, heading }) => {
                 </Label>
                 <Ellipsis className="p-2 border border-gray-300 dark:border-gray-700 rounded-full text-gray-600 dark:text-gray-300" />
             </div>
-            <div className="grid gap-4 grid-cols-1">
+            <div className="grid gap-4 grid-cols-1 lg:grid-cols-2 ">
                 {songs && songs.length > 0 ? (
                     songs.map((song, index) => (
                         <div

@@ -2032,7 +2032,7 @@ export const all_top_playlists = {
     top_albums_of_year: "https://www.jiosaavn.com/api.php?__call=search.topAlbumsoftheYear&api_version=4&_format=json&_marker=0&ctx=web6dot0&album_year=2024&album_lang=hindi"  //[23 items-albums] id, title, image
 }
 
-export const mega_menu = "https://www.jiosaavn.com/api.php?__call=webapi.getBrowseHoverDetails&is_entity_page=true&language=hindi&api_version=4&_format=json&_marker=0"
+export const mega_menu_1 = "https://www.jiosaavn.com/api.php?__call=webapi.getBrowseHoverDetails&is_entity_page=true&language=hindi&api_version=4&_format=json&_marker=0"
 /*
 {new_releases:[9 albums]  perma_url, title
 top_artists: [9 artists]  perma_url, title
@@ -2083,6 +2083,10 @@ export const All_Albums = [
     {
         heading: "Top Searches",
         link: all_top_playlists.top_searches
+    },
+    {
+        heading: "Trending Albums",
+        link: all_top_playlists.trending_albums
     }
 
 ]

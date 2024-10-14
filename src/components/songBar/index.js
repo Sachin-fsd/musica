@@ -29,20 +29,21 @@ const SongBar = ({ song, trimLength }) => {
 
     } = useContext(UserContext);
 
-    const [decodedName, setDecodedName] = useState(song?.name || "");
+    const [decodedName, setDecodedName] = useState("");
+    const [decodedAlbumName, setDecodedAlbumName] = useState("");
     const [imageError, setImageError] = useState(false)
 
     useEffect(() => {
         if (song && song.name) {
             if (trimLength) {
                 setDecodedName(decodeHtml(song.name).substring(0, trimLength));
-
             }
             else {
-
                 setDecodedName(decodeHtml(song.name).substring(0, 20));
             }
-
+        }
+        if(song && song.album){
+            setDecodedAlbumName(decodeHtml(song.album?.name, 80) || "")
         }
     }, [song]);
 
@@ -162,7 +163,7 @@ const SongBar = ({ song, trimLength }) => {
                     )}
                     {song?.artists?.primary[0]?.name ? (
                         <p className="text-xs text-gray-600 dark:text-gray-400 truncate whitespace-nowrap overflow-hidden text-ellipsis">
-                            {decodeHtml(song.artists?.primary[0]?.name)} <span className="">•</span> <span> {decodeHtml(song.album?.name, 80)}</span>
+                            {decodeHtml(song.artists?.primary[0]?.name)} <span className="">•</span> <span> {decodedAlbumName}</span>
                         </p>
                     ) : null}
                 </div>
