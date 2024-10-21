@@ -29,7 +29,7 @@ const SongBar = ({ song, trimLength }) => {
 
     } = useContext(UserContext);
 
-    const [decodedName, setDecodedName] = useState("");
+    const [decodedName, setDecodedName] = useState(song.name.substring(0,15));
     const [decodedAlbumName, setDecodedAlbumName] = useState("");
     const [imageError, setImageError] = useState(false)
 
@@ -130,8 +130,7 @@ const SongBar = ({ song, trimLength }) => {
 
     return (
         <div
-            className={`flex justify-between items-center p-2 bg-white dark:bg-slate-950 rounded-lg shadow-md w-full transition-transform duration-200 ease-in-out ${song.id === currentSong?.id ? "outline outline-1 outline-purple-500" : ""
-                } md:hover:scale-[1.02] md:hover:bg-gray-100 dark:md:hover:bg-gray-800 sm:hover:scale-[1] sm:hover:bg-transparent`}
+            className={`flex justify-between items-center p-2 bg-white dark:bg-slate-950 rounded-lg shadow-md w-full transition-transform duration-200 ease-in-out md:hover:scale-[1.02] md:hover:bg-gray-100 dark:md:hover:bg-gray-800 sm:hover:scale-[1] sm:hover:bg-transparent`}
         >
             <div
                 className="relative flex items-center cursor-pointer mr-3"
@@ -154,7 +153,7 @@ const SongBar = ({ song, trimLength }) => {
                 <div className="flex-1 overflow-hidden">
                     {decodedName ? (
                         <Label
-                            className="cursor-pointer font-medium text-gray-900 dark:text-gray-100 truncate text-sm whitespace-nowrap overflow-hidden text-ellipsis"
+                            className={` cursor-pointer font-medium text-gray-900 dark:text-gray-100 ${song.id === currentSong?.id ? "font-bold dark:text-green-700 text-green-700" : ""} truncate text-sm whitespace-nowrap overflow-hidden text-ellipsis`}
                         >
                             {decodedName}
                         </Label>
@@ -169,8 +168,8 @@ const SongBar = ({ song, trimLength }) => {
                 </div>
                 {
                     song.id === currentSong.id ? null : <div className="absolute top-0 left-0 flex items-center justify-center opacity-0 transition-opacity duration-300 md:hover:opacity-100">
-                        <div className="bg-black bg-opacity-50 rounded-full p-2 outline-slate-700">
-                            <Play className="p-1 text-white" />
+                        <div className=" bg-black bg-opacity-50 rounded-full p-2 outline-slate-700">
+                            <Play className="p-0 text-white" />
                         </div>
                     </div>
                 }
