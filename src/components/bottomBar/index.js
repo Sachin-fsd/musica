@@ -72,7 +72,10 @@ const Bottombar = () => {
                                     <Skeleton className="w-32 h-4 mb-1 bg-gray-700" />
                                 )}
                                 {currentSong?.artists?.primary[0]?.name ? (
-                                    <p className="text-sm text-gray-400 truncate">{currentSong.artists.primary[0].name}</p>
+                                    <span className="flex whitespace-nowrap">
+                                        <p className="text-sm text-gray-400 truncate">{currentSong.artists.primary[0].name} </p> <span className=""> • </span>
+                                        <p className="text-sm text-gray-400 truncate"> {currentSong.album?.name}</p>
+                                    </span>
                                 ) : null}
                             </div>
                         </div>

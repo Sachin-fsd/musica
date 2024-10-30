@@ -2,6 +2,7 @@
 import { fetchAlbumsByLinkAction, GetSongsByIdAction, SearchSongSuggestionAction } from "@/app/actions";
 import { useToast } from "@/components/ui/use-toast";
 import { All_Albums, songs } from "@/utils/cachedSongs";
+import { shuffleArray } from "@/utils/extraFunctions";
 import { createContext, useRef, useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
@@ -20,7 +21,7 @@ export default function UserState({ children }) {
     const [loading, setLoading] = useState(false);
     const [searchResults, setSearchResults] = useState([])
     const [manualQuality, setManualQuality] = useState("very_high"); // State for manual quality selection
-    const [isJamChecked, setIsJamChecked] = useState(true);
+    const [isJamChecked, setIsJamChecked] = useState(false);
 
 
     // const handleJamToogle () => {
@@ -59,16 +60,16 @@ export default function UserState({ children }) {
         };
     }, [audioRef.current]);
 
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-          // Generate a random index from 0 to i
-          const randomIndex = Math.floor(Math.random() * (i + 1));
-          
-          // Swap the current element with the random element
-          [array[i], array[randomIndex]] = [array[randomIndex], array[i]];
-        }
-        return array;
-      }
+    // function shuffleArray(array) {
+    //     for (let i = array.length - 1; i > 0; i--) {
+    //         // Generate a random index from 0 to i
+    //         const randomIndex = Math.floor(Math.random() * (i + 1));
+
+    //         // Swap the current element with the random element
+    //         [array[i], array[randomIndex]] = [array[randomIndex], array[i]];
+    //     }
+    //     return array;
+    // }
 
     // // if album ends add related songs at end
     useEffect(() => {
@@ -83,12 +84,12 @@ export default function UserState({ children }) {
                     let relatedResults = response.data;
 
                     relatedResults = relatedResults.filter(
-                        relatedSong => !songList.some(song=>song.id === relatedSong.id)
+                        relatedSong => !songList.some(song => song.id === relatedSong.id)
                     )
 
                     relatedResults = shuffleArray(relatedResults)
                     // console.log("Related funxt in context",relatedResults)
-                    
+
                     setSongList((prevList) => [...prevList, ...relatedResults]);
                 }
             }
@@ -207,7 +208,7 @@ export default function UserState({ children }) {
             audioRef.current.play();
         }
 
-    }, [currentSong]); 
+    }, [currentSong]);
 
     // when song is playing add its name to site title
     useEffect(() => {
@@ -311,9 +312,9 @@ export default function UserState({ children }) {
         manualQuality,
         setManualQuality,
         togglePlayPause,
-        searchResults, 
+        searchResults,
         setSearchResults,
-        isJamChecked, 
+        isJamChecked,
         setIsJamChecked
     };
 

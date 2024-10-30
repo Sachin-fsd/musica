@@ -2,6 +2,7 @@ import JamComponent from '@/components/friendsJam';
 import SearchResults from '@/components/homePage/SearchResult';
 import AlbumContent from '@/components/homePage/TopAlbums/AlbumContent';
 import SongContent from '@/components/homePage/TopSongs';
+import SongContentCarousel from '@/components/homePage/TopSongs/SongContentCarousel';
 
 const HomePage = () => {
 
@@ -11,8 +12,12 @@ const HomePage = () => {
       <div>
         <SearchResults />
       </div>
-      <div>
+      {/* <div>
         <SongContent />
+      </div> */}
+
+      <div>
+        <SongContentCarousel />
       </div>
 
       {/* Album Content Section */}

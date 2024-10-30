@@ -14,6 +14,7 @@ import LongPressTooltip from "./longPressTooltip";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 const SongBar = ({ song, trimLength }) => {
+
     const {
         currentSong,
         setCurrentIndex,
@@ -26,11 +27,12 @@ const SongBar = ({ song, trimLength }) => {
         setCurrentId,
         loading,
         setLoading,
+        searchResults
 
     } = useContext(UserContext);
 
-    const [decodedName, setDecodedName] = useState(song.name.substring(0,15));
-    const [decodedAlbumName, setDecodedAlbumName] = useState("");
+    const [decodedName, setDecodedName] = useState(song.name);
+    const [decodedAlbumName, setDecodedAlbumName] = useState(song.album?.name.substring(15));
     const [imageError, setImageError] = useState(false)
 
     useEffect(() => {
@@ -43,7 +45,7 @@ const SongBar = ({ song, trimLength }) => {
             }
         }
         if(song && song.album){
-            setDecodedAlbumName(decodeHtml(song.album?.name, 80) || "")
+            setDecodedAlbumName(decodeHtml(song.album?.name, 20) || "")
         }
     }, [song]);
 
@@ -162,7 +164,8 @@ const SongBar = ({ song, trimLength }) => {
                     )}
                     {song?.artists?.primary[0]?.name ? (
                         <p className="text-xs text-gray-600 dark:text-gray-400 truncate whitespace-nowrap overflow-hidden text-ellipsis">
-                            {decodeHtml(song.artists?.primary[0]?.name)} <span className="">•</span> <span> {decodedAlbumName}</span>
+                            {decodeHtml(song.artists?.primary[0]?.name)} <span className="">•</span> 
+                            {/* <span> {searchResults.length > 0 && decodedAlbumName}</span> */}
                         </p>
                     ) : null}
                 </div>

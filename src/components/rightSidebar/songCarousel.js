@@ -104,8 +104,11 @@ const SongCarousel = ({ songs }) => {
                     <p className='font-semibold font-mono truncate max-w-xs mx-auto'>
                         {decodeHtml(songs[currentIndex].name, 30)}
                     </p>
-                    <p className='font-extralight font-mono text-gray-600 text-xs truncate max-w-xs mx-auto'>
+                    <p className='font-mono text-gray-400 text-xs truncate max-w-xs mx-auto'>
                         {decodeHtml(formatSingers(songs[currentIndex]))}
+                    </p>
+                    <p className='font-mono text-gray-400 text-xs truncate max-w-xs mx-auto'>
+                        {decodeHtml(currentSong?.album?.name)}
                     </p>
                 </div>
             )}

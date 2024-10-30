@@ -4,7 +4,7 @@ import SongBar from "@/components/songBar"
 import { Label } from "@/components/ui/label"
 import { Skeleton } from "@/components/ui/skeleton"
 import { UserContext } from "@/context"
-import { Ellipsis, Plus } from "lucide-react"
+import { Plus } from "lucide-react"
 import { useContext } from "react"
 
 const SearchResults = () => {

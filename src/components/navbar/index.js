@@ -1,54 +1,27 @@
 'use client';
 
-import { useRouter } from "next/navigation";
 import { useContext, useState, useEffect, useCallback } from "react";
-// import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "../ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { Bell, Loader2, Menu, MessageSquareText, Radar, Search, X } from "lucide-react";
+import { Loader2, Menu, Search, X } from "lucide-react";
 import LeftSidebarIcons from "../leftSidebar/leftSidebarIcons";
 import { UserContext } from "@/context";
 import { SearchSongsAction } from "@/app/actions";
-import { SuggestionCard } from "../searchPage/suggestedSongsList";
 import { debounce } from "lodash";
-// import { Label } from "../ui/label";
-// import { Separator } from "../ui/separator";
-import { decodeHtml } from "@/utils";
-// import LongPressTooltip from "../songBar/longPressTooltip";
-// import Link from "next/link";
-// import Image from "next/image";
 import { ThemeSwitch } from "../themeSwitch";
-import InstallPromptIcon from "../leftSidebar/installApp/installPrompt";
 import InstallPromptNav from "./installPromptNav";
 
 const Navbar = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const { setSearchResults } = useContext(UserContext);
-    const [autocompleteSongs, setAutocompleteSongs] = useState([]);
-    const [isSuggestionSelected, setIsSuggestionSelected] = useState(false);
     const [isSearchPopoverOpen, setIsSearchPopoverOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
-    const router = useRouter();
-
-    // goes to searcg page with query
-    const handleSearch = async (searchQuery) => {
-        if (searchQuery.trim()) {
-            try {
-                setLoading(true);
-                router.push(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
-                setAutocompleteSongs([]);
-                setIsSearchPopoverOpen(false)
-            } catch (error) {
-                console.error("Failed to perform search:", error);
-            }
-        }
-    };
 
     const handleSearchSuggestions = useCallback(
         debounce(async (query) => {
-            if (query.trim() && !isSuggestionSelected) {
+            if (query.trim()) {
                 let songResults = await SearchSongsAction(query);
                 if(songResults && songResults.success && songResults.data.results.length===0){
                     query = query.split(" ")[0];
@@ -57,28 +30,16 @@ const Navbar = () => {
                 if (songResults && songResults.success ) {
                     setSearchResults(songResults.data.results)
                     setLoading(false)
-                    // setAutocompleteSongs(songResults.data.results);
                 }
             }
-        }, 300),
-        [isSuggestionSelected]
+        }, 300)
     );
 
-    const handleSuggestionClick = (song) => {
-        setIsSuggestionSelected(true);
-        setAutocompleteSongs([]);
-        setSearchQuery(decodeHtml(song.name));
-        handleSearch(song.name);
-    };
-
     useEffect(() => {
-        if (searchQuery && !isSuggestionSelected) {
+        if (searchQuery) {
             setLoading(true)
             handleSearchSuggestions(searchQuery);
-        } else if (!searchQuery) {
-            setAutocompleteSongs([]);
         }
-        setIsSuggestionSelected(false);
     }, [searchQuery]);
 
     return (
@@ -123,9 +84,9 @@ const Navbar = () => {
 
             <div className="flex-grow mx-4 md:mx-8 max-w-lg">
                 <div className="hidden md:block">
-                    <form onSubmit={(e) => { e.preventDefault(); handleSearch(searchQuery); }}>
+                    <form onSubmit={(e) => { e.preventDefault(); handleSearchSuggestions(searchQuery); }}>
                         <div className="relative">
-                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 cursor-pointer" onClick={() => handleSearch(searchQuery)}>
+                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 cursor-pointer" onClick={() => handleSearchSuggestions(searchQuery)}>
                                 <Search className="text-gray-900 dark:text-gray-300 p-0.5" />
                             </div>
                             <input
@@ -142,18 +103,6 @@ const Navbar = () => {
                             <div className="absolute inset-y-0 right-6 flex items-center pr-1">
                                 {loading && <Loader2 className="animate-spin text-gray-500 dark:text-gray-400" />}
                             </div>
-
-                            {/* {autocompleteSongs && autocompleteSongs.length > 0 && (
-                                <div className="absolute z-50 w-full bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 rounded-lg shadow-lg mt-1">
-                                    {autocompleteSongs.map((song, index) => (
-                                        <SuggestionCard
-                                            key={index}
-                                            song={song}
-                                            onClick={() => handleSuggestionClick(song)}
-                                        />
-                                    ))}
-                                </div>
-                            )} */}
                         </div>
                     </form>
                 </div>
@@ -168,7 +117,7 @@ const Navbar = () => {
                     </PopoverTrigger>
                     <PopoverContent className=" dark:bg-gray-800 p-1">
                         <div>
-                            <form onSubmit={(e) => { e.preventDefault(); handleSearch(searchQuery); }}>
+                            <form onSubmit={(e) => { e.preventDefault(); handleSearchSuggestions(searchQuery); }}>
                                 <input
                                     type="search"
                                     id="popover-search"
@@ -185,15 +134,6 @@ const Navbar = () => {
                         <div className="absolute top-1/3 right-16">
                             {loading && <Loader2 className="animate-spin text-gray-500 dark:text-gray-400" />}
                         </div>
-                        {/* <div>
-                            {autocompleteSongs && autocompleteSongs.length > 0 && autocompleteSongs.map((song, index) => (
-                                <SuggestionCard
-                                    key={index}
-                                    song={song}
-                                    onClick={() => handleSuggestionClick(song)}
-                                />
-                            ))}
-                        </div> */}
                     </PopoverContent>
                 </Popover>
 
