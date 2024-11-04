@@ -48,7 +48,7 @@ export function decodeHtml(html, size=16) {
             let maxLength =  Math.floor(screenWidth / size); // Adjust this factor as needed
             
             if (decodedString.length > maxLength) {
-                decodedString = decodedString.substring(0, maxLength) + '...';
+                decodedString = decodedString?.substring(0, maxLength) + '...';
             }
         // }
     }

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+import { Label } from '../ui/label';
 
 export function SongNameHandler({ text }) {
     const [truncatedText, setTruncatedText] = useState(text);
@@ -10,13 +11,22 @@ export function SongNameHandler({ text }) {
             const screenWidth = window.innerWidth;
 
             if (screenWidth <= 640) {
-                const maxLength = Math.floor(screenWidth / 12); // Adjust this factor as needed
+                const maxLength = Math.floor(screenWidth / 20); // Adjust this factor as needed
                 if (text.length > maxLength) {
-                    setTruncatedText(`${text.substring(0, maxLength)}...`);
+                    setTruncatedText(`${text?.substring(0, maxLength)}...`);
                 } else {
                     setTruncatedText(text);
                 }
-            } else {
+            }
+            else if (screenWidth <= 340) {
+                const maxLength = Math.floor(screenWidth / 45); // Adjust this factor as needed
+                if (text.length > maxLength) {
+                    setTruncatedText(`${text?.substring(0, maxLength)}...`);
+                } else {
+                    setTruncatedText(text);
+                }
+            }
+            else {
                 setTruncatedText(text);
             }
         };

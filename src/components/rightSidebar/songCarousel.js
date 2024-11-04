@@ -15,7 +15,7 @@ const SongCarousel = ({ songs }) => {
 
         if (isCurrent) {
             return {
-                transform: 'scale(1.25)',
+                transform: 'scale(1.1) translateY(0px)',
                 zIndex: 20,
                 opacity: 1,
             };
@@ -23,14 +23,14 @@ const SongCarousel = ({ songs }) => {
 
         if (isPrev || isNext) {
             return {
-                transform: 'scale(0.9)',
+                transform: 'scale(0.9) translateY(10px)',
                 zIndex: 10,
-                opacity: 0.7,
+                opacity: 0.8,
             };
         }
 
         return {
-            transform: 'scale(0.8)',
+            transform: 'scale(0.8) translateY(20px)',
             zIndex: 1,
             opacity: 0.5,
         };
@@ -54,12 +54,11 @@ const SongCarousel = ({ songs }) => {
 
     const formatSingers = (song) => {
         if (!song.artists || !song.artists.primary) return '';
-        const singers = song.artists.primary.map(artist => artist.name).join(', ');
-        return singers;
+        return song.artists.primary.map((artist) => artist.name).join(', ');
     };
 
     return (
-        <div className='flex flex-col justify-center items-center'>
+        <div className="flex flex-col justify-center items-center">
             <div className="relative flex items-center justify-center pt-4 space-x-3">
                 {songs && songs.length > 0 ? (
                     <>
@@ -100,14 +99,14 @@ const SongCarousel = ({ songs }) => {
                 )}
             </div>
             {songs && songs.length > 0 && (
-                <div className='mt-5 text-center'>
-                    <p className='font-semibold font-mono truncate max-w-xs mx-auto'>
+                <div className="mt-5 text-center">
+                    <p className="font-semibold font-mono truncate max-w-xs mx-auto">
                         {decodeHtml(songs[currentIndex].name, 30)}
                     </p>
-                    <p className='font-mono text-gray-400 text-xs truncate max-w-xs mx-auto'>
+                    <p className="font-mono text-gray-400 text-xs truncate max-w-xs mx-auto">
                         {decodeHtml(formatSingers(songs[currentIndex]))}
                     </p>
-                    <p className='font-mono text-gray-400 text-xs truncate max-w-xs mx-auto'>
+                    <p className="font-mono text-gray-400 text-xs truncate max-w-xs mx-auto">
                         {decodeHtml(currentSong?.album?.name)}
                     </p>
                 </div>

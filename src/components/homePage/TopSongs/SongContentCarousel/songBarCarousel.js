@@ -13,7 +13,7 @@ const SongBarCarousel = ({ song }) => {
     const [imageError, setImageError] = useState(false)
 
     const truncateTitle = (title, maxLength = 15) => {
-        return title.length > maxLength ? `${title.substring(0, maxLength)}...` : title;
+        return title.length > maxLength ? `${title?.substring(0, maxLength)}...` : title;
     };
 
     // Define a debounced function

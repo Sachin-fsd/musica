@@ -12,6 +12,7 @@ import { Button } from "../ui/button";
 import { debounce } from "lodash";
 import LongPressTooltip from "./longPressTooltip";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { SongNameHandler } from "./SongNamesHandler";
 
 const SongBar = ({ song, trimLength }) => {
 
@@ -31,19 +32,19 @@ const SongBar = ({ song, trimLength }) => {
 
     } = useContext(UserContext);
 
-    const [decodedName, setDecodedName] = useState(song.name);
-    const [decodedAlbumName, setDecodedAlbumName] = useState(song.album?.name.substring(15));
+    const [decodedName, setDecodedName] = useState(song?.name);
+    const [decodedAlbumName, setDecodedAlbumName] = useState(song.album?.name?.substring(15));
     const [imageError, setImageError] = useState(false)
 
     useEffect(() => {
-        if (song && song.name) {
-            if (trimLength) {
-                setDecodedName(decodeHtml(song.name).substring(0, trimLength));
-            }
-            else {
-                setDecodedName(decodeHtml(song.name).substring(0, 20));
-            }
-        }
+        // if (song && song.name) {
+        //     if (trimLength) {
+        //         setDecodedName(decodeHtml(song.name)?.substring(0, trimLength));
+        //     }
+        //     else {
+        //         setDecodedName(decodeHtml(song.name)?.substring(0, 20));
+        //     }
+        // }
         if(song && song.album){
             setDecodedAlbumName(decodeHtml(song.album?.name, 20) || "")
         }
@@ -132,7 +133,7 @@ const SongBar = ({ song, trimLength }) => {
 
     return (
         <div
-            className={`flex justify-between items-center p-2 bg-white dark:bg-slate-950 rounded-lg shadow-md w-full transition-transform duration-200 ease-in-out md:hover:scale-[1.02] md:hover:bg-gray-100 dark:md:hover:bg-gray-800 sm:hover:scale-[1] sm:hover:bg-transparent`}
+            className={`flex justify-between items-center p-2 bg-white dark:bg-slate-950 rounded-lg shadow-md w-full transition-transform duration-200 ease-in-out md:hover:scale-[1.01] md:hover:bg-gray-100 dark:md:hover:bg-gray-800 sm:hover:scale-[1] sm:hover:bg-transparent`}
         >
             <div
                 className="relative flex items-center cursor-pointer mr-3"
@@ -155,9 +156,9 @@ const SongBar = ({ song, trimLength }) => {
                 <div className="flex-1 overflow-hidden">
                     {decodedName ? (
                         <Label
-                            className={` cursor-pointer font-medium text-gray-900 dark:text-gray-100 ${song.id === currentSong?.id ? "font-bold dark:text-green-700 text-green-700" : ""} truncate text-sm whitespace-nowrap overflow-hidden text-ellipsis`}
+                            className={`cursor-pointer font-medium text-gray-900 dark:text-gray-100 ${song.id === currentSong?.id ? "font-bold dark:text-green-700 text-green-700" : ""} truncate text-sm whitespace-nowrap overflow-hidden text-ellipsis`}
                         >
-                            {decodedName}
+                            <SongNameHandler text={song?.name} />
                         </Label>
                     ) : (
                         <Skeleton className="min-h-2 p-2 m-2" />

@@ -74,7 +74,7 @@ const Bottombar = () => {
                                 {currentSong?.artists?.primary[0]?.name ? (
                                     <span className="flex whitespace-nowrap">
                                         <p className="text-sm text-gray-400 truncate">{currentSong.artists.primary[0].name} </p> <span className=""> • </span>
-                                        <p className="text-sm text-gray-400 truncate"> {currentSong.album?.name.substring(0,15).concat("...")}</p>
+                                        <p className="text-sm text-gray-400 truncate"> {currentSong.album?.name.length>15 ? currentSong.album?.name?.substring(0,15).concat("..."): currentSong.album?.name}</p>
                                     </span>
                                 ) : null}
                             </div>
