@@ -1,54 +1,52 @@
-'use client'
-
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { UserContext } from "@/context";
 import { useCallback, useContext, useState } from "react";
 import { debounce } from "lodash";
 import { playAndFetchSuggestions } from "@/utils/playAndFetchSuggestionUtils";
-import { Play } from "lucide-react"; // Import the Play icon
+import { Play } from "lucide-react";
+import { decodeHtml } from "@/utils";
 
-const SongBarCarousel = ({ song }) => {
-    const { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading } = useContext(UserContext);
-    const [imageError, setImageError] = useState(false)
+const SongBarCarousel = ({ song, index }) => {
+    const { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, currentId, setLoading } = useContext(UserContext);
+    const [imageError, setImageError] = useState(false);
 
     const truncateTitle = (title, maxLength = 15) => {
-        return title.length > maxLength ? `${title?.substring(0, maxLength)}...` : title;
+        let result = title.length > maxLength ? `${title.substring(0, maxLength)}...` : title;
+        return decodeHtml(result);
     };
 
-    // Define a debounced function
-    const handleClick = useCallback(() => {
-        setLoading(true);
+    const handlePlayClick = useCallback(
         debounce(async () => {
+            setLoading(true);
             try {
                 const context = { setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, setCurrentId, currentSong };
                 await playAndFetchSuggestions(song, context);
-
             } catch (error) {
                 console.error(error);
             } finally {
                 setLoading(false);
             }
-        }, 300)();
-    }, [song, setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, setCurrentId]);
+        }, 300),
+        [song, currentIndex, songList]
+    );
+
+    const imageUrl = song.image && song.image[1]?.url; // Verify if the image URL exists
 
     return (
         <div
             className="relative flex flex-col items-center border p-1 border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden w-full cursor-pointer transition-transform transform hover:scale-101"
-            onClick={handleClick}
+            onClick={handlePlayClick}
         >
             <div className="relative w-full pb-[100%]">
-                <div className="absolute  top-0 left-0 w-full h-full transition-opacity duration-300 hover:opacity-80">
-                    {song.image && !imageError ? (
+                <div className="absolute top-0 left-0 w-full h-full transition-opacity duration-300 hover:opacity-80">
+                    {imageUrl && !imageError ? (
                         <img
-                            src={song.image[1].url}
+                            src={imageUrl}
                             alt={`${song.name} cover`}
-                            fill="true"
                             loading="lazy"
-                            quality={100}
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             className="absolute top-0 left-0 w-full h-full rounded-md object-cover"
-                            onError={() => setImageError(true)} // Set imageError to true on error
+                            onError={() => setImageError(true)}
                         />
                     ) : (
                         <Skeleton className="absolute top-0 left-0 w-full h-full rounded" />
@@ -63,7 +61,7 @@ const SongBarCarousel = ({ song }) => {
             </div>
             <div className="w-full text-center mt-2 px-2">
                 {song.name ? (
-                    <Label className="font-bold text-gray-800 dark:text-gray-300 truncate text-sm">
+                    <Label className={`font-bold text-gray-800 dark:text-gray-300 ${song.id === currentSong.id ? " dark:text-green-700 text-green-700" : ""} truncate text-sm`}>
                         {truncateTitle(song.name)}
                     </Label>
                 ) : (

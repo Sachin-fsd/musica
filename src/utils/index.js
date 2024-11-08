@@ -28,9 +28,34 @@ export const leftIcons = [
     // },
 ]
 
+const handleResize = (text) => {
+    const screenWidth = window.innerWidth;
 
-export function decodeHtml(html, size=16) {
-    if(!html) return;
+    if (screenWidth <= 640) {
+        const maxLength = Math.floor(screenWidth / 20); // Adjust this factor as needed
+        if (text.length > maxLength) {
+            return `${text?.substring(0, maxLength)}...`;
+        } else {
+            return (text);
+        }
+    }
+    else if (screenWidth <= 340) {
+        const maxLength = Math.floor(screenWidth / 45); // Adjust this factor as needed
+        if (text.length > maxLength) {
+            return (`${text?.substring(0, maxLength)}...`);
+        } else {
+            return (text);
+        }
+    }
+    else {
+        return (text);
+    }
+};
+
+
+
+export function decodeHtml(html, size = 16) {
+    if (!html) return;
     // Decode HTML entities
     let decodedString = html
         .replace(/&quot;/g, '"')
@@ -42,15 +67,7 @@ export function decodeHtml(html, size=16) {
 
     // Check screen width and truncate for small screens
     if (typeof window !== "undefined") {
-        const screenWidth = window.innerWidth;
-
-        // if (screenWidth <= 640) { // Tailwind 'sm' breakpoint is 640px
-            let maxLength =  Math.floor(screenWidth / size); // Adjust this factor as needed
-            
-            if (decodedString.length > maxLength) {
-                decodedString = decodedString?.substring(0, maxLength) + '...';
-            }
-        // }
+        return handleResize(decodedString)
     }
 
     return decodedString;

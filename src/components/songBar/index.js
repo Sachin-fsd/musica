@@ -12,7 +12,6 @@ import { Button } from "../ui/button";
 import { debounce } from "lodash";
 import LongPressTooltip from "./longPressTooltip";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { SongNameHandler } from "./SongNamesHandler";
 
 const SongBar = ({ song, trimLength }) => {
 
@@ -33,19 +32,19 @@ const SongBar = ({ song, trimLength }) => {
     } = useContext(UserContext);
 
     const [decodedName, setDecodedName] = useState(song?.name);
-    const [decodedAlbumName, setDecodedAlbumName] = useState(song.album?.name?.substring(15));
+    const [decodedAlbumName, setDecodedAlbumName] = useState(decodeHtml(song.album?.name?.substring(15)));
     const [imageError, setImageError] = useState(false)
 
     useEffect(() => {
-        // if (song && song.name) {
-        //     if (trimLength) {
-        //         setDecodedName(decodeHtml(song.name)?.substring(0, trimLength));
-        //     }
-        //     else {
-        //         setDecodedName(decodeHtml(song.name)?.substring(0, 20));
-        //     }
-        // }
-        if(song && song.album){
+        if (song && song.name) {
+            if (trimLength || song.name.length > 15) {
+                setDecodedName(decodeHtml(song.name).substring(0, 15).concat("..."));
+            }
+            else {
+                setDecodedName(decodeHtml(song.name));
+            }
+        }
+        if (song && song.album) {
             setDecodedAlbumName(decodeHtml(song.album?.name, 20) || "")
         }
     }, [song]);
@@ -158,14 +157,14 @@ const SongBar = ({ song, trimLength }) => {
                         <Label
                             className={`cursor-pointer font-medium text-gray-900 dark:text-gray-100 ${song.id === currentSong?.id ? "font-bold dark:text-green-700 text-green-700" : ""} truncate text-sm whitespace-nowrap overflow-hidden text-ellipsis`}
                         >
-                            <SongNameHandler text={song?.name} />
+                            {decodedName}
                         </Label>
                     ) : (
                         <Skeleton className="min-h-2 p-2 m-2" />
                     )}
                     {song?.artists?.primary[0]?.name ? (
                         <p className="text-xs text-gray-600 dark:text-gray-400 truncate whitespace-nowrap overflow-hidden text-ellipsis">
-                            {decodeHtml(song.artists?.primary[0]?.name)} <span className="">•</span> 
+                            {decodeHtml(song.artists?.primary[0]?.name)} <span className="">•</span>
                             {/* <span> {searchResults.length > 0 && decodedAlbumName}</span> */}
                         </p>
                     ) : null}

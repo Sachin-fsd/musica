@@ -19,28 +19,41 @@ const Navbar = () => {
     const [loading, setLoading] = useState(false);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
 
-    const handleSearchSuggestions = useCallback(
+    const debouncedSearch = useCallback(
         debounce(async (query) => {
-            if (query.trim()) {
+            if (!query.trim()) return;
+
+            setLoading(true);  // Start loading before the search request
+            try {
                 let songResults = await SearchSongsAction(query);
-                if(songResults && songResults.success && songResults.data.results.length===0){
-                    query = query.split(" ")[0];
-                    songResults = await SearchSongsAction(query);
+
+                // Retry with the first word if no results
+                if (songResults && songResults.success && songResults.data.results.length === 0) {
+                    const fallbackQuery = query.split(" ")[0];
+                    songResults = await SearchSongsAction(fallbackQuery);
                 }
-                if (songResults && songResults.success ) {
-                    setSearchResults(songResults.data.results)
-                    setLoading(false)
+
+                if (songResults && songResults.success) {
+                    setSearchResults(songResults.data.results);
                 }
+            } catch (error) {
+                console.error("Search error:", error);
+            } finally {
+                setLoading(false);  // Stop loading after the search completes
             }
-        }, 300)
+        }, 500),
+        []  // Empty dependency array to ensure `debounce` is not recreated on every render
     );
 
     useEffect(() => {
-        if (searchQuery) {
-            setLoading(true)
-            handleSearchSuggestions(searchQuery);
-        }
-    }, [searchQuery]);
+        debouncedSearch(searchQuery);
+
+        // Cleanup function to cancel pending debounced call when component unmounts
+        return () => {
+            debouncedSearch.cancel();
+        };
+    }, [searchQuery, debouncedSearch]);  // `searchQuery` dependency to trigger on input changes
+
 
     return (
         <div className="flex items-center justify-between p-4 bg-gray-200 dark:bg-slate-950 shadow-md">
@@ -70,7 +83,7 @@ const Navbar = () => {
 
                                 </SheetClose>
                             </div>
-                            <LeftSidebarIcons setIsSheetOpen={setIsSheetOpen}/>
+                            <LeftSidebarIcons setIsSheetOpen={setIsSheetOpen} />
                         </SheetContent>
                     </Sheet>
                 </div>
@@ -84,9 +97,9 @@ const Navbar = () => {
 
             <div className="flex-grow mx-4 md:mx-8 max-w-lg">
                 <div className="hidden md:block">
-                    <form onSubmit={(e) => { e.preventDefault(); handleSearchSuggestions(searchQuery); }}>
+                    <form onSubmit={(e) => e.preventDefault()}>
                         <div className="relative">
-                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 cursor-pointer" onClick={() => handleSearchSuggestions(searchQuery)}>
+                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 cursor-pointer" onClick={() => debouncedSearch(searchQuery)}>
                                 <Search className="text-gray-900 dark:text-gray-300 p-0.5" />
                             </div>
                             <input
@@ -97,7 +110,7 @@ const Navbar = () => {
                                 required
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                autoComplete="off"
+                                autoComplete="on"
                             />
 
                             <div className="absolute inset-y-0 right-6 flex items-center pr-1">

@@ -63,31 +63,47 @@ const SongCarousel = ({ songs }) => {
                 {songs && songs.length > 0 ? (
                     <>
                         <div onClick={handlePrev} className="cursor-pointer">
-                            <animated.div style={prevSpring}>
-                                <img
-                                    src={songs[(currentIndex - 1 + songs.length) % songs.length].image[0].url}
-                                    alt={songs[(currentIndex - 1 + songs.length) % songs.length].name}
-                                    className="rounded-lg w-16 h-16 object-cover"
-                                />
-                            </animated.div>
+                            {
+                                songs[(currentIndex - 1 + songs.length) % songs.length].image[0].url ?
+                                    <animated.div style={prevSpring}>
+                                        <img
+                                            src={songs[(currentIndex - 1 + songs.length) % songs.length]?.image[0]?.url}
+                                            alt={songs[(currentIndex - 1 + songs.length) % songs.length]?.name}
+                                            className="rounded-lg w-16 h-16 object-cover"
+                                        />
+                                    </animated.div>
+                                    : <Skeleton className="rounded-lg w-16 h-16 object-cover" />
+                            }
+
                         </div>
                         <div className="cursor-pointer">
-                            <animated.div style={currentSpring}>
-                                <img
-                                    src={songs[currentIndex].image[2].url}
-                                    alt={songs[currentIndex].name}
-                                    className="rounded-lg w-24 h-24 object-cover shadow-lg"
-                                />
-                            </animated.div>
+                            {
+                                songs[currentIndex]?.image[2].url ?
+                                    <animated.div style={currentSpring}>
+                                        <img
+                                            src={songs[currentIndex]?.image[2]?.url}
+                                            alt={songs[currentIndex]?.name}
+                                            className="rounded-lg w-24 h-24 object-cover shadow-lg"
+                                        />
+                                    </animated.div>
+                                    : <Skeleton className="rounded-lg w-24 h-24 object-cover shadow-lg" />
+                            }
+
                         </div>
                         <div onClick={handleNext} className="cursor-pointer">
-                            <animated.div style={nextSpring}>
-                                <img
-                                    src={songs[(currentIndex + 1) % songs.length].image[0].url}
-                                    alt={songs[(currentIndex + 1) % songs.length].name}
-                                    className="rounded-lg w-16 h-16 object-cover"
-                                />
-                            </animated.div>
+                            {
+                                songs[(currentIndex + 1) % songs.length].image[0].url ?
+
+                                    <animated.div style={nextSpring}>
+                                        <img
+                                            src={songs[(currentIndex + 1) % songs.length]?.image[0]?.url}
+                                            alt={songs[(currentIndex + 1) % songs.length]?.name}
+                                            className="rounded-lg w-16 h-16 object-cover"
+                                        />
+                                    </animated.div>
+                                    :
+                                    <Skeleton className="rounded-lg w-16 h-16 object-cover" />
+                            }
                         </div>
                     </>
                 ) : (

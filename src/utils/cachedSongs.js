@@ -1,3 +1,115 @@
+export const songFormat =
+{
+    "id": "",
+    "name": "",
+    "type": "",
+    "year": "",
+    "releaseDate": null,
+    "duration": 0,
+    "label": "",
+    "explicitContent": false,
+    "playCount": "",
+    "language": "",
+    "hasLyrics": false,
+    "lyricsId": null,
+    "url": "",
+    "copyright": "",
+    "album": {
+        "id": "",
+        "name": "",
+        "url": ""
+    },
+    "artists": {
+        "primary": [
+            {
+                "id": "",
+                "name": "",
+                "role": "",
+                "image": [
+                    {
+                        "quality": "",
+                        "url": ""
+                    },
+                    {
+                        "quality": "",
+                        "url": ""
+                    },
+                    {
+                        "quality": "",
+                        "url": ""
+                    },
+
+                ],
+                "type": "",
+                "url": ""
+            }
+        ],
+        "featured": [],
+        "all": [
+            {
+                "id": "",
+                "name": "",
+                "role": "",
+                "image": [
+                    {
+                        "quality": "",
+                        "url": ""
+                    },
+                    {
+                        "quality": "",
+                        "url": ""
+                    },
+                    {
+                        "quality": "",
+                        "url": ""
+                    },
+
+                ],
+                "type": "",
+                "url": ""
+            },
+        ]
+    },
+    "image": [
+        {
+            "quality": "",
+            "url": ""
+        },
+        {
+            "quality": "",
+            "url": ""
+        },
+        {
+            "quality": "",
+            "url": ""
+        },
+
+    ],
+    "downloadUrl": [
+        {
+            "quality": "",
+            "url": ""
+        },
+        {
+            "quality": "",
+            "url": ""
+        },
+        {
+            "quality": "",
+            "url": ""
+        },
+        {
+            "quality": "",
+            "url": ""
+        },
+        {
+            "quality": "",
+            "url": ""
+        },
+    ]
+}
+
+
 export const songs = [
     {
         "id": "1xqHQw3J",
