@@ -72,3 +72,12 @@ export function decodeHtml(html, size = 16) {
 
     return decodedString;
 }
+export function htmlParser(html) {
+    if (!html) return;
+    
+    // Use DOMParser to decode HTML entities
+    const parser = new DOMParser();
+    const decodedString = parser.parseFromString(html, 'text/html').documentElement.textContent;
+
+    return decodedString;
+}

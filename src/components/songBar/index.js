@@ -7,7 +7,7 @@ import { Skeleton } from "../ui/skeleton";
 import { useContext, useState, useCallback, useEffect } from "react";
 import { UserContext } from "@/context";
 import { playAndFetchSuggestions } from "@/utils/playAndFetchSuggestionUtils";
-import { decodeHtml } from "@/utils";
+import { decodeHtml, htmlParser } from "@/utils";
 import { Button } from "../ui/button";
 import { debounce } from "lodash";
 import LongPressTooltip from "./longPressTooltip";
@@ -38,14 +38,14 @@ const SongBar = ({ song, trimLength }) => {
     useEffect(() => {
         if (song && song.name) {
             if (trimLength || song.name.length > 15) {
-                setDecodedName(decodeHtml(song.name).substring(0, 15).concat("..."));
+                setDecodedName(htmlParser(song.name).substring(0, 15).concat("..."));
             }
             else {
-                setDecodedName(decodeHtml(song.name));
+                setDecodedName(htmlParser(song.name));
             }
         }
         if (song && song.album) {
-            setDecodedAlbumName(decodeHtml(song.album?.name, 20) || "")
+            setDecodedAlbumName(htmlParser(song.album?.name, 20) || "")
         }
     }, [song]);
 
