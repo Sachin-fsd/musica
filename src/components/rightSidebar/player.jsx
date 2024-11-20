@@ -45,7 +45,7 @@ const Player = () => {
 
 
     const loopSong = () => {
-        audioRef?.current.loop = !audioRef.current.loop;
+        audioRef.current.loop = !audioRef.current.loop;
         setIsLooping(!isLooping);
     };
 

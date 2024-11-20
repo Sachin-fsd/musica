@@ -31,7 +31,7 @@ export default function UserState({ children }) {
     // handle seek of slider
     const handleSeek = (e) => {
         const seekTime = e[0];
-        audioRef?.current.currentTime = seekTime;
+        audioRef.current.currentTime = seekTime;
         setCurrentTime(seekTime);
     };
 
@@ -199,7 +199,7 @@ export default function UserState({ children }) {
         // Adjust quality only when the song changes
         const qualityUrl = adjustQuality();
         if (qualityUrl) {
-            audioRef?.current.src = qualityUrl;
+            audioRef.current.src = qualityUrl;
         }
 
         // Prevent song from auto-playing when paused
