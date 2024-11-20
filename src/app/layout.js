@@ -25,6 +25,7 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/favicon.png" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="theme-color" content="#020617" />
       </head>
       <body className={`${inter.className} min-h-screen overflow-x-hidden `}>
         <NextUIProvider>

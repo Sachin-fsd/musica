@@ -6,10 +6,6 @@ import AlbumBar from './AlbumBar';
 import { Label } from '@/components/ui/label';
 
 const TopAlbums = ({ heading, albums }) => {
-    // console.log(heading, albums)
-    useEffect(() => {
-        console.log("console started", heading, albums)
-    }, [heading, albums]);
     const softAlbumsRef = useRef(null);
 
     const scroll = (ref, direction) => {
@@ -49,7 +45,7 @@ const TopAlbums = ({ heading, albums }) => {
                                     key={index}
                                     className='border mr-1 bg-white dark:bg-gray-800 rounded-lg shadow-sm min-w-[25%] md:min-w-[17%] hover:shadow-md transition'
                                 >
-                                    <AlbumBar album={album} index={index} />
+                                    {albums?.image!=="" && <AlbumBar album={album} index={index} />}
                                 </div>
                             ))
                         ) : (

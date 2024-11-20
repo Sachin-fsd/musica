@@ -1,7 +1,6 @@
 import { All_Albums, mega_menu_1, mega_menu_2 } from "@/utils/cachedSongs";
 import TopAlbums from "..";
 import { fetchAlbumsByLinkAction, fetchArtistsByPermaLinkAction } from "@/app/actions";
-import TopArtists from "../../TopArtists";
 
 
 
@@ -11,12 +10,11 @@ const AlbumContent = async () => {
         const albumData = await Promise.all(
             All_Albums.map(async (album) => {
                 const data = await fetchAlbumsByLinkAction(album.link);
-                console.log("loading albums",album.heading, data)
                 return { heading: album.heading, data: data || [] }
             })
         )
 
-        const MegaMenu2 = await fetchAlbumsByLinkAction(mega_menu_2);
+        // const MegaMenu2 = await fetchAlbumsByLinkAction(mega_menu_2);
         // const MegaMenu1 = await fetchAlbumsByLinkAction(mega_menu_1);
 
         // const artists = await Promise.all(

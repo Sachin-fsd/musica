@@ -79,3 +79,30 @@
       display: none;  /* Safari and Chrome */
   }
 }
+
+.song-prev,
+.song-next {
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    opacity: 0.7;
+}
+
+.song-current {
+    transition: transform 0.3s ease-in-out;
+}
+
+.song-prev:hover,
+.song-next:hover {
+    opacity: 1;
+}
+
+.translate-x-full {
+    transform: translateX(100%);
+}
+
+.-translate-x-full {
+    transform: translateX(-100%);
+}
+
+.scale-105 {
+    transform: scale(1.05);
+}
