@@ -40,13 +40,12 @@ const TopAlbums = ({ heading, albums }) => {
                     <div ref={softAlbumsRef} className='flex overflow-x-auto scroll-smooth hide-scrollbar'>
                         {albums?.length > 0 ? (
                             albums.map((album, index) => (
-
-                                <div
+                                album.image ? <div
                                     key={index}
                                     className='border mr-1 bg-white dark:bg-gray-800 rounded-lg shadow-sm min-w-[25%] md:min-w-[17%] hover:shadow-md transition'
                                 >
-                                    {albums?.image!=="" && <AlbumBar album={album} index={index} />}
-                                </div>
+                                    <AlbumBar album={album} index={index} />
+                                </div> : null
                             ))
                         ) : (
                             <div className='flex items-center justify-center w-full h-32 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'>
