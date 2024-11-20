@@ -10,38 +10,51 @@ const InstallPromptIcon = () => {
   const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
-    const userAgent = window.navigator.userAgent;
-    
+    const userAgent = navigator.userAgent;
+
+    // Check if the app is running in standalone mode
+    setIsStandalone(window.matchMedia("(display-mode: standalone)").matches);
+
     // Detect if the user is on iOS
     setIsIOS(/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream);
 
-    setIsStandalone(window.matchMedia("(display-mode: standalone)").matches);
-
     const handleBeforeInstallPrompt = (e) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
+      e.preventDefault(); // Prevent the default prompt
+      setDeferredPrompt(e); // Save the event for later
     };
 
+    // Add event listener for the `beforeinstallprompt` event
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
 
     return () => {
+      // Clean up the event listener
       window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
     };
   }, []);
 
   const handleInstallClick = () => {
     if (isIOS) {
-      // Show instructions for iOS users
-      toast("To install this app on your iOS device, tap the share button and then 'Add to Home Screen'.");
+      // Show installation instructions for iOS
+      toast("To install on iOS, tap the share icon and then 'Add to Home Screen'.");
     } else if (deferredPrompt) {
+      // Trigger the install prompt
       deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(() => {
-        setDeferredPrompt(null); // Clear the deferredPrompt after interaction
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          toast.success("App installation started!");
+        } else {
+          toast.error("App installation dismissed.");
+        }
+        setDeferredPrompt(null); // Clear the deferred prompt
       });
+    } else {
+      // If no deferred prompt is available
+      toast.error("Installation prompt not available.");
     }
   };
 
-  if (isStandalone) return null; // If already installed, hide the icon
+  // If the app is already installed, do not display the icon
+  if (isStandalone) return null;
 
   return (
     <div

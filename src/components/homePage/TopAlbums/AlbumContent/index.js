@@ -11,6 +11,7 @@ const AlbumContent = async () => {
         const albumData = await Promise.all(
             All_Albums.map(async (album) => {
                 const data = await fetchAlbumsByLinkAction(album.link);
+                console.log("loading albums",album.heading, data)
                 return { heading: album.heading, data: data || [] }
             })
         )

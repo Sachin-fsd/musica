@@ -1,12 +1,15 @@
 'use client'
 
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import AlbumBar from './AlbumBar';
 import { Label } from '@/components/ui/label';
 
 const TopAlbums = ({ heading, albums }) => {
     // console.log(heading, albums)
+    useEffect(() => {
+        console.log("console started", heading, albums)
+    }, [heading, albums]);
     const softAlbumsRef = useRef(null);
 
     const scroll = (ref, direction) => {
@@ -39,14 +42,14 @@ const TopAlbums = ({ heading, albums }) => {
                 </div>
                 <div className='relative max-w-full'>
                     <div ref={softAlbumsRef} className='flex overflow-x-auto scroll-smooth hide-scrollbar'>
-                        {albums.length > 0 ? (
+                        {albums?.length > 0 ? (
                             albums.map((album, index) => (
 
                                 <div
                                     key={index}
                                     className='border mr-1 bg-white dark:bg-gray-800 rounded-lg shadow-sm min-w-[25%] md:min-w-[17%] hover:shadow-md transition'
                                 >
-                                    {album && album.image && <AlbumBar album={album} index={index} />}
+                                    <AlbumBar album={album} index={index} />
                                 </div>
                             ))
                         ) : (
