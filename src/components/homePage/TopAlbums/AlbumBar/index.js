@@ -34,7 +34,7 @@ const AlbumBar = ({ album }) => {
                 <div className="absolute  top-0 left-0 w-full h-full transition-opacity duration-300 sm:hover:opacity-80">
                     {album?.image && !imageError ? (
                         <img
-                            src={album?.image}
+                            src={album.image}
                             alt={`${album?.title} cover`}
                             fill="true"
                             loading="lazy"
@@ -57,7 +57,7 @@ const AlbumBar = ({ album }) => {
             <div className="w-full text-center mt-2 px-2">
                 {album?.title ? (
                     <Label className="font-bold text-gray-800 dark:text-gray-300 truncate text-sm">
-                        {truncateTitle(album?.title)}
+                        {truncateTitle(album.title)}
                     </Label>
                 ) : (
                     <Skeleton className="h-4 w-full rounded" />

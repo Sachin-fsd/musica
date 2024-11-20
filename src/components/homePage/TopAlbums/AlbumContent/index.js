@@ -10,8 +10,8 @@ const AlbumContent = async () => {
         // Fetch all albums concurrently
         const albumData = await Promise.all(
             All_Albums.map(async (album) => {
-                const data = await fetchAlbumsByLinkAction(album?.link);
-                return { heading: album?.heading, data: data || [] }
+                const data = await fetchAlbumsByLinkAction(album.link);
+                return { heading: album.heading, data: data || [] }
             })
         )
 
