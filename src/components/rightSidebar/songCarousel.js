@@ -54,7 +54,8 @@ const SongCarousel = ({ songs }) => {
 
     const formatSingers = (song) => {
         if (!song?.artists || !song?.artists.primary) return '';
-        return song?.artists.primary.map((artist) => artist.name).join(', ');
+        
+        return song?.artists.primary.map((artist) => artist.name).slice(0,2).join(', ');
     };
 
     return (

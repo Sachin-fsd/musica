@@ -145,7 +145,6 @@ export async function GetSongsByIdAction(type, id) {
 
 export async function fetchAlbumsByLinkAction(link) {
     try {
-        // const response = await fetch(`${BASE_URL}/api/trending-albums?link=${link}`);
         const response = await fetch(link, {
             headers: {
                 'Content-Type': 'application/json',
