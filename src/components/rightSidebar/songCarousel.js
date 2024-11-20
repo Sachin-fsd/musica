@@ -53,8 +53,8 @@ const SongCarousel = ({ songs }) => {
     }, [currentIndex]);
 
     const formatSingers = (song) => {
-        if (!song.artists || !song.artists.primary) return '';
-        return song.artists.primary.map((artist) => artist.name).join(', ');
+        if (!song?.artists || !song?.artists.primary) return '';
+        return song?.artists.primary.map((artist) => artist.name).join(', ');
     };
 
     return (
@@ -64,7 +64,7 @@ const SongCarousel = ({ songs }) => {
                     <>
                         <div onClick={handlePrev} className="cursor-pointer">
                             {
-                                songs[(currentIndex - 1 + songs.length) % songs.length].image[0].url ?
+                                songs[(currentIndex - 1 + songs.length) % songs.length].image[0]?.url ?
                                     <animated.div style={prevSpring}>
                                         <img
                                             src={songs[(currentIndex - 1 + songs.length) % songs.length]?.image[0]?.url}
@@ -78,7 +78,7 @@ const SongCarousel = ({ songs }) => {
                         </div>
                         <div className="cursor-pointer">
                             {
-                                songs[currentIndex]?.image[2].url ?
+                                songs[currentIndex]?.image[2]?.url ?
                                     <animated.div style={currentSpring}>
                                         <img
                                             src={songs[currentIndex]?.image[2]?.url}
@@ -92,7 +92,7 @@ const SongCarousel = ({ songs }) => {
                         </div>
                         <div onClick={handleNext} className="cursor-pointer">
                             {
-                                songs[(currentIndex + 1) % songs.length].image[0].url ?
+                                songs[(currentIndex + 1) % songs.length].image[0]?.url ?
 
                                     <animated.div style={nextSpring}>
                                         <img

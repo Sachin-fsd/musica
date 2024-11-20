@@ -22,7 +22,7 @@ const Bottombar = () => {
     }, []);
 
     const handleNextSong = () => {
-        const nextIndex = (currentIndex + 1) % songList.length;
+        const nextIndex = (currentIndex + 1) % songList?.length;
         setCurrentIndex(nextIndex);
         setCurrentSong(songList[nextIndex]);
         if (playing) setPlaying(true);
@@ -53,28 +53,28 @@ const Bottombar = () => {
                 <div className="flex w-full items-center justify-between">
                     <SheetTrigger asChild>
                         <div className="flex items-center space-x-4 cursor-pointer">
-                            {currentSong.image[0].url && !imageError ? (
+                            {currentSong?.image[0]?.url && !imageError ? (
                                 <img
-                                    src={currentSong.image[0].url}
+                                    src={currentSong?.image[0]?.url}
                                     height="48"
                                     width="48"
                                     loading="lazy"
                                     className="rounded-lg object-cover"
-                                    alt={`${currentSong.name} cover`}
+                                    alt={`${currentSong?.name} cover`}
                                     onError={() => setImageError(true)} />
                             ) : (
                                 <Skeleton className="w-12 h-12 rounded-lg bg-gray-700" />
                             )}
                             <div className="flex flex-col overflow-hidden">
-                                {currentSong.name ? (
-                                    <Label className="font-semibold text-gray-100 truncate text-base cursor-pointer">{decodeHtml(currentSong.name)}</Label>
+                                {currentSong?.name ? (
+                                    <Label className="font-semibold text-gray-100 truncate text-base cursor-pointer">{decodeHtml(currentSong?.name)}</Label>
                                 ) : (
                                     <Skeleton className="w-32 h-4 mb-1 bg-gray-700" />
                                 )}
                                 {currentSong?.artists?.primary[0]?.name ? (
                                     <span className="flex whitespace-nowrap">
-                                        <p className="text-sm text-gray-400 truncate">{currentSong.artists.primary[0].name} </p> <span className=""> • </span>
-                                        <p className="text-sm text-gray-400 truncate"> {currentSong.album?.name.length>15 ? currentSong.album?.name?.substring(0,15).concat("..."): currentSong.album?.name}</p>
+                                        <p className="text-sm text-gray-400 truncate">{currentSong?.artists?.primary[0]?.name} </p> <span className=""> • </span>
+                                        <p className="text-sm text-gray-400 truncate"> {currentSong?.album?.name?.length>15 ? currentSong?.album?.name?.substring(0,15).concat("..."): currentSong?.album?.name}</p>
                                     </span>
                                 ) : null}
                             </div>

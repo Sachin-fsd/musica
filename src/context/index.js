@@ -31,15 +31,15 @@ export default function UserState({ children }) {
     // handle seek of slider
     const handleSeek = (e) => {
         const seekTime = e[0];
-        audioRef.current.currentTime = seekTime;
+        audioRef?.current.currentTime = seekTime;
         setCurrentTime(seekTime);
     };
 
     const togglePlayPause = () => {
         if (playing) {
-            audioRef.current.pause();
+            audioRef?.current.pause();
         } else {
-            audioRef.current.play();
+            audioRef?.current.play();
         }
         setPlaying(!playing);
     };
@@ -47,18 +47,18 @@ export default function UserState({ children }) {
     // update audioref with song 
     useEffect(() => {
         const handleTimeUpdate = () => {
-            setCurrentTime(audioRef.current.currentTime);
-            setDuration(audioRef.current.duration);
+            setCurrentTime(audioRef?.current.currentTime);
+            setDuration(audioRef?.current.duration);
         };
 
         audioRef?.current?.addEventListener('timeupdate', handleTimeUpdate);
 
         return () => {
-            if (audioRef.current) {
-                audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
+            if (audioRef?.current) {
+                audioRef?.current.removeEventListener('timeupdate', handleTimeUpdate);
             }
         };
-    }, [audioRef.current]);
+    }, [audioRef?.current]);
 
     // function shuffleArray(array) {
     //     for (let i = array.length - 1; i > 0; i--) {
@@ -73,18 +73,18 @@ export default function UserState({ children }) {
 
     // // if album ends add related songs at end
     useEffect(() => {
-        const currentIndex = songList.findIndex(song => song.id === currentSong.id);
+        const currentIndex = songList?.findIndex(song => song?.id === currentSong?.id);
 
         const addRelatedSongs = async () => {
             // console.log("context add related song function ran",songList, currentIndex)
-            if (currentIndex === songList.length - 1) { // Check if the current song is the last in the list
-                const response = await SearchSongSuggestionAction(currentSong.id);
+            if (currentIndex === songList?.length - 1) { // Check if the current song is the last in the list
+                const response = await SearchSongSuggestionAction(currentSong?.id);
                 // console.log("response of context add related",response)
                 if (response.success) {
                     let relatedResults = response.data;
 
                     relatedResults = relatedResults.filter(
-                        relatedSong => !songList.some(song => song.id === relatedSong.id)
+                        relatedSong => !songList?.some(song => song?.id === relatedSong.id)
                     )
 
                     relatedResults = shuffleArray(relatedResults)
@@ -105,7 +105,7 @@ export default function UserState({ children }) {
     useEffect(() => {
         const handleSongEnd = () => {
             if (!isLooping) {
-                const nextIndex = (currentIndex + 1) % songList.length;
+                const nextIndex = (currentIndex + 1) % songList?.length;
                 setCurrentIndex(nextIndex);
                 setCurrentSong(songList[nextIndex]);
                 setPlaying(true);
@@ -115,8 +115,8 @@ export default function UserState({ children }) {
         audioRef?.current?.addEventListener('ended', handleSongEnd);
 
         return () => {
-            if (audioRef.current) {
-                audioRef.current.removeEventListener('ended', handleSongEnd);
+            if (audioRef?.current) {
+                audioRef?.current.removeEventListener('ended', handleSongEnd);
             }
         };
     }, [isLooping, currentIndex, songList, setCurrentIndex, setCurrentSong]);
@@ -127,7 +127,6 @@ export default function UserState({ children }) {
 
         let qualityUrl;
 
-        // console.log(currentSong, manualQuality, currentSong.downloadUrl[qualityIndex])
 
         if (manualQuality) {
             // If manual quality is selected, use it
@@ -138,9 +137,9 @@ export default function UserState({ children }) {
                 high: 3,
                 very_high: 4
             }[manualQuality];
-            qualityUrl = currentSong.downloadUrl[qualityIndex]?.url;
+            qualityUrl = currentSong?.downloadUrl[qualityIndex]?.url;
         } else {
-            qualityUrl = currentSong.downloadUrl[4].url;
+            qualityUrl = currentSong?.downloadUrl[4].url;
         }
 
         return qualityUrl;
@@ -169,7 +168,7 @@ export default function UserState({ children }) {
     useEffect(() => {
         if (!currentSong) return;
 
-        const audioElement = audioRef.current;
+        const audioElement = audioRef?.current;
 
         // Preserve the current playback position
         const currentTime = audioElement.currentTime;
@@ -200,12 +199,12 @@ export default function UserState({ children }) {
         // Adjust quality only when the song changes
         const qualityUrl = adjustQuality();
         if (qualityUrl) {
-            audioRef.current.src = qualityUrl;
+            audioRef?.current.src = qualityUrl;
         }
 
         // Prevent song from auto-playing when paused
         if (playing) {
-            audioRef.current.play();
+            audioRef?.current.play();
         }
 
     }, [currentSong]);
@@ -226,20 +225,20 @@ export default function UserState({ children }) {
     const handlePrev = () => {
         setCurrentIndex((prevIndex) => {
             // If there's only one song, stay on the same song
-            if (songList.length === 1) {
+            if (songList?.length === 1) {
                 return prevIndex;
             }
-            return (prevIndex === 0 ? songList.length - 1 : prevIndex - 1);
+            return (prevIndex === 0 ? songList?.length - 1 : prevIndex - 1);
         });
     };
 
     const handleNext = () => {
         setCurrentIndex((prevIndex) => {
             // If there's only one song, stay on the same song
-            if (songList.length === 1) {
+            if (songList?.length === 1) {
                 return prevIndex;
             }
-            return (prevIndex === songList.length - 1 ? 0 : prevIndex + 1);
+            return (prevIndex === songList?.length - 1 ? 0 : prevIndex + 1);
         });
     };
 
@@ -248,12 +247,12 @@ export default function UserState({ children }) {
         if ("mediaSession" in navigator && currentSong) {
 
             navigator.mediaSession.metadata = new MediaMetadata({
-                title: currentSong.name,
-                artist: currentSong.artists.primary[0].name,
-                album: currentSong.album?.name,
+                title: currentSong?.name,
+                artist: currentSong?.artists?.primary[0].name,
+                album: currentSong?.album?.name,
                 artwork: [
                     {
-                        src: currentSong.image[2].url, // URL to the song's image
+                        src: currentSong?.image[2]?.url, // URL to the song's image
                         sizes: "500x500", // Image size
                         type: "image/jpg", // Or image/jpeg depending on your file
                     },
@@ -262,11 +261,11 @@ export default function UserState({ children }) {
 
             // Set media controls for play, pause, etc.
             navigator.mediaSession.setActionHandler("play", () => {
-                audioRef.current.play();
+                audioRef?.current.play();
                 setPlaying(true);
             });
             navigator.mediaSession.setActionHandler("pause", () => {
-                audioRef.current.pause();
+                audioRef?.current.pause();
                 setPlaying(false);
             });
 
@@ -326,8 +325,8 @@ export default function UserState({ children }) {
                 onPlay={() => setPlaying(true)}
                 onPause={() => setPlaying(false)}
                 onLoadedData={() => {
-                    // audioRef.current.currentTime = currentTime;
-                    audioRef.current.duration ? setDuration(audioRef.current.duration) : setDuration(0)
+                    // audioRef?.current.currentTime = currentTime;
+                    audioRef?.current.duration ? setDuration(audioRef.current.duration) : setDuration(0)
                 }}
                 loop={isLooping}
             />

@@ -11,8 +11,8 @@ const SongBarCarousel = ({ song, index }) => {
     const { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, currentId, setLoading } = useContext(UserContext);
     const [imageError, setImageError] = useState(false);
 
-    const truncateTitle = (title, maxLength = 15) => {
-        let result = title.length > maxLength ? `${title.substring(0, maxLength)}...` : title;
+    const truncateTitle = (title, maxLength = 12) => {
+        let result = title?.length > maxLength ? `${title?.substring(0, maxLength)}...` : title;
         return decodeHtml(result);
     };
 
@@ -31,7 +31,7 @@ const SongBarCarousel = ({ song, index }) => {
         [song, currentIndex, songList]
     );
 
-    const imageUrl = song.image && song.image[1]?.url; // Verify if the image URL exists
+    const imageUrl = song?.image[1]?.url; // Verify if the image URL exists
 
     return (
         <div
@@ -39,11 +39,11 @@ const SongBarCarousel = ({ song, index }) => {
             onClick={handlePlayClick}
         >
             <div className="relative w-full pb-[100%]">
-                <div className="absolute top-0 left-0 w-full h-full transition-opacity duration-300 hover:opacity-80">
+                <div className="absolute top-0 left-0 w-full h-full transition-opacity duration-300 sm:hover:opacity-80">
                     {imageUrl && !imageError ? (
                         <img
                             src={imageUrl}
-                            alt={`${song.name} cover`}
+                            alt={`${song?.name} cover`}
                             loading="lazy"
                             className="absolute top-0 left-0 w-full h-full rounded-md object-cover"
                             onError={() => setImageError(true)}
@@ -60,9 +60,9 @@ const SongBarCarousel = ({ song, index }) => {
                 </div>
             </div>
             <div className="w-full text-center mt-2 px-2">
-                {song.name ? (
-                    <Label className={`font-bold text-gray-800 dark:text-gray-300 ${song.id === currentSong.id ? " dark:text-green-700 text-green-700" : ""} truncate text-sm`}>
-                        {truncateTitle(song.name)}
+                {song?.name ? (
+                    <Label className={`font-bold text-gray-800 dark:text-gray-300 ${song?.id === currentSong?.id ? " dark:text-green-700 text-green-700" : ""} truncate text-sm`}>
+                        {truncateTitle(song?.name)}
                     </Label>
                 ) : (
                     <Skeleton className="h-4 w-full rounded" />

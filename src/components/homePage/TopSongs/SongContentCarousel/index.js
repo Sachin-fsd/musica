@@ -40,13 +40,13 @@ const SongContentCarousel = () => {
                 </div>
                 <div className='relative max-w-full'>
                     <div ref={softAlbumsRef} className='flex overflow-x-auto scroll-smooth hide-scrollbar'>
-                        {songList.length > 0 ? (
-                            songList.map((song, index) => (
+                        {songList?.length > 0 ? (
+                            songList?.map((song, index) => (
                                 <div
                                     key={index}
                                     className='border mr-1 bg-white dark:bg-gray-800 rounded-lg shadow-sm min-w-[25%] md:min-w-[17%] hover:shadow-md transition'
                                 >
-                                    {song && song.image && <SongBarCarousel song={song} index={index} />}
+                                    {song?.image && <SongBarCarousel song={song} index={index} />}
                                 </div>
                             ))
                         ) : (

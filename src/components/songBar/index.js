@@ -13,7 +13,7 @@ import { debounce } from "lodash";
 import LongPressTooltip from "./longPressTooltip";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
-const SongBar = ({ song, trimLength }) => {
+const SongBar = ({ song }) => {
 
     const {
         currentSong,
@@ -32,25 +32,25 @@ const SongBar = ({ song, trimLength }) => {
     } = useContext(UserContext);
 
     const [decodedName, setDecodedName] = useState(song?.name);
-    const [decodedAlbumName, setDecodedAlbumName] = useState(decodeHtml(song.album?.name?.substring(15)));
+    const [decodedAlbumName, setDecodedAlbumName] = useState(decodeHtml(song?.album?.name?.substring(15)));
     const [imageError, setImageError] = useState(false)
 
     useEffect(() => {
-        if (song && song.name) {
-            if (trimLength || song.name.length > 15) {
-                setDecodedName(htmlParser(song.name).substring(0, 15).concat("..."));
+        if (song && song?.name) {
+            if (song?.name?.length > 15) {
+                setDecodedName(htmlParser(song?.name).substring(0, 15).concat("..."));
             }
             else {
-                setDecodedName(htmlParser(song.name));
+                setDecodedName(htmlParser(song?.name));
             }
         }
-        if (song && song.album) {
-            setDecodedAlbumName(htmlParser(song.album?.name, 20) || "")
+        if (song && song?.album) {
+            setDecodedAlbumName(htmlParser(song?.album?.name, 20) || "")
         }
     }, [song]);
 
     const handlePlusClick = () => {
-        const songExists = songList.find(s => s.id === song.id);
+        const songExists = songList?.find(s => s.id === song?.id);
         if (!songExists) {
             const newSongList = [...songList, song];
             setSongList(newSongList);
@@ -74,15 +74,15 @@ const SongBar = ({ song, trimLength }) => {
 
     const handleRemoveSong = () => {
         // Prevent removing the current song
-        if (songList[currentIndex].id === song.id) {
+        if (songList[currentIndex].id === song?.id) {
             toast.error("Cannot remove the currently playing song")
             return;
         }
 
-        if (songList.length > 3) {
-            const updatedSongList = songList.filter(s => s.id !== song.id);
+        if (songList?.length > 3) {
+            const updatedSongList = songList?.filter(s => s.id !== song?.id);
 
-            const currentSongIndex = updatedSongList.findIndex(s => s.id === currentSong.id);
+            const currentSongIndex = updatedsongList?.findIndex(s => s.id === currentSong?.id);
             setCurrentIndex(currentSongIndex)
 
             setSongList(updatedSongList);
@@ -107,7 +107,7 @@ const SongBar = ({ song, trimLength }) => {
         if (currentSongIndex === -1) return; // If current song is not found, exit the function
 
         // Remove the desired song from its current position
-        const songIndex = updatedList.findIndex(s => s.id === song.id);
+        const songIndex = updatedList.findIndex(s => s.id === song?.id);
         if (songIndex !== -1) {
             updatedList.splice(songIndex, 1);
         }
@@ -139,9 +139,9 @@ const SongBar = ({ song, trimLength }) => {
                 onClick={handleClick}
                 style={{ flex: '1' }}
             >
-                {song.image[1]?.url && !imageError ? (
+                {song?.image[1]?.url && !imageError ? (
                     <img
-                        src={song.image[1].url}
+                        src={song?.image[1]?.url}
                         height={45}
                         width={45}
                         loading="lazy"
@@ -155,7 +155,7 @@ const SongBar = ({ song, trimLength }) => {
                 <div className="flex-1 overflow-hidden">
                     {decodedName ? (
                         <Label
-                            className={`cursor-pointer font-medium text-gray-900 dark:text-gray-100 ${song.id === currentSong?.id ? "font-bold dark:text-green-700 text-green-700" : ""} truncate text-sm whitespace-nowrap overflow-hidden text-ellipsis`}
+                            className={`cursor-pointer font-medium text-gray-900 dark:text-gray-100 ${song?.id === currentSong?.id ? "font-bold dark:text-green-700 text-green-700" : ""} truncate text-sm whitespace-nowrap overflow-hidden text-ellipsis`}
                         >
                             {decodedName}
                         </Label>
@@ -164,13 +164,13 @@ const SongBar = ({ song, trimLength }) => {
                     )}
                     {song?.artists?.primary[0]?.name ? (
                         <p className="text-xs text-gray-600 dark:text-gray-400 truncate whitespace-nowrap overflow-hidden text-ellipsis">
-                            {decodeHtml(song.artists?.primary[0]?.name)} <span className="">•</span>
+                            {decodeHtml(song?.artists?.primary[0]?.name)} <span className=""> • </span>
                             {/* <span> {searchResults.length > 0 && decodedAlbumName}</span> */}
                         </p>
                     ) : null}
                 </div>
                 {
-                    song.id === currentSong.id ? null : <div className="absolute top-0 left-0 flex items-center justify-center opacity-0 transition-opacity duration-300 md:hover:opacity-100">
+                    song?.id === currentSong?.id ? null : <div className="absolute top-0 left-0 flex items-center justify-center opacity-0 transition-opacity duration-300 md:hover:opacity-100">
                         <div className=" bg-black bg-opacity-50 rounded-full p-2 outline-slate-700">
                             <Play className="p-0 text-white" />
                         </div>
@@ -181,14 +181,14 @@ const SongBar = ({ song, trimLength }) => {
             <div className="flex items-center space-x-2">
                 {/* Song Duration */}
                 {
-                    song.id === currentSong.id ? null : <span className="text-xs text-gray-700 dark:text-gray-300 mr-1">
-                        {formatDuration(song.duration)}
+                    song?.id === currentSong?.id ? null : <span className="text-xs text-gray-700 dark:text-gray-300 mr-1">
+                        {formatDuration(song?.duration)}
                     </span>
                 }
 
                 <Label variant="simple" disabled={loading}>
-                    {songList.find(s => s.id === song.id) ? (
-                        currentSong.id === song.id ? <span>playing</span> : (
+                    {songList?.find(s => s.id === song?.id) ? (
+                        currentSong?.id === song?.id ? <span>playing</span> : (
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button variant="simple">

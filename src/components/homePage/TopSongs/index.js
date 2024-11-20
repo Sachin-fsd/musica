@@ -56,7 +56,7 @@ const SongContent = () => {
         }
     }, [currentSong]);
 
-    if (!songList || songList.length === 0) {
+    if (!songList || songList?.length === 0) {
         return (
             <div className="text-center text-gray-500 dark:text-gray-400">
                 No songs available. Please try again later.

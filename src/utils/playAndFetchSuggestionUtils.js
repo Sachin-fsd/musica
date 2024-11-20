@@ -13,7 +13,7 @@ export async function playAndFetchSuggestions(song, context) {
     } = context;
 
     try {
-        const clickedSongIndex = songList.findIndex((s) => s.id === song.id);
+        const clickedSongIndex = songList?.findIndex((s) => s.id === song?.id);
         const isNewSong = clickedSongIndex === -1;
         let updatedSongList = songList;
         let blankArr =  Array.from({length:10},(el)=>el=songFormat);
@@ -30,13 +30,13 @@ export async function playAndFetchSuggestions(song, context) {
         // Set up the current song to play
         setCurrentSong(song);
         setPlaying(true);
-        setCurrentId(song.id);
+        setCurrentId(song?.id);
 
         // Fetch and add related song suggestions
-        const response = await SearchSongSuggestionAction(song.id);
+        const response = await SearchSongSuggestionAction(song?.id);
         if (response.success) {
             const relatedSongs = shuffleArray(response.data).filter(
-                (relatedSong) => !songList.some((existingSong) => existingSong.id === relatedSong.id)
+                (relatedSong) => !songList?.some((existingSong) => existingSong.id === relatedSong.id)
             );
             setSongList(isNewSong ? [song, ...relatedSongs, ...songList] : [...songList, ...relatedSongs]);
         }
@@ -65,18 +65,18 @@ export async function fetchAlbumSongs(type, id, context) {
         const response = await GetSongsByIdAction(type, id);
         if (response.success) {
             let albumSongs = response.data.songs || response.data.topSongs || response.data;
-            const currentSongIndex = songList.findIndex((s) => s.id === currentSong.id);
+            const currentSongIndex = songList?.findIndex((s) => s.id === currentSong?.id);
 
             console.log("Initial Song List:", songList);
 
             // Remove duplicates from album songs
             albumSongs = albumSongs.filter(
-                (albumSong) => !songList.some((existingSong) => existingSong.id === albumSong.id)
+                (albumSong) => !songList?.some((existingSong) => existingSong.id === albumSong.id)
             );
 
             // Update the song list with album songs
             const updatedSongList = [
-                ...songList.slice(0, currentSongIndex + 1),
+                ...songList?.slice(0, currentSongIndex + 1),
                 ...albumSongs
             ];
             const firstAlbumSong = albumSongs[0];

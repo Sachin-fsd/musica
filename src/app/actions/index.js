@@ -1,7 +1,6 @@
 'use server'
 
 export async function SearchGlobalAction(song) {
-    // console.log("song",song)
     try {
         const response = await fetch(`https://saavn-api-two.vercel.app/api/search?query=${encodeURIComponent(song)}`);
 

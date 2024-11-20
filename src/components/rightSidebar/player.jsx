@@ -21,10 +21,9 @@ const Player = () => {
     } = useContext(UserContext);
 
     const downloadSong = async () => {
-        // console.log("downloaduRL", currentSong.downloadUrl[4])
         setIsDownloading(true);
         try {
-            const response = await fetch(currentSong.downloadUrl[4].url);
+            const response = await fetch(currentSong?.downloadUrl[4].url);
             if (!response.ok) {
                 throw new Error('Download failed');
             }
@@ -32,7 +31,7 @@ const Player = () => {
             const url = URL.createObjectURL(data);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `${currentSong.name}`;
+            a.download = `${currentSong?.name}`;
             a.click();
             URL.revokeObjectURL(url);
             toast.success("Song Downloaded")
@@ -46,7 +45,7 @@ const Player = () => {
 
 
     const loopSong = () => {
-        audioRef.current.loop = !audioRef.current.loop;
+        audioRef?.current.loop = !audioRef.current.loop;
         setIsLooping(!isLooping);
     };
 

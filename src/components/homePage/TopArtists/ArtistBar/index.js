@@ -16,13 +16,13 @@ const ArtistBar = ({ album }) => {
     const [imageError, setImageError] = useState(false)
 
     const truncateTitle = (title, maxLength = 15) => {
-        return title.length > maxLength ? `${title?.substring(0, maxLength)}...` : title;
+        return title?.length > maxLength ? `${title?.substring(0, maxLength)}...` : title;
     };
 
     // Define a debounced function
     const handleAlbumClick = useCallback(debounce(() => {
         const context = { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId }
-        fetchAlbumSongs(album.type, album.id, context);
+        fetchAlbumSongs(album?.type, album?.id, context);
     }, 300), [album.type, album.id, fetchAlbumSongs, songList]);
 
     return (
@@ -33,10 +33,10 @@ const ArtistBar = ({ album }) => {
             {console.log(album)}
             <div className="relative w-full pb-[100%]">
                 <div className="absolute  top-0 left-0 w-full h-full transition-opacity duration-300 hover:opacity-80">
-                    {album.image[1] && !imageError ? (
+                    {album?.image[1] && !imageError ? (
                         <img
-                            src={album.image[1].url}
-                            alt={`${album.name} cover`}
+                            src={album?.image[1]?.url}
+                            alt={`${album?.name} cover`}
                             fill="true"
                             loading="lazy"
                             quality={100}
@@ -56,9 +56,9 @@ const ArtistBar = ({ album }) => {
                 </div>
             </div>
             <div className="w-full text-center mt-2 px-2">
-                {album.name ? (
+                {album?.name ? (
                     <Label className="font-bold text-gray-800 dark:text-gray-300 truncate text-sm">
-                        {truncateTitle(album.name)}
+                        {truncateTitle(album?.name)}
                     </Label>
                 ) : (
                     <Skeleton className="h-4 w-full rounded" />
