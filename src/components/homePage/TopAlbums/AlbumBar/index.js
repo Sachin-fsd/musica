@@ -1,10 +1,8 @@
 'use client'
 
-import { GetAlbumSongsByIdAction, GetSongsByIdAction } from "@/app/actions";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { UserContext } from "@/context";
-import Image from "next/image";
 import { useCallback, useContext, useState } from "react";
 import { debounce } from "lodash";
 import { fetchAlbumSongs } from "@/utils/playAndFetchSuggestionUtils";
@@ -15,7 +13,7 @@ const AlbumBar = ({ album }) => {
 
     const [imageError, setImageError] = useState(false)
 
-    const truncateTitle = (title, maxLength = 15) => {
+    const truncateTitle = (title, maxLength = 12) => {
         return title?.length > maxLength ? `${title?.substring(0, maxLength)}...` : title;
     };
 
@@ -34,7 +32,7 @@ const AlbumBar = ({ album }) => {
                 <div className="absolute  top-0 left-0 w-full h-full transition-opacity duration-300 sm:hover:opacity-80">
                     {album?.image && !imageError ? (
                         <img
-                            src={album.image}
+                            src={album?.image}
                             alt={`${album?.title} cover`}
                             fill="true"
                             loading="lazy"

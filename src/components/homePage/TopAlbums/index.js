@@ -46,7 +46,7 @@ const TopAlbums = ({ heading, albums }) => {
                                     key={index}
                                     className='border mr-1 bg-white dark:bg-gray-800 rounded-lg shadow-sm min-w-[25%] md:min-w-[17%] hover:shadow-md transition'
                                 >
-                                    {album?.image && <AlbumBar album={album} index={index} />}
+                                    {album && album.image && <AlbumBar album={album} index={index} />}
                                 </div>
                             ))
                         ) : (
