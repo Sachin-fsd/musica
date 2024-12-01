@@ -5,13 +5,14 @@ import { useCallback, useContext, useState } from "react";
 import { debounce } from "lodash";
 import { playAndFetchSuggestions } from "@/utils/playAndFetchSuggestionUtils";
 import { Play } from "lucide-react";
-import { decodeHtml } from "@/utils";
+import { decodeHtml, htmlParser } from "@/utils";
+import Marquee from "react-fast-marquee";
 
 const SongBarCarousel = ({ song, index }) => {
     const { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, currentId, setLoading } = useContext(UserContext);
     const [imageError, setImageError] = useState(false);
 
-    const truncateTitle = (title, maxLength = 12) => {
+    const truncateTitle = (title, maxLength = 18) => {
         let result = title?.length > maxLength ? `${title?.substring(0, maxLength)}...` : title;
         return decodeHtml(result);
     };
@@ -40,7 +41,7 @@ const SongBarCarousel = ({ song, index }) => {
         >
             <div className="relative w-full pb-[100%]">
                 <div className="absolute  top-0 left-0 w-full h-full transition-opacity duration-300 sm:hover:opacity-80">
-                    {song?.image && !imageError ? (
+                    {song?.image ? (
                         <img
                             src={imageUrl}
                             alt={`${song?.name} cover`}
@@ -61,10 +62,11 @@ const SongBarCarousel = ({ song, index }) => {
                     </div>
                 </div>
             </div>
-            <div className="w-full text-clip mt-2 px-2 cursor-pointer">
+            <div className="w-full text-balance mt-2 px-2 cursor-pointer">
                 {song?.name ? (
                     <Label className={`font-bold cursor-pointer text-gray-800 dark:text-gray-300 ${song?.id === currentSong?.id ? " dark:text-green-700 text-green-700" : ""} text-sm`}>
-                        {song?.name}
+                        <Marquee speed={5}> {htmlParser(song?.name)} </Marquee>
+                        {/* {truncateTitle(song?.name)} */}
                     </Label>
                 ) : (
                     <Skeleton className="h-4 w-full rounded" />

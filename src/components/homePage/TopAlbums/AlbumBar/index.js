@@ -13,9 +13,9 @@ const AlbumBar = ({ album }) => {
 
     const [imageError, setImageError] = useState(false)
 
-    // const truncateTitle = (title, maxLength = 12) => {
-    //     return title?.length > maxLength ? `${title?.substring(0, maxLength)}...` : title;
-    // };
+    const truncateTitle = (title, maxLength = 24) => {
+        return title?.length > maxLength ? `${title?.substring(0, maxLength)}...` : title;
+    };
 
     // Define a debounced function
     const handleAlbumClick = useCallback(debounce(() => {
@@ -25,7 +25,7 @@ const AlbumBar = ({ album }) => {
 
     return (
         <div
-            className="relative flex flex-col items-center rounded-lg overflow-hidden w-full cursor-pointer transition-transform transform hover:scale-101 hover:underline"
+            className="relative flex flex-col items-center rounded-lg overflow-hidden w-full cursor-pointer transition-transform transform hover:scale-101 sm:hover:underline"
             onClick={handleAlbumClick}
         >
             <div className="relative w-full pb-[100%]">
@@ -47,16 +47,15 @@ const AlbumBar = ({ album }) => {
                 </div>
                 {/* Play button overlay */}
                 <div className=" absolute w-full h-full flex bottom-0 right-0  duration-300  sm:hover:translate-x-0 translate-x-12 ">
-                    {/* <div className=" absolute w-full h-full flex bottom-0 right-0 opacity-0 transition-opacity duration-300 sm:hover:opacity-100"> */}
                     <div className="absolute bottom-0 right-0 -translate-x-1 -translate-y-1 bg-green-600 bg-opacity-100 rounded-full p-3 hover:scale-105 hover:bg-green-500">
                         <Play className="w-5 h-5 text-black fill-black" />
                     </div>
                 </div>
             </div>
-            <div className="w-full text-clip mt-2 px-2 cursor-pointer">
+            <div className="w-full text-pretty mt-2 px-2 cursor-pointer">
                 {album?.title ? (
                     <Label className="font-bold cursor-pointer text-gray-800 dark:text-gray-300 text-sm ">
-                        {album.title}
+                        {truncateTitle(album.title)}
                     </Label>
                 ) : (
                     <Skeleton className="h-4 w-full rounded" />

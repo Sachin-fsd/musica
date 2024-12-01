@@ -26,15 +26,11 @@ const TopAlbums = ({ heading, albums }) => {
                     <div className='flex items-center space-x-2'>
                         <button
                             onClick={() => scroll(softAlbumsRef, 'left')}
-                            onTouchStart={() => scroll(softAlbumsRef, 'left')}
-                            onMouseEnter={() => scroll(softAlbumsRef, 'left')}
                             className='p-2 bg-white dark:bg-gray-800 shadow-sm rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition'>
                             <ChevronLeft size={20} className='text-gray-600 dark:text-gray-300' />
                         </button>
                         <button
                             onClick={() => scroll(softAlbumsRef, 'right')}
-                            onTouchStart={() => scroll(softAlbumsRef, 'right')}
-                            onMouseEnter={() => scroll(softAlbumsRef, 'right')}
                             className='p-2 bg-white dark:bg-gray-800 shadow-sm rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition'>
                             <ChevronRight size={20} className='text-gray-600 dark:text-gray-300' />
                         </button>
