@@ -26,11 +26,15 @@ const TopAlbums = ({ heading, albums }) => {
                     <div className='flex items-center space-x-2'>
                         <button
                             onClick={() => scroll(softAlbumsRef, 'left')}
+                            onTouchStart={() => scroll(softAlbumsRef, 'left')}
+                            onMouseEnter={() => scroll(softAlbumsRef, 'left')}
                             className='p-2 bg-white dark:bg-gray-800 shadow-sm rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition'>
                             <ChevronLeft size={20} className='text-gray-600 dark:text-gray-300' />
                         </button>
                         <button
                             onClick={() => scroll(softAlbumsRef, 'right')}
+                            onTouchStart={() => scroll(softAlbumsRef, 'right')}
+                            onMouseEnter={() => scroll(softAlbumsRef, 'right')}
                             className='p-2 bg-white dark:bg-gray-800 shadow-sm rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition'>
                             <ChevronRight size={20} className='text-gray-600 dark:text-gray-300' />
                         </button>
@@ -42,7 +46,7 @@ const TopAlbums = ({ heading, albums }) => {
                             albums.map((album, index) => (
                                 album.image ? <div
                                     key={index}
-                                    className='border mr-1 bg-white dark:bg-gray-800 rounded-lg shadow-sm min-w-[25%] md:min-w-[17%] hover:shadow-md transition'
+                                    className='mr-1 hover:bg-white dark:hover:bg-gray-800 rounded-lg shadow-sm min-w-[25%] md:min-w-[17%] hover:shadow-md transition'
                                 >
                                     <AlbumBar album={album} index={index} />
                                 </div> : null

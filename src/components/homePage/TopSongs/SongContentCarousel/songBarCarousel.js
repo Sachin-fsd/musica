@@ -35,34 +35,36 @@ const SongBarCarousel = ({ song, index }) => {
 
     return (
         <div
-            className="relative flex flex-col items-center border p-1 border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden w-full cursor-pointer transition-transform transform hover:scale-101"
+            className="relative flex flex-col items-center p-1 rounded-lg overflow-hidden w-full cursor-pointer transition-transform transform hover:scale-101 hover:underline"
             onClick={handlePlayClick}
         >
             <div className="relative w-full pb-[100%]">
-                <div className="absolute top-0 left-0 w-full h-full transition-opacity duration-300 sm:hover:opacity-80">
-                    {imageUrl && !imageError ? (
+                <div className="absolute  top-0 left-0 w-full h-full transition-opacity duration-300 sm:hover:opacity-80">
+                    {song?.image && !imageError ? (
                         <img
                             src={imageUrl}
                             alt={`${song?.name} cover`}
                             loading="lazy"
+                            quality={100}
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             className="absolute top-0 left-0 w-full h-full rounded-md object-cover"
-                            onError={() => setImageError(true)}
+                            onError={() => setImageError(true)} // Set imageError to true on error
                         />
                     ) : (
                         <Skeleton className="absolute top-0 left-0 w-full h-full rounded" />
                     )}
                 </div>
                 {/* Play button overlay */}
-                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center opacity-0 transition-opacity duration-300 hover:opacity-100">
-                    <div className="bg-black bg-opacity-50 rounded-full p-2">
-                        <Play className="w-8 h-8 text-white" />
+                <div className=" absolute w-full h-full flex bottom-0 right-0  duration-300  sm:hover:translate-x-0 translate-x-14 ">
+                    <div className="absolute bottom-0 right-0 -translate-x-1 -translate-y-1 bg-green-600 bg-opacity-100 rounded-full p-3 hover:scale-105 hover:bg-green-500">
+                        <Play className="w-5 h-5 text-black fill-black" />
                     </div>
                 </div>
             </div>
-            <div className="w-full text-center mt-2 px-2">
+            <div className="w-full text-clip mt-2 px-2 cursor-pointer">
                 {song?.name ? (
-                    <Label className={`font-bold text-gray-800 dark:text-gray-300 ${song?.id === currentSong?.id ? " dark:text-green-700 text-green-700" : ""} truncate text-sm`}>
-                        {truncateTitle(song?.name)}
+                    <Label className={`font-bold cursor-pointer text-gray-800 dark:text-gray-300 ${song?.id === currentSong?.id ? " dark:text-green-700 text-green-700" : ""} text-sm`}>
+                        {song?.name}
                     </Label>
                 ) : (
                     <Skeleton className="h-4 w-full rounded" />
