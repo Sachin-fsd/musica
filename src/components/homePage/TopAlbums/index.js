@@ -1,20 +1,39 @@
-'use client'
+'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import AlbumBar from './AlbumBar';
 import { Label } from '@/components/ui/label';
 
 const TopAlbums = ({ heading, albums }) => {
     const softAlbumsRef = useRef(null);
+    const [scrollInterval, setScrollInterval] = useState(null);
 
-    const scroll = (ref, direction) => {
+    const scroll = (ref, direction, increment = 200) => {
         if (ref.current) {
             ref.current.scrollBy({
-                left: direction === 'left' ? -200 : 200,
+                left: direction === 'left' ? -increment : increment,
                 behavior: 'smooth',
             });
         }
+    };
+
+    const handleClick = (ref, direction) => {
+        scroll(ref, direction); // Perform a single scroll
+    };
+
+    const handleLongPress = (ref, direction) => {
+        // Start continuous scrolling on long press
+        const interval = setInterval(() => {
+            scroll(ref, direction, 20); // Smaller increments for smooth long-press scroll
+        }, 50); // Adjust for speed
+        setScrollInterval(interval);
+    };
+
+    const handlePressEnd = () => {
+        // Stop continuous scrolling
+        clearInterval(scrollInterval);
+        setScrollInterval(null);
     };
 
     return (
@@ -24,13 +43,25 @@ const TopAlbums = ({ heading, albums }) => {
                 <div className='flex items-center justify-between mb-4'>
                     <Label className="text-2xl font-bold text-sky-900 dark:text-sky-400">{heading}</Label>
                     <div className='flex items-center space-x-2'>
+                        {/* Left Button */}
                         <button
-                            onClick={() => scroll(softAlbumsRef, 'left')}
+                            onClick={() => handleClick(softAlbumsRef, 'left')}
+                            onMouseDown={() => handleLongPress(softAlbumsRef, 'left')}
+                            onTouchStart={() => handleLongPress(softAlbumsRef, 'left')}
+                            onMouseUp={handlePressEnd}
+                            onMouseLeave={handlePressEnd}
+                            onTouchEnd={handlePressEnd}
                             className='p-2 bg-white dark:bg-gray-800 shadow-sm rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition'>
                             <ChevronLeft size={20} className='text-gray-600 dark:text-gray-300' />
                         </button>
+                        {/* Right Button */}
                         <button
-                            onClick={() => scroll(softAlbumsRef, 'right')}
+                            onClick={() => handleClick(softAlbumsRef, 'right')}
+                            onMouseDown={() => handleLongPress(softAlbumsRef, 'right')}
+                            onTouchStart={() => handleLongPress(softAlbumsRef, 'right')}
+                            onMouseUp={handlePressEnd}
+                            onMouseLeave={handlePressEnd}
+                            onTouchEnd={handlePressEnd}
                             className='p-2 bg-white dark:bg-gray-800 shadow-sm rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition'>
                             <ChevronRight size={20} className='text-gray-600 dark:text-gray-300' />
                         </button>
