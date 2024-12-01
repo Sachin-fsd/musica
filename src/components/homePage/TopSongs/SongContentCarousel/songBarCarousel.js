@@ -1,3 +1,5 @@
+'use client'
+
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { UserContext } from "@/context";
@@ -65,8 +67,9 @@ const SongBarCarousel = ({ song, index }) => {
             <div className="w-full text-balance mt-2 px-2 cursor-pointer">
                 {song?.name ? (
                     <Label className={`font-bold cursor-pointer text-gray-800 dark:text-gray-300 ${song?.id === currentSong?.id ? " dark:text-green-700 text-green-700" : ""} text-sm`}>
-                        <Marquee speed={5}> {htmlParser(song?.name)} </Marquee>
-                        {/* {truncateTitle(song?.name)} */}
+                        <Marquee speed={5}>
+                            {decodeHtml(song?.name)}
+                        </Marquee>
                     </Label>
                 ) : (
                     <Skeleton className="h-4 w-full rounded" />
