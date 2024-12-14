@@ -44,7 +44,7 @@ const SongContentCarousel = () => {
                             songList?.map((song, index) => (
                                 <div
                                     key={index}
-                                    className='mr-1  sm:hover:bg-white dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-32 hover:shadow-md transition'
+                                    className='mr-1  sm:hover:bg-white dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-36 max-w-52 hover:shadow-md transition'
                                 >
                                     {song?.image && <SongBarCarousel song={song} index={index} />}
                                 </div>

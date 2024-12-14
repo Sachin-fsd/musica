@@ -2149,7 +2149,10 @@ export const all_top_playlists = {
     top_searches: "https://www.jiosaavn.com/api.php?__call=content.getTopSearches&ctx=web6dot0&api_version=4&_format=json&_marker=0",          // [9 items-albums,artist] check=type id, title,image
     new_releases: "https://www.jiosaavn.com/api.php?__call=reco.getAlbumReco&api_version=4&_format=json&_marker=0&ctx=web6dot0&albumid=57129653", //[15 items-albums] id, title, image
     trending_albums_hindi: "https://www.jiosaavn.com/api.php?__call=content.getTrending&api_version=4&_format=json&_marker=0&ctx=web6dot0&entity_type=album&entity_language=hindi", //[23 items-albums] id, title, image
+    trending_albums_haryanvi: "https://www.jiosaavn.com/api.php?__call=content.getTrending&api_version=4&_format=json&_marker=0&ctx=web6dot0&entity_type=album&entity_language=haryanvi", //[23 items-albums] id, title, image
+    trending_albums_punjabi: "https://www.jiosaavn.com/api.php?__call=content.getTrending&api_version=4&_format=json&_marker=0&ctx=web6dot0&entity_type=album&entity_language=punjabi", //[23 items-albums] id, title, image
     trending_albums_english: "https://www.jiosaavn.com/api.php?__call=content.getTrending&api_version=4&_format=json&_marker=0&ctx=web6dot0&entity_type=album&entity_language=english", //[23 items-albums] id, title, image
+    trending_albums_bhojpuri: "https://www.jiosaavn.com/api.php?__call=content.getTrending&api_version=4&_format=json&_marker=0&ctx=web6dot0&entity_type=album&entity_language=bhojpuri", //[23 items-albums] id, title, image
     top_albums_of_year: "https://www.jiosaavn.com/api.php?__call=search.topAlbumsoftheYear&api_version=4&_format=json&_marker=0&ctx=web6dot0&album_year=2024&album_lang=hindi"  //[23 items-albums] id, title, image
 }
 
@@ -2197,16 +2200,24 @@ export const All_Albums = [
         link: all_top_playlists.new_releases
     },
     {
-        heading: "Trending Albums Hindi",
+        heading: "Haryanvi Beats",
+        link: all_top_playlists.trending_albums_haryanvi
+    },
+    {
+        heading: "Hindi Hots",
         link: all_top_playlists.trending_albums_hindi
     },
     {
-        heading: "Trending Albums English",
+        heading: "English Essentials",
         link: all_top_playlists.trending_albums_english
     },
     {
-        heading: "Top Searches",
-        link: all_top_playlists.top_searches
+        heading: "Punjabi Mix",
+        link: all_top_playlists.trending_albums_punjabi
+    },
+    {
+        heading: "Bhojpuri Chills",
+        link: all_top_playlists.trending_albums_bhojpuri
     },
     {
         heading: "Top Albums of Year",

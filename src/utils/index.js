@@ -54,7 +54,7 @@ const handleResize = (text) => {
 
 
 
-export function decodeHtml(html, size = 16) {
+export function decodeHtml(html) {
     if (!html) return;
     // Decode HTML entities
     let decodedString = html
@@ -74,10 +74,15 @@ export function decodeHtml(html, size = 16) {
 }
 export function htmlParser(html) {
     if (!html) return;
-    
+
     // Use DOMParser to decode HTML entities
-    const parser = new DOMParser();
-    const decodedString = parser.parseFromString(html, 'text/html').documentElement.textContent;
+    let decodedString = html
+        .replace(/&quot;/g, '"')
+        .replace(/&#039;/g, "'")
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&nbsp;/g, ' ');
 
     return decodedString;
 }

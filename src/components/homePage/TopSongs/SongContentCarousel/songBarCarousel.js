@@ -7,7 +7,7 @@ import { useCallback, useContext, useState } from "react";
 import { debounce } from "lodash";
 import { playAndFetchSuggestions } from "@/utils/playAndFetchSuggestionUtils";
 import { Play } from "lucide-react";
-import { decodeHtml } from "@/utils";
+import { decodeHtml, htmlParser } from "@/utils";
 import Marquee from "react-fast-marquee";
 
 const SongBarCarousel = ({ song }) => {
@@ -69,10 +69,10 @@ const SongBarCarousel = ({ song }) => {
                         {
                             song?.name.length > 12 ?
                                 <Marquee gradient={false} speed={20} pauseOnHover={true}>
-                                    {song?.name}
+                                    {htmlParser(song?.name)}
                                 </Marquee>
                                 :
-                                song?.name
+                                htmlParser(song?.name)
                         }
                     </Label>
                 ) : (

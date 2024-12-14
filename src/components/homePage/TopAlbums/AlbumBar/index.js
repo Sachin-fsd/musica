@@ -7,6 +7,7 @@ import { useCallback, useContext, useState } from "react";
 import { debounce } from "lodash";
 import { fetchAlbumSongs } from "@/utils/playAndFetchSuggestionUtils";
 import { Play } from "lucide-react"; // Import the Play icon
+import { htmlParser } from "@/utils";
 
 const AlbumBar = ({ album }) => {
     const { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading, setIsLooping } = useContext(UserContext);
@@ -14,7 +15,8 @@ const AlbumBar = ({ album }) => {
     const [imageError, setImageError] = useState(false)
 
     const truncateTitle = (title, maxLength = 24) => {
-        return title?.length > maxLength ? `${title?.substring(0, maxLength)}...` : title;
+        let result = title?.length > maxLength ? `${title?.substring(0, maxLength)}...` : title;
+        return htmlParser(result)
     };
 
     // Define a debounced function

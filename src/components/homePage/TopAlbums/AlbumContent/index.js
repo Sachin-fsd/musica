@@ -6,15 +6,64 @@ import { fetchByLinkAction, fetchArtistsByPermaLinkAction } from "@/app/actions"
 
 const AlbumContent = async () => {
     try {
+        let MegaMenu3Playlists = await fetchByLinkAction(mega_menu_3);
+        let object_for_megaMenu3 = [
+            {
+                heading: "Ultimate Jams",
+                data: MegaMenu3Playlists.top_playlists
+            },
+            {
+                heading: "New Trending",
+                data: MegaMenu3Playlists.new_trending
+            },
+            {
+                heading: "New Albums",
+                data: MegaMenu3Playlists.new_albums
+            },
+            {
+                heading: "Top Hits",
+                data: MegaMenu3Playlists["promo:vx:data:68"]
+            },
+            {
+                heading: "Charts",
+                data: MegaMenu3Playlists.charts
+            },
+            {
+                heading: "On Repeat",
+                data: MegaMenu3Playlists["promo:vx:data:185"]
+            },
+            {
+                heading: "Chill Vibes",
+                data: MegaMenu3Playlists["promo:vx:data:113"]
+            },
+            {
+                heading: "Vibe Check",
+                data: MegaMenu3Playlists["promo:vx:data:116"]
+            },
+            {
+                heading: "Fresh Finds",
+                data: MegaMenu3Playlists["promo:vx:data:143"]
+            },
+            {
+                heading: "Epic Soundtracks",
+                data: MegaMenu3Playlists["promo:vx:data:76"]
+            },
+            {
+                heading: "Groove Station",
+                data: MegaMenu3Playlists["promo:vx:data:68"]
+            },
+        ]
+
         // Fetch all albums concurrently
-        const albumData = await Promise.all(
+        let albumData = await Promise.all(
             All_Albums.map(async (album) => {
                 const data = await fetchByLinkAction(album.link);
                 return { heading: album.heading, data: data || [] }
             })
         )
 
-        const MegaMenu3Playlists = await fetchByLinkAction(mega_menu_3);
+        albumData = [...object_for_megaMenu3, ...albumData, ]
+
         // const MegaMenu1 = await fetchByLinkAction(mega_menu_1);
 
         // const artists = await Promise.all(
@@ -39,15 +88,7 @@ const AlbumContent = async () => {
                         </div>
                     ))
                 }
-                {
-                    <div>
-                        <TopAlbums
-                            heading=""
-                            albums={MegaMenu3Playlists.top_playlists}
-                            emptyMessage="No trending albums available."
-                        />
-                    </div>
-                }
+
                 {/* <div>
                     <TopArtists
                         heading={"Top Artists"}
