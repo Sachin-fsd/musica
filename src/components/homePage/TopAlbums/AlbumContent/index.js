@@ -1,6 +1,7 @@
 import { All_Albums, mega_menu_1, mega_menu_2, mega_menu_3 } from "@/utils/cachedSongs";
 import TopAlbums from "..";
 import { fetchByLinkAction, fetchArtistsByPermaLinkAction } from "@/app/actions";
+import { shuffleArray } from "@/utils/extraFunctions";
 
 
 
@@ -63,6 +64,7 @@ const AlbumContent = async () => {
         )
 
         albumData = [...object_for_megaMenu3, ...albumData, ]
+        albumData = shuffleArray(albumData);
 
         // const MegaMenu1 = await fetchByLinkAction(mega_menu_1);
 

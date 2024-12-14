@@ -4,7 +4,7 @@ import { Play, Pause, StepForward, ChevronDown } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { Label } from "../ui/label";
-import { decodeHtml } from "@/utils";
+import { decodeHtml, htmlParser } from "@/utils";
 import { Button } from "../ui/button";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import RightSidebar from "../rightSidebar";
@@ -15,18 +15,18 @@ const Bottombar = () => {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [imageError, setImageError] = useState(false)
 
-    const { togglePlayPause, currentSong, playing, setCurrentIndex, songList, currentIndex, setCurrentSong, setPlaying, audioRef, handleSeek, currentTime, duration } = useContext(UserContext);
+    const { togglePlayPause, currentSong, playing, setCurrentIndex, songList, currentIndex, setCurrentSong, setPlaying, audioRef, handleSeek, currentTime, duration, handleNext } = useContext(UserContext);
 
     useEffect(() => {
         if (window.innerWidth < 768) setIsSheetOpen(true);
     }, []);
 
-    const handleNextSong = () => {
-        const nextIndex = (currentIndex + 1) % songList?.length;
-        setCurrentIndex(nextIndex);
-        setCurrentSong(songList[nextIndex]);
-        if (playing) setPlaying(true);
-    };
+    // const handleNextSong = () => {
+    //     const nextIndex = (currentIndex + 1) % songList?.length;
+    //     setCurrentIndex(nextIndex);
+    //     setCurrentSong(songList[nextIndex]);
+    //     if (playing) setPlaying(true);
+    // };
 
     if (!currentSong) return null;
 
@@ -56,10 +56,10 @@ const Bottombar = () => {
                             {currentSong?.image[0]?.url && !imageError ? (
                                 <img
                                     src={currentSong?.image[0]?.url}
-                                    height="48"
-                                    width="48"
+                                    // height="48"
+                                    // width="48"
                                     loading="lazy"
-                                    className="rounded-lg object-cover"
+                                    className="rounded-lg"
                                     alt={`${currentSong?.name} cover`}
                                     onError={() => setImageError(true)} />
                             ) : (
@@ -73,8 +73,8 @@ const Bottombar = () => {
                                 )}
                                 {currentSong?.artists?.primary[0]?.name ? (
                                     <span className="flex whitespace-nowrap">
-                                        <p className="text-sm text-gray-400 truncate">{currentSong?.artists?.primary[0]?.name} </p> <span className=""> • </span>
-                                        <p className="text-sm text-gray-400 truncate"> {currentSong?.album?.name?.length>15 ? currentSong?.album?.name?.substring(0,15).concat("..."): currentSong?.album?.name}</p>
+                                        <p className="text-sm text-gray-400 truncate">{htmlParser(currentSong?.artists?.primary[0]?.name)} </p> <span className=""> • </span>
+                                        <p className="text-sm text-gray-400 truncate"> {currentSong?.album?.name?.length>15 ? htmlParser(currentSong?.album?.name?.substring(0,15).concat("...")): htmlParser(currentSong?.album?.name)}</p>
                                     </span>
                                 ) : null}
                             </div>
@@ -89,7 +89,7 @@ const Bottombar = () => {
                                 <Play className="w-6 h-6" />
                             )}
                         </Button>
-                        <Button variant="simple" className="p-2 bg-gray-700 rounded-full text-white shadow-md hover:bg-gray-800 hover:text-accent-foreground" onClick={handleNextSong}>
+                        <Button variant="simple" className="p-2 bg-gray-700 rounded-full text-white shadow-md hover:bg-gray-800 hover:text-accent-foreground" onClick={handleNext}>
                             <StepForward className="w-6 h-6" />
                         </Button>
                     </div>
@@ -98,7 +98,7 @@ const Bottombar = () => {
                     <div className="flex flex-col h-full">
                         <div className="flex justify-between items-center ml-2 mt-2">
                             <SheetClose asChild>
-                                <Button className="cursor-pointer bg-transparent hover:bg-gray-200 dark:hover:bg-gray-700 hover:shadow-md transition-all duration-200">
+                                <Button className="cursor-pointer bg-transparent hover:bg-gray-200 dark:hover:bg-gray-700 sm:hover:shadow-md transition-all duration-200">
                                     <ChevronDown className="text-2xl font-bold text-gray-900 dark:text-gray-100" />
                                 </Button>
                             </SheetClose>

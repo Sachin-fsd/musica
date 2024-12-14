@@ -226,16 +226,17 @@ export default function UserState({ children }) {
             }
             return (prevIndex === 0 ? songList?.length - 1 : prevIndex - 1);
         });
+        const prevIndex = currentIndex === 0 ? songList?.length - 1 : currentIndex - 1;
+        setCurrentIndex(prevIndex);
+        setCurrentSong(songList[prevIndex]);
+        if (playing) setPlaying(true);
     };
 
     const handleNext = () => {
-        setCurrentIndex((prevIndex) => {
-            // If there's only one song, stay on the same song
-            if (songList?.length === 1) {
-                return prevIndex;
-            }
-            return (prevIndex === songList?.length - 1 ? 0 : prevIndex + 1);
-        });
+        const nextIndex = (currentIndex + 1) % songList?.length;
+        setCurrentIndex(nextIndex);
+        setCurrentSong(songList[nextIndex]);
+        if (playing) setPlaying(true);
     };
 
     // for notification song player

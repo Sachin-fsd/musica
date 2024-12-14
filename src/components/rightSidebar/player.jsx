@@ -61,11 +61,11 @@ const Player = () => {
                 <Button variant="simple" className="p-0 m-0" onClick={handlePrev}>
                     <SkipBack />
                 </Button>
-                <Button variant="ghost" className="p-0" onClick={togglePlayPause}>
+                <Button variant="ghost" className="p-0 " onClick={togglePlayPause}>
                     {playing ? (
-                        <Pause className="bg-pink-500 p-2 rounded-lg text-white size-10" />
+                        <Pause className="bg-pink-500 p-2 text-white size-14 rounded-full" />
                     ) : (
-                        <Play className="bg-pink-500 p-2 rounded-lg text-white size-10" />
+                        <Play className="bg-pink-500 p-2 rounded-full text-white size-14" />
                     )}
                 </Button>
                 <Button variant="simple" className="p-0" onClick={handleNext}>
