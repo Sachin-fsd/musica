@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -7,7 +7,6 @@ import { useCallback, useContext, useState } from "react";
 import { debounce } from "lodash";
 import { fetchAlbumSongs } from "@/utils/playAndFetchSuggestionUtils";
 import { Play } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"; // Assuming you have a Tooltip component
 
 const AlbumBar = ({ album }) => {
     const { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId } = useContext(UserContext);
@@ -51,34 +50,22 @@ const AlbumBar = ({ album }) => {
                 {/* Play button overlay */}
                 <div className="absolute inset-0 flex items-center justify-center group">
                     {/* Play Button */}
-                    <div className="relative flex items-center justify-center w-12 h-12 transform scale-0 transition-all duration-300 ease-out opacity-0 sm:group-hover:scale-100 sm:group-hover:opacity-100">
+                    <div className="relative flex items-center justify-center w-12 h-12 transform scale-0 transition-all duration-300 ease-out opacity-0 group-hover:scale-100 group-hover:opacity-100">
                         <div className="absolute w-full h-full bg-green-600 rounded-full shadow-lg shadow-green-500/50 hover:bg-green-500"></div>
                         <Play className="relative w-6 h-6 text-black" />
                     </div>
                 </div>
+
             </div>
-            <TooltipProvider>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <div className="w-full mt-2 px-2 cursor-pointer text-center">
-                            {album?.title ? (
-                                <Label
-                                    className={`font-bold cursor-pointer text-gray-800 dark:text-gray-300 text-sm truncate`}
-                                >
-                                    {truncateTitle(album.title)}
-                                </Label>
-                            ) : (
-                                <Skeleton className="h-4 w-full rounded" />
-                            )}
-                        </div>
-                    </TooltipTrigger>
-                    {album?.title?.length > 24 && (
-                        <TooltipContent>
-                            <p className="z-10 text-xs text-gray-800 dark:text-gray-300">{album?.title}</p>
-                        </TooltipContent>
-                    )}
-                </Tooltip>
-            </TooltipProvider>
+            <div className="w-full text-pretty mt-2 px-2 cursor-pointer">
+                {album?.title ? (
+                    <Label className="font-bold cursor-pointer text-gray-800 dark:text-gray-300 text-sm">
+                        {truncateTitle(album.title)}
+                    </Label>
+                ) : (
+                    <Skeleton className="h-4 w-full rounded" />
+                )}
+            </div>
         </div>
     );
 };
