@@ -47,7 +47,6 @@
     "react-fast-marquee": "^1.6.5",
     "react-multi-carousel": "^2.8.5",
     "react-scrollbars-custom": "^4.1.1",
-    "react-toastify": "^10.0.5",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7"

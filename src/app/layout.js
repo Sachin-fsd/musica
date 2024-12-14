@@ -5,8 +5,6 @@ import { ThemeProvider } from "@/components/themeProvider";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
 import { Toaster } from "sonner";
-import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
 import { NextUIProvider } from "@nextui-org/react";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -53,7 +51,6 @@ export default function RootLayout({ children }) {
             {/* <NextTopLoader /> */}
             {children}
             <Toaster />
-            <ToastContainer />
             <SpeedInsights />
             <Analytics />
           </ThemeProvider>

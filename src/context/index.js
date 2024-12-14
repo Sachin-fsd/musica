@@ -1,10 +1,8 @@
 'use client'
-import { fetchAlbumsByLinkAction, GetSongsByIdAction, SearchSongSuggestionAction } from "@/app/actions";
-import { useToast } from "@/components/ui/use-toast";
-import { All_Albums, songs } from "@/utils/cachedSongs";
+import { SearchSongSuggestionAction } from "@/app/actions";
+import { songs } from "@/utils/cachedSongs";
 import { shuffleArray } from "@/utils/extraFunctions";
 import { createContext, useRef, useState, useEffect } from "react";
-import { toast } from "react-toastify";
 
 export const UserContext = createContext(null);
 
@@ -23,10 +21,19 @@ export default function UserState({ children }) {
     const [manualQuality, setManualQuality] = useState("very_high"); // State for manual quality selection
     const [isJamChecked, setIsJamChecked] = useState(false);
 
+    //save songs in local storage
+    useEffect(() => {
+        setSongList(JSON.parse(localStorage.getItem("songList"))  || songs)
+        setCurrentSong(JSON.parse(localStorage.getItem("currentSong") ) || songs[0]);
+    }, [])
 
-    // const handleJamToogle () => {
-    //     setIsChecked
-    // }
+    useEffect(() => {
+        localStorage.setItem("songList", JSON.stringify(songList))
+    }, songList)
+
+    useEffect(() => {
+        localStorage.setItem("currentSong", JSON.stringify(currentSong))
+    }, currentSong)
 
     // handle seek of slider
     const handleSeek = (e) => {

@@ -7,7 +7,7 @@ import { UserContext } from '@/context';
 import SongBarCarousel from './songBarCarousel';
 
 const SongContentCarousel = () => {
-    const {songList} = useContext(UserContext);
+    const { songList} = useContext(UserContext);
     const softAlbumsRef = useRef(null);
 
     const scroll = (ref, direction) => {

@@ -8,53 +8,70 @@ import { songs as defaultSongs } from '@/utils/cachedSongs';
 const SongContent = () => {
     const { setSongList, songList, currentSong, setCurrentSong } = useContext(UserContext);
 
+    useEffect(() => {
+        let savedSongList = null;
+        try {
+            const storedData = localStorage.getItem('songList');
+            savedSongList = storedData ? JSON.parse(storedData) : null;
+        } catch (error) {
+            console.error("Error parsing song list from localStorage:", error);
+            localStorage.removeItem('songList'); // Remove invalid data
+        }
+
+        if (savedSongList) {
+            setSongList(savedSongList);
+        } else {
+            setSongList(defaultSongs);
+        }
+    }, []);
+
+    useEffect(() => {
+        let savedSongList = null;
+        try {
+            const storedData = localStorage.getItem('songList');
+            savedSongList = storedData ? JSON.parse(storedData) : null;
+        } catch (error) {
+            console.error("Error parsing song list from localStorage:", error);
+            localStorage.removeItem('songList'); // Remove invalid data
+        }
+
+        if (savedSongList) {
+            setSongList(savedSongList);
+        } else {
+            setSongList(defaultSongs);
+        }
+    }, [setSongList]);
+
     // useEffect(() => {
-    //     let savedSongList = null;
+    //     let savedCurrentSong = null;
     //     try {
-    //         const storedData = localStorage.getItem('songList');
-    //         savedSongList = storedData ? JSON.parse(storedData) : null;
+    //         const storedData = localStorage.getItem('currentSong');
+    //         savedCurrentSong = storedData ? JSON.parse(storedData) : null;
     //     } catch (error) {
-    //         console.error("Error parsing song list from localStorage:", error);
-    //         localStorage.removeItem('songList'); // Remove invalid data
+    //         console.error("Error parsing currentsong from localStorage:", error);
+    //         localStorage.removeItem('currentSong'); // Remove invalid data
     //     }
 
-    //     if (savedSongList) {
-    //         setSongList(savedSongList);
-    //     } else {
-    //         setSongList(defaultSongs);
+    //     if (savedCurrentSong) {
+    //         setCurrentSong(savedCurrentSong);
+    //     } 
+    // }, [setCurrentSong]);
+
+    // useEffect(() => {
+    //     try {
+    //         localStorage.setItem('songList', JSON.stringify(songList));
+    //     } catch (error) {
+    //         console.error("Error saving song list to localStorage:", error);
     //     }
-    // }, [setSongList]);
-    
-    useEffect(() => {
-        let savedCurrentSong = null;
-        try {
-            const storedData = localStorage.getItem('currentSong');
-            savedCurrentSong = storedData ? JSON.parse(storedData) : null;
-        } catch (error) {
-            console.error("Error parsing currentsong from localStorage:", error);
-            localStorage.removeItem('currentSong'); // Remove invalid data
-        }
+    // }, [songList]);
 
-        if (savedCurrentSong) {
-            setCurrentSong(savedCurrentSong);
-        } 
-    }, [setCurrentSong]);
-
-    useEffect(() => {
-        try {
-            localStorage.setItem('songList', JSON.stringify(songList));
-        } catch (error) {
-            console.error("Error saving song list to localStorage:", error);
-        }
-    }, [songList]);
-
-    useEffect(() => {
-        try {
-            localStorage.setItem('currentSong', JSON.stringify(currentSong));
-        } catch (error) {
-            console.error("Error saving current song to localStorage:", error);
-        }
-    }, [currentSong]);
+    // useEffect(() => {
+    //     try {
+    //         localStorage.setItem('currentSong', JSON.stringify(currentSong));
+    //     } catch (error) {
+    //         console.error("Error saving current song to localStorage:", error);
+    //     }
+    // }, [currentSong]);
 
     if (!songList || songList?.length === 0) {
         return (

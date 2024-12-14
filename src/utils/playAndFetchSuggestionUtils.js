@@ -15,8 +15,8 @@ export async function playAndFetchSuggestions(song, context) {
     try {
         const clickedSongIndex = songList?.findIndex((s) => s.id === song?.id);
         const isNewSong = clickedSongIndex === -1;
-        let NewSongList = songList.filter(s => !s.old );
-        console.log("NewSongList",NewSongList)
+        let NewSongList = songList.filter(s => !s.old);
+        // console.log("NewSongList",NewSongList)
         let blankArr = Array.from({ length: 10 }, (el) => el = songFormat);
 
         // Handle new song addition to the list
@@ -25,7 +25,7 @@ export async function playAndFetchSuggestions(song, context) {
             setSongList(updatedSongList);
             setCurrentIndex(0);
         } else {
-            setCurrentIndex(clickedSongIndex);
+            setCurrentIndex(songList?.findIndex((s) => s.id === song?.id));
         }
 
         // Set up the current song to play
@@ -66,28 +66,21 @@ export async function fetchAlbumSongs(type, id, context) {
         const response = await GetSongsByIdAction(type, id);
         if (response.success) {
             let albumSongs = response.data.songs || response.data.topSongs || response.data;
-            const currentSongIndex = songList?.findIndex((s) => s.id === currentSong?.id);
-
-            console.log("Initial Song List:", songList);
-
+            let updatedSongListCurrent = songList.filter(s => !s.old);
+            
             // Remove duplicates from album songs
-            albumSongs = albumSongs.filter(
-                (albumSong) => !songList?.some((existingSong) => existingSong.id === albumSong.id)
+            updatedSongListCurrent = updatedSongListCurrent.filter(
+                (existingSong) => !albumSongs?.some((albumSong) => existingSong.id === albumSong.id)
             );
 
             // Update the song list with album songs
-            const updatedSongList = [
-                ...songList?.slice(0, currentSongIndex + 1),
-                ...albumSongs
-            ];
-            const firstAlbumSong = albumSongs[0];
-            const newIndex = updatedSongList.findIndex((s) => s.id === firstAlbumSong.id);
+            const updatedSongList = [...albumSongs,...updatedSongListCurrent];
 
             setSongList(updatedSongList);
-            setCurrentIndex(newIndex);
-            setCurrentSong(firstAlbumSong);
+            setCurrentIndex(0);
+            setCurrentSong(albumSongs[0]);
             setPlaying(true);
-            setCurrentId(firstAlbumSong.id);
+            setCurrentId(albumSongs[0].id);
 
             console.log("Updated Song List with Album Songs:", updatedSongList);
         }
