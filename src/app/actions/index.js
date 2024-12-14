@@ -143,7 +143,7 @@ export async function GetSongsByIdAction(type, id) {
     }
 }
 
-export async function fetchAlbumsByLinkAction(link) {
+export async function fetchByLinkAction(link) {
     try {
         const response = await fetch(link, {
             headers: {
@@ -190,3 +190,53 @@ export async function fetchArtistsByPermaLinkAction(link) {
         }
     }
 }
+
+//for playlists
+
+export async function fetchPlaylistsByIdAction(playlistId) {
+    try {
+
+        const response = await fetch(`https://saavn-api-two.vercel.app/api/playlists?id=${playlistId}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch songs');
+        }
+        const data = await response.json();
+
+        if (data.success) {
+            return data;
+        }
+        return {
+            msg: "Not Found",
+            ok: false
+        };
+    } catch (error) {
+        console.error('Error fetching songs:', error);
+        return {
+            msg: "Song Not Found",
+            ok: false
+        }
+    }
+}
+
+// export async function fetchPlaylistsByIdAction(id) {
+//     try {
+//         const response = await fetch(id, {
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 'Accept': 'application/json',
+//             }
+//         })
+//         // const contentType = response.headers.get("content-type");
+//         // if (!response.ok || !contentType || !contentType.includes("application/json")) {
+//         //     console.error('Unexpected response format:', await response.text());
+//         //     return null;
+//         // }
+//         // console.log(response)
+//         const data = await response.json();
+
+//         return data;
+//     } catch (error) {
+//         console.error('Error fetching trending albums:', error);
+//         return null;
+//     }
+// }

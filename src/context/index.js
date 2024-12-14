@@ -22,18 +22,18 @@ export default function UserState({ children }) {
     const [isJamChecked, setIsJamChecked] = useState(false);
 
     //save songs in local storage
-    useEffect(() => {
-        setSongList(JSON.parse(localStorage.getItem("songList"))  || songs)
-        setCurrentSong(JSON.parse(localStorage.getItem("currentSong") ) || songs[0]);
-    }, [])
+    // useEffect(() => {
+    //     setSongList(JSON.parse(localStorage.getItem("songList"))  || songs)
+    //     setCurrentSong(JSON.parse(localStorage.getItem("currentSong") ) || songs[0]);
+    // }, [])
 
-    useEffect(() => {
-        localStorage.setItem("songList", JSON.stringify(songList))
-    }, songList)
+    // useEffect(() => {
+    //     localStorage.setItem("songList", JSON.stringify(songList))
+    // }, songList)
 
-    useEffect(() => {
-        localStorage.setItem("currentSong", JSON.stringify(currentSong))
-    }, currentSong)
+    // useEffect(() => {
+    //     localStorage.setItem("currentSong", JSON.stringify(currentSong))
+    // }, currentSong)
 
     // handle seek of slider
     const handleSeek = (e) => {

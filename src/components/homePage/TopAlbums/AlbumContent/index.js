@@ -1,6 +1,6 @@
-import { All_Albums, mega_menu_1, mega_menu_2 } from "@/utils/cachedSongs";
+import { All_Albums, mega_menu_1, mega_menu_2, mega_menu_3 } from "@/utils/cachedSongs";
 import TopAlbums from "..";
-import { fetchAlbumsByLinkAction, fetchArtistsByPermaLinkAction } from "@/app/actions";
+import { fetchByLinkAction, fetchArtistsByPermaLinkAction } from "@/app/actions";
 
 
 
@@ -9,13 +9,13 @@ const AlbumContent = async () => {
         // Fetch all albums concurrently
         const albumData = await Promise.all(
             All_Albums.map(async (album) => {
-                const data = await fetchAlbumsByLinkAction(album.link);
+                const data = await fetchByLinkAction(album.link);
                 return { heading: album.heading, data: data || [] }
             })
         )
 
-        // const MegaMenu2 = await fetchAlbumsByLinkAction(mega_menu_2);
-        // const MegaMenu1 = await fetchAlbumsByLinkAction(mega_menu_1);
+        const MegaMenu3Playlists = await fetchByLinkAction(mega_menu_3);
+        // const MegaMenu1 = await fetchByLinkAction(mega_menu_1);
 
         // const artists = await Promise.all(
         //     MegaMenu2.playlist.map(async (artist) => {
@@ -38,6 +38,15 @@ const AlbumContent = async () => {
                             />
                         </div>
                     ))
+                }
+                {
+                    <div>
+                        <TopAlbums
+                            heading=""
+                            albums={MegaMenu3Playlists.top_playlists}
+                            emptyMessage="No trending albums available."
+                        />
+                    </div>
                 }
                 {/* <div>
                     <TopArtists

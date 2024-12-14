@@ -2148,7 +2148,8 @@ export const songs = [
 export const all_top_playlists = {
     top_searches: "https://www.jiosaavn.com/api.php?__call=content.getTopSearches&ctx=web6dot0&api_version=4&_format=json&_marker=0",          // [9 items-albums,artist] check=type id, title,image
     new_releases: "https://www.jiosaavn.com/api.php?__call=reco.getAlbumReco&api_version=4&_format=json&_marker=0&ctx=web6dot0&albumid=57129653", //[15 items-albums] id, title, image
-    trending_albums: "https://www.jiosaavn.com/api.php?__call=content.getTrending&api_version=4&_format=json&_marker=0&ctx=web6dot0&entity_type=album&entity_language=hindi", //[23 items-albums] id, title, image
+    trending_albums_hindi: "https://www.jiosaavn.com/api.php?__call=content.getTrending&api_version=4&_format=json&_marker=0&ctx=web6dot0&entity_type=album&entity_language=hindi", //[23 items-albums] id, title, image
+    trending_albums_english: "https://www.jiosaavn.com/api.php?__call=content.getTrending&api_version=4&_format=json&_marker=0&ctx=web6dot0&entity_type=album&entity_language=english", //[23 items-albums] id, title, image
     top_albums_of_year: "https://www.jiosaavn.com/api.php?__call=search.topAlbumsoftheYear&api_version=4&_format=json&_marker=0&ctx=web6dot0&album_year=2024&album_lang=hindi"  //[23 items-albums] id, title, image
 }
 
@@ -2196,8 +2197,12 @@ export const All_Albums = [
         link: all_top_playlists.new_releases
     },
     {
-        heading: "Trending Albums",
-        link: all_top_playlists.trending_albums
+        heading: "Trending Albums Hindi",
+        link: all_top_playlists.trending_albums_hindi
+    },
+    {
+        heading: "Trending Albums English",
+        link: all_top_playlists.trending_albums_english
     },
     {
         heading: "Top Searches",
