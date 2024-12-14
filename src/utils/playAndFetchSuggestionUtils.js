@@ -15,12 +15,13 @@ export async function playAndFetchSuggestions(song, context) {
     try {
         const clickedSongIndex = songList?.findIndex((s) => s.id === song?.id);
         const isNewSong = clickedSongIndex === -1;
-        let updatedSongList = songList;
-        let blankArr =  Array.from({length:10},(el)=>el=songFormat);
+        let NewSongList = songList.filter(s => !s.old );
+        console.log("NewSongList",NewSongList)
+        let blankArr = Array.from({ length: 10 }, (el) => el = songFormat);
 
         // Handle new song addition to the list
         if (isNewSong) {
-            updatedSongList = [song, ...blankArr, ...songList];
+            let updatedSongList = [song, ...blankArr, ...NewSongList];
             setSongList(updatedSongList);
             setCurrentIndex(0);
         } else {
@@ -38,10 +39,10 @@ export async function playAndFetchSuggestions(song, context) {
             const relatedSongs = shuffleArray(response.data).filter(
                 (relatedSong) => !songList?.some((existingSong) => existingSong.id === relatedSong.id)
             );
-            setSongList(isNewSong ? [song, ...relatedSongs, ...songList] : [...songList, ...relatedSongs]);
+            setSongList(isNewSong ? [song, ...relatedSongs, ...NewSongList] : [...NewSongList, ...relatedSongs]);
         }
 
-        console.log("Updated Song List:", updatedSongList);
+        // console.log("Updated Song List:", updatedSongList);
         return { msg: "ok", ok: true };
 
     } catch (error) {

@@ -42,7 +42,7 @@ const TopAlbums = ({ heading, albums }) => {
                             albums.map((album, index) => (
                                 album.image ? <div
                                     key={index}
-                                    className='mr-1 hover:bg-white dark:hover:bg-gray-800 rounded-lg shadow-sm min-w-[25%] md:min-w-[17%] hover:shadow-md transition'
+                                    className='mr-1 sm:hover:bg-white dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-32 md:min-w-[17%] sm:hover:shadow-md transition'
                                 >
                                     <AlbumBar album={album} index={index} />
                                 </div> : null

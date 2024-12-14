@@ -7,15 +7,15 @@ import { useCallback, useContext, useState } from "react";
 import { debounce } from "lodash";
 import { playAndFetchSuggestions } from "@/utils/playAndFetchSuggestionUtils";
 import { Play } from "lucide-react";
-import { decodeHtml, htmlParser } from "@/utils";
+import { decodeHtml } from "@/utils";
 import Marquee from "react-fast-marquee";
 
-const SongBarCarousel = ({ song, index }) => {
-    const { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, currentId, setLoading } = useContext(UserContext);
+const SongBarCarousel = ({ song }) => {
+    const { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading } = useContext(UserContext);
     const [imageError, setImageError] = useState(false);
 
     const truncateTitle = (title, maxLength = 18) => {
-        let result = title?.length > maxLength ? `${title?.substring(0, maxLength)}...` : title;
+        const result = title?.length > maxLength ? `${title?.substring(0, maxLength)}...` : title;
         return decodeHtml(result);
     };
 
@@ -34,42 +34,46 @@ const SongBarCarousel = ({ song, index }) => {
         [song, currentIndex, songList]
     );
 
-    const imageUrl = song?.image[1]?.url; // Verify if the image URL exists
+    const imageUrl = song?.image[1]?.url;
 
     return (
         <div
-            className="relative flex flex-col items-center p-1 rounded-lg overflow-hidden w-full cursor-pointer transition-transform transform hover:scale-101 hover:underline"
+            className="relative flex flex-col items-center rounded-lg transition-transform transform sm:hover:scale-102 shadow-md overflow-hidden cursor-pointer"
             onClick={handlePlayClick}
         >
-            <div className="relative w-full pb-[100%]">
-                <div className="absolute  top-0 left-0 w-full h-full transition-opacity duration-300 sm:hover:opacity-80">
-                    {song?.image ? (
-                        <img
-                            src={imageUrl}
-                            alt={`${song?.name} cover`}
-                            loading="lazy"
-                            quality={100}
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            className="absolute top-0 left-0 w-full h-full rounded-md object-cover"
-                            onError={() => setImageError(true)} // Set imageError to true on error
-                        />
-                    ) : (
-                        <Skeleton className="absolute top-0 left-0 w-full h-full rounded" />
-                    )}
-                </div>
+            <div className="relative w-full" style={{ aspectRatio: "1 / 1" }}>
+                {song?.image ? (
+                    <img
+                        src={imageUrl}
+                        alt={`${song?.name} cover`}
+                        // className="absolute inset-0 w-full h-full rounded-md object-cover"
+                        className="rounded-md"
+                        onError={() => setImageError(true)}
+                    />
+                ) : (
+                    <Skeleton className="absolute inset-0 w-full h-full rounded-md" />
+                )}
+
                 {/* Play button overlay */}
-                <div className=" absolute w-full h-full flex bottom-0 right-0  duration-300  sm:hover:translate-x-0 translate-x-14 ">
-                    <div className="absolute bottom-0 right-0 -translate-x-1 -translate-y-1 bg-green-600 bg-opacity-100 rounded-full p-3 hover:scale-105 hover:bg-green-500">
-                        <Play className="w-5 h-5 text-black fill-black" />
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 sm:hover:opacity-100 bg-black/30 rounded-md">
+                    <div className="bg-green-500 hover:bg-green-400 p-3 rounded-full shadow-lg transition-transform transform hover:scale-110">
+                        <Play className="w-6 h-6 text-white" />
                     </div>
                 </div>
             </div>
-            <div className="w-full text-balance mt-2 px-2 cursor-pointer">
+
+            {/* Song title */}
+            <div className="w-full mt-2 text-center px-2">
                 {song?.name ? (
-                    <Label className={`font-bold cursor-pointer text-gray-800 dark:text-gray-300 ${song?.id === currentSong?.id ? " dark:text-green-700 text-green-700" : ""} text-sm`}>
-                        <Marquee speed={5}>
-                            {decodeHtml(song?.name)}
-                        </Marquee>
+                    <Label className={`font-medium text-sm text-gray-800 dark:text-gray-300 ${song?.id === currentSong?.id ? "text-green-600 dark:text-green-400" : ""}`}>
+                        {
+                            song?.name.length > 12 ?
+                                <Marquee gradient={false} speed={20} pauseOnHover={true}>
+                                    {song?.name}
+                                </Marquee>
+                                :
+                                song?.name
+                        }
                     </Label>
                 ) : (
                     <Skeleton className="h-4 w-full rounded" />

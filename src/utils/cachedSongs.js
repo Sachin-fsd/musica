@@ -305,7 +305,8 @@ export const songs = [
                 "quality": "320kbps",
                 "url": "https://aac.saavncdn.com/981/ff704210de1a556e6d59fe7241f94983_320.mp4"
             }
-        ]
+        ],
+        old: true
     },
 
     {
@@ -628,7 +629,8 @@ export const songs = [
                 "quality": "320kbps",
                 "url": "https://aac.saavncdn.com/248/a6b1b78b396245f712abda8f1daefee0_320.mp4"
             }
-        ]
+        ],
+        old: true
     },
 
     {
@@ -822,7 +824,8 @@ export const songs = [
                 "quality": "320kbps",
                 "url": "https://aac.saavncdn.com/336/9a856d1ea68a67128ec2885cdece697c_320.mp4"
             }
-        ]
+        ],
+        old: true
     },
 
     {
@@ -1168,7 +1171,8 @@ export const songs = [
                 "quality": "320kbps",
                 "url": "https://aac.saavncdn.com/525/635c9a67460d995998d32379af620aac_320.mp4"
             }
-        ]
+        ],
+        old: true
     },
 
     {
@@ -1370,7 +1374,8 @@ export const songs = [
                 "quality": "320kbps",
                 "url": "https://aac.saavncdn.com/622/670a6ae6791f492f5604395ed30ea7f7_320.mp4"
             }
-        ]
+        ],
+        old: true
     },
 
     {
@@ -1687,7 +1692,8 @@ export const songs = [
                 "quality": "320kbps",
                 "url": "https://aac.saavncdn.com/868/dd764763d2659f968486b9134fc8a7a2_320.mp4"
             }
-        ]
+        ],
+        old: true
     },
 
     {
@@ -1983,7 +1989,8 @@ export const songs = [
                 "quality": "320kbps",
                 "url": "https://aac.saavncdn.com/656/a7bd9f27bab9ab2c9b5cbdec064b876a_320.mp4"
             }
-        ]
+        ],
+        old: true
     },
 
     {
@@ -2132,7 +2139,8 @@ export const songs = [
                 "quality": "320kbps",
                 "url": "https://aac.saavncdn.com/026/62aa47f800ad9eb59db461246ef3b491_320.mp4"
             }
-        ]
+        ],
+        old: true
     },
 ]
 

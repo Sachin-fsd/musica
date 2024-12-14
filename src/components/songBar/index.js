@@ -82,7 +82,7 @@ const SongBar = ({ song }) => {
         if (songList?.length > 3) {
             const updatedSongList = songList?.filter(s => s.id !== song?.id);
 
-            const currentSongIndex = updatedsongList?.findIndex(s => s.id === currentSong?.id);
+            const currentSongIndex = updatedSongList?.findIndex(s => s.id === currentSong?.id);
             setCurrentIndex(currentSongIndex)
 
             setSongList(updatedSongList);
