@@ -5,7 +5,12 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import AlbumBar from './AlbumBar';
 import { Label } from '@/components/ui/label';
 
-const TopAlbums = ({ heading, albums }) => {
+const TopAlbums = ({ heading, albums, data }) => {
+
+    // useEffect(()=>{
+    //     console.log(data)
+    // },[])
+
     const softAlbumsRef = useRef(null);
 
     const scroll = (ref, direction) => {
@@ -17,6 +22,7 @@ const TopAlbums = ({ heading, albums }) => {
         }
     };
 
+    if(!albums || albums.length==0) return null
     return (
         <div className='flex flex-col gap-8 mt-4'>
             {/* Albums Section */}

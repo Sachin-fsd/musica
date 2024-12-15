@@ -105,7 +105,7 @@ const Navbar = () => {
                             <input
                                 type="search"
                                 id="default-search"
-                                className="block w-full p-2 pl-10 text-sm text-gray-900 dark:text-gray-300 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+                                className="block w-full p-2 pl-10 text-sm text-gray-900 dark:text-gray-300 border border-gray-300 dark:border-gray-700 rounded-3xl bg-white dark:bg-gray-800 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
                                 placeholder="Search"
                                 required
                                 value={searchQuery}

@@ -155,7 +155,7 @@ const SongBar = ({ song }) => {
                 <div className="flex-1 overflow-hidden">
                     {decodedName ? (
                         <Label
-                            className={`cursor-pointer font-medium text-gray-900 dark:text-gray-100 ${song?.id === currentSong?.id ? "font-bold dark:text-green-700 text-green-700" : ""} truncate text-sm whitespace-nowrap overflow-hidden text-ellipsis`}
+                            className={`cursor-pointer font-medium text-gray-900 dark:text-gray-100 ${song?.id === currentSong?.id ? "font-bold dark:text-green-600 text-green-700" : ""} truncate text-sm whitespace-nowrap overflow-hidden text-ellipsis`}
                         >
                             {decodedName}
                         </Label>

@@ -1,6 +1,6 @@
-import { All_Albums, mega_menu_1, mega_menu_2, mega_menu_3 } from "@/utils/cachedSongs";
+import { All_Albums, mega_menu_3 } from "@/utils/cachedSongs";
 import TopAlbums from "..";
-import { fetchByLinkAction, fetchArtistsByPermaLinkAction } from "@/app/actions";
+import { fetchByLinkAction} from "@/app/actions";
 import { shuffleArray } from "@/utils/extraFunctions";
 
 
@@ -26,10 +26,6 @@ const AlbumContent = async () => {
                 data: MegaMenu3Playlists["promo:vx:data:68"]
             },
             {
-                heading: "Charts",
-                data: MegaMenu3Playlists.charts
-            },
-            {
                 heading: "On Repeat",
                 data: MegaMenu3Playlists["promo:vx:data:185"]
             },
@@ -48,11 +44,7 @@ const AlbumContent = async () => {
             {
                 heading: "Epic Soundtracks",
                 data: MegaMenu3Playlists["promo:vx:data:76"]
-            },
-            {
-                heading: "Groove Station",
-                data: MegaMenu3Playlists["promo:vx:data:68"]
-            },
+            }
         ]
 
         // Fetch all albums concurrently
@@ -65,6 +57,7 @@ const AlbumContent = async () => {
 
         albumData = [...object_for_megaMenu3, ...albumData, ]
         albumData = shuffleArray(albumData);
+        albumData = [{heading: "Charts",data: MegaMenu3Playlists.charts},...albumData]
 
         // const MegaMenu1 = await fetchByLinkAction(mega_menu_1);
 

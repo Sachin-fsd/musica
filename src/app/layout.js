@@ -24,6 +24,19 @@ export default function RootLayout({ children }) {
         <link rel="manifest" href="/manifest.json" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta name="theme-color" content="#020617" />
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="https://musica-steel.vercel.app/summary_large_image.jpeg" />
+        <meta name="twitter:title" content="Musica NextGen Music" />
+        <meta name="twitter:description" content="Made with 💖" />
+
+        {/* Open Graph / Facebook*/}
+        <meta property="og:image" content="https://musica-steel.vercel.app/summary_large_image.jpeg" />
+        <meta property="og:site_name" content="Musica NextGen Music" />
+        <meta property="og:title" content="Musica NextGen Music" />
+        <meta property="og:description" content="Made with 💖" />
+        <meta property="og:url" content="https://musica-steel.vercel.app" />
+
       </head>
       <body className={`${inter.className} min-h-screen overflow-x-hidden `}>
         <NextUIProvider>

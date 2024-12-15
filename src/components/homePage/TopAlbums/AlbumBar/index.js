@@ -48,7 +48,7 @@ const AlbumBar = ({ album }) => {
                     )}
                 </div>
                 {/* Play button overlay */}
-                <div className=" absolute w-full h-full flex bottom-0 right-0  duration-300  sm:hover:translate-x-0 translate-x-12 ">
+                <div className=" absolute w-full h-full flex bottom-0 right-0  duration-75  sm:hover:translate-x-0 translate-x-12 ">
                     <div className="absolute bottom-0 right-0 -translate-x-1 -translate-y-1 bg-green-600 bg-opacity-100 rounded-full p-3 hover:scale-105 hover:bg-green-500">
                         <Play className="w-5 h-5 text-black fill-black" />
                     </div>
