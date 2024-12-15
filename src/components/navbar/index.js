@@ -58,7 +58,7 @@ const Navbar = () => {
     return (
         <div className="flex items-center justify-between p-4 bg-gray-200 dark:bg-slate-950 shadow-md">
             <div className="flex items-center">
-                <div className="block md:hidden">
+                <div className="block lg:hidden">
                     <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                         <SheetTrigger asChild>
                             <button className="p-2">
@@ -153,10 +153,10 @@ const Navbar = () => {
                 <div className="ml-2 md:ml-6">
                     <ThemeSwitch />
                 </div>
-
+{/* 
                 <div>
                     <InstallPromptNav />
-                </div>
+                </div> */}
             </div>
 
         </div>

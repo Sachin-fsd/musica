@@ -8,6 +8,7 @@ const InstallPromptIcon = () => {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isStandalone, setIsStandalone] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
     const userAgent = navigator.userAgent;
@@ -17,6 +18,9 @@ const InstallPromptIcon = () => {
 
     // Detect if the user is on iOS
     setIsIOS(/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream);
+
+    // Detect if the user is on a desktop
+    setIsDesktop(!/Mobi|Android/i.test(userAgent)); // Basic desktop detection
 
     const handleBeforeInstallPrompt = (e) => {
       e.preventDefault(); // Prevent the default prompt
@@ -49,7 +53,7 @@ const InstallPromptIcon = () => {
       });
     } else {
       // If no deferred prompt is available
-      toast.error("Installation prompt not available.");
+      toast.error("Click on install icon on URL bar");
     }
   };
 
