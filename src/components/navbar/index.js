@@ -46,6 +46,9 @@ const Navbar = () => {
     );
 
     useEffect(() => {
+        // Scroll to top whenever searchQuery changes 
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
         debouncedSearch(searchQuery);
 
         // Cleanup function to cancel pending debounced call when component unmounts
