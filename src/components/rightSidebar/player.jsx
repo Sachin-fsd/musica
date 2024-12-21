@@ -51,6 +51,7 @@ const Player = () => {
 
     return (
         <div>
+            
             <div className="p-1 flex justify-between items-center">
                 <Button variant="simple" className="p-0" onClick={loopSong}>
                     {

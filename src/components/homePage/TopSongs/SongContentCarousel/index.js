@@ -24,7 +24,7 @@ const SongContentCarousel = () => {
             {/* Albums Section */}
             <div className='flex-1'>
                 <div className='flex items-center justify-between mb-4'>
-                    <Label className="text-2xl font-bold text-sky-900 dark:text-sky-400">Now Playing</Label>
+                    <Label className="text-2xl font-bold text-sky-900 dark:text-white">Now Playing</Label>
                     <div className='flex items-center space-x-2'>
                         <button
                             onClick={() => scroll(softAlbumsRef, 'left')}

@@ -30,7 +30,8 @@ const TopAlbums = ({ heading, albums, data }) => {
                 <div className='flex items-center justify-between mb-4'>
                     {
                         heading && <>
-                            <Label className="text-2xl font-bold text-sky-900 dark:text-sky-400">{heading}</Label>
+                            <Label className="text-2xl font-bold text-sky-900 dark:text-white">{heading}</Label>
+                            {/* <Label className="text-2xl font-bold text-sky-900 dark:text-sky-400">{heading}</Label> */}
                             <div className='flex items-center space-x-2'>
                                 <button
                                     onClick={() => scroll(softAlbumsRef, 'left')}
@@ -52,7 +53,7 @@ const TopAlbums = ({ heading, albums, data }) => {
                             albums.map((album, index) => (
                                 album.image ? <div
                                     key={index}
-                                    className='mr-1 sm:hover:bg-white dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-36 max-w-52 sm:hover:shadow-md transition'
+                                    className='mr-1 sm:hover:bg-white dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-36 max-w-52 sm:hover:shadow-md transition' // fix at w-36 = 144px
                                 >
                                     <AlbumBar album={album} index={index} />
                                 </div> : null

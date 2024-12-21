@@ -5,6 +5,7 @@ import SongCarousel from "./songCarousel";
 import SongsListComponent from "./songsList";
 import { useContext } from "react";
 import { decodeHtml } from "@/utils";
+import MainSongPhoto from "./mainSongPhoto/MainSongPhoto";
 
 const BigPhotoComponent = () => {
     const { currentTime, duration, handleSeek, songList, currentSong, currentIndex } = useContext(UserContext);
@@ -18,24 +19,27 @@ const BigPhotoComponent = () => {
     return (
         <div className="flex flex-col h-full rounded-lg p-4 shadow-md overflow-auto">
             {/* Carousel - takes up a small portion */}
-            <div className="rounded">
-                {
-                    currentSong.image[2].url ?
-                        <img
-                        style={{borderRadius:"30px"}}
-                            src={currentSong.image[2].url}
-                            className="-mt-6 p-6 -m-2 rounded"
-                        /> :
-                        <Skeleton className="rounded-lg w-[400px] h-[400px] object-cover shadow-lg" />
-                }
+            <div className="rounded text-center">
+                <div>
+                    <MainSongPhoto src={currentSong.image[2].url} alt={currentSong.name}/>
+                    {/* {
+                        currentSong.image[2].url ?
+                            <img
+                                style={{ borderRadius: "30px" }}
+                                src={currentSong.image[2].url}
+                                className="-mt-6 p-6 -m-2 rounded"
+                            /> :
+                            <Skeleton className="rounded-lg w-[400px] h-[400px] object-cover shadow-lg" />
+                    } */}
+                </div>
                 {songList && songList.length > 0 && (
                     <div className="text-center -mt-1">
                         <p className="font-semibold font-mono truncate max-w-xs mx-auto">
-                            {decodeHtml(songList[currentIndex]?.name)}
+                            {decodeHtml(currentSong?.name)}
                         </p>
                         <p className="font-mono text-gray-400 text-xs truncate max-w-xs mx-auto">
                             {decodeHtml(
-                                songList[currentIndex]?.artists?.primary
+                                currentSong?.artists?.primary
                                     ?.slice(0, 2)
                                     .map((a) => a.name)
                                     .join(', ')

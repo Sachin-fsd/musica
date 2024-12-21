@@ -12,6 +12,7 @@ import { Button } from "../ui/button";
 import { debounce } from "lodash";
 import LongPressTooltip from "./longPressTooltip";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import Marquee from "react-fast-marquee";
 
 const SongBar = ({ song }) => {
 
@@ -37,12 +38,14 @@ const SongBar = ({ song }) => {
 
     useEffect(() => {
         if (song && song?.name) {
-            if (song?.name?.length > 15) {
-                setDecodedName(htmlParser(song?.name).substring(0, 15).concat("..."));
-            }
-            else {
-                setDecodedName(htmlParser(song?.name));
-            }
+            setDecodedName(htmlParser(song?.name));
+
+            // if (song?.name?.length > 15) {
+            //     setDecodedName(htmlParser(song?.name).substring(0, 15).concat("..."));
+            // }
+            // else {
+            //     setDecodedName(htmlParser(song?.name));
+            // }
         }
         if (song && song?.album) {
             setDecodedAlbumName(htmlParser(song?.album?.name, 20) || "")
@@ -157,7 +160,13 @@ const SongBar = ({ song }) => {
                         <Label
                             className={`cursor-pointer font-medium text-gray-900 dark:text-gray-100 ${song?.id === currentSong?.id ? "font-bold dark:text-green-600 text-green-700" : ""} truncate text-sm whitespace-nowrap overflow-hidden text-ellipsis`}
                         >
-                            {decodedName}
+                            {decodedName.length > 12 ?
+                                <Marquee speed={10} style={{width:"50vw"}} className="w-[55vw]">
+                                    {decodedName}
+                                </Marquee>
+                                :
+                                decodedName
+                            }
                         </Label>
                     ) : (
                         <Skeleton className="min-h-2 p-2 m-2" />
@@ -188,27 +197,36 @@ const SongBar = ({ song }) => {
 
                 <Label variant="simple" disabled={loading}>
                     {songList?.find(s => s.id === song?.id) ? (
-                        currentSong?.id === song?.id ? <span>playing</span> : (
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="simple">
-                                        <EllipsisVertical className="text-gray-500 dark:text-gray-300  cursor-pointer size-5" />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className="w-56">
-                                    <DropdownMenuGroup>
-                                        <DropdownMenuItem onClick={handleRemoveSong} className="bg-red-300 dark:bg-red-600">
-                                            <Trash2 className="mr-2 h-4 w-4" />
-                                            <span>Remove from queue</span>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={handleAddNextSong}>
-                                            <ListMusic className="mr-2 h-4 w-4" />
-                                            <span>Play next</span>
-                                        </DropdownMenuItem>
-                                    </DropdownMenuGroup>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        )
+                        currentSong?.id === song?.id ?
+                            <div className="flex items-center gap-2 pr-2">
+                                <div className="sound-waves">
+                                    <div className="wave"></div>
+                                    <div className="wave"></div>
+                                    <div className="wave"></div>
+                                </div>
+                                {/* <span>Playing</span> */}
+                            </div>
+                            : (
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="simple">
+                                            <EllipsisVertical className="text-gray-500 dark:text-gray-300  cursor-pointer size-5" />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className="w-56">
+                                        <DropdownMenuGroup>
+                                            <DropdownMenuItem onClick={handleRemoveSong} className="bg-red-300 dark:bg-red-600">
+                                                <Trash2 className="mr-2 h-4 w-4" />
+                                                <span>Remove from queue</span>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem onClick={handleAddNextSong}>
+                                                <ListMusic className="mr-2 h-4 w-4" />
+                                                <span>Play next</span>
+                                            </DropdownMenuItem>
+                                        </DropdownMenuGroup>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            )
                     ) : (
                         <LongPressTooltip tooltipText="Add to queue">
                             <Plus onClick={handlePlusClick} className="text-gray-500 dark:text-gray-300 md:hover:text-gray-700 dark:md:hover:text-gray-200 cursor-pointer size-5" />

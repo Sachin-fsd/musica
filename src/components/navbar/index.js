@@ -10,11 +10,9 @@ import { UserContext } from "@/context";
 import { SearchSongsAction } from "@/app/actions";
 import { debounce } from "lodash";
 import { ThemeSwitch } from "../themeSwitch";
-import InstallPromptNav from "./installPromptNav";
 
 const Navbar = () => {
-    const [searchQuery, setSearchQuery] = useState("");
-    const { setSearchResults } = useContext(UserContext);
+    const { setSearchResults, searchQuery, setSearchQuery } = useContext(UserContext);
     const [isSearchPopoverOpen, setIsSearchPopoverOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -46,8 +44,6 @@ const Navbar = () => {
     );
 
     useEffect(() => {
-        // Scroll to top whenever searchQuery changes 
-        window.scrollTo({ top: 0, behavior: 'smooth' });
 
         debouncedSearch(searchQuery);
 
@@ -100,25 +96,37 @@ const Navbar = () => {
 
             <div className="flex-grow mx-4 md:mx-8 max-w-lg">
                 <div className="hidden md:block">
-                    <form onSubmit={(e) => e.preventDefault()}>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 cursor-pointer" onClick={() => debouncedSearch(searchQuery)}>
-                                <Search className="text-gray-900 dark:text-gray-300 p-0.5" />
-                            </div>
-                            <input
-                                type="search"
-                                id="default-search"
-                                className="block w-full p-2 pl-10 text-sm text-gray-900 dark:text-gray-300 border border-gray-300 dark:border-gray-700 rounded-3xl bg-white dark:bg-gray-800 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
-                                placeholder="Search"
-                                required
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                autoComplete="on"
-                            />
-
-                            <div className="absolute inset-y-0 right-6 flex items-center pr-1">
-                                {loading && <Loader2 className="animate-spin text-gray-500 dark:text-gray-400" />}
-                            </div>
+                    <form onSubmit={(e) => e.preventDefault()} className="relative">
+                        <div
+                            className="absolute inset-y-0 left-0 flex items-center pl-3 cursor-pointer"
+                            onClick={() => debouncedSearch(searchQuery)}
+                            aria-label="Search"
+                        >
+                            <Search className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200" />
+                        </div>
+                        <input
+                            // type="search"
+                            id="default-search"
+                            className="block w-full px-4 py-2 pl-12 text-sm rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-300 transition-colors duration-200"
+                            placeholder="Search for songs, albums, or artists"
+                            required
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            autoComplete="on"
+                        />
+                        <div className="absolute inset-y-0 right-6 flex items-center pr-1">
+                            {loading ? (
+                                <Loader2 className="animate-spin text-gray-500 dark:text-gray-400" aria-label="Loading" />
+                            ) : (
+                                <button
+                                    type="button"
+                                    className="flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200 focus:outline-none"
+                                    aria-label="Clear search"
+                                    onClick={() => setSearchQuery('')}
+                                >
+                                    <X className="w-4 h-4" />
+                                </button>
+                            )}
                         </div>
                     </form>
                 </div>
@@ -127,36 +135,61 @@ const Navbar = () => {
             <div className="flex items-center justify-center">
                 <Popover className="md:hidden" open={isSearchPopoverOpen} onOpenChange={setIsSearchPopoverOpen}>
                     <PopoverTrigger asChild>
-                        <button className="p-2 md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300">
+                        <button
+                            className="p-2 md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 
+                group-hover:text-slate-900 dark:group-hover:text-slate-300 shadow-md hover:shadow-lg transition-shadow duration-200"
+                            aria-label="Open search"
+                        >
                             <Search className="w-6 h-6 text-gray-900 dark:text-gray-300" />
                         </button>
                     </PopoverTrigger>
-                    <PopoverContent className=" dark:bg-gray-800 p-1">
-                        <div>
-                            <form onSubmit={(e) => { e.preventDefault(); handleSearchSuggestions(searchQuery); }}>
-                                <input
-                                    type="search"
-                                    id="popover-search"
-                                    className="block w-full p-2 text-sm text-gray-900 dark:text-gray-300 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
-                                    placeholder="Search"
-                                    required
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    autoComplete="off"
-                                />
-
-                            </form>
-                        </div>
-                        <div className="absolute top-1/3 right-16">
-                            {loading && <Loader2 className="animate-spin text-gray-500 dark:text-gray-400" />}
+                    <PopoverContent
+                        className="dark:bg-gray-800 bg-white border border-gray-300 dark:border-gray-700 p-4 rounded-lg shadow-xl transform transition-transform ease-out duration-200"
+                    >
+                        <form onSubmit={(e) => e.preventDefault()} className="relative">
+                            <div
+                                className="absolute inset-y-0 left-0 flex items-center pl-3 cursor-pointer"
+                                onClick={() => debouncedSearch(searchQuery)}
+                                aria-label="Search"
+                            >
+                                <Search className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200" />
+                            </div>
+                            <input
+                                // type="search"
+                                id="default-search"
+                                className="block w-full px-4 py-2 pl-12 text-sm rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-300 transition-colors duration-200"
+                                placeholder="Search for songs, albums, or artists"
+                                required
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                autoComplete="on"
+                            />
+                            <div className="absolute inset-y-0 right-6 flex items-center ">
+                                {loading ? (
+                                    <Loader2 className="animate-spin text-gray-500 dark:text-gray-400" aria-label="Loading" />
+                                ) : (
+                                    <button
+                                        type="button"
+                                        className="flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200 focus:outline-none"
+                                        aria-label="Clear search"
+                                        onClick={() => setSearchQuery('')}
+                                    >
+                                        <X className="w-4 h-4 " />
+                                    </button>
+                                )}
+                            </div>
+                        </form>
+                        <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
+                            Try searching for your favorite songs or artists.
                         </div>
                     </PopoverContent>
                 </Popover>
 
+
                 <div className="ml-2 md:ml-6">
                     <ThemeSwitch />
                 </div>
-{/* 
+                {/* 
                 <div>
                     <InstallPromptNav />
                 </div> */}

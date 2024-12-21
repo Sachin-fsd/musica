@@ -20,6 +20,7 @@ export default function UserState({ children }) {
     const [searchResults, setSearchResults] = useState([])
     const [manualQuality, setManualQuality] = useState("very_high"); // State for manual quality selection
     const [isJamChecked, setIsJamChecked] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
 
     //save songs in local storage
     // useEffect(() => {
@@ -311,7 +312,9 @@ export default function UserState({ children }) {
         searchResults,
         setSearchResults,
         isJamChecked,
-        setIsJamChecked
+        setIsJamChecked,
+        searchQuery, 
+        setSearchQuery
     };
 
     return (
