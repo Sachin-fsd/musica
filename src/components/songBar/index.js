@@ -14,7 +14,7 @@ import LongPressTooltip from "./longPressTooltip";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import Marquee from "react-fast-marquee";
 
-const SongBar = ({ song }) => {
+const SongBar = ({ song, searched }) => {
 
     const {
         currentSong,
@@ -160,7 +160,7 @@ const SongBar = ({ song }) => {
                         <Label
                             className={`cursor-pointer font-medium text-gray-900 dark:text-gray-100 ${song?.id === currentSong?.id ? "font-bold dark:text-green-600 text-green-700" : ""} truncate text-sm whitespace-nowrap overflow-hidden text-ellipsis`}
                         >
-                            {decodedName.length > 12 ?
+                            {!searched && decodedName.length > 12 ?
                                 <Marquee speed={10} style={{width:"50vw"}} className="w-[55vw]">
                                     {decodedName}
                                 </Marquee>

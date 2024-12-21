@@ -25,7 +25,7 @@ const SearchResults = () => {
         )
     }
     return (
-        <div className="flex flex-col lg:flex-row gap-6 mb-4">
+        <div className="flex flex-col lg:flex-row gap-6 mb-4 mt-4">
             <div className="flex-1">
                 <div className="flex items-center justify-between mb-4">
                     <Label className="text-xl font-bold text-sky-900 dark:text-sky-300">
@@ -33,7 +33,7 @@ const SearchResults = () => {
                     </Label>
                     <Plus onClick={() => setSearchResults([])} className="cursor-pointer rotate-45 border border-gray-300 dark:border-gray-700 rounded-full text-gray-600 dark:text-gray-300" />
                 </div>
-                <div className="grid gap-4 grid-cols-1">
+                <div className="grid gap-4 grid-cols-1 mt-2">
                     {searchResults && searchResults.length > 0 ? (
                         searchResults.map((song, index) => (
                             <div

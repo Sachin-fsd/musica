@@ -31,7 +31,7 @@ const Bottombar = () => {
     if (!currentSong) return null;
 
     return (
-        <div className="fixed bottom-0 left-0 w-full bg-gray-900 text-white shadow-lg p-4 pt-0 flex flex-col items-center justify-between flex-grow">
+        <div className="fixed bottom-0 left-0 w-full bg-gray-900 text-white shadow-lg p-4 pt-0 flex flex-col items-center justify-between flex-grow z-10">
             <div className="w-full pb-1">
                 {/* <Progress
                     value={currentTime}
