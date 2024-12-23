@@ -40,7 +40,7 @@ const SearchResults = () => {
                                 key={index}
                                 className=" bg-gray-300 dark:bg-gray-950 rounded"
                             >
-                                <SongBar song={song} index={index} />
+                                <SongBar song={song} index={index} searched={true}/>
                             </div>
                         ))
                     ) : (

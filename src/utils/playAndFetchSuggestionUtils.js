@@ -82,7 +82,7 @@ export async function fetchAlbumSongs(type, id, context) {
             setPlaying(true);
             setCurrentId(albumSongs[0].id);
 
-            console.log("Updated Song List with Album Songs:", updatedSongList);
+            // console.log("Updated Song List with Album Songs:", updatedSongList);
         }
     } catch (error) {
         console.error("Error fetching album songs:", error);

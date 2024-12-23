@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import AlbumBar from './AlbumBar';
 import { Label } from '@/components/ui/label';
+import TouchableOpacity from '@/components/ui/touchableOpacity';
 
 const TopAlbums = ({ heading, albums, data }) => {
 
@@ -22,7 +23,7 @@ const TopAlbums = ({ heading, albums, data }) => {
         }
     };
 
-    if(!albums || albums.length==0) return null
+    if (!albums || albums.length == 0) return null
     return (
         <div className='flex flex-col gap-8 mt-4'>
             {/* Albums Section */}
@@ -55,7 +56,9 @@ const TopAlbums = ({ heading, albums, data }) => {
                                     key={index}
                                     className='mr-1 sm:hover:bg-white dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-36 max-w-52 sm:hover:shadow-md transition' // fix at w-36 = 144px
                                 >
-                                    <AlbumBar album={album} index={index} />
+                                    <TouchableOpacity>
+                                        <AlbumBar album={album} index={index} />
+                                    </TouchableOpacity>
                                 </div> : null
                             ))
                         ) : (

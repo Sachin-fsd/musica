@@ -8,7 +8,9 @@ import { debounce } from "lodash";
 import { playAndFetchSuggestions } from "@/utils/playAndFetchSuggestionUtils";
 import { Play } from "lucide-react";
 import { decodeHtml, htmlParser } from "@/utils";
+// import Marquee from "@/components/ui/marquee";
 import Marquee from "react-fast-marquee";
+
 
 const SongBarCarousel = ({ song }) => {
     const { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading } = useContext(UserContext);
@@ -68,8 +70,8 @@ const SongBarCarousel = ({ song }) => {
                     <Label className={`font-medium text-sm text-gray-800 dark:text-gray-300 ${song?.id === currentSong?.id ? "text-green-600 dark:text-green-400" : ""}`}>
                         {
                             song?.name.length > 12 ?
-                                <Marquee gradient={false} speed={20} pauseOnHover={true}>
-                                    {htmlParser(song?.name)}
+                                <Marquee gradient={false} speed={20} pauseOnHover={true} className="whitespace-nowrap">
+                                    <span style={{ marginRight: "20px" }}>{htmlParser(song?.name)}</span>
                                 </Marquee>
                                 :
                                 htmlParser(song?.name)

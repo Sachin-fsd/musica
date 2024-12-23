@@ -5,9 +5,10 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { UserContext } from '@/context';
 import SongBarCarousel from './songBarCarousel';
+import TouchableOpacity from '@/components/ui/touchableOpacity';
 
 const SongContentCarousel = () => {
-    const { songList} = useContext(UserContext);
+    const { songList } = useContext(UserContext);
     const softAlbumsRef = useRef(null);
 
     const scroll = (ref, direction) => {
@@ -46,7 +47,11 @@ const SongContentCarousel = () => {
                                     key={index}
                                     className='mr-1  sm:hover:bg-white dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-36 max-w-52 hover:shadow-md transition'
                                 >
-                                    {song?.image && <SongBarCarousel song={song} index={index} />}
+                                    {song?.image &&
+                                        <TouchableOpacity>
+                                            <SongBarCarousel song={song} index={index} />
+                                        </TouchableOpacity>
+                                    }
                                 </div>
                             ))
                         ) : (

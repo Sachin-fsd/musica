@@ -12,7 +12,7 @@ import { Button } from "../ui/button";
 import { debounce } from "lodash";
 import LongPressTooltip from "./longPressTooltip";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import Marquee from "react-fast-marquee";
+import TouchableOpacity from "../ui/touchableOpacity";
 
 const SongBar = ({ song, searched }) => {
 
@@ -36,22 +36,24 @@ const SongBar = ({ song, searched }) => {
     const [decodedAlbumName, setDecodedAlbumName] = useState(decodeHtml(song?.album?.name?.substring(15)));
     const [imageError, setImageError] = useState(false)
 
+    // setting song name and album name
     useEffect(() => {
         if (song && song?.name) {
             setDecodedName(htmlParser(song?.name));
 
-            // if (song?.name?.length > 15) {
-            //     setDecodedName(htmlParser(song?.name).substring(0, 15).concat("..."));
-            // }
-            // else {
-            //     setDecodedName(htmlParser(song?.name));
-            // }
+            if (song?.name?.length > 15) {
+                setDecodedName(htmlParser(song?.name).substring(0, 15).concat("..."));
+            }
+            else {
+                setDecodedName(htmlParser(song?.name));
+            }
         }
-        if (song && song?.album) {
-            setDecodedAlbumName(htmlParser(song?.album?.name, 20) || "")
-        }
+        // if (song && song?.album) {
+        //     setDecodedAlbumName(htmlParser(song?.album?.name, 20) || "")
+        // }
     }, [song]);
 
+    //handle plus click
     const handlePlusClick = () => {
         const songExists = songList?.find(s => s.id === song?.id);
         if (!songExists) {
@@ -60,6 +62,7 @@ const SongBar = ({ song, searched }) => {
         }
     };
 
+    //handle songbar click
     const handleClick = useCallback(() => {
         setLoading(true);
         debounce(async () => {
@@ -75,6 +78,7 @@ const SongBar = ({ song, searched }) => {
         }, 300)();
     }, [song, setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId]);
 
+    //handle remove song
     const handleRemoveSong = () => {
         // Prevent removing the current song
         if (songList[currentIndex].id === song?.id) {
@@ -94,12 +98,14 @@ const SongBar = ({ song, searched }) => {
         }
     };
 
+    // format timing to show only in minutes and seconds
     function formatDuration(durationInSeconds) {
         const minutes = Math.floor(durationInSeconds / 60);
         const seconds = durationInSeconds % 60;
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }
 
+    //adds the song to next place
     const handleAddNextSong = () => {
         // Make a shallow copy of the current songList
         const updatedList = [...songList];
@@ -122,6 +128,7 @@ const SongBar = ({ song, searched }) => {
         setSongList(updatedList);
     };
 
+    //if no song return skeleton
     if (!song) {
         return (
             <div className="flex justify-between items-center py-1 border-b border-gray-200 dark:border-gray-700">
@@ -138,55 +145,54 @@ const SongBar = ({ song, searched }) => {
             className={`flex justify-between items-center p-2 bg-white dark:bg-slate-950 rounded-lg shadow-md w-full transition-transform duration-200 ease-in-out md:hover:scale-[1.01] md:hover:bg-gray-100 dark:md:hover:bg-gray-800 sm:hover:scale-[1] sm:hover:bg-transparent`}
         >
             <div
-                className="relative flex items-center cursor-pointer mr-3"
-                onClick={handleClick}
-                style={{ flex: '1' }}
+            // className="relative flex items-center cursor-pointer mr-3"
+            // onClick={handleClick}
+            // style={{ flex: '1' }}
             >
-                {song?.image[1]?.url && !imageError ? (
-                    <img
-                        src={song?.image[1]?.url}
-                        height={45}
-                        width={45}
-                        loading="lazy"
-                        className="rounded object-cover mr-3"
-                        alt={`${decodedName} cover`}
-                        onError={() => setImageError(true)}
-                    />
-                ) : (
-                    <Skeleton className="w-10 h-10 rounded object-cover mr-3" />
-                )}
-                <div className="flex-1 overflow-hidden">
-                    {decodedName ? (
-                        <Label
-                            className={`cursor-pointer font-medium text-gray-900 dark:text-gray-100 ${song?.id === currentSong?.id ? "font-bold dark:text-green-600 text-green-700" : ""} truncate text-sm whitespace-nowrap overflow-hidden text-ellipsis`}
-                        >
-                            {!searched && decodedName.length > 12 ?
-                                <Marquee speed={10} style={{width:"50vw"}} className="w-[55vw]">
-                                    {decodedName}
-                                </Marquee>
-                                :
-                                decodedName
-                            }
-                        </Label>
+                <TouchableOpacity className="relative flex items-center cursor-pointer mr-3"
+                    onClick={handleClick}
+                    style={{ flex: '1' }}
+                >
+                    {song?.image[1]?.url && !imageError ? (
+                        <img
+                            src={song?.image[1]?.url}
+                            height={45}
+                            width={45}
+                            loading="lazy"
+                            className="rounded object-cover mr-3"
+                            alt={`${decodedName} cover`}
+                            onError={() => setImageError(true)}
+                        />
                     ) : (
-                        <Skeleton className="min-h-2 p-2 m-2" />
+                        <Skeleton className="w-10 h-10 rounded object-cover mr-3" />
                     )}
-                    {song?.artists?.primary[0]?.name ? (
-                        <p className="text-xs text-gray-600 dark:text-gray-400 truncate whitespace-nowrap overflow-hidden text-ellipsis">
-                            {decodeHtml(song?.artists?.primary[0]?.name)} <span className=""> • </span>
-                            {/* <span> {searchResults.length > 0 && decodedAlbumName}</span> */}
-                        </p>
-                    ) : null}
-                </div>
-                {
-                    song?.id === currentSong?.id ? null : <div className="absolute top-0 left-0 flex items-center justify-center opacity-0 transition-opacity duration-300 md:hover:opacity-100">
-                        <div className=" bg-black bg-opacity-50 rounded-full p-2 outline-slate-700">
-                            <Play className="p-0 text-white" />
-                        </div>
+                    <div className="flex-1 overflow-hidden">
+                        {decodedName ? (
+                            <Label
+                                className={`cursor-pointer font-medium text-gray-900 dark:text-gray-100 ${song?.id === currentSong?.id ? "font-bold dark:text-green-600 text-green-700" : ""} truncate text-sm whitespace-nowrap overflow-hidden text-ellipsis`}
+                            >
+                                { decodedName }
+                            </Label>
+                        ) : (
+                            <Skeleton className="min-h-2 p-2 m-2" />
+                        )}
+                        {song?.artists?.primary[0]?.name ? (
+                            <p className="text-xs text-gray-600 dark:text-gray-400 truncate whitespace-nowrap overflow-hidden text-ellipsis">
+                                {decodeHtml(song?.artists?.primary[0]?.name)} <span className=""> • </span>
+                                {/* <span> {searchResults.length > 0 && decodedAlbumName}</span> */}
+                            </p>
+                        ) : null}
                     </div>
-                }
-
+                    {
+                        song?.id === currentSong?.id ? null : <div className="absolute top-0 left-0 flex items-center justify-center opacity-0 transition-opacity duration-300 md:hover:opacity-100">
+                            <div className=" bg-black bg-opacity-50 rounded-full p-2 outline-slate-700">
+                                <Play className="p-0 text-white" />
+                            </div>
+                        </div>
+                    }
+                </TouchableOpacity>
             </div>
+
             <div className="flex items-center space-x-2">
                 {/* Song Duration */}
                 {

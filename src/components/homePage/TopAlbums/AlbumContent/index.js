@@ -56,8 +56,8 @@ const AlbumContent = async () => {
         )
 
         albumData = [...object_for_megaMenu3, ...albumData, ]
-        albumData = shuffleArray(albumData);
-        albumData = [{heading: "Charts",data: MegaMenu3Playlists.charts},...albumData]
+        // albumData = shuffleArray(albumData);
+        // albumData = [{heading: "Charts",data: MegaMenu3Playlists.charts},...albumData]
 
         // const MegaMenu1 = await fetchByLinkAction(mega_menu_1);
 
