@@ -117,16 +117,19 @@ const Navbar = () => {
                         <div className="absolute inset-y-0 right-6 flex items-center pr-1">
                             {loading ? (
                                 <Loader2 className="animate-spin text-gray-500 dark:text-gray-400" aria-label="Loading" />
-                            ) : (
-                                <button
-                                    type="button"
-                                    className="flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200 focus:outline-none"
-                                    aria-label="Clear search"
-                                    onClick={() => setSearchQuery('')}
-                                >
-                                    <X className="w-4 h-4" />
-                                </button>
-                            )}
+                            ) :
+                                // (
+                                //     <button
+                                //         type="button"
+                                //         className="flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200 focus:outline-none"
+                                //         aria-label="Clear search"
+                                //         onClick={() => setSearchQuery('')}
+                                //     >
+                                //         <X className="w-4 h-4" />
+                                //     </button>
+                                // )
+                                null
+                            }
                         </div>
                     </form>
                 </div>
@@ -144,7 +147,7 @@ const Navbar = () => {
                         </button>
                     </PopoverTrigger>
                     <PopoverContent
-                        className="dark:bg-gray-800 bg-white border border-gray-300 dark:border-gray-700 p-4 rounded-lg shadow-xl transform transition-transform ease-out duration-200"
+                        className="transform transition-transform ease-out duration-200"
                     >
                         <form onSubmit={(e) => e.preventDefault()} className="relative">
                             <div
@@ -155,7 +158,7 @@ const Navbar = () => {
                                 <Search className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200" />
                             </div>
                             <input
-                                // type="search"
+                                type="search"
                                 id="default-search"
                                 className="block w-full px-4 py-2 pl-12 text-sm rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-300 transition-colors duration-200"
                                 placeholder="Search for songs, albums, or artists"
@@ -179,9 +182,9 @@ const Navbar = () => {
                                 )}
                             </div>
                         </form>
-                        <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
+                        {/* <div className=" text-sm text-gray-600 dark:text-gray-400">
                             Try searching for your favorite songs or artists.
-                        </div>
+                        </div> */}
                     </PopoverContent>
                 </Popover>
 

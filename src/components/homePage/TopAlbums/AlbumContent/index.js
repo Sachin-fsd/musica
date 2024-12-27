@@ -1,6 +1,6 @@
 import { All_Albums, mega_menu_3 } from "@/utils/cachedSongs";
 import TopAlbums from "..";
-import { fetchByLinkAction} from "@/app/actions";
+import { fetchByLinkAction } from "@/app/actions";
 import { shuffleArray } from "@/utils/extraFunctions";
 
 
@@ -9,6 +9,10 @@ const AlbumContent = async () => {
     try {
         let MegaMenu3Playlists = await fetchByLinkAction(mega_menu_3);
         let object_for_megaMenu3 = [
+            { 
+                heading: "Charts", 
+                data: MegaMenu3Playlists.charts 
+            },
             {
                 heading: "Ultimate Jams",
                 data: MegaMenu3Playlists.top_playlists
@@ -55,7 +59,7 @@ const AlbumContent = async () => {
             })
         )
 
-        albumData = [...object_for_megaMenu3, ...albumData, ]
+        albumData = [...object_for_megaMenu3, ...albumData,]
         // albumData = shuffleArray(albumData);
         // albumData = [{heading: "Charts",data: MegaMenu3Playlists.charts},...albumData]
 

@@ -33,7 +33,7 @@ const SearchResults = () => {
                     </Label>
                     <Plus onClick={() => setSearchResults([])} className="cursor-pointer rotate-45 border border-gray-300 dark:border-gray-700 rounded-full text-gray-600 dark:text-gray-300" />
                 </div>
-                <div className="grid gap-4 grid-cols-1 mt-2">
+                <div className="grid gap-4 grid-cols-1 mt-4">
                     {searchResults && searchResults.length > 0 ? (
                         searchResults.map((song, index) => (
                             <div
