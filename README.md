@@ -1,13 +1,13 @@
-# 🎵 Next.js Music Site 🎶
+# 🎵 Musica - Next Gen Music Site 🎶
 
-Welcome to the **Next.js Music Site**, a platform where music comes alive! This app is your gateway to endless grooves, from soft ballads to party anthems. Built with cutting-edge technology, it delivers an unparalleled user experience.
+Welcome to the **Musica - Next Gen Music Site**, a platform where music comes alive! This app is your gateway to endless grooves, from soft ballads to party anthems. Built with cutting-edge technology, it delivers an unparalleled user experience.
 
 <!-- ![Music App Banner](https://via.placeholder.com/1200x400?text=Your+Music+Journey+Starts+Here!) -->
 ![Home Page](https://github.com/Sachin-fsd/all-images/blob/main/musica-home-page.png?raw=true)
 
 <p align="center">
-  <img src="https://github.com/Sachin-fsd/all-images/blob/main/musica-home-page-mobile2.png?raw=true" alt="Image 1" width="45%">
   <img src="https://github.com/Sachin-fsd/all-images/blob/main/musica-home-page-mobile.png?raw=true" alt="Image 2" width="45%">
+  <img src="https://github.com/Sachin-fsd/all-images/blob/main/musica-home-page-mobile2.png?raw=true" alt="Image 1" width="45%">
 </p>
 
 
