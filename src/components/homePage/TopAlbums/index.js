@@ -5,12 +5,9 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import AlbumBar from './AlbumBar';
 import { Label } from '@/components/ui/label';
 import TouchableOpacity from '@/components/ui/touchableOpacity';
+import { ExpandableAlbumCarousel } from './expandableAlbumCarousel';
 
 const TopAlbums = ({ heading, albums, data }) => {
-
-    // useEffect(()=>{
-    //     console.log(data)
-    // },[])
 
     const softAlbumsRef = useRef(null);
 
@@ -52,20 +49,23 @@ const TopAlbums = ({ heading, albums, data }) => {
                     <div ref={softAlbumsRef} className='flex overflow-x-auto scroll-smooth hide-scrollbar'>
                         {albums?.length > 0 ? (
                             albums.map((album, index) => (
-                                album.image ? <div
-                                    key={index}
-                                    className='mr-1 sm:hover:bg-white dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-36 max-w-52 sm:hover:shadow-md transition' // fix at w-36 = 144px
-                                >
-                                    <TouchableOpacity>
-                                        <AlbumBar album={album} index={index} />
-                                    </TouchableOpacity>
-                                </div> : null
+                                album.image ?
+                                    <div
+                                        key={index}
+                                        className='mr-1 sm:hover:bg-white dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-36 max-w-52 sm:hover:shadow-md transition' // fix at w-36 = 144px
+                                    >
+                                        <TouchableOpacity>
+                                            <AlbumBar album={album} index={index} />
+                                        </TouchableOpacity>
+                                    </div> :
+                                    null
                             ))
                         ) : (
                             <div className='flex items-center justify-center w-full h-32 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'>
                                 <p>No albums available</p>
                             </div>
                         )}
+                        {/* <ExpandableAlbumCarousel albums={albums} /> */}
                     </div>
                 </div>
             </div>

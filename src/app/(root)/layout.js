@@ -4,9 +4,11 @@ import Navbar from "@/components/navbar";
 import UserState from "@/context";
 import Bottombar from "@/components/bottomBar";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import { AuroraBackground } from "@/components/ui/aurora-background";
 
 export default function RootLayout({ children }) {
   return (
+    // <AuroraBackground>
     <UserState>
       <div className="grid h-screen w-screen grid-rows-[auto,1fr] grid-cols-[auto,1fr] lg:grid-cols-[auto,1fr,auto] sm:max-w-full">
 
@@ -48,5 +50,6 @@ export default function RootLayout({ children }) {
         </div>
       </div>
     </UserState>
+    // </AuroraBackground>
   );
 }

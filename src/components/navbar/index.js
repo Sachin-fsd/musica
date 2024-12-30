@@ -10,6 +10,7 @@ import { UserContext } from "@/context";
 import { SearchSongsAction } from "@/app/actions";
 import { debounce } from "lodash";
 import { ThemeSwitch } from "../themeSwitch";
+import { PlaceholdersAndVanishInput } from "../ui/placeholders-and-vanish-input";
 
 const Navbar = () => {
     const { setSearchResults, searchQuery, setSearchQuery } = useContext(UserContext);
@@ -44,7 +45,6 @@ const Navbar = () => {
     );
 
     useEffect(() => {
-
         debouncedSearch(searchQuery);
 
         // Cleanup function to cancel pending debounced call when component unmounts
@@ -53,6 +53,13 @@ const Navbar = () => {
         };
     }, [searchQuery, debouncedSearch]);  // `searchQuery` dependency to trigger on input changes
 
+    const placeholders = [
+        "Search for Aaj ki raat",
+        "Arjit Singh Songs",
+        "Search for artists",
+        "Search for haryanavi songs",
+        "Search you favourite playlist",
+    ];
 
     return (
         <div className="flex items-center justify-between p-4 bg-gray-200 dark:bg-slate-950 shadow-md">
@@ -79,7 +86,6 @@ const Navbar = () => {
                                     >
                                         <X className="text-2xl font-bold text-gray-900 dark:text-gray-100" />
                                     </Button>
-
                                 </SheetClose>
                             </div>
                             <LeftSidebarIcons setIsSheetOpen={setIsSheetOpen} />
@@ -96,110 +102,84 @@ const Navbar = () => {
 
             <div className="flex-grow mx-4 md:mx-8 max-w-lg">
                 <div className="hidden md:block">
-                    <form onSubmit={(e) => e.preventDefault()} className="relative">
+                    <div
+                        onSubmit={(e) => e.preventDefault()}
+                        className="relative border dark:from-gray-800 dark:to-gray-900 rounded-full shadow-md transition-all duration-300 hover:shadow-lg"
+                    >
+                        {/* Search Icon */}
                         <div
-                            className="absolute inset-y-0 left-0 flex items-center pl-3 cursor-pointer"
+                            className="absolute inset-y-0 left-0 flex items-center pl-4 cursor-pointer z-10"
                             onClick={() => debouncedSearch(searchQuery)}
                             aria-label="Search"
                         >
-                            <Search className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200" />
+                            <Search className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-200" />
                         </div>
-                        <input
-                            // type="search"
-                            id="default-search"
-                            className="block w-full px-4 py-2 pl-12 text-sm rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-300 transition-colors duration-200"
-                            placeholder="Search for songs, albums, or artists"
-                            required
+
+                        {/* Input Field */}
+                        <PlaceholdersAndVanishInput
+                            placeholders={placeholders}
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             autoComplete="on"
+                            className="block w-full pl-2 py-2 text-sm rounded-full border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-gray-200 dark:bg-slate-950 placeholder-gray-500 dark:placeholder-gray-600 text-gray-900 dark:text-gray-300 transition-colors duration-200"
                         />
-                        <div className="absolute inset-y-0 right-6 flex items-center pr-1">
+
+                        {/* Loader or End Icon */}
+                        <div className="absolute inset-y-0 right-10 flex items-center">
                             {loading ? (
-                                <Loader2 className="animate-spin text-gray-500 dark:text-gray-400" aria-label="Loading" />
-                            ) :
-                                // (
-                                //     <button
-                                //         type="button"
-                                //         className="flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200 focus:outline-none"
-                                //         aria-label="Clear search"
-                                //         onClick={() => setSearchQuery('')}
-                                //     >
-                                //         <X className="w-4 h-4" />
-                                //     </button>
-                                // )
-                                null
-                            }
+                                <Loader2 className="animate-spin text-blue-600 dark:text-blue-400" aria-label="Loading" />
+                            ) : null}
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
 
+
             <div className="flex items-center justify-center">
                 <Popover className="md:hidden" open={isSearchPopoverOpen} onOpenChange={setIsSearchPopoverOpen}>
-                    <PopoverTrigger asChild>
+                    <PopoverTrigger className="md:hidden" asChild>
                         <button
-                            className="p-2 md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 
+                            className="p-2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 
                 group-hover:text-slate-900 dark:group-hover:text-slate-300 shadow-md hover:shadow-lg transition-shadow duration-200"
                             aria-label="Open search"
                         >
-                            <Search className="w-6 h-6 text-gray-900 dark:text-gray-300" />
+                            <div className="flex items-center justify-center">
+                                <Search className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-200" />
+                            </div>
                         </button>
                     </PopoverTrigger>
-                    <PopoverContent
-                        className="transform transition-transform ease-out duration-200"
-                    >
-                        <form onSubmit={(e) => e.preventDefault()} className="relative">
-                            <div
-                                className="absolute inset-y-0 left-0 flex items-center pl-3 cursor-pointer"
+                    <PopoverContent className="transform transition-transform ease-out duration-200">
+                        <div className="relative">
+                            {/* <div
+                                className="z-10 absolute inset-y-0 left-6 flex items-center pl-6 cursor-pointer"
                                 onClick={() => debouncedSearch(searchQuery)}
                                 aria-label="Search"
                             >
-                                <Search className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200" />
+                                <Search className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-200" />
+                            </div> */}
+                            <div>
+                                <PlaceholdersAndVanishInput
+                                    placeholders={placeholders}
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="block w-full py-2 text-sm rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-300 transition-colors duration-200"
+                                />
                             </div>
-                            <input
-                                type="search"
-                                id="default-search"
-                                className="block w-full px-4 py-2 pl-12 text-sm rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-300 transition-colors duration-200"
-                                placeholder="Search for songs, albums, or artists"
-                                required
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                autoComplete="on"
-                            />
-                            <div className="absolute inset-y-0 right-6 flex items-center ">
+                            <div className="absolute inset-y-0 right-16 flex items-center">
                                 {loading ? (
-                                    <Loader2 className="animate-spin text-gray-500 dark:text-gray-400" aria-label="Loading" />
-                                ) : (
-                                    <button
-                                        type="button"
-                                        className="flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors duration-200 focus:outline-none"
-                                        aria-label="Clear search"
-                                        onClick={() => setSearchQuery('')}
-                                    >
-                                        <X className="w-4 h-4 " />
-                                    </button>
-                                )}
+                                    <Loader2 className="animate-spin text-blue-600 dark:text-blue-400" aria-label="Loading" />
+                                ) : null}
                             </div>
-                        </form>
-                        {/* <div className=" text-sm text-gray-600 dark:text-gray-400">
-                            Try searching for your favorite songs or artists.
-                        </div> */}
+                        </div>
                     </PopoverContent>
                 </Popover>
-
 
                 <div className="ml-2 md:ml-6">
                     <ThemeSwitch />
                 </div>
-                {/* 
-                <div>
-                    <InstallPromptNav />
-                </div> */}
             </div>
-
         </div>
     );
 };
 
-export default Navbar
+export default Navbar;
