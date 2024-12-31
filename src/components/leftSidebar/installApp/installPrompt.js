@@ -54,13 +54,6 @@ const InstallPromptIcon = () => {
         }
         setDeferredPrompt(null); // Clear the deferred prompt
       });
-    } else {
-      // If no deferred prompt is available
-      if (!isDesktop) {
-        toast.error("Look for the install icon in your browser menu.");
-      } else {
-        toast.error("This browser does not support app installation.");
-      }
     }
   };
 

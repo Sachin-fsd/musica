@@ -22,17 +22,8 @@ const BigPhotoComponent = () => {
             <div className="rounded text-center">
                 <div>
                     <MainSongPhoto src={currentSong.image[2].url} alt={currentSong.name}/>
-                    {/* {
-                        currentSong.image[2].url ?
-                            <img
-                                style={{ borderRadius: "30px" }}
-                                src={currentSong.image[2].url}
-                                className="-mt-6 p-6 -m-2 rounded"
-                            /> :
-                            <Skeleton className="rounded-lg w-[400px] h-[400px] object-cover shadow-lg" />
-                    } */}
                 </div>
-                {songList && songList.length > 0 && (
+                {currentSong && currentSong?.name > 0 && (
                     <div className="text-center -mt-1">
                         <p className="font-semibold font-mono truncate max-w-xs mx-auto">
                             {decodeHtml(currentSong?.name)}

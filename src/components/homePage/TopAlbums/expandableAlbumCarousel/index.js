@@ -94,25 +94,25 @@ export function ExpandableAlbumCarousel({ albums }) {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0, transition: { duration: 0.05 } }}
-                        className="flex absolute top-2 right-2 lg:hidden items-center justify-center bg-white dark:bg-gray-800 rounded-full h-6 w-6 shadow-md"
+                        className="flex absolute top-2 right-2 lg:hidden items-center justify-center bg-white dark:bg-gray-200 rounded-full h-6 w-6 shadow-md"
                         onClick={() => setActive(null)}>
                         <CloseIcon />
                     </motion.button>
                     <motion.div
                         layoutId={`card-${active.title}-${id}`}
                         ref={ref}
-                        className="w-full max-w-[500px] h-full md:h-fit md:max-h-[90%] flex flex-col bg-white dark:bg-gray-900 sm:rounded-3xl overflow-hidden">
+                        className="w-full max-w-[500px] h-full md:h-fit flex flex-col bg-white dark:bg-gray-900 sm:rounded-3xl">
                         <motion.div layoutId={`image-${active.title}-${id}`}>
                             <img
                                 src={active.image || "/placeholder.png"}
                                 alt={active.title}
-                                className="w-full h-80 sm:rounded-t-3xl object-cover"
+                                className="flex-none w-full h-80 sm:rounded-t-3xl object-cover"
                                 onError={() => setImageError(true)}
                             />
                         </motion.div>
 
-                        <div>
-                            <div className="flex justify-between items-start p-4">
+                        <div className="flex flex-1 flex-col">
+                            <div className="flex-none flex justify-between items-start p-4">
                                 <div>
                                     <motion.h3
                                         layoutId={`title-${active.title}-${id}`}
@@ -134,13 +134,13 @@ export function ExpandableAlbumCarousel({ albums }) {
                                 </motion.button>
                             </div>
 
-                            <div className="pt-4 relative px-4">
+                            <div className="flex-1 overflow-hidden px-4 pt-4">
                                 <motion.div
                                     layout
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
-                                    className="text-gray-600 text-xs md:text-sm flex flex-col flex-1 items-start overflow-y-auto max-h-60 dark:text-gray-400">
+                                    className="text-gray-600 text-xs md:text-sm flex flex-col flex-1 items-start overflow-y-auto max-h-[35vh] dark:text-gray-400">
                                     {loading ? (
                                         "Loading..."
                                     ) : (
@@ -153,7 +153,6 @@ export function ExpandableAlbumCarousel({ albums }) {
                                     )}
                                 </motion.div>
                             </div>
-
                         </div>
                     </motion.div>
                 </div>
