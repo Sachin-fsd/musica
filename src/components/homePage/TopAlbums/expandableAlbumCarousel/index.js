@@ -1,22 +1,69 @@
 "use client";
 import Image from "next/image";
-import React, { useEffect, useId, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "@/hooks/use-outside-click";
+import { Play } from "lucide-react";
+import TouchableOpacity from "@/components/ui/touchableOpacity";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Label } from "@/components/ui/label";
+import { htmlParser } from "@/utils";
+import SongsListComponent from "@/components/rightSidebar/songsList";
+import { debounce } from "lodash";
+import { fetchAlbumSongs } from "@/utils/playAndFetchSuggestionUtils";
+
+import { UserContext } from "@/context";
+import { GetSongsByIdAction } from "@/app/actions";
+import SongBar from "@/components/songBar";
+import { Separator } from "@/components/ui/separator";
 
 export function ExpandableAlbumCarousel({ albums }) {
     const [active, setActive] = useState(null);
+    const [songs, setSongs] = useState([]);
     const id = useId();
     const ref = useRef(null);
+    const [loading, setLoading] = useState(false);
+    const [imageError, setImageError] = useState(false);
+    const { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId } = useContext(UserContext);
+
+    const truncateTitle = (title, maxLength = 24) => {
+        return htmlParser(title?.length > maxLength ? `${title?.substring(0, maxLength)}...` : title);
+    };
+
+    const handleAlbumPlay = useCallback(debounce((album) => {
+        const context = { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId };
+        fetchAlbumSongs(album?.type, album?.id, context);
+    }, 300), [currentSong, currentIndex, songList]);
+
+    const handleFetchAlbumSongs = async (album) => {
+        setLoading(true);
+        try {
+            const fetchedSongs = await GetSongsByIdAction(album.type, album.id);
+            if (fetchedSongs.success) {
+                let albumSongs = fetchedSongs.data.songs || fetchedSongs.data.topSongs || fetchedSongs.data;
+                setSongs(albumSongs || []);
+                active.image = fetchedSongs.data.image[2].url;
+                active.description = fetchedSongs.data.description;
+            } else {
+                setSongs([]);
+            }
+        } catch (error) {
+            console.error("Error fetching songs:", error);
+            setSongs([]);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
         function onKeyDown(event) {
             if (event.key === "Escape") {
-                setActive(false);
+                setActive(null);
             }
         }
 
         if (active && typeof active === "object") {
+            handleFetchAlbumSongs(active);
             document.body.style.overflow = "hidden";
         } else {
             document.body.style.overflow = "auto";
@@ -35,160 +82,147 @@ export function ExpandableAlbumCarousel({ albums }) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 bg-black/20 h-full w-full z-10" />
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm h-full w-full z-10" />
             )}
         </AnimatePresence>
         <AnimatePresence>
             {active && typeof active === "object" ? (
-                <div className="fixed inset-0  grid place-items-center z-[100]">
+                <div className="fixed inset-0 grid place-items-center z-[100]">
                     <motion.button
                         key={`button-${active.title}-${id}`}
                         layout
-                        initial={{
-                            opacity: 0,
-                        }}
-                        animate={{
-                            opacity: 1,
-                        }}
-                        exit={{
-                            opacity: 0,
-                            transition: {
-                                duration: 0.05,
-                            },
-                        }}
-                        className="flex absolute top-2 right-2 lg:hidden items-center justify-center bg-white rounded-full h-6 w-6"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0, transition: { duration: 0.05 } }}
+                        className="flex absolute top-2 right-2 lg:hidden items-center justify-center bg-white dark:bg-gray-800 rounded-full h-6 w-6 shadow-md"
                         onClick={() => setActive(null)}>
                         <CloseIcon />
                     </motion.button>
                     <motion.div
                         layoutId={`card-${active.title}-${id}`}
                         ref={ref}
-                        className="w-full max-w-[500px]  h-full md:h-fit md:max-h-[90%]  flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden">
+                        className="w-full max-w-[500px] h-full md:h-fit md:max-h-[90%] flex flex-col bg-white dark:bg-gray-900 sm:rounded-3xl overflow-hidden">
                         <motion.div layoutId={`image-${active.title}-${id}`}>
                             <img
-                                priority
-                                width={200}
-                                height={200}
-                                src={active.image}
+                                src={active.image || "/placeholder.png"}
                                 alt={active.title}
-                                className="w-full h-80 lg:h-80 sm:rounded-tr-lg sm:rounded-tl-lg object-cover object-top" />
+                                className="w-full h-80 sm:rounded-t-3xl object-cover"
+                                onError={() => setImageError(true)}
+                            />
                         </motion.div>
 
                         <div>
                             <div className="flex justify-between items-start p-4">
-                                <div className="">
+                                <div>
                                     <motion.h3
                                         layoutId={`title-${active.title}-${id}`}
-                                        className="font-medium text-neutral-700 dark:text-neutral-200 text-base">
+                                        className="font-medium text-gray-700 dark:text-gray-200 text-base">
                                         {active.title}
                                     </motion.h3>
                                     <motion.p
                                         layoutId={`description-${active.title}-${id}`}
-                                        className="text-neutral-600 dark:text-neutral-400 text-base">
-                                        {active.description}
+                                        className="text-gray-600 dark:text-gray-400 text-sm">
+                                        {htmlParser(active.description)}
                                     </motion.p>
                                 </div>
 
-                                <motion.a
+                                <motion.button
+                                    onClick={() => handleAlbumPlay(active)}
                                     layout
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    href={active.ctaLink}
-                                    target="_blank"
-                                    className="px-4 py-3 text-sm rounded-full font-bold bg-green-500 text-white">
-                                    {active.title}
-                                </motion.a>
+                                    className="px-4 py-3 text-sm rounded-full font-bold bg-green-500 sm:hover:bg-green-400 text-white">
+                                    <Play />
+                                </motion.button>
                             </div>
+
                             <div className="pt-4 relative px-4">
                                 <motion.div
                                     layout
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
-                                    className="text-neutral-600 text-xs md:text-sm lg:text-base h-40 md:h-fit pb-10 flex flex-col items-start gap-4 overflow-auto dark:text-neutral-400 [mask:linear-gradient(to_bottom,white,white,transparent)] [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]">
-                                    {typeof active.content === "function"
-                                        ? active.content()
-                                        : active.content}
+                                    className="text-gray-600 text-xs md:text-sm flex flex-col flex-1 items-start overflow-y-auto max-h-60 dark:text-gray-400">
+                                    {loading ? (
+                                        "Loading..."
+                                    ) : (
+                                        songs.map((song, index) => (
+                                            <React.Fragment key={index}>
+                                                <SongBar song={song} />
+                                                <Separator />
+                                            </React.Fragment>
+                                        ))
+                                    )}
                                 </motion.div>
                             </div>
+
                         </div>
                     </motion.div>
                 </div>
             ) : null}
         </AnimatePresence>
-        <div
-            className="max-w-2xl mx-auto w-full flex overflow-x-auto gap-4 py-4"
-            style={{ scrollSnapType: 'x mandatory' }}
-        >
+        <div className="mx-auto w-full flex overflow-x-auto gap-4 py-4" style={{ scrollSnapType: 'x mandatory' }}>
             {albums.map((card, index) => (
-                <motion.div
-                    layoutId={`card-${card.title}-${id}`}
-                    key={card.title}
+                <div
                     onClick={() => setActive(card)}
-                    className="flex-none w-[250px] flex flex-col hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer"
-                    style={{ scrollSnapAlign: 'center' }}
-                >
-                    <div className="flex gap-4 flex-col w-full">
-                        <motion.div layoutId={`image-${card.title}-${id}`}>
-                            <img
-                                width={100}
-                                height={100}
-                                src={card.image}
-                                alt={card.title}
-                                className="h-60 w-full rounded-lg object-cover object-top"
-                            />
+                    key={index}
+                    className="mr-1 sm:hover:bg-gray-100 dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-[144px] sm:sm:hover:shadow-md transition">
+                    <TouchableOpacity>
+                        <motion.div
+                            style={{ scrollSnapAlign: 'center' }}
+                            layoutId={`card-${card.title}-${id}`}
+                            className="relative flex flex-col items-center rounded-lg overflow-hidden w-full cursor-pointer transition-transform transform sm:hover:scale-105">
+                            <motion.div className="relative w-full pb-[100%]">
+                                <div className="absolute top-0 left-0 w-full h-full">
+                                    {card?.image && !imageError ? (
+                                        <img
+                                            src={card?.image}
+                                            alt={`${card?.title} cover`}
+                                            className="absolute top-0 left-0 w-full h-full rounded-md object-cover"
+                                            onError={() => setImageError(true)}
+                                        />
+                                    ) : (
+                                        <Skeleton className="absolute top-0 left-0 w-full h-full rounded" />
+                                    )}
+                                </div>
+                                <div className=" absolute w-full h-full flex bottom-0 right-0  duration-75  sm:sm:hover:translate-x-0 translate-x-12 ">
+                                    <div className="absolute bottom-0 right-0 -translate-x-1 -translate-y-1 bg-green-600 bg-opacity-100 rounded-full p-3 sm:hover:scale-105 sm:hover:bg-green-500">
+                                        <Play className="w-5 h-5 text-black fill-black" />
+                                    </div>
+                                </div>
+                            </motion.div>
+
+                            <motion.div className="w-full mt-2 px-2">
+                                {card?.title ? (
+                                    <Label className="font-bold text-gray-800 dark:text-gray-300 text-sm">
+                                        {truncateTitle(card.title)}
+                                    </Label>
+                                ) : (
+                                    <Skeleton className="h-4 w-full rounded" />
+                                )}
+                            </motion.div>
                         </motion.div>
-                        <div className="flex justify-center items-center flex-col">
-                            <motion.h3
-                                layoutId={`title-${card.title}-${id}`}
-                                className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-left text-base"
-                            >
-                                {card.title}
-                            </motion.h3>
-                            <motion.p
-                                layoutId={`description-${card.description}-${id}`}
-                                className="text-neutral-600 dark:text-neutral-400 text-center md:text-left text-base"
-                            >
-                                {card.description}
-                            </motion.p>
-                        </div>
-                    </div>
-                </motion.div>
+                    </TouchableOpacity>
+                </div>
             ))}
         </div>
-
     </>);
 }
 
-export const CloseIcon = () => {
-    return (
-        (<motion.svg
-            initial={{
-                opacity: 0,
-            }}
-            animate={{
-                opacity: 1,
-            }}
-            exit={{
-                opacity: 0,
-                transition: {
-                    duration: 0.05,
-                },
-            }}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-4 w-4 text-black">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <path d="M18 6l-12 12" />
-            <path d="M6 6l12 12" />
-        </motion.svg>)
-    );
-};
+export const CloseIcon = () => (
+    <motion.svg
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0, transition: { duration: 0.05 } }}
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="h-4 w-4 text-black">
+        <path d="M18 6L6 18" />
+        <path d="M6 6l12 12" />
+    </motion.svg>
+);

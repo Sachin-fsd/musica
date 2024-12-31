@@ -14,7 +14,10 @@ const InstallPromptIcon = () => {
     const userAgent = navigator.userAgent;
 
     // Check if the app is running in standalone mode
-    setIsStandalone(window.matchMedia("(display-mode: standalone)").matches);
+    setIsStandalone(
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone // For iOS
+    );
 
     // Detect if the user is on iOS
     setIsIOS(/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream);
@@ -53,7 +56,11 @@ const InstallPromptIcon = () => {
       });
     } else {
       // If no deferred prompt is available
-      toast.error("Click on install icon on URL bar");
+      if (!isDesktop) {
+        toast.error("Look for the install icon in your browser menu.");
+      } else {
+        toast.error("This browser does not support app installation.");
+      }
     }
   };
 

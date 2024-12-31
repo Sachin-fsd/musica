@@ -47,7 +47,7 @@ const TopAlbums = ({ heading, albums, data }) => {
                 </div>
                 <div className='relative max-w-full'>
                     <div ref={softAlbumsRef} className='flex overflow-x-auto scroll-smooth hide-scrollbar'>
-                        {albums?.length > 0 ? (
+                        {/* {albums?.length > 0 ? (
                             albums.map((album, index) => (
                                 album.image ?
                                     <div
@@ -64,8 +64,8 @@ const TopAlbums = ({ heading, albums, data }) => {
                             <div className='flex items-center justify-center w-full h-32 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'>
                                 <p>No albums available</p>
                             </div>
-                        )}
-                        {/* <ExpandableAlbumCarousel albums={albums} /> */}
+                        )} */}
+                        <ExpandableAlbumCarousel albums={albums} />
                     </div>
                 </div>
             </div>
