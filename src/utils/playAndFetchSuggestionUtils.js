@@ -9,10 +9,13 @@ export async function playAndFetchSuggestions(song, context) {
         setSongList,
         songList,
         setPlaying,
-        setCurrentId
+        setCurrentId,
+        audioRef
     } = context;
 
     try {
+        audioRef.current.src = song.downloadUrl[4].url;
+        audioRef.current.play();
         const clickedSongIndex = songList?.findIndex((s) => s.id === song?.id);
         const isNewSong = clickedSongIndex === -1;
         let NewSongList = songList.filter(s => !s.old);
@@ -67,14 +70,14 @@ export async function fetchAlbumSongs(type, id, context) {
         if (response.success) {
             let albumSongs = response.data.songs || response.data.topSongs || response.data;
             let updatedSongListCurrent = songList.filter(s => !s.old);
-            
+
             // Remove duplicates from album songs
             updatedSongListCurrent = updatedSongListCurrent.filter(
                 (existingSong) => !albumSongs?.some((albumSong) => existingSong.id === albumSong.id)
             );
 
             // Update the song list with album songs
-            const updatedSongList = [...albumSongs,...updatedSongListCurrent];
+            const updatedSongList = [...albumSongs, ...updatedSongListCurrent];
 
             setSongList(updatedSongList);
             setCurrentIndex(0);

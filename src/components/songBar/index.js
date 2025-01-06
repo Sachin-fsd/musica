@@ -28,7 +28,6 @@ const SongBar = ({ song, searched }) => {
         setCurrentId,
         loading,
         setLoading,
-        searchResults
 
     } = useContext(UserContext);
 
