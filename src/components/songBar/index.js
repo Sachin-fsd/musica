@@ -63,19 +63,13 @@ const SongBar = ({ song, searched }) => {
 
     //handle songbar click
     const handleClick = useCallback(() => {
-        setLoading(true);
-        debounce(async () => {
-            try {
-                const context = { setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId, currentSong };
-                await playAndFetchSuggestions(song, context);
+        audioRef.current.src = song.downloadUrl[4].url;
+        audioRef.current.play();
+        const context = { setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId, currentSong };
+        playAndFetchSuggestions(song, context)
+            .catch((error) => console.error("Error in handleClick:", error));
+    }, [song, setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId, currentSong]);
 
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setLoading(false);
-            }
-        }, 300)();
-    }, [song, setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId]);
 
     //handle remove song
     const handleRemoveSong = () => {
@@ -170,7 +164,7 @@ const SongBar = ({ song, searched }) => {
                             <Label
                                 className={`cursor-pointer font-medium text-gray-900 dark:text-gray-100 ${song?.id === currentSong?.id ? "font-bold dark:text-green-600 text-green-700" : ""} truncate text-sm whitespace-nowrap overflow-hidden text-ellipsis`}
                             >
-                                { decodedName }
+                                {decodedName}
                             </Label>
                         ) : (
                             <Skeleton className="min-h-2 p-2 m-2" />

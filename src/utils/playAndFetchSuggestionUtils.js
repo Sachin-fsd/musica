@@ -14,45 +14,44 @@ export async function playAndFetchSuggestions(song, context) {
     } = context;
 
     try {
-        audioRef.current.src = song.downloadUrl[4].url;
-        audioRef.current.play();
-        const clickedSongIndex = songList?.findIndex((s) => s.id === song?.id);
-        const isNewSong = clickedSongIndex === -1;
-        let NewSongList = songList.filter(s => !s.old);
-        // console.log("NewSongList",NewSongList)
-        let blankArr = Array.from({ length: 10 }, (el) => el = songFormat);
-
-        // Handle new song addition to the list
-        if (isNewSong) {
-            let updatedSongList = [song, ...blankArr, ...NewSongList];
-            setSongList(updatedSongList);
-            setCurrentIndex(0);
-        } else {
-            setCurrentIndex(songList?.findIndex((s) => s.id === song?.id));
-        }
-
-        // Set up the current song to play
+        // Play the song immediately
+        // audioRef.current.src = song.downloadUrl[4].url;
+        // audioRef.current.play();
+        setPlaying(true); // Update playing state
         setCurrentSong(song);
-        setPlaying(true);
         setCurrentId(song?.id);
 
-        // Fetch and add related song suggestions
-        const response = await SearchSongSuggestionAction(song?.id);
-        if (response.success) {
-            const relatedSongs = shuffleArray(response.data).filter(
-                (relatedSong) => !songList?.some((existingSong) => existingSong.id === relatedSong.id)
-            );
-            setSongList(isNewSong ? [song, ...relatedSongs, ...NewSongList] : [...NewSongList, ...relatedSongs]);
+        // Update song index
+        const clickedSongIndex = songList?.findIndex((s) => s.id === song?.id);
+        const isNewSong = clickedSongIndex === -1;
+        setCurrentIndex(isNewSong ? 0 : clickedSongIndex);
+
+        // Fetch and update the song list asynchronously
+        const relatedSongsPromise = SearchSongSuggestionAction(song?.id);
+
+        let updatedSongList = songList.filter((s) => !s.old);
+        if (isNewSong) {
+            updatedSongList = [song, ...Array(10).fill(songFormat), ...updatedSongList];
         }
 
-        // console.log("Updated Song List:", updatedSongList);
-        return { msg: "ok", ok: true };
+        setSongList(updatedSongList); // Update song list with placeholder items
 
+        // Process suggestions when available
+        const response = await relatedSongsPromise;
+        if (response.success) {
+            const relatedSongs = shuffleArray(response.data).filter(
+                (relatedSong) => !updatedSongList.some((existingSong) => existingSong.id === relatedSong.id)
+            );
+            setSongList([...updatedSongList, ...relatedSongs]);
+        }
+
+        return { msg: "ok", ok: true };
     } catch (error) {
         console.error("Error in playAndFetchSuggestions:", error);
         return { msg: "Songs Not Found", ok: false };
     }
 }
+
 
 export async function fetchAlbumSongs(type, id, context) {
     const {
