@@ -1,8 +1,10 @@
 {
   "name": "Musica Steel",
   "short_name": "Musica",
-  "start_url": "/",
+  "start_url": "/browse",
   "orientation": "portrait",
+  "scope": "/",
+  "description": "Musica Steel - The best music streaming app.",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -13,7 +15,13 @@
       "src": "/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
     }
+    
   ],
   "theme_color": "#020617",
   "background_color": "#020617",

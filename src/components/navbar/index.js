@@ -11,6 +11,7 @@ import { SearchSongsAction } from "@/app/actions";
 import { debounce } from "lodash";
 import { ThemeSwitch } from "../themeSwitch";
 import { PlaceholdersAndVanishInput } from "../ui/placeholders-and-vanish-input";
+import InstallPromptIcon from "../leftSidebar/installApp/installPrompt";
 
 const Navbar = () => {
     const { setSearchResults, searchQuery, setSearchQuery } = useContext(UserContext);
@@ -176,6 +177,9 @@ const Navbar = () => {
 
                 <div className="ml-2 md:ml-6">
                     <ThemeSwitch />
+                </div>
+                <div className="ml-2 md:ml-6">
+                    <InstallPromptIcon />
                 </div>
             </div>
         </div>

@@ -8,56 +8,62 @@ const InstallPromptIcon = () => {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isStandalone, setIsStandalone] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
-    const userAgent = navigator.userAgent;
-
-    // Check if the app is running in standalone mode
-    setIsStandalone(
-      window.matchMedia("(display-mode: standalone)").matches ||
-      window.navigator.standalone // For iOS
-    );
-
     // Detect if the user is on iOS
+    const userAgent = typeof window !== "undefined" ? window.navigator.userAgent : "";
     setIsIOS(/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream);
 
-    // Detect if the user is on a desktop
-    setIsDesktop(!/Mobi|Android/i.test(userAgent)); // Basic desktop detection
+    // Detect if the app is already installed
+    const standalone = window.matchMedia("(display-mode: standalone)").matches;
+    setIsStandalone(standalone);
 
     const handleBeforeInstallPrompt = (e) => {
-      e.preventDefault(); // Prevent the default prompt
-      setDeferredPrompt(e); // Save the event for later
+      e.prompt();
+      e.preventDefault();
+      setDeferredPrompt(e);
     };
+    window.addEventListener('beforeinstallprompt', function (event) {
+      console.log(event)
+      // Prevent Chrome 67 and earlier from automatically showing the prompt
+      // event.preventDefault();
+      // Stash the event so it can be triggered later.
+      setDeferredPrompt(event);
+    });
 
-    // Add event listener for the `beforeinstallprompt` event
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    // window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
 
     return () => {
-      // Clean up the event listener
       window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
     };
   }, []);
 
   const handleInstallClick = () => {
     if (isIOS) {
-      // Show installation instructions for iOS
-      toast("To install on iOS, tap the share icon and then 'Add to Home Screen'.");
+      // Show instructions for iOS users
+      toast("To install this app on your iOS device, tap the share button and then 'Add to Home Screen'.");
     } else if (deferredPrompt) {
-      // Trigger the install prompt
       deferredPrompt.prompt();
-      deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === 'accepted') {
-          toast.success("App installation started!");
-        } else {
-          toast.error("App installation dismissed.");
-        }
-        setDeferredPrompt(null); // Clear the deferred prompt
-      });
+      deferredPrompt.userChoice
+        .then((choice) => {
+          if (choice.outcome === "accepted") {
+            toast.success("App installed successfully!");
+          } else {
+            toast.error("App installation canceled.");
+          }
+          setDeferredPrompt(null); // Clear the deferredPrompt after interaction
+        })
+        .catch((error) => {
+          console.error("Error during app installation:", error);
+          toast.error("An error occurred during installation.");
+        });
+    } else {
+      console.log(deferredPrompt)
+      toast.error("Installation prompt is not available.");
     }
   };
 
-  // If the app is already installed, do not display the icon
+  // Hide the icon if the app is already installed
   if (isStandalone) return null;
 
   return (

@@ -3,7 +3,7 @@ import { UserContext } from "@/context";
 import { Slider } from "../ui/slider";
 import SongCarousel from "./songCarousel";
 import SongsListComponent from "./songsList";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { decodeHtml } from "@/utils";
 import MainSongPhoto from "./mainSongPhoto/MainSongPhoto";
 
