@@ -20,7 +20,7 @@ const SongBarCarousel = ({ song }) => {
     // Truncate the title with HTML decoding
     const truncateTitle = (title, maxLength = 18) => {
         const result = title?.length > maxLength ? `${title?.substring(0, maxLength)}...` : title;
-        return decodeHtml(result);
+        return decodeHtml(result)
     };
 
     // Optimized context memoization
