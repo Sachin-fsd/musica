@@ -14,7 +14,7 @@ import dynamic from "next/dynamic";
 const Marquee = dynamic(() => import("react-fast-marquee"), { ssr: false });
 
 const SongBarCarousel = ({ song }) => {
-    const { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading } = useContext(UserContext);
+    const {audioRef, currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading } = useContext(UserContext);
     const [imageError, setImageError] = useState(false);
 
     // Truncate the title with HTML decoding
