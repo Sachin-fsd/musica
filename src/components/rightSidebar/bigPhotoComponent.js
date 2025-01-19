@@ -42,7 +42,7 @@ const BigPhotoComponent = () => {
             </div>
 
             {/* Songs List - takes up the remaining space */}
-            <div className="overflow-auto p-1 pb-3 max-h-[calc(100vh-300px)]">
+            <div className="">
                 {!songList?.length ? (
                     <p className="text-center text-gray-500">No songs available</p>
                 ) : (

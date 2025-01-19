@@ -9,9 +9,9 @@ const AlbumContent = async () => {
     try {
         let MegaMenu3Playlists = await fetchByLinkAction(mega_menu_3);
         let object_for_megaMenu3 = [
-            { 
-                heading: "Charts", 
-                data: MegaMenu3Playlists.charts 
+            {
+                heading: "Charts",
+                data: MegaMenu3Playlists.charts
             },
             {
                 heading: "Ultimate Jams",
@@ -75,7 +75,7 @@ const AlbumContent = async () => {
         // console.log("artists: ",artists);
 
         return (
-            <div className="p-2 mb-4 rounded-lg">
+            <div className="p-2 mb-4 rounded-lg hide-scrollbar">
                 {
                     albumData.map(({ heading, data }) => (
                         <div key={heading}>

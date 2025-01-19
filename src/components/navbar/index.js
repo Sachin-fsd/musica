@@ -178,9 +178,9 @@ const Navbar = () => {
                 <div className="ml-2 md:ml-6">
                     <ThemeSwitch />
                 </div>
-                <div className="ml-2 md:ml-6">
+                {/* <div className="ml-2 md:ml-6">
                     <InstallPromptIcon />
-                </div>
+                </div> */}
             </div>
         </div>
     );

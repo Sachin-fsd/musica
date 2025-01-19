@@ -1,20 +1,30 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-// import ColorThief from "color-thief";
-// import ColorThief from './node_modules/colorthief/dist/color-thief.mjs'
-import ColorThief from '../../../../node_modules/colorthief/dist/color-thief.mjs'
+import ColorThief from '../../../../node_modules/colorthief/dist/color-thief.mjs';
 
 const MainSongPhoto = ({ src, alt }) => {
   const [glowColor, setGlowColor] = useState("");
   const imgRef = useRef(null);
 
+  // Ensuring the image is loaded before extracting the color
   useEffect(() => {
     const image = imgRef.current;
-    if (image && image.complete) {
-      extractColor();
+    if (image) {
+      // Adding event listener to ensure the image is loaded
+      const onLoadHandler = () => extractColor();
+      if (image.complete) {
+        extractColor();
+      } else {
+        image.addEventListener("load", onLoadHandler);
+      }
+
+      // Cleanup event listener when component unmounts or image changes
+      return () => {
+        image.removeEventListener("load", onLoadHandler);
+      };
     }
-  }, []);
+  }, [src]); // Adding src as a dependency to re-run effect if the image changes
 
   const extractColor = () => {
     const colorThief = new ColorThief();
@@ -32,6 +42,7 @@ const MainSongPhoto = ({ src, alt }) => {
         display: "inline-block",
         borderRadius: "8px",
         boxShadow: `0 0 20px 6px ${glowColor}`,
+        transition: "box-shadow 0.3s ease", // Smooth transition for the glow effect
       }}
     >
       <img
@@ -42,6 +53,9 @@ const MainSongPhoto = ({ src, alt }) => {
         style={{
           display: "block",
           borderRadius: "8px",
+          objectFit: "cover", // Ensures the image fits the container properly
+          width: "100%", // Make sure the image fills the container
+          height: "100%", // Ensure the height also matches
         }}
         crossOrigin="anonymous" // Required for ColorThief to work with images from different origins
       />
