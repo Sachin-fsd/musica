@@ -23,18 +23,36 @@ export default function UserState({ children }) {
     const [searchQuery, setSearchQuery] = useState("");
 
     //save songs in local storage
-    // useEffect(() => {
-    //     setSongList(JSON.parse(localStorage.getItem("songList"))  || songs)
-    //     setCurrentSong(JSON.parse(localStorage.getItem("currentSong") ) || songs[0]);
-    // }, [])
+    useEffect(() => {
+        try {
+            const storedSongList = JSON.parse(localStorage.getItem("songList"));
+            const storedCurrentSong = JSON.parse(localStorage.getItem("currentSong"));
+            setSongList(storedSongList || songs);
+            setCurrentSong(storedCurrentSong || songs[0]);
+        } catch (error) {
+            console.error("Error parsing localStorage data", error);
+            setSongList(songs);
+            setCurrentSong(songs[0]);
+        }
+    }, []);
 
-    // useEffect(() => {
-    //     localStorage.setItem("songList", JSON.stringify(songList))
-    // }, songList)
 
-    // useEffect(() => {
-    //     localStorage.setItem("currentSong", JSON.stringify(currentSong))
-    // }, currentSong)
+    useEffect(() => {
+        if (songList.length > 10) {
+            let songs = songList.filter((s) => s.id !== currentId);
+            songs = [currentSong, ...songs];
+            localStorage.setItem("songList", JSON.stringify(songs))
+        } else {
+            localStorage.setItem("songList", JSON.stringify(songList));
+        }
+    }, [songList])
+
+    useEffect(() => {
+        if (currentSong) {
+            localStorage.setItem("currentSong", JSON.stringify(currentSong));
+        }
+    }, [currentSong]);
+
 
     // handle seek of slider
     const handleSeek = (e) => {
@@ -313,7 +331,7 @@ export default function UserState({ children }) {
         setSearchResults,
         isJamChecked,
         setIsJamChecked,
-        searchQuery, 
+        searchQuery,
         setSearchQuery
     };
 
