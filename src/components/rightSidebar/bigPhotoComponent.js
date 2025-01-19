@@ -21,26 +21,10 @@ const BigPhotoComponent = () => {
             {/* Carousel - takes up a small portion */}
             <div className="rounded text-center">
                 <div>
-                    <MainSongPhoto src={currentSong.image[2].url} alt={currentSong.name}/>
+                    {currentSong && currentSong?.image?.[2]?.url && (
+                        <MainSongPhoto src={currentSong.image[2].url} alt={currentSong.name} />
+                    )}
                 </div>
-                {currentSong && currentSong?.name > 0 && (
-                    <div className="text-center -mt-1">
-                        <p className="font-semibold font-mono truncate max-w-xs mx-auto">
-                            {decodeHtml(currentSong?.name)}
-                        </p>
-                        <p className="font-mono text-gray-400 text-xs truncate max-w-xs mx-auto">
-                            {decodeHtml(
-                                currentSong?.artists?.primary
-                                    ?.slice(0, 2)
-                                    .map((a) => a.name)
-                                    .join(', ')
-                            )}
-                        </p>
-                        <p className="font-mono text-gray-400 text-xs truncate max-w-xs mx-auto">
-                            {decodeHtml(currentSong?.album?.name)}
-                        </p>
-                    </div>
-                )}
                 {/* <SongCarousel songs={songList} /> */}
             </div>
 
@@ -48,8 +32,8 @@ const BigPhotoComponent = () => {
             <div className="mb-4 pt-2">
                 <Slider
                     onValueChange={handleSeek}
-                    value={[currentTime]}
-                    max={duration}
+                    value={[currentTime || 0]}
+                    max={duration || 0}
                     className="shadow-lg bg-gray-200 dark:bg-gray-800 rounded-lg"
                 />
                 <div className="flex items-center justify-between mt-1 text-gray-700 dark:text-gray-300">
@@ -59,8 +43,17 @@ const BigPhotoComponent = () => {
             </div>
 
             {/* Songs List - takes up the remaining space */}
-            <div className="">
-                <SongsListComponent songList={songList} />
+            <div className="overflow-auto p-1 pb-3 max-h-[calc(100vh-300px)]">
+                {!songList?.length ? (
+                    <p className="text-center text-gray-500">No songs available</p>
+                ) : (
+                    songList?.map((song, index) => (
+                        <div key={index} className="w-full">
+                            <SongBar song={song} />
+                            {index < songList?.length - 1 && <Separator className="my-2" />}
+                        </div>
+                    ))
+                )}
             </div>
         </div>
     );

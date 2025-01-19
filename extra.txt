@@ -1,0 +1,1 @@
+context update, removed songListComponent from BigPhoto, Updated songBar, Replaced plus icon with ellipsis, Added song name in player

@@ -1,6 +1,6 @@
 {
-  "name": "music-app",
-  "version": "0.1.0",
+  "name": "musica",
+  "version": "2.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -34,7 +34,6 @@
     "colorthief": "^2.6.0",
     "embla-carousel-react": "^8.1.8",
     "framer-motion": "^11.15.0",
-    "input-otp": "^1.2.4",
     "lodash": "^4.17.21",
     "lucide-react": "^0.424.0",
     "mongoose": "^8.5.3",
@@ -42,13 +41,9 @@
     "next-themes": "^0.3.0",
     "nextjs-toploader": "^1.6.12",
     "react": "^18",
-    "react-beautiful-dnd": "^13.1.1",
-    "react-custom-scrollbars-2": "^4.5.0",
     "react-dom": "^18",
     "react-fast-marquee": "^1.6.5",
-    "react-multi-carousel": "^2.8.5",
     "react-resizable-panels": "^2.1.7",
-    "react-scrollbars-custom": "^4.1.1",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7"
