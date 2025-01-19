@@ -13,8 +13,9 @@ import LongPressTooltip from "./longPressTooltip";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import TouchableOpacity from "../ui/touchableOpacity";
 
-const SongBar = ({ song}) => {
+const SongBar = ({ song }) => {
     const {
+        setCurrentTime,
         currentSong,
         setCurrentIndex,
         currentIndex,
@@ -52,6 +53,7 @@ const SongBar = ({ song}) => {
     const handleClick = useCallback(() => {
         if (!song || loading) return; // Skip if no song or already loading
         audioRef.current.src = song.downloadUrl[4].url;
+        audioRef.current.currentTime = 0;
         audioRef.current.play();
         const context = { setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId, currentSong };
         playAndFetchSuggestions(song, context).catch((error) => console.error("Error in handleClick:", error));

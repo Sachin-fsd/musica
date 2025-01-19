@@ -3,7 +3,7 @@
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { UserContext } from "@/context";
-import { useCallback, useContext, useState, useMemo } from "react";
+import { useCallback, useContext, useState } from "react";
 import { debounce } from "lodash";
 import { playAndFetchSuggestions } from "@/utils/playAndFetchSuggestionUtils";
 import { Play } from "lucide-react";
@@ -14,40 +14,30 @@ import dynamic from "next/dynamic";
 const Marquee = dynamic(() => import("react-fast-marquee"), { ssr: false });
 
 const SongBarCarousel = ({ song }) => {
-    const { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading } = useContext(UserContext);
+    const { audioRef, currentSong, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading, loading } = useContext(UserContext);
     const [imageError, setImageError] = useState(false);
 
     // Truncate the title with HTML decoding
     const truncateTitle = (title, maxLength = 18) => {
-        const result = title?.length > maxLength ? `${title?.substring(0, maxLength)}...` : title;
-        return decodeHtml(result);
+        return decodeHtml(title?.length > maxLength ? `${title?.substring(0, maxLength)}...` : title);
     };
-
-    // Optimized context memoization
-    const context = useMemo(() => ({
-        setCurrentIndex,
-        currentIndex,
-        setSongList,
-        songList,
-        setCurrentSong,
-        setPlaying,
-        setCurrentId,
-        currentSong,
-    }), [setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, setCurrentId, currentSong]);
 
     // Handle play click with debouncing
     const handlePlayClick = useCallback(
         debounce(async () => {
-            setLoading(true);
+            if (!song || loading) return; // Skip if no song or already loading
+            audioRef.current.src = song.downloadUrl[4].url;
+            audioRef.current.currentTime = 0;
+            audioRef.current.play();
             try {
-                await playAndFetchSuggestions(song, context);
+                await playAndFetchSuggestions(song, { setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId });
             } catch (error) {
                 console.error(error);
             } finally {
                 setLoading(false);
             }
         }, 300),
-        [song, context]
+        [song, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId]
     );
 
     // Extract image URL
@@ -67,6 +57,7 @@ const SongBarCarousel = ({ song }) => {
                         src={imageUrl}
                         alt={`${song?.name} cover`}
                         className="rounded-md"
+                        loading="lazy" // Image lazy load for better performance
                         onError={() => setImageError(true)}
                     />
                 )}
