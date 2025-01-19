@@ -6,6 +6,7 @@ import SongsListComponent from "./songsList";
 import { useContext, useEffect } from "react";
 import { decodeHtml } from "@/utils";
 import MainSongPhoto from "./mainSongPhoto/MainSongPhoto";
+import SongBar from "../songBar";
 
 const BigPhotoComponent = () => {
     const { currentTime, duration, handleSeek, songList, currentSong, currentIndex } = useContext(UserContext);

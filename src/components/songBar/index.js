@@ -13,7 +13,7 @@ import LongPressTooltip from "./longPressTooltip";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import TouchableOpacity from "../ui/touchableOpacity";
 
-const SongBar = ({ song, searched }) => {
+const SongBar = ({ song}) => {
     const {
         currentSong,
         setCurrentIndex,
