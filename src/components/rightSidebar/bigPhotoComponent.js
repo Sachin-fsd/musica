@@ -1,12 +1,10 @@
 'use client'
 import { UserContext } from "@/context";
 import { Slider } from "../ui/slider";
-import SongCarousel from "./songCarousel";
-import SongsListComponent from "./songsList";
-import { useContext, useEffect } from "react";
-import { decodeHtml } from "@/utils";
+import { useContext } from "react";
 import MainSongPhoto from "./mainSongPhoto/MainSongPhoto";
 import SongBar from "../songBar";
+import { Separator } from "../ui/separator";
 
 const BigPhotoComponent = () => {
     const { currentTime, duration, handleSeek, songList, currentSong, currentIndex } = useContext(UserContext);
