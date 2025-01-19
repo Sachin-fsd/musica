@@ -23,32 +23,23 @@ const SongBarCarousel = ({ song }) => {
         return decodeHtml(result);
     };
 
-    // Optimized context memoization
-    const context = useMemo(() => ({
-        setCurrentIndex,
-        currentIndex,
-        setSongList,
-        songList,
-        setCurrentSong,
-        setPlaying,
-        setCurrentId,
-        currentSong,
-    }), [setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, setCurrentId, currentSong]);
 
     // Handle play click with debouncing
-    const handlePlayClick = useCallback(
+    const handlePlayClick = useCallback(() => {
+        setLoading(true);
         debounce(async () => {
-            setLoading(true);
             try {
+                const context = { setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId, currentSong };
                 await playAndFetchSuggestions(song, context);
+
             } catch (error) {
                 console.error(error);
             } finally {
                 setLoading(false);
             }
-        }, 300),
-        [song, context]
-    );
+        }, 300)();
+    }, [song, setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId]);
+
 
     // Extract image URL
     const imageUrl = song?.image[1]?.url;
