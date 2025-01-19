@@ -14,7 +14,7 @@ import dynamic from "next/dynamic";
 const Marquee = dynamic(() => import("react-fast-marquee"), { ssr: false });
 
 const SongBarCarousel = ({ song }) => {
-    const { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading } = useContext(UserContext);
+    const {audioRef, currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, setLoading, loading } = useContext(UserContext);
     const [imageError, setImageError] = useState(false);
 
     // Truncate the title with HTML decoding
@@ -38,7 +38,10 @@ const SongBarCarousel = ({ song }) => {
     // Handle play click with debouncing
     const handlePlayClick = useCallback(
         debounce(async () => {
-            setLoading(true);
+            if (!song || loading) return; // Skip if no song or already loading
+            audioRef.current.src = song.downloadUrl[4].url;
+            audioRef.current.currentTime = 0;
+            audioRef.current.play();
             try {
                 await playAndFetchSuggestions(song, context);
             } catch (error) {
