@@ -56,7 +56,7 @@ const SongContentCarousel = () => {
                             ))
                         ) : (
                             <div className='flex items-center justify-center w-full h-32 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'>
-                                <p>Song unavailable🥺</p>
+                                <p>Loading in seconds🎵</p>
                             </div>
                         )}
                     </div>
