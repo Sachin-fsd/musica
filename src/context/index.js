@@ -1,6 +1,6 @@
 'use client'
 import { SearchSongSuggestionAction } from "@/app/actions";
-import { songs } from "@/utils/cachedSongs";
+import { songFormat, songs } from "@/utils/cachedSongs";
 import { shuffleArray } from "@/utils/extraFunctions";
 import { createContext, useRef, useState, useEffect } from "react";
 
@@ -8,14 +8,14 @@ export const UserContext = createContext(null);
 
 export default function UserState({ children }) {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [currentSong, setCurrentSong] = useState(songs[0]);
-    const [currentId, setCurrentId] = useState(songs[0].id);
+    const [currentSong, setCurrentSong] = useState(songFormat);
+    const [currentId, setCurrentId] = useState(null);
     const [playing, setPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [isLooping, setIsLooping] = useState(false);
     const audioRef = useRef(null);
-    const [songList, setSongList] = useState(songs);
+    const [songList, setSongList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [searchResults, setSearchResults] = useState([])
     const [manualQuality, setManualQuality] = useState("very_high"); // State for manual quality selection
@@ -25,26 +25,25 @@ export default function UserState({ children }) {
     //save songs in local storage
     useEffect(() => {
         try {
-            const storedSongList = JSON.parse(localStorage.getItem("songList"));
-            const storedCurrentSong = JSON.parse(localStorage.getItem("currentSong"));
-            setSongList(storedSongList || songs);
-            setCurrentSong(storedCurrentSong || songs[0]);
+            const storedCurrentSong = JSON.parse(localStorage.getItem("currentSong")) || null;
+            let storedSongList = JSON.parse(localStorage.getItem("songList")) || [];
+
+            if (storedSongList.length > 10) {
+                storedSongList = storedSongList.filter(s => s.id !== storedCurrentSong.id).slice(0, 10);
+                storedSongList.unshift(storedCurrentSong);
+            }
+
+            setSongList(storedSongList);
+            setCurrentSong(storedCurrentSong || storedSongList[0] || null);
         } catch (error) {
             console.error("Error parsing localStorage data", error);
-            setSongList(songs);
-            setCurrentSong(songs[0]);
+            setSongList([]);
+            setCurrentSong(null);
         }
     }, []);
 
-
     useEffect(() => {
-        if (songList.length > 10) {
-            let songs = songList.filter((s) => s.id !== currentId);
-            songs = [currentSong, ...songs];
-            localStorage.setItem("songList", JSON.stringify(songs))
-        } else {
-            localStorage.setItem("songList", JSON.stringify(songList));
-        }
+        localStorage.setItem("songList", JSON.stringify(songList));
     }, [songList])
 
     useEffect(() => {
