@@ -10,6 +10,7 @@ import { decodeHtml, htmlParser } from "@/utils";
 import { Button } from "../ui/button";
 import { debounce } from "lodash";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import TouchableOpacity from "../ui/touchableOpacity";
 
 const SongBar = ({ song, searched }) => {
     const {
@@ -106,7 +107,7 @@ const SongBar = ({ song, searched }) => {
 
     return (
         <div className="flex justify-between items-center p-2 bg-white dark:bg-slate-950 rounded-lg shadow-md w-full transition-transform duration-200 ease-in-out md:hover:scale-[1.01] md:hover:bg-gray-100 dark:md:hover:bg-gray-800 sm:hover:scale-[1] sm:hover:bg-transparent">
-            <div className="relative flex items-center cursor-pointer mr-3" onClick={handleClick} style={{ flex: '1' }}>
+            <TouchableOpacity className="relative flex items-center cursor-pointer mr-3" onClick={handleClick} style={{ flex: '1' }}>
                 {song?.image[1]?.url && !imageError ? (
                     <img
                         src={song?.image[1]?.url}
@@ -139,7 +140,7 @@ const SongBar = ({ song, searched }) => {
                         </div>
                     </div>
                 )}
-            </div>
+            </TouchableOpacity >
 
             <div className="flex items-center space-x-2">
                 {song?.id !== currentSong?.id && (
