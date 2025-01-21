@@ -7,9 +7,13 @@ import { toast } from 'sonner'; // Toast notifications
 const InstallPromptIcon = () => {
   const [isAndroid, setIsAndroid] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
+  const [isStandalone, setIsStandalone] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
 
   useEffect(() => {
+    // Check if the app is in standalone mode
+    setIsStandalone(window.matchMedia("(display-mode: standalone)").matches);
+
     const handleBeforeInstallPrompt = (e) => {
       e.preventDefault(); // Prevent automatic prompt display
       setDeferredPrompt(e);
@@ -24,7 +28,7 @@ const InstallPromptIcon = () => {
     return () => {
       window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
     };
-  }, []);
+  }, [deferredPrompt]);
 
   useEffect(() => {
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
@@ -51,6 +55,9 @@ const InstallPromptIcon = () => {
       toast("To install this app, use the 'Install' option in your browser settings.");
     }
   };
+
+  // Hide the button if the app is already installed
+  if (isStandalone) return null;
 
   return (
     <div
