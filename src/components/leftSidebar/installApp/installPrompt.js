@@ -35,10 +35,10 @@ const InstallPromptIcon = () => {
   const handleDownloadClick = () => {
     if (isAndroid) {
       // Download APK
-      const apkUrl = "https://drive.google.com/uc?id=1W0EbXh0Jw7fv7Lqu8HU2a-ZPo4zmRwzP&export=download"; // Replace with your APK URL
+      const apkUrl = "/Musica.apk"; // Replace with your APK URL
       const link = document.createElement("a");
       link.href = apkUrl;
-      link.download = "YourAppName.apk"; // Optional: Default file name
+      link.download = "Musica.apk"; // Optional: Default file name
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

@@ -253,8 +253,3 @@ const JamComponent = () => {
 };
 
 export default JamComponent;
-
-//block event loop
-//network request
-//long compitation
-//i/o operation
