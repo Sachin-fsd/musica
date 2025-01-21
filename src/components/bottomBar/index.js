@@ -1,8 +1,16 @@
 'use client'
+import { UserContext } from "@/context";
 import { memo, useMemo } from "react";
-import { Slider, Button, Sheet, Skeleton, Label } from "../ui"; // Importing memoized components
-import RightSidebar from "../rightSidebar";
 import { debounce } from "lodash";
+import { Play, Pause, StepForward, ChevronDown } from "lucide-react";
+import { useContext, useState } from "react";
+import { Skeleton } from "../ui/skeleton";
+import { Label } from "../ui/label";
+import { decodeHtml, htmlParser } from "@/utils";
+import { Button } from "../ui/button";
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
+import RightSidebar from "../rightSidebar";
+import { Slider } from "./BottomSlider";
 
 const Bottombar = () => {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -41,7 +49,17 @@ const Bottombar = () => {
                         <div className="flex items-center space-x-4 cursor-pointer">
                             {songImage}
                             <div className="flex flex-col overflow-hidden">
-                                <Label className="font-semibold text-gray-100 truncate text-base cursor-pointer">{currentSong?.name}</Label>
+                                {currentSong?.name ? (
+                                    <Label className="font-semibold text-gray-100 truncate text-base cursor-pointer">{decodeHtml(currentSong?.name)}</Label>
+                                ) : (
+                                    <Skeleton className="w-32 h-4 mb-1 bg-gray-700" />
+                                )}
+                                {currentSong?.artists?.primary[0]?.name ? (
+                                    <span className="flex whitespace-nowrap">
+                                        <p className="text-sm text-gray-400 truncate">{htmlParser(currentSong?.artists?.primary[0]?.name)} </p> <span className=""> • </span>
+                                        <p className="text-sm text-gray-400 truncate"> {currentSong?.album?.name?.length > 15 ? htmlParser(currentSong?.album?.name?.substring(0, 15).concat("...")) : htmlParser(currentSong?.album?.name)}</p>
+                                    </span>
+                                ) : null}
                             </div>
                         </div>
                     </MemoizedSheetTrigger>
