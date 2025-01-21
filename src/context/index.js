@@ -22,7 +22,7 @@ export default function UserState({ children }) {
     const [isJamChecked, setIsJamChecked] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
-    //save songs in local storage
+    //get songs from local storage
     useEffect(() => {
         try {
             const storedCurrentSong = JSON.parse(localStorage.getItem("currentSong")) || null;
@@ -33,12 +33,13 @@ export default function UserState({ children }) {
                 storedSongList.unshift(storedCurrentSong);
             }
 
-            setSongList(storedSongList);
-            setCurrentSong(storedCurrentSong || storedSongList[0] || null);
+            setSongList(storedSongList?.length > 0 ? storedSongList : songs);
+            setCurrentSong(storedCurrentSong?.id ? storedCurrentSong : (storedSongList[0] || songs[0]));
+            console.log(songList, currentSong)
         } catch (error) {
             console.error("Error parsing localStorage data", error);
-            setSongList([]);
-            setCurrentSong(null);
+            setSongList(songs);
+            setCurrentSong(songs[0]);
         }
     }, []);
 

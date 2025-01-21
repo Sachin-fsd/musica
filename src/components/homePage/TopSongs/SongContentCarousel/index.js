@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { UserContext } from '@/context';
 import SongBarCarousel from './songBarCarousel';
 import TouchableOpacity from '@/components/ui/touchableOpacity';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const SongContentCarousel = () => {
     const { songList } = useContext(UserContext);
@@ -45,7 +46,7 @@ const SongContentCarousel = () => {
                             songList?.map((song, index) => (
                                 <div
                                     key={index}
-                                    className='mr-1  sm:hover:bg-white dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-36 max-w-52 hover:shadow-md transition'
+                                    className='mr-1 sm:hover:bg-white dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-36 max-w-52 hover:shadow-md transition'
                                 >
                                     {song?.image &&
                                         <TouchableOpacity>
@@ -55,8 +56,11 @@ const SongContentCarousel = () => {
                                 </div>
                             ))
                         ) : (
-                            <div className='flex items-center justify-center w-full h-32 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'>
-                                <p>Loading in seconds🎵</p>
+                            <div className='flex gap-1 overflow-x-auto scroll-smooth hide-scrollbar'>
+                                <Skeleton className="h-32 w-32 rounded" />
+                                <Skeleton className="h-32 w-32 rounded" />
+                                <Skeleton className="h-32 w-32 rounded" />
+                                <Skeleton className="h-32 w-32 rounded" />
                             </div>
                         )}
                     </div>
