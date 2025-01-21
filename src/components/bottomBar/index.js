@@ -33,13 +33,6 @@ const Bottombar = () => {
     return (
         <div className="fixed bottom-0 left-0 w-full bg-gray-900 text-white shadow-lg p-4 pt-0 flex flex-col items-center justify-between flex-grow z-10">
             <div className="w-full pb-1">
-                {/* <Progress
-                    value={currentTime}
-                    max={duration}
-                    className="bg-gray-600 rounded-full"
-                    trackclassname="bg-gray-700"
-                    indicatorclassname="bg-pink-500"
-                /> */}
                 <Slider
                     onValueChange={handleSeek}
                     value={[currentTime]}

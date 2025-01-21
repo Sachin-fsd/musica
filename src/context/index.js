@@ -115,23 +115,49 @@ export default function UserState({ children }) {
         }
     }, [songList, currentSong]);
 
+    useEffect(() => {
+        if (songList && songList.length > 0) {
+            // Determine the index of the next song and the song after that
+            const nextIndex = (currentIndex + 1) % songList.length;
+            const nextNextIndex = (currentIndex + 2) % songList.length;
+
+            // Preload the next song
+            const nextSong = songList[nextIndex];
+            const nextSongAudio = new Audio(nextSong.downloadUrl[4].url);
+            nextSongAudio.load();
+
+            // Optionally preload the song after next
+            const nextNextSong = songList[nextNextIndex];
+            const nextNextSongAudio = new Audio(nextNextSong.downloadUrl[4].url);
+            nextNextSongAudio.load();
+        }
+    }, [currentIndex, songList]); // This runs when the currentIndex or songList changes
 
     // handles song end
     useEffect(() => {
         const handleSongEnd = () => {
             if (!isLooping) {
                 const nextIndex = (currentIndex + 1) % songList?.length;
+                const nextSong = songList[nextIndex];
+
+                // Set the next song and play it
                 setCurrentIndex(nextIndex);
-                setCurrentSong(songList[nextIndex]);
+                setCurrentSong(nextSong);
+
+                // Use a callback pattern to ensure `setPlaying(true)` happens after song is set
                 setPlaying(true);
             }
         };
 
-        audioRef?.current?.addEventListener('ended', handleSongEnd);
+        // Check if audioRef and current are defined
+        if (audioRef?.current) {
+            audioRef.current.addEventListener('ended', handleSongEnd);
+        }
 
         return () => {
+            // Clean up the event listener when the component unmounts
             if (audioRef?.current) {
-                audioRef?.current.removeEventListener('ended', handleSongEnd);
+                audioRef.current.removeEventListener('ended', handleSongEnd);
             }
         };
     }, [isLooping, currentIndex, songList, setCurrentIndex, setCurrentSong]);
