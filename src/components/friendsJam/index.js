@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { UserContext } from "@/context";
 import { supabase } from "@/lib/supabase";
@@ -7,97 +7,26 @@ import debounce from "lodash/debounce";
 
 const JamComponent = () => {
   const {
-    isJamChecked, songList, currentSong, setSongList, setCurrentSong,
-    currentIndex, currentId, setCurrentId, setCurrentIndex
+    isJamChecked,
+    songList,
+    currentSong,
+    setSongList,
+    setCurrentSong,
+    currentIndex,
+    currentId,
+    setCurrentId,
+    setCurrentIndex,
+    connectedJam
   } = useContext(UserContext);
 
   const connectedJamRef = useRef(null);
-  const [jam_code, set_jam_code] = useState(getJamCode);
   const [activeUsers, setActiveUsers] = useState([]);
-  const [connectedJam, setConnectedJam] = useState(null);
   const lastUpdateSource = useRef(null);
   const isRealTimeUpdate = useRef(false);
 
-  function getJamCode() {
-    if (typeof window === 'undefined') return;
-    return localStorage.getItem("jam_code") || null;
-  }
-
-  const generateJamCode = () => {
-    return Date.now().toString(36); // Generate a unique jam code
-  };
-
-  const createOrFetchJamRow = async () => {
-    if (!jam_code) {
-      const { data, error } = await supabase
-        .from('jams')
-        .upsert({
-          content: { songList, currentSong, currentIndex, currentId },
-          code: generateJamCode(),
-          last_updated: new Date()
-        }, { onConflict: ['code'] })
-        .select('code')
-        .single();
-
-      if (error) {
-        console.error('Error creating or fetching jam:', error);
-      } else {
-        const new_jam_code = data.code;
-        localStorage.setItem('jam_code', new_jam_code);
-        set_jam_code(new_jam_code);
-        console.log('Jam row created with code:', new_jam_code);
-      }
-    } else {
-      const { data: existingJam, error } = await supabase
-        .from('jams')
-        .select('*')
-        .eq('code', jam_code)
-        .single();
-
-      if (error && error.code === 'PGRST116') {
-        const { data, error: insertError } = await supabase
-          .from('jams')
-          .upsert([{ content: { songList, currentSong, currentIndex, currentId }, code: jam_code, last_updated: new Date() }]);
-
-        if (insertError) {
-          console.error('Error creating new jam with existing code:', insertError);
-        }
-      } else if (existingJam) {
-        console.log('Jam row already exists with jam_code:', jam_code);
-      }
-    }
-  };
-
-  const deleteJamRow = async () => {
-    if (jam_code) {
-      const { error } = await supabase
-        .from('jams')
-        .delete()
-        .eq('code', jam_code);
-
-      if (error) {
-        console.error('Error deleting jam row:', error);
-      } else {
-        console.log('Jam row deleted successfully.');
-        set_jam_code(null);
-      }
-    }
-  };
-
-  // Listen for changes in isJamChecked
+  // Fetch active users and subscribe to Supabase real-time updates
   useEffect(() => {
-    if (isJamChecked) {
-      // When jam is turned on, create or fetch the jam row
-      createOrFetchJamRow();
-    } else {
-      // When jam is turned off, delete the jam row
-      deleteJamRow();
-    }
-  }, [isJamChecked]);
-
-  useEffect(() => {
-
-    if (!isJamChecked) return; // Don't proceed if Jam is turned off
+    if (!connectedJam) return; // Load only if connectedJam is true
 
     const fetchActiveUsers = async () => {
       const { data, error } = await supabase.from('jams').select('*');
@@ -105,28 +34,22 @@ const JamComponent = () => {
         console.error('Error fetching active users:', error);
       } else {
         setActiveUsers(data);
-        data.map((user)=>{
-          // console.log(Date.now()-new Date(user.last_updated).getTime()>3600000)
-          if(Date.now()-new Date(user.last_updated).getTime()>3600000){
-            console.log("Old row found")
-            deleteOldRow(user.id)
+        data.forEach((user) => {
+          if (Date.now() - new Date(user.last_updated).getTime() > 3600000) {
+            deleteOldRow(user.id);
           }
-        })
+        });
       }
     };
 
-    async function deleteOldRow(id){
-      const { error } = await supabase
-      .from('jams')
-      .delete()
-      .eq('id', id);
-
-    if (error) {
-      console.error('Error deleting jam row:', error);
-    } else {
-      console.log("SUccessfully deleted old rows")
-    }
-    }
+    const deleteOldRow = async (id) => {
+      const { error } = await supabase.from('jams').delete().eq('id', id);
+      if (error) {
+        console.error('Error deleting old jam row:', error);
+      } else {
+        console.log("Successfully deleted old rows");
+      }
+    };
 
     const updateRow = (updatedRow) => {
       if (connectedJamRef.current === updatedRow.code && lastUpdateSource.current !== updatedRow.code) {
@@ -166,62 +89,10 @@ const JamComponent = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [jam_code, isJamChecked]);
+  }, [connectedJam]); // Only run when connectedJam changes
 
-  useEffect(() => {
-    if (!isJamChecked || !jam_code) return;
-    const updateJamContent = debounce(async () => {
-      if (jam_code) {
-        lastUpdateSource.current = jam_code;
-
-        if (isRealTimeUpdate.current) {
-          console.log('Skipping update due to real-time event...');
-          isRealTimeUpdate.current = false;
-          return;
-        }
-
-        const { error } = await supabase
-          .from('jams')
-          .update({ content: { songList, currentSong, currentId, currentIndex }, last_updated: new Date() })
-          .eq('code', jam_code);
-
-        if (error) {
-          console.error('Error updating jam content:', error);
-        } else {
-          console.log('Jam content updated successfully');
-        }
-      }
-    }, 300);
-
-    if (jam_code) {
-      updateJamContent();
-    }
-  }, [songList, currentSong, jam_code, currentIndex, isJamChecked]);
-
-  function handleJamConnect(code) {
-    if (!isJamChecked) {
-      return;
-    }
-    if (connectedJam) {
-      console.log("Disconnecting from current jam:", connectedJam);
-      setConnectedJam(null);
-      connectedJamRef.current = null;
-    } else {
-      const userJam = activeUsers.find(user => user.code === code);
-      if (userJam) {
-        const value = JSON.parse(userJam.content);
-        setSongList(value.songList);
-        setCurrentSong(value.currentSong);
-        setCurrentId(value.currentId);
-        setCurrentIndex(value.currentIndex);
-        setConnectedJam(code);
-        connectedJamRef.current = code;
-      }
-    }
-  }
-
-  if (!isJamChecked) {
-    return null;
+  if (!connectedJam) {
+    return null; // Do not render anything if connectedJam is not true
   }
 
   return (
@@ -231,24 +102,18 @@ const JamComponent = () => {
         {activeUsers && activeUsers.length > 0 && activeUsers.map((user, index) => (
           <div
             key={index}
-            className={`border p-4 rounded-lg shadow-md transition-colors duration-300 ${user.code === jam_code ? "bg-purple-100 dark:bg-purple-900 border-purple-500" : "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700"
+            className={`border p-4 rounded-lg shadow-md transition-colors duration-300 ${user.code === connectedJam ? "bg-purple-100 dark:bg-purple-900 border-purple-500" : "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700"
               }`}
           >
-            {user.code === jam_code ? (
+            {user.code === connectedJam ? (
               <strong className="text-purple-700 dark:text-purple-300">You: {user.code}</strong>
             ) : (
-              <span
-                className="cursor-pointer text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400"
-                onClick={() => handleJamConnect(user.code)}
-              >
-                {connectedJam === user.code ? "Disconnect" : "Connect"}: {user.code}
-              </span>
+              <span className="text-gray-700 dark:text-gray-300">{user.code}</span>
             )}
           </div>
         ))}
       </div>
     </div>
-
   );
 };
 

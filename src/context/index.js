@@ -2,6 +2,7 @@
 import { SearchSongSuggestionAction } from "@/app/actions";
 import { songFormat, songs } from "@/utils/cachedSongs";
 import { shuffleArray } from "@/utils/extraFunctions";
+import { debounce } from "lodash";
 import { createContext, useRef, useState, useEffect } from "react";
 
 export const UserContext = createContext(null);
@@ -55,10 +56,14 @@ export default function UserState({ children }) {
 
 
     // handle seek of slider
+    const debouncedSeek = debounce((audio, seekTime, setTime) => {
+        audio.currentTime = seekTime;
+        setTime(seekTime);
+    }, 300); // Adjust debounce delay as needed
+
     const handleSeek = (e) => {
         const seekTime = e[0];
-        audioRef.current.currentTime = seekTime;
-        setCurrentTime(seekTime);
+        debouncedSeek(audioRef.current, seekTime, setCurrentTime);
     };
 
     const togglePlayPause = () => {
@@ -72,20 +77,26 @@ export default function UserState({ children }) {
 
     // update audioref with song 
     useEffect(() => {
+        let animationFrameId;
+    
         const handleTimeUpdate = () => {
             setCurrentTime(audioRef?.current.currentTime);
             setDuration(audioRef?.current.duration);
+            animationFrameId = requestAnimationFrame(handleTimeUpdate);
         };
-
-        audioRef?.current?.addEventListener('timeupdate', handleTimeUpdate);
-
+    
+        audioRef?.current?.addEventListener('timeupdate', () => {
+            animationFrameId = requestAnimationFrame(handleTimeUpdate);
+        });
+    
         return () => {
+            cancelAnimationFrame(animationFrameId);
             if (audioRef?.current) {
                 audioRef?.current.removeEventListener('timeupdate', handleTimeUpdate);
             }
         };
     }, [audioRef?.current]);
-
+    
     // // if album ends add related songs at end
     useEffect(() => {
         const currentIndex = songList?.findIndex(song => song?.id === currentSong?.id);
