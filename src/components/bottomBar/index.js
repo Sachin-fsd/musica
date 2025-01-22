@@ -33,7 +33,66 @@ const Bottombar = () => {
                 />
             </div>
 
-            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+            <div className="flex w-full items-center justify-between">
+                <div>
+                    <div className="flex items-center space-x-4 cursor-pointer">
+                        {image?.[0]?.url && !imageError ? (
+                            <img
+                                src={image[0].url}
+                                loading="lazy"
+                                className="rounded-lg"
+                                alt={`${name} cover`}
+                                onError={() => setImageError(true)}
+                            />
+                        ) : (
+                            <Skeleton className="w-12 h-12 rounded-lg bg-gray-700" />
+                        )}
+                        <div className="flex flex-col overflow-hidden">
+                            {name ? (
+                                <Label className="font-semibold text-gray-100 truncate text-base cursor-pointer">
+                                    {decodeHtml(name)}
+                                </Label>
+                            ) : (
+                                <Skeleton className="w-32 h-4 mb-1 bg-gray-700" />
+                            )}
+                            {artists?.primary?.[0]?.name && (
+                                <span className="flex whitespace-nowrap">
+                                    <p className="text-sm text-gray-400 truncate">
+                                        {htmlParser(artists.primary[0].name)}
+                                    </p>
+                                    <span> • </span>
+                                    <p className="text-sm text-gray-400 truncate">
+                                        {album?.name?.length > 15
+                                            ? htmlParser(album.name.substring(0, 15).concat("..."))
+                                            : htmlParser(album?.name)}
+                                    </p>
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex items-center space-x-4">
+                    <Button
+                        variant="simple"
+                        className="p-2 bg-pink-500 rounded-full"
+                        onClick={togglePlayPause}
+                        aria-label={playing ? "Pause" : "Play"}
+                    >
+                        {playing ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
+                    </Button>
+                    <Button
+                        variant="simple"
+                        className="p-2 bg-gray-700 rounded-full"
+                        onClick={handleNext}
+                        aria-label="Next Song"
+                    >
+                        <StepForward className="w-6 h-6" />
+                    </Button>
+                </div>
+            </div>
+
+            {/* <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                 <div className="flex w-full items-center justify-between">
                     <SheetTrigger asChild>
                         <div className="flex items-center space-x-4 cursor-pointer">
@@ -108,7 +167,7 @@ const Bottombar = () => {
                         <RightSidebar />
                     </div>
                 </SheetContent>
-            </Sheet>
+            </Sheet> */}
         </div>
     );
 };
