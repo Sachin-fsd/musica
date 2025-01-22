@@ -10,6 +10,8 @@ import { Button } from "../ui/button";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import RightSidebar from "../rightSidebar";
 import { Slider } from "./BottomSlider";
+import MainSongPhoto from "../rightSidebar/mainSongPhoto/MainSongPhoto";
+import Player from "../rightSidebar/player";
 
 const Bottombar = () => {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -33,7 +35,7 @@ const Bottombar = () => {
                 />
             </div>
 
-            <div className="flex w-full items-center justify-between">
+            {/* <div className="flex w-full items-center justify-between">
                 <div>
                     <div className="flex items-center space-x-4 cursor-pointer">
                         {image?.[0]?.url && !imageError ? (
@@ -90,9 +92,9 @@ const Bottombar = () => {
                         <StepForward className="w-6 h-6" />
                     </Button>
                 </div>
-            </div>
+            </div> */}
 
-            {/* <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                 <div className="flex w-full items-center justify-between">
                     <SheetTrigger asChild>
                         <div className="flex items-center space-x-4 cursor-pointer">
@@ -164,10 +166,30 @@ const Bottombar = () => {
                                 </Button>
                             </SheetClose>
                         </div>
-                        <RightSidebar />
+                        {/* <RightSidebar /> */}
+                        <div className="w-full h-full bg-gradient-to-b bg-fuchsia-300 dark:from-slate-950 dark:to-gray-900 rounded-t-lg p-2 pt-0 flex flex-col">
+                            <div className="song-carousel-container overflow-hidden flex-grow mb-2">
+                                <div className="flex flex-col h-full rounded-lg p-4 shadow-md bg-white dark:bg-gray-900 overflow-auto">
+                                    {/* Current Song Image */}
+                                    <div className="rounded text-center mb-4">
+                                        {currentSong?.image?.[2]?.url ? (
+                                            <MainSongPhoto
+                                                src={currentSong.image[2].url}
+                                                alt={currentSong.name || "Song Cover"}
+                                            />
+                                        ) : (
+                                            <p className="text-center text-gray-500 dark:text-gray-400">No song image available</p>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex flex-col gap-4">
+                                <Player />
+                            </div>
+                        </div>
                     </div>
                 </SheetContent>
-            </Sheet> */}
+            </Sheet>
         </div>
     );
 };
