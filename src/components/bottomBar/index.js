@@ -3,11 +3,12 @@ import { memo, useContext, useMemo, useState } from "react";
 import RightSidebar from "../rightSidebar";
 import { debounce } from "lodash";
 import { Slider } from "./BottomSlider";
-import { SheetContent, SheetTrigger } from "../ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import { UserContext } from "@/context";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
+import { ChevronDown, Pause, Play, StepForward } from "lucide-react";
 
 const Bottombar = () => {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
