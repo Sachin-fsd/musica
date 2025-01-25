@@ -1,5 +1,5 @@
 'use client'
-import { memo, useContext, useMemo } from "react";
+import { memo, useContext, useMemo, useState } from "react";
 import RightSidebar from "../rightSidebar";
 import { debounce } from "lodash";
 import { Slider } from "./BottomSlider";
