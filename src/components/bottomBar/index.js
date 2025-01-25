@@ -1,8 +1,13 @@
 'use client'
-import { memo, useMemo } from "react";
-import { Slider, Button, Sheet, Skeleton, Label } from "../ui"; // Importing memoized components
+import { memo, useContext, useMemo } from "react";
 import RightSidebar from "../rightSidebar";
 import { debounce } from "lodash";
+import { Slider } from "./BottomSlider";
+import { SheetContent, SheetTrigger } from "../ui/sheet";
+import { UserContext } from "@/context";
+import { Label } from "../ui/label";
+import { Button } from "../ui/button";
+import { Skeleton } from "../ui/skeleton";
 
 const Bottombar = () => {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
