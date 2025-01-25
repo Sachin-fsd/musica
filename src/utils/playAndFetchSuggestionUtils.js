@@ -16,15 +16,14 @@ export async function playAndFetchSuggestions(song, context) {
     try {
         audioRef.current.src = song.downloadUrl[4].url;
         audioRef.current.play();
+
         const clickedSongIndex = songList?.findIndex((s) => s.id === song?.id);
         const isNewSong = clickedSongIndex === -1;
         let NewSongList = songList.filter(s => !s.old);
-        // console.log("NewSongList",NewSongList)
-        let blankArr = Array.from({ length: 10 }, (el) => el = songFormat);
 
         // Handle new song addition to the list
         if (isNewSong) {
-            let updatedSongList = [song, ...blankArr, ...NewSongList];
+            let updatedSongList = [song, ...NewSongList];
             setSongList(updatedSongList);
             setCurrentIndex(0);
         } else {
@@ -38,14 +37,22 @@ export async function playAndFetchSuggestions(song, context) {
 
         // Fetch and add related song suggestions
         const response = await SearchSongSuggestionAction(song?.id);
-        if (response.success) {
+        if (response?.success) {
             const relatedSongs = shuffleArray(response.data).filter(
                 (relatedSong) => !songList?.some((existingSong) => existingSong.id === relatedSong.id)
             );
-            setSongList(isNewSong ? [song, ...relatedSongs, ...NewSongList] : [...NewSongList, ...relatedSongs]);
+
+            if (relatedSongs.length > 0) {
+                setSongList(isNewSong ? [song, ...relatedSongs, ...NewSongList] : [...NewSongList, ...relatedSongs]);
+            } else {
+                console.warn("No suggestions available for this song.");
+                setSongList(isNewSong ? [song, ...NewSongList] : [...NewSongList]);
+            }
+        } else {
+            console.warn("Suggestions response is null or failed.");
+            setSongList(isNewSong ? [song, ...NewSongList] : [...NewSongList]);
         }
 
-        // console.log("Updated Song List:", updatedSongList);
         return { msg: "ok", ok: true };
 
     } catch (error) {
