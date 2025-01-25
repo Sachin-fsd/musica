@@ -9,6 +9,7 @@ import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
 import { ChevronDown, Pause, Play, StepForward } from "lucide-react";
+import { decodeHtml } from "@/utils";
 
 const Bottombar = () => {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -47,7 +48,17 @@ const Bottombar = () => {
                         <div className="flex items-center space-x-4 cursor-pointer">
                             {songImage}
                             <div className="flex flex-col overflow-hidden">
-                                <Label className="font-semibold text-gray-100 truncate text-base cursor-pointer">{currentSong?.name}</Label>
+                                {currentSong?.name ? (
+                                    <Label className="font-semibold text-gray-100 truncate text-base cursor-pointer">{decodeHtml(currentSong?.name)}</Label>
+                                ) : (
+                                    <Skeleton className="w-32 h-4 mb-1 bg-gray-700" />
+                                )}
+                                {currentSong?.artists?.primary[0]?.name ? (
+                                    <span className="flex whitespace-nowrap">
+                                        <p className="text-sm text-gray-400 truncate">{decodeHtml(currentSong?.artists?.primary[0]?.name)} </p> <span className=""> • </span>
+                                        <p className="text-sm text-gray-400 truncate"> {decodeHtml(currentSong?.album?.name)}</p>
+                                    </span>
+                                ) : null}
                             </div>
                         </div>
                     </MemoizedSheetTrigger>
