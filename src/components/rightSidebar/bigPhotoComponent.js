@@ -1,58 +1,42 @@
-'use client'
+'use client';
 import { UserContext } from "@/context";
-import { Slider } from "../ui/slider";
 import { useContext } from "react";
 import MainSongPhoto from "./mainSongPhoto/MainSongPhoto";
 import SongBar from "../songBar";
 import { Separator } from "../ui/separator";
 
 const BigPhotoComponent = () => {
-    const { currentTime, duration, handleSeek, songList, currentSong, currentIndex } = useContext(UserContext);
-
-    const formatTime = (time) => {
-        const minutes = Math.floor(time / 60);
-        const seconds = Math.floor(time % 60);
-        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    };
+    const { songList, currentSong } = useContext(UserContext);
 
     return (
-        <div className="flex flex-col h-full rounded-lg p-4 shadow-md overflow-auto">
-            {/* Carousel - takes up a small portion */}
-            <div className="rounded text-center">
-                <div>
-                    {currentSong && currentSong?.image?.[2]?.url && (
-                        <MainSongPhoto src={currentSong.image[2].url} alt={currentSong.name} />
+        <div className="h-full w-full p-4 shadow-md overflow-auto">
+            {/* Container with responsive layout */}
+            <div className="flex flex-col lg:flex-row lg:space-x-6 space-y-6 lg:space-y-0">
+                {/* Big Photo Section */}
+                <div className="flex justify-center lg:w-1/2">
+                    {currentSong && currentSong?.image?.[2]?.url ? (
+                        <MainSongPhoto
+                            src={currentSong.image[2].url}
+                            alt={currentSong.name}
+                        />
+                    ) : (
+                        <p className="text-center text-gray-500">No image available</p>
                     )}
                 </div>
-                {/* <SongCarousel songs={songList} /> */}
-            </div>
 
-            {/* Slider - also takes up a small portion */}
-            <div className="mb-4 pt-2">
-                <Slider
-                    onValueChange={handleSeek}
-                    value={[currentTime || 0]}
-                    max={duration || 0}
-                    className="shadow-lg bg-gray-200 dark:bg-gray-800 rounded-lg"
-                />
-                <div className="flex items-center justify-between mt-1 text-gray-700 dark:text-gray-300">
-                    <span className="text-xs">{formatTime(currentTime)}</span>
-                    <span className="text-xs">{duration ? formatTime(duration) : "Loading"}</span>
+                {/* Songs List Section */}
+                <div className="lg:w-1/2">
+                    {!songList?.length ? (
+                        <p className="text-center text-gray-500">No songs available</p>
+                    ) : (
+                        songList?.map((song, index) => (
+                            <div key={index} className="w-full">
+                                <SongBar song={song} />
+                                {index < songList?.length - 1 && <Separator className="my-2" />}
+                            </div>
+                        ))
+                    )}
                 </div>
-            </div>
-
-            {/* Songs List - takes up the remaining space */}
-            <div className="">
-                {!songList?.length ? (
-                    <p className="text-center text-gray-500">No songs available</p>
-                ) : (
-                    songList?.map((song, index) => (
-                        <div key={index} className="w-full">
-                            <SongBar song={song} />
-                            {index < songList?.length - 1 && <Separator className="my-2" />}
-                        </div>
-                    ))
-                )}
             </div>
         </div>
     );
