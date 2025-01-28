@@ -33,7 +33,7 @@ const Bottombar = () => {
                 {/* Song Image and Info */}
                 <div className="flex w-full items-center justify-between">
                     <SheetTrigger asChild>
-                        <div className="flex items-center space-x-4 cursor-pointer">
+                        <div className="lg:z-50 flex items-center space-x-4 cursor-pointer">
                             {currentSong?.image[0]?.url && !imageError ? (
                                 <img
                                     src={currentSong?.image[0]?.url}

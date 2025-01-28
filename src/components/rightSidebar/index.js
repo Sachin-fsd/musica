@@ -7,7 +7,7 @@ const RightSidebar = () => {
             <div className="song-carousel-container overflow-hidden flex-grow mb-2">
                 <BigPhotoComponent />
             </div>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 lg:hidden">
                 <Player />
             </div>
         </div>
