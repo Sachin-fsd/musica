@@ -159,7 +159,7 @@ const Navbar = () => {
                                 <Search className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-200" />
                             </div> */}
                             <div>
-                                <PlaceholdersAndVanishInput
+                                <input
                                     placeholders={placeholders}
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
