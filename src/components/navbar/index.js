@@ -41,7 +41,7 @@ const Navbar = () => {
             } finally {
                 setLoading(false);  // Stop loading after the search completes
             }
-        }, 500),
+        }, 300),
         []  // Empty dependency array to ensure `debounce` is not recreated on every render
     );
 
@@ -120,7 +120,10 @@ const Navbar = () => {
                         <PlaceholdersAndVanishInput
                             placeholders={placeholders}
                             value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onChange={(e) => {
+                                setSearchQuery(e.target.value); // Update instantly
+                                debouncedSearch(e.target.value); // Trigger debounced search
+                            }}
                             autoComplete="on"
                             className="block w-full pl-2 py-2 text-sm rounded-full border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-gray-200 dark:bg-slate-950 placeholder-gray-500 dark:placeholder-gray-600 text-gray-900 dark:text-gray-300 transition-colors duration-200"
                         />
@@ -159,11 +162,15 @@ const Navbar = () => {
                                 <Search className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-200" />
                             </div> */}
                             <div>
-                                <input
+                                <PlaceholdersAndVanishInput
                                     placeholders={placeholders}
                                     value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="block w-full py-2 text-sm rounded-full border focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-300 transition-colors duration-200"
+                                    onChange={(e) => {
+                                        setSearchQuery(e.target.value); // Update instantly
+                                        debouncedSearch(e.target.value); // Trigger debounced search
+                                    }}
+                                    autoComplete="on"
+                                    className="block w-full pl-2 py-2 text-sm rounded-full border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-gray-200 dark:bg-slate-950 placeholder-gray-500 dark:placeholder-gray-600 text-gray-900 dark:text-gray-300 transition-colors duration-200"
                                 />
                             </div>
                             <div className="absolute inset-y-0 right-16 flex items-center">
