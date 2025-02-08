@@ -23,35 +23,35 @@ export default function UserState({ children }) {
     const [searchQuery, setSearchQuery] = useState("");
 
     //get songs from local storage
-    useEffect(() => {
-        try {
-            const storedCurrentSong = JSON.parse(localStorage.getItem("currentSong")) || null;
-            let storedSongList = JSON.parse(localStorage.getItem("songList")) || [];
+    // useEffect(() => {
+    //     try {
+    //         const storedCurrentSong = JSON.parse(localStorage.getItem("currentSong")) || songs[0];
+    //         let storedSongList = JSON.parse(localStorage.getItem("songList")) || songs;
 
-            if (storedSongList.length > 10) {
-                storedSongList = storedSongList.filter(s => s.id !== storedCurrentSong.id).slice(0, 10);
-                storedSongList.unshift(storedCurrentSong);
-            }
+    //         if (storedSongList.length > 10) {
+    //             storedSongList = storedSongList.filter(s => s.id !== storedCurrentSong.id).slice(0, 10);
+    //             storedSongList.unshift(storedCurrentSong);
+    //         }
 
-            setSongList(storedSongList?.length > 0 ? storedSongList : songs);
-            setCurrentSong(storedCurrentSong?.id ? storedCurrentSong : (storedSongList[0] || songs[0]));
-            console.log(songList, currentSong)
-        } catch (error) {
-            console.error("Error parsing localStorage data", error);
-            setSongList(songs);
-            setCurrentSong(songs[0]);
-        }
-    }, []);
+    //         setSongList(storedSongList?.length > 0 ? storedSongList : songs);
+    //         setCurrentSong(storedCurrentSong?.id ? storedCurrentSong : (storedSongList[0] || songs[0]));
+    //         console.log(songList, currentSong)
+    //     } catch (error) {
+    //         console.error("Error parsing localStorage data", error);
+    //         setSongList(songs);
+    //         setCurrentSong(songs[0]);
+    //     }
+    // }, []);
 
-    useEffect(() => {
-        localStorage.setItem("songList", JSON.stringify(songList));
-    }, [songList])
+    // useEffect(() => {
+    //     localStorage.setItem("songList", JSON.stringify(songList));
+    // }, [songList])
 
-    useEffect(() => {
-        if (currentSong) {
-            localStorage.setItem("currentSong", JSON.stringify(currentSong));
-        }
-    }, [currentSong]);
+    // useEffect(() => {
+    //     if (currentSong) {
+    //         localStorage.setItem("currentSong", JSON.stringify(currentSong));
+    //     }
+    // }, [currentSong]);
 
 
     // handle seek of slider
