@@ -8,14 +8,14 @@ export const UserContext = createContext(null);
 
 export default function UserState({ children }) {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [currentSong, setCurrentSong] = useState(songFormat);
-    const [currentId, setCurrentId] = useState(null);
+    const [currentSong, setCurrentSong] = useState(songs[0]);
+    const [currentId, setCurrentId] = useState(songs[0].id);
     const [playing, setPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [isLooping, setIsLooping] = useState(false);
     const audioRef = useRef(null);
-    const [songList, setSongList] = useState([]);
+    const [songList, setSongList] = useState(songs);
     const [loading, setLoading] = useState(false);
     const [searchResults, setSearchResults] = useState([])
     const [manualQuality, setManualQuality] = useState("very_high"); // State for manual quality selection
@@ -42,6 +42,10 @@ export default function UserState({ children }) {
     //         setCurrentSong(songs[0]);
     //     }
     // }, []);
+    useEffect(()=>{
+        localStorage.removeItem("songList");
+        localStorage.removeItem("currentSong");
+    },[]);
 
     // useEffect(() => {
     //     localStorage.setItem("songList", JSON.stringify(songList));
