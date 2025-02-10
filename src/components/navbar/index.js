@@ -11,7 +11,7 @@ import { SearchSongsAction } from "@/app/actions";
 import { debounce } from "lodash";
 import { ThemeSwitch } from "../themeSwitch";
 import { PlaceholdersAndVanishInput } from "../ui/placeholders-and-vanish-input";
-import InstallPromptIcon from "../leftSidebar/installApp/installPrompt";
+import { toast } from "sonner";
 
 const Navbar = () => {
     const { setSearchResults, searchQuery, setSearchQuery } = useContext(UserContext);
@@ -54,6 +54,10 @@ const Navbar = () => {
         };
     }, [searchQuery, debouncedSearch]);  // `searchQuery` dependency to trigger on input changes
 
+    function showName(){
+        toast("Made by Ujjawal Pandey")
+    }
+
     const placeholders = [
         "Search for Aaj ki raat",
         "Arjit Singh Songs",
@@ -95,7 +99,7 @@ const Navbar = () => {
                 </div>
 
                 <div className="ml-2 md:ml-4 cursor-pointer">
-                    <p className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+                    <p className="text-2xl font-bold text-gray-800 dark:text-gray-100" onDoubleClick={showName}>
                         Musi<span className="text-blue-500">ca</span>
                     </p>
                 </div>
