@@ -3,7 +3,7 @@ import Image from "next/image";
 import React, { useCallback, useContext, useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "@/hooks/use-outside-click";
-import { Play } from "lucide-react";
+import { Pause, Play } from "lucide-react";
 import TouchableOpacity from "@/components/ui/touchableOpacity";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Label } from "@/components/ui/label";
@@ -24,13 +24,18 @@ export function ExpandableAlbumCarousel({ albums }) {
     const ref = useRef(null);
     const [loading, setLoading] = useState(false);
     const [imageError, setImageError] = useState(false);
-    const { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId } = useContext(UserContext);
+    const { setCurrentAlbum, currentAlbum, currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId } = useContext(UserContext);
 
     const truncateTitle = (title, maxLength = 24) => {
         return htmlParser(title?.length > maxLength ? `${title?.substring(0, maxLength)}...` : title);
     };
 
     const handleAlbumPlay = useCallback(debounce((album) => {
+        if (album.id == currentAlbum.id) {
+            setPlaying(false);
+            return;
+        }
+        setCurrentAlbum(album);
         const context = { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId };
         fetchAlbumSongs(album?.type, album?.id, context);
     }, 300), [currentSong, currentIndex, songList]);
@@ -130,7 +135,9 @@ export function ExpandableAlbumCarousel({ albums }) {
                                     onClick={() => handleAlbumPlay(active)}
                                     layout
                                     className="px-4 py-3 text-sm rounded-full font-bold bg-green-500 sm:hover:bg-green-400 text-white">
-                                    <Play />
+                                    {
+                                        currentAlbum.id == active.id ? <Pause /> : <Play />
+                                    }
                                 </motion.button>
                             </div>
 
@@ -184,7 +191,9 @@ export function ExpandableAlbumCarousel({ albums }) {
                                 </div>
                                 <div className=" absolute w-full h-full flex bottom-0 right-0  duration-75  sm:sm:hover:translate-x-0 translate-x-12 ">
                                     <div className="absolute bottom-0 right-0 -translate-x-1 -translate-y-1 bg-green-600 bg-opacity-100 rounded-full p-3 sm:hover:scale-105 sm:hover:bg-green-500">
-                                        <Play className="w-5 h-5 text-black fill-black" />
+                                        {
+                                            card.id == currentAlbum.id ? <Pause className="w-5 h-5 text-black fill-black" /> : <Play className="w-5 h-5 text-black fill-black" />
+                                        }
                                     </div>
                                 </div>
                             </motion.div>
