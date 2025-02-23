@@ -50,8 +50,11 @@ export function ExpandableAlbumCarousel({ albums }) {
             if (fetchedSongs.success) {
                 let albumSongs = fetchedSongs.data.songs || fetchedSongs.data.topSongs || fetchedSongs.data;
                 setSongs(albumSongs || []);
-                active.image = fetchedSongs.data.image[2].url;
-                active.description = fetchedSongs.data.description;
+                setActive((prev) => ({
+                    ...prev,
+                    image: fetchedSongs.data.image[2].url,
+                    description: fetchedSongs.data.description,
+                }));
             } else {
                 setSongs([]);
             }
@@ -171,13 +174,7 @@ export function ExpandableAlbumCarousel({ albums }) {
         <div className="mx-auto w-full flex overflow-x-auto gap-4 py-4" style={{ scrollSnapType: 'x mandatory' }}>
             {albums.map((card, index) => (
                 <div
-                    onClick={() =>
-                        setActive((prev) => ({
-                            ...prev,
-                            image: fetchedSongs.data.image[2].url,
-                            description: fetchedSongs.data.description,
-                        }))}
-
+                    onClick={() => setActive(card)}
                     key={index}
                     className="mr-1 sm:hover:bg-gray-100 dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-[144px] sm:sm:hover:shadow-md transition">
                     <TouchableOpacity>
