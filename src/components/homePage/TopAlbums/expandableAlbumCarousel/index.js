@@ -30,15 +30,18 @@ export function ExpandableAlbumCarousel({ albums }) {
         return htmlParser(title?.length > maxLength ? `${title?.substring(0, maxLength)}...` : title);
     };
 
+    const memoizedFetchAlbumSongs = useCallback(fetchAlbumSongs, []);
+
     const handleAlbumPlay = useCallback(debounce((album) => {
-        if (album.id == currentAlbum.id) {
+        if (album?.id === currentAlbum?.id) {
             setPlaying(false);
             return;
         }
         setCurrentAlbum(album);
         const context = { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId };
-        fetchAlbumSongs(album?.type, album?.id, context);
-    }, 300), [currentSong, currentIndex, songList]);
+        memoizedFetchAlbumSongs(album?.type, album?.id, context);
+    }, 300), [currentAlbum]);
+
 
     const handleFetchAlbumSongs = async (album) => {
         setLoading(true);
@@ -168,7 +171,13 @@ export function ExpandableAlbumCarousel({ albums }) {
         <div className="mx-auto w-full flex overflow-x-auto gap-4 py-4" style={{ scrollSnapType: 'x mandatory' }}>
             {albums.map((card, index) => (
                 <div
-                    onClick={() => setActive(card)}
+                    onClick={() =>
+                        setActive((prev) => ({
+                            ...prev,
+                            image: fetchedSongs.data.image[2].url,
+                            description: fetchedSongs.data.description,
+                        }))}
+
                     key={index}
                     className="mr-1 sm:hover:bg-gray-100 dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-[144px] sm:sm:hover:shadow-md transition">
                     <TouchableOpacity>
@@ -192,7 +201,7 @@ export function ExpandableAlbumCarousel({ albums }) {
                                 <div className=" absolute w-full h-full flex bottom-0 right-0  duration-75  sm:sm:hover:translate-x-0 translate-x-12 ">
                                     <div className="absolute bottom-0 right-0 -translate-x-1 -translate-y-1 bg-green-600 bg-opacity-100 rounded-full p-3 sm:hover:scale-105 sm:hover:bg-green-500">
                                         {
-                                            card.id == currentAlbum.id ? <Pause className="w-5 h-5 text-black fill-black" /> : <Play className="w-5 h-5 text-black fill-black" />
+                                            card?.id == currentAlbum?.id ? <Pause className="w-5 h-5 text-black fill-black" /> : <Play className="w-5 h-5 text-black fill-black" />
                                         }
                                     </div>
                                 </div>
