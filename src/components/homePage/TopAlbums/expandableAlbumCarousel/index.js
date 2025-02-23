@@ -33,7 +33,7 @@ export function ExpandableAlbumCarousel({ albums }) {
     const memoizedFetchAlbumSongs = useCallback(fetchAlbumSongs, []);
 
     const handleAlbumPlay = useCallback(debounce((album) => {
-        if (album?.id === currentAlbum?.id) {
+        if (!album?.id || album?.id === currentAlbum?.id) {
             setPlaying(false);
             return;
         }
@@ -100,7 +100,7 @@ export function ExpandableAlbumCarousel({ albums }) {
             {active && typeof active === "object" ? (
                 <div className="fixed inset-0 grid place-items-center z-[100]">
                     <motion.button
-                        key={`button-${active.title}-${id}`}
+                        key={`button-${active?.title}-${id}`}
                         layout
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -110,13 +110,13 @@ export function ExpandableAlbumCarousel({ albums }) {
                         <CloseIcon />
                     </motion.button>
                     <motion.div
-                        layoutId={`card-${active.title}-${id}`}
+                        layoutId={`card-${active?.title}-${id}`}
                         ref={ref}
                         className="w-full max-w-[500px] h-full md:h-fit flex flex-col bg-white dark:bg-gray-900 sm:rounded-3xl">
-                        <motion.div layoutId={`image-${active.title}-${id}`}>
+                        <motion.div layoutId={`image-${active?.title}-${id}`}>
                             <img
-                                src={active.image || "/placeholder.png"}
-                                alt={active.title}
+                                src={active?.image || "/placeholder.png"}
+                                alt={active?.title}
                                 className="flex-none w-full h-80 sm:rounded-t-3xl object-cover"
                                 onError={() => setImageError(true)}
                             />
@@ -126,14 +126,14 @@ export function ExpandableAlbumCarousel({ albums }) {
                             <div className="flex-none flex justify-between items-start p-4">
                                 <div>
                                     <motion.h3
-                                        layoutId={`title-${active.title}-${id}`}
+                                        layoutId={`title-${active?.title}-${id}`}
                                         className="font-medium text-gray-700 dark:text-gray-200 text-base">
-                                        {active.title}
+                                        {active?.title}
                                     </motion.h3>
                                     <motion.p
-                                        layoutId={`description-${active.title}-${id}`}
+                                        layoutId={`description-${active?.title}-${id}`}
                                         className="text-gray-600 dark:text-gray-400 text-sm">
-                                        {htmlParser(active.description)}
+                                        {htmlParser(active?.description)}
                                     </motion.p>
                                 </div>
 
@@ -142,7 +142,7 @@ export function ExpandableAlbumCarousel({ albums }) {
                                     layout
                                     className="px-4 py-3 text-sm rounded-full font-bold bg-green-500 sm:hover:bg-green-400 text-white">
                                     {
-                                        currentAlbum.id == active.id ? <Pause /> : <Play />
+                                        currentAlbum?.id == active?.id ? <Pause /> : <Play />
                                     }
                                 </motion.button>
                             </div>
