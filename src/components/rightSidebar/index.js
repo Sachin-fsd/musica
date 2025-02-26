@@ -1,6 +1,5 @@
 import BigPhotoComponent from './bigPhotoComponent';
 import Player from './player';
-import RightSidebarCarouselSliderList from './RightSidebar-Carousel-SliderList';
 
 const RightSidebar = () => {
     return (
@@ -10,9 +9,6 @@ const RightSidebar = () => {
             </div>
             <div className="flex flex-col gap-4">
                 <Player />
-                {/* <div className="p-2">
-                    <ConnectionStatus />
-                </div> */}
             </div>
         </div>
     );
