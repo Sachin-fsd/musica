@@ -66,7 +66,7 @@ const SongBarCarousel = ({ song }) => {
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 sm:hover:opacity-100 bg-black/30 rounded-md">
                     <div className="bg-green-500 hover:bg-green-400 p-3 rounded-full shadow-lg transition-transform transform hover:scale-110">
                         {
-                            song.id == currentSong.id ? <Pause className="w-6 h-6 text-white" /> : <Play className="w-6 h-6 text-white" />
+                            song.id == currentSong.id ? <Pause className="w-6 h-6 text-black fill-black" /> : <Play className="w-6 h-6 text-black fill-black" />
                         }
                     </div>
                 </div>
