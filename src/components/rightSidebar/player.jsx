@@ -90,7 +90,7 @@ const Player = () => {
                 </Button>
 
                 {/* Play/Pause Button */}
-                <Button variant="ghost" onClick={togglePlayPause}>
+                <Button variant="none" onClick={togglePlayPause} >
                     {playing ? (
                         <Pause className="bg-pink-500 p-3 size-14 text-white rounded-full" />
                     ) : (
