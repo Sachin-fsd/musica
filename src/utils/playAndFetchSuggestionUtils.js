@@ -23,7 +23,7 @@ export async function playAndFetchSuggestions(song, context) {
 
         // Handle new song addition to the list
         if (isNewSong) {
-            let updatedSongList = [song, ...NewSongList];
+            let updatedSongList = [song, ...Array(10), ...NewSongList];
             setSongList(updatedSongList);
             setCurrentIndex(0);
         } else {
