@@ -20,10 +20,12 @@ export async function playAndFetchSuggestions(song, context) {
         const clickedSongIndex = songList?.findIndex((s) => s.id === song?.id);
         const isNewSong = clickedSongIndex === -1;
         let NewSongList = songList.filter(s => !s.old);
+        let blankArr = Array.from({ length: 10 }, (el) => el = songFormat);
 
         // Handle new song addition to the list
         if (isNewSong) {
-            let updatedSongList = [song, ...NewSongList];
+            let updatedSongList = [song, ...blankArr, ...NewSongList];
+
             setSongList(updatedSongList);
             setCurrentIndex(0);
         } else {
