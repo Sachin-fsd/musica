@@ -15,7 +15,7 @@ export default function UserState({ children }) {
     const [duration, setDuration] = useState(0);
     const [isLooping, setIsLooping] = useState(false);
     const audioRef = useRef(null);
-    const [songList, setSongList] = useState([songFormat, songFormat, songFormat, songFormat]);
+    const [songList, setSongList] = useState([songFormat, songFormat, songFormat, songFormat, songFormat, songFormat]);
     const [loading, setLoading] = useState(false);
     const [searchResults, setSearchResults] = useState([])
     const [manualQuality, setManualQuality] = useState("very_high"); // State for manual quality selection
