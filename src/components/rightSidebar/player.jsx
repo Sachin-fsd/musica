@@ -66,9 +66,9 @@ const Player = () => {
                                     .join(', ')
                             )}
                         </p>
-                        <p className="font-mono text-gray-600 dark:text-gray-400 text-sm truncate max-w-xs mx-auto">
+                        {/* <p className="font-mono text-gray-600 dark:text-gray-400 text-sm truncate max-w-xs mx-auto">
                             {decodeHtml(currentSong?.album?.name)}
-                        </p>
+                        </p> */}
                     </div>
                 )}
             </div>
