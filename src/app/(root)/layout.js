@@ -24,14 +24,14 @@ export default function RootLayout({ children }) {
 
             {/* Content Area with Resizable Panels for large screens */}
             <ResizablePanelGroup direction="horizontal" className="hidden lg:flex overflow-hidden">
-              <ResizablePanel defaultSize={60} className="h-full overflow-hidden">
+              <ResizablePanel defaultSize={70} className="h-full overflow-hidden">
                 {/* Main content area */}
                 <div className="overflow-y-auto h-full">
                   {children}
                 </div>
               </ResizablePanel>
               <ResizableHandle />
-              <ResizablePanel defaultSize={40} className="h-full overflow-hidden">
+              <ResizablePanel defaultSize={30} className="h-full overflow-hidden">
                 {/* RightSidebar for large screens */}
                 <div className="h-full overflow-y-auto">
                   <RightSidebar />
