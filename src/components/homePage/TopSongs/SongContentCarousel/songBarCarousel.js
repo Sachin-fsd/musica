@@ -6,7 +6,7 @@ import { UserContext } from "@/context";
 import { useCallback, useContext, useState, useMemo } from "react";
 import { debounce } from "lodash";
 import { playAndFetchSuggestions } from "@/utils/playAndFetchSuggestionUtils";
-import { Play } from "lucide-react";
+import { Pause, Play } from "lucide-react";
 import { decodeHtml, htmlParser } from "@/utils";
 import dynamic from "next/dynamic";
 
