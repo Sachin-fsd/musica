@@ -6,14 +6,14 @@ import React, { useContext } from 'react';
 
 const JamOnOff = ({ setIsSheetOpen }) => {
     const { isJamChecked, setIsJamChecked } = useContext(UserContext);
-    
+
     function ToogleJam() {
         setIsJamChecked(!isJamChecked);
         setIsSheetOpen && setIsSheetOpen(false);
         const JamSection = document.getElementById("jam_section");
 
         if (JamSection) {
-            JamSection.scrollIntoView({ behavior: "smooth", block: "center" });
+            JamSection.scrollIntoView({ behavior: "smooth", block: "end" });
         }
     }
 
