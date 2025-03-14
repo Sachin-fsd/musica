@@ -4,8 +4,14 @@ import { Switch } from '@/components/ui/switch';
 import { UserContext } from '@/context';
 import React, { useContext } from 'react';
 
-const JamOnOff = () => {
+const JamOnOff = ({ setIsSheetOpen }) => {
     const { isJamChecked, setIsJamChecked } = useContext(UserContext);
+    function ToogleJam() {
+        setIsJamChecked(true);
+        setIsSheetOpen && setIsSheetOpen(false);
+        const JamSection = document.getElementById("jam_section");
+        JamSection?.scrollIntoView({ behavior: "smooth" });
+    }
     return (
         <div
             // onClick={setIsChecked}
@@ -14,9 +20,9 @@ const JamOnOff = () => {
             <div className="flex items-center justify-center w-10 h-10 text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300">
                 <Switch
                     checked={isJamChecked}
-                    onCheckedChange={setIsJamChecked}
+                    onCheckedChange={ToogleJam}
                     className="bg-slate-100 dark:bg-slate-500 rounded-full"
-                    // disabled={false}
+                // disabled={false}
                 />
             </div>
             <span className="md:text-xs ml-1 text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300 font-bold">

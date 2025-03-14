@@ -27,7 +27,7 @@ const LeftSidebarIcons = ({ setIsSheetOpen }) => {
                 ))}
                 <AdjustSongQuality setIsSheetOpen={setIsSheetOpen}/>
                 <InstallPromptIcon />
-                <JamOnOff />
+                <JamOnOff setIsSheetOpen={setIsSheetOpen}/>
             </div>
         </div>
     );

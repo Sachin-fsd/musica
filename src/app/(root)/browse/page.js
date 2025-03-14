@@ -26,7 +26,7 @@ const HomePage = () => {
         <AlbumContent />
       </div>
 
-      <div>
+      <div id='jam_section'>
         <JamComponent />
       </div>
 

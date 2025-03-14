@@ -1,4 +1,3 @@
-import { Menu } from "lucide-react";
 import LeftSidebarIcons from "./leftSidebarIcons";
 
 const LeftSidebar = () => {
