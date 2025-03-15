@@ -1,18 +1,20 @@
 'use client'
 
 import { UserContext } from '@/context';
-import { ChevronsLeft, ChevronsRight, Download, Loader, Pause, Play, Repeat, Repeat1, SkipBack, SkipBackIcon, SkipForward, StepBack, StepForward } from 'lucide-react';
-import { useContext, useEffect, useState } from 'react';
+import { Download, Loader, Pause, Play, Repeat, Repeat1, SkipBack, SkipForward } from 'lucide-react';
+import { useContext, useState } from 'react';
 import { Button } from '../ui/button';
 import { toast } from 'sonner';
 import { decodeHtml } from '@/utils';
+import { Slider } from '../ui/slider';
 
 const Player = () => {
     const [isDownloading, setIsDownloading] = useState(false);
 
-    const { currentSong,
+    const {
+        currentTime, duration, handleSeek,
+        currentSong,
         playing,
-        setPlaying,
         isLooping,
         setIsLooping,
         audioRef,
@@ -50,8 +52,29 @@ const Player = () => {
         setIsLooping(!isLooping);
     };
 
+    const formatTime = (time) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60);
+        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    };
+
     return (
-        <div className="flex flex-col items-center justify-center p-4">
+        <div className="flex flex-col items-center justify-center p-3 pt-0">
+
+            {/* Slider */}
+            <div className="w-full">
+                <Slider
+                    onValueChange={handleSeek}
+                    value={[currentTime || 0]}
+                    max={duration || 0}
+                    className="shadow-lg bg-gray-200 dark:bg-gray-800 rounded-lg"
+                />
+                <div className="flex items-center justify-between mt-1 text-gray-700 dark:text-gray-300">
+                    <span className="text-xs">{formatTime(currentTime)}</span>
+                    <span className="text-xs">{duration ? formatTime(duration) : "Loading"}</span>
+                </div>
+            </div>
+
             {/* Song Info Section */}
             <div className="text-center -mt-4">
                 {currentSong && currentSong?.name && (
@@ -66,9 +89,9 @@ const Player = () => {
                                     .join(', ')
                             )}
                         </p>
-                        <p className="font-mono text-gray-600 dark:text-gray-400 text-sm truncate max-w-xs mx-auto">
+                        {/* <p className="font-mono text-gray-600 dark:text-gray-400 text-sm truncate max-w-xs mx-auto">
                             {decodeHtml(currentSong?.album?.name)}
-                        </p>
+                        </p> */}
                     </div>
                 )}
             </div>
@@ -76,7 +99,7 @@ const Player = () => {
             {/* Player Controls Section */}
             <div className="p-2 flex justify-center items-center gap-6 mt-4">
                 {/* Loop Button */}
-                <Button variant="simple" className="p-0" onClick={loopSong}>
+                <Button variant="simple" className="p-0" onClick={loopSong} >
                     {isLooping ? (
                         <Repeat1 className="text-gray-600 dark:text-gray-300" />
                     ) : (
@@ -90,11 +113,26 @@ const Player = () => {
                 </Button>
 
                 {/* Play/Pause Button */}
-                <Button variant="ghost" onClick={togglePlayPause}>
+                {/* <Button variant="simple" onClick={togglePlayPause}>
                     {playing ? (
                         <Pause className="bg-pink-500 p-3 size-14 text-white rounded-full" />
                     ) : (
                         <Play className="bg-pink-500 p-3 size-14 text-white rounded-full" />
+                    )}
+                </Button> */}
+                <Button
+                    variant="simple"
+                    onClick={togglePlayPause}
+                    className="transition-all duration-200 transform hover:scale-105 active:scale-100"
+                >
+                    {playing ? (
+                        <Pause
+                            className="size-14 bg-pink-500 p-4 text-white rounded-full shadow-lg transform transition-transform duration-200 ease-in-out hover:scale-110 active:scale-100 flex items-center justify-center"
+                        />
+                    ) : (
+                        <Play
+                            className="size-14 bg-green-500 p-4 text-white rounded-full shadow-lg transform transition-transform duration-200 ease-in-out hover:scale-110 active:scale-100 flex items-center justify-center"
+                        />
                     )}
                 </Button>
 

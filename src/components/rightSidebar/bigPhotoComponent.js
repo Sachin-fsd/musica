@@ -9,12 +9,6 @@ import { Separator } from "../ui/separator";
 const BigPhotoComponent = () => {
     const { currentTime, duration, handleSeek, songList, currentSong, currentIndex } = useContext(UserContext);
 
-    const formatTime = (time) => {
-        const minutes = Math.floor(time / 60);
-        const seconds = Math.floor(time % 60);
-        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    };
-
     return (
         <div className="flex flex-col h-full rounded-lg p-4 shadow-md overflow-auto">
             {/* Carousel - takes up a small portion */}
@@ -27,19 +21,7 @@ const BigPhotoComponent = () => {
                 {/* <SongCarousel songs={songList} /> */}
             </div>
 
-            {/* Slider - also takes up a small portion */}
-            <div className="mb-4 pt-2">
-                <Slider
-                    onValueChange={handleSeek}
-                    value={[currentTime || 0]}
-                    max={duration || 0}
-                    className="shadow-lg bg-gray-200 dark:bg-gray-800 rounded-lg"
-                />
-                <div className="flex items-center justify-between mt-1 text-gray-700 dark:text-gray-300">
-                    <span className="text-xs">{formatTime(currentTime)}</span>
-                    <span className="text-xs">{duration ? formatTime(duration) : "Loading"}</span>
-                </div>
-            </div>
+            <Separator className="my-2" />
 
             {/* Songs List - takes up the remaining space */}
             <div className="">

@@ -17,17 +17,6 @@ const Bottombar = () => {
 
     const { togglePlayPause, currentSong, playing, setCurrentIndex, songList, currentIndex, setCurrentSong, setPlaying, audioRef, handleSeek, currentTime, duration, handleNext } = useContext(UserContext);
 
-    // useEffect(() => {
-    //     if (window.innerWidth < 768) setIsSheetOpen(true);
-    // }, []);
-
-    // const handleNextSong = () => {
-    //     const nextIndex = (currentIndex + 1) % songList?.length;
-    //     setCurrentIndex(nextIndex);
-    //     setCurrentSong(songList[nextIndex]);
-    //     if (playing) setPlaying(true);
-    // };
-
     if (!currentSong) return null;
 
     return (
