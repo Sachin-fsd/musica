@@ -14,7 +14,7 @@ const Bottombar = () => {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [imageError, setImageError] = useState(false)
 
-    const { togglePlayPause, currentSong, playing, handleSeek, currentTime, duration, handleNext } = useContext(UserContext);
+    const { togglePlayPause, currentSong, playing, setCurrentIndex, songList, currentIndex, setCurrentSong, setPlaying, audioRef, handleSeek, currentTime, duration, handleNext } = useContext(UserContext);
 
     if (!currentSong) return null;
 
