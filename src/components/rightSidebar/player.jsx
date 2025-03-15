@@ -62,7 +62,7 @@ const Player = () => {
         <div className="flex flex-col items-center justify-center p-3 pt-0">
 
             {/* Slider */}
-            <div className="w-full">
+            <div className="w-full pb-3">
                 <Slider
                     onValueChange={handleSeek}
                     value={[currentTime || 0]}

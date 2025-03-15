@@ -67,7 +67,7 @@ const Navbar = () => {
     ];
 
     return (
-        <div className="flex items-center justify-between p-4 bg-gray-200 dark:bg-slate-950 shadow-md">
+        <div className="flex items-center justify-between p-4 bg-gray-200 dark:bg-[#100023] shadow-md">
             <div className="flex items-center">
                 <div className="block lg:hidden">
                     <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
