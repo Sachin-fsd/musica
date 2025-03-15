@@ -271,7 +271,7 @@ export default function UserState({ children }) {
         if ("mediaSession" in navigator) {
             navigator.mediaSession.playbackState = playing ? "playing" : "paused";
         }
-    }, [playing])
+    }, [playing, currentSong])
 
     const handlePrev = () => {
         setCurrentIndex((prevIndex) => {
