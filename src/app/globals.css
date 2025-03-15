@@ -82,11 +82,38 @@
     /* Firefox */
   }
 
+  /* Show scrollbar on hover */
+  .hide-scrollbar:hover {
+    -ms-overflow-style: auto;
+    /* Internet Explorer 10+ */
+    scrollbar-width: thin;
+    /* Firefox */
+  }
+
+  /* Safari and Chrome */
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
-    /* Safari and Chrome */
+  }
+
+  .hide-scrollbar:hover::-webkit-scrollbar {
+    display: block;
+    width: 8px;
+    /* Adjust the width as needed */
+  }
+
+  /* Styling the scrollbar thumb (optional) */
+  .hide-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+  }
+
+  /* Optional: styling for the scrollbar track (background area) */
+  .hide-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
   }
 }
+
 
 .song-prev,
 .song-next {

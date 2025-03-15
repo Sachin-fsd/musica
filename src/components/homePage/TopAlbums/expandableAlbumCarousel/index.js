@@ -158,7 +158,10 @@ export function ExpandableAlbumCarousel({ albums }) {
                 </div>
             ) : null}
         </AnimatePresence>
-        <div className="mx-auto w-full flex overflow-x-auto gap-4 py-4" style={{ scrollSnapType: 'x mandatory' }}>
+        <div
+            className="mx-auto w-full flex overflow-x-auto gap-4 py-4 hide-scrollbar"
+            style={{ scrollSnapType: 'x mandatory' }}
+        >
             {albums.map((card, index) => (
                 <div
                     onClick={() => setActive(card)}

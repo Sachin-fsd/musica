@@ -7,7 +7,7 @@ import JamOnOff from "../jamOnOff";
 const LeftSidebarIcons = ({ setIsSheetOpen }) => {
     return (
         <div className="flex flex-col items-center w-full">
-            <div className="flex flex-col  items-centre space-y-4">
+            <div className="flex flex-col  items-centre space-y-3">
                 {leftIcons.map((icon) => (
                     <Link
                         onClick={setIsSheetOpen ? ()=>setIsSheetOpen(false) : null}
