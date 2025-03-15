@@ -21,15 +21,14 @@ const HomePage = () => {
         <SongContentCarousel />
       </div>
 
+      <div id='jam_section'>
+        <JamComponent />
+      </div>
+
       {/* Album Content Section */}
       <div>
         <AlbumContent />
       </div>
-
-      <div>
-        <JamComponent />
-      </div>
-      <div id='jam_section'></div>
 
     </div>
   );
