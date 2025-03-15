@@ -8,7 +8,7 @@ import { AuroraBackground } from "@/components/ui/aurora-background";
 
 export default function RootLayout({ children }) {
   return (
-    <AuroraBackground>
+    <AuroraBackground className="">
       <UserState>
         <div className="grid h-screen w-screen grid-rows-[auto,1fr] grid-cols-[auto,1fr] lg:grid-cols-[auto,1fr,auto] sm:max-w-full">
 
