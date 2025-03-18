@@ -1,7 +1,5 @@
 import JamComponent from '@/components/friendsJam';
-// import SearchResults from '@/components/homePage/SearchResult';
 import AlbumContent from '@/components/homePage/TopAlbums/AlbumContent';
-import SongContent from '@/components/homePage/TopSongs';
 import SongContentCarousel from '@/components/homePage/TopSongs/SongContentCarousel';
 import dynamic from 'next/dynamic';
 const SearchResults = dynamic(() => import("@/components/homePage/SearchResult"), { ssr: false });
