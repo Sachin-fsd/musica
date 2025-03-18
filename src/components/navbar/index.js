@@ -1,14 +1,12 @@
 'use client';
 
-import { useContext, useState, useEffect, useCallback } from "react";
+import { useContext, useState } from "react";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "../ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { Cross, CrossIcon, Loader2, Menu, Plus, Search, X } from "lucide-react";
+import { Loader2, Menu, Plus, Search, X } from "lucide-react";
 import LeftSidebarIcons from "../leftSidebar/leftSidebarIcons";
 import { UserContext } from "@/context";
-import { SearchSongsAction } from "@/app/actions";
-import { debounce } from "lodash";
 import { ThemeSwitch } from "../themeSwitch";
 import { PlaceholdersAndVanishInput } from "../ui/placeholders-and-vanish-input";
 import { toast } from "sonner";
@@ -81,7 +79,7 @@ const Navbar = () => {
                             onClick={() => setSearchQuery((e)=>e+"")}
                             aria-label="Search"
                         >
-                            <Plus className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-200" />
+                            <Search className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-200" />
                         </div>
 
                         {/* Input Field */}

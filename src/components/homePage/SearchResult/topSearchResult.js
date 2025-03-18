@@ -61,7 +61,7 @@ const TopSearchResult = ({ topQuery }) => {
                             <h3 className="text-lg font-semibold">{title}</h3>
                         </div>
                         <p className="text-sm text-gray-300 mt-1">{description}</p>
-                        <Badge className="mt-2 bg-blue-600 text-white px-2 py-1 text-xs flex items-center gap-1">
+                        <Badge className="mt-2 bg-blue-600 text-white px-2 py-1 text-xs flex items-center gap-1 justify-between">
                             <Play className="w-3 h-3" /> {type.toUpperCase()}
                         </Badge>
                     </CardContent>
