@@ -1,11 +1,11 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { FaMusic, FaUser, FaCompactDisc } from "react-icons/fa";
 import { useCallback, useContext } from "react";
 import { debounce } from "lodash";
 import { UserContext } from "@/context";
 import { fetchAlbumSongs } from "@/utils/playAndFetchSuggestionUtils";
+import { Disc3, Music, User } from "lucide-react";
 
 const TopSearchResult = ({ topQuery }) => {
     if (!topQuery?.results?.length) return null;
@@ -18,9 +18,9 @@ const TopSearchResult = ({ topQuery }) => {
 
     // Define type icons
     const typeIcons = {
-        song: <FaMusic className="text-blue-500 text-xl" />,
-        artist: <FaUser className="text-green-500 text-xl" />,
-        album: <FaCompactDisc className="text-purple-500 text-xl" />,
+        song: <Music className="text-blue-500 text-xl" />,
+        artist: <User className="text-green-500 text-xl" />,
+        album: <Disc3 className="text-purple-500 text-xl" />,
     };
 
     const handleAlbumPlay = useCallback(debounce(() => {
