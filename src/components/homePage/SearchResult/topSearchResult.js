@@ -26,18 +26,15 @@ const TopSearchResult = ({ topQuery }) => {
         album: <Disc3 className="text-purple-500 text-xl" />,
     };
 
-    // Define debounced function once outside to avoid recreation
-    const debouncedAlbumPlay = debounce((type, id, context) => {
-        fetchAlbumSongs(type, id, context);
-    }, 200);
-
-    // Memoized function to play album
-    const handleAlbumPlay = useCallback(() => {
-        debouncedAlbumPlay(type, id, {
+    // Remove the global debounce function and define it inside handleAlbumPlay
+const handleAlbumPlay = useCallback(() => {
+    debounce(() => {
+        fetchAlbumSongs(type, id, {
             currentSong, currentIndex, songList,
             setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId
         });
-    }, [currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId]);
+    }, 200)(); // Immediately invoke debounce
+}, [topQuery, currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId]);
 
     return (
         <motion.div
