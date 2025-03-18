@@ -4,7 +4,7 @@ import { useContext, useState, useEffect, useCallback } from "react";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "../ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { Loader2, Menu, Search, X } from "lucide-react";
+import { Cross, CrossIcon, Loader2, Menu, Plus, Search, X } from "lucide-react";
 import LeftSidebarIcons from "../leftSidebar/leftSidebarIcons";
 import { UserContext } from "@/context";
 import { SearchSongsAction } from "@/app/actions";
@@ -14,56 +14,20 @@ import { PlaceholdersAndVanishInput } from "../ui/placeholders-and-vanish-input"
 import { toast } from "sonner";
 
 const Navbar = () => {
-    const { setSearchResults, searchQuery, setSearchQuery } = useContext(UserContext);
+    const { searchQuery, setSearchQuery, loading } = useContext(UserContext);
     const [isSearchPopoverOpen, setIsSearchPopoverOpen] = useState(false);
-    const [loading, setLoading] = useState(false);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
 
-    const debouncedSearch = useCallback(
-        debounce(async (query) => {
-            if (!query.trim()) return;
-
-            setLoading(true);  // Start loading before the search request
-            try {
-                let songResults = await SearchSongsAction(query);
-
-                // Retry with the first word if no results
-                if (songResults && songResults.success && songResults.data.results.length === 0) {
-                    const fallbackQuery = query.split(" ")[0];
-                    songResults = await SearchSongsAction(fallbackQuery);
-                }
-
-                if (songResults && songResults.success) {
-                    setSearchResults(songResults.data.results);
-                }
-            } catch (error) {
-                console.error("Search error:", error);
-            } finally {
-                setLoading(false);  // Stop loading after the search completes
-            }
-        }, 500),
-        []  // Empty dependency array to ensure `debounce` is not recreated on every render
-    );
-
-    useEffect(() => {
-        debouncedSearch(searchQuery);
-
-        // Cleanup function to cancel pending debounced call when component unmounts
-        return () => {
-            debouncedSearch.cancel();
-        };
-    }, [searchQuery, debouncedSearch]);  // `searchQuery` dependency to trigger on input changes
-
-    function showName(){
+    function showName() {
         toast("Made by Ujjawal Pandey")
     }
 
     const placeholders = [
-        "Search for Aaj ki raat",
         "Arjit Singh Songs",
         "Search for artists",
         "Search for haryanavi songs",
         "Search you favourite playlist",
+        "Latest Albums",
     ];
 
     return (
@@ -114,10 +78,10 @@ const Navbar = () => {
                         {/* Search Icon */}
                         <div
                             className="absolute inset-y-0 left-0 flex items-center pl-4 cursor-pointer z-10"
-                            onClick={() => debouncedSearch(searchQuery)}
+                            onClick={() => setSearchQuery((e)=>e+"")}
                             aria-label="Search"
                         >
-                            <Search className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-200" />
+                            <Plus className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-200" />
                         </div>
 
                         {/* Input Field */}

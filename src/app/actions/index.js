@@ -1,8 +1,8 @@
 'use server'
 
-export async function SearchGlobalAction(song) {
+export async function SearchGlobalAction(query) {
     try {
-        const response = await fetch(`${process.env.FETCH_URL}/search?query=${encodeURIComponent(song)}`);
+        const response = await fetch(`${process.env.FETCH_URL}/search?query=${encodeURIComponent(query)}`);
 
         if (!response.ok) {
             throw new Error('Failed to fetch songs');
