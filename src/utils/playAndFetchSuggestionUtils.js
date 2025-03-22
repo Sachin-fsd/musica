@@ -14,6 +14,7 @@ export async function playAndFetchSuggestions(song, context) {
     } = context;
 
     try {
+        console.log("song ",song)
         audioRef.current.src = song.downloadUrl[4].url;
         audioRef.current.play();
 

@@ -54,7 +54,7 @@ const SearchResults = () => {
             } finally {
                 setLoading(false);
             }
-        }, 500),
+        }, 300),
         [setLoading]
     );
 
