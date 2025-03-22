@@ -16,7 +16,7 @@ const TopSearchResult = ({ topQuery }) => {
 
     const {
         currentSong, currentIndex, songList,
-        setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId
+        setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId, audioRef
     } = useContext(UserContext);
 
     // Type icons mapping
@@ -31,7 +31,7 @@ const handleAlbumPlay = useCallback(() => {
     debounce(() => {
         fetchAlbumSongs(type, id, {
             currentSong, currentIndex, songList,
-            setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId
+            setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId,audioRef
         });
     }, 200)(); // Immediately invoke debounce
 }, [topQuery, currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId]);

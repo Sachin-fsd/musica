@@ -36,10 +36,11 @@ export const AuroraBackground = ({
               after:[background-size:200%,_100%] 
               after:[background-attachment:fixed] after:mix-blend-difference
               pointer-events-none
-              absolute -inset-[10px] opacity-50 will-change-transform`,
+              absolute -inset-[10px] opacity-50 will-change-transform
+              after:animate-aurora after:[animation-play-state:paused]`,
+              playing && "after:[animation-play-state:running]",
               showRadialGradient &&
-              `[mask-image:radial-gradient(ellipse_at_100%_0%,black_10%,var(--transparent)_70%)]`,
-              playing ? "after:animate-aurora" : "after:animate-none" // Apply animation only if playing
+              `[mask-image:radial-gradient(ellipse_at_100%_0%,black_10%,var(--transparent)_70%)]`
             )}
           ></div>
         </div>
