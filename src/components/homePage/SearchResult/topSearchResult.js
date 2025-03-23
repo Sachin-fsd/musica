@@ -7,7 +7,7 @@ import { UserContext } from "@/context";
 import { fetchAlbumSongs } from "@/utils/playAndFetchSuggestionUtils";
 import { Disc3, Music, Play, User } from "lucide-react";
 
-const TopSearchResult = ({ topQuery }) => {
+const TopSearchResult = ({ topQuery, currentSong }) => {
     if (!topQuery?.results?.length) return null;
 
     const result = topQuery.results[0];
@@ -55,7 +55,7 @@ const handleAlbumPlay = useCallback(() => {
                     <CardContent className="p-0 flex-1">
                         <div className="flex items-center gap-2">
                             {typeIcons[type] || <Music className="text-gray-400 text-xl" />}
-                            <h3 className="text-lg font-semibold">{title}</h3>
+                            <h3 className={`text-lg font-semibold  ${currentSong?.id === topQuery?.id ? "font-bold dark:text-green-600 text-green-700" : ""} truncate`}>{title}</h3>
                         </div>
                         <p className="text-sm text-gray-300 mt-1">{description}</p>
                         <Badge className="mt-2 bg-blue-600 text-white px-2 py-1 text-xs flex items-center gap-1 justify-between">
