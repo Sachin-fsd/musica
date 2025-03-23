@@ -16,8 +16,20 @@ export async function playAndFetchSuggestions(song, context) {
     try {
         console.log("song ", song)
         console.log("audioRef", audioRef)
-        if(!song || !song.downloadUrl || !audioRef){
-            console.warn("song or audioref not defined",song, audioRef);
+        if(!song){
+            console.warn("song not defined",song, audioRef);
+            return;
+        }
+        if(!song.downloadUrl){
+            console.warn("song.downloadurl not defined",song, audioRef);
+            return;
+        }
+        if(!audioRef){
+            console.warn("audioref not defined",song, audioRef);
+            return;
+        }
+        if(!audioRef.current){
+            console.warn("audioref.current not defined",song, audioRef);
             return;
         }
         let songUrls = song.downloadUrl;
