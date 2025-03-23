@@ -14,8 +14,14 @@ export async function playAndFetchSuggestions(song, context) {
     } = context;
 
     try {
-        console.log("song ",song)
-        audioRef.current.src = song.downloadUrl[4].url;
+        console.log("song ", song)
+        console.log("audioRef", audioRef)
+        if(!song || !song.downloadUrl || !audioRef){
+            console.warn("song or audioref not defined",song, audioRef);
+            return;
+        }
+        let songUrls = song.downloadUrl;
+        audioRef.current.src = songUrls[songUrls.length - 1].url;
         audioRef.current.play();
 
         const clickedSongIndex = songList?.findIndex((s) => s.id === song?.id);
@@ -80,7 +86,7 @@ export async function fetchAlbumSongs(type, id, context) {
         const response = await GetSongsByIdAction(type, id);
         if (response.success) {
             let albumSongs = response.data.songs || response.data.topSongs || response.data;
-            if(type=="song"){
+            if (type == "song") {
                 playAndFetchSuggestions(albumSongs, context)
                 return;
             }
