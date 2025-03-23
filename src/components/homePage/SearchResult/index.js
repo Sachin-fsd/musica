@@ -12,7 +12,7 @@ import TopSearchResult from "./topSearchResult";
 import { Separator } from "@/components/ui/separator";
 
 const SearchResults = () => {
-    const { searchQuery, setLoading, currentSong } = useContext(UserContext);
+    const { searchQuery, setLoading } = useContext(UserContext);
     const [searchResults, setSearchResults] = useState([]);
     const [topQuery, setTopQuery] = useState({});
     const [removeSearch, setRemoveSearch] = useState(false);
@@ -104,7 +104,7 @@ const SearchResults = () => {
                     </button>
                 </div>
                 <div className="grid gap-1 grid-cols-1 mt-3">
-                    <TopSearchResult topQuery={topQuery} currentSong={currentSong}/>
+                    <TopSearchResult topQuery={topQuery}/>
                     <Separator />
                     {searchResults.length > 0 ? (
                         searchResults.map((song, index) => (

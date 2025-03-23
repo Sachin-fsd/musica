@@ -7,7 +7,7 @@ import { UserContext } from "@/context";
 import { fetchAlbumSongs } from "@/utils/playAndFetchSuggestionUtils";
 import { Disc3, Music, Play, User } from "lucide-react";
 
-const TopSearchResult = ({ topQuery, currentSong }) => {
+const TopSearchResult = ({ topQuery}) => {
     if (!topQuery?.results?.length) return null;
 
     const result = topQuery.results[0];
