@@ -14,22 +14,8 @@ export async function playAndFetchSuggestions(song, context) {
     } = context;
 
     try {
-        console.log("song ", song)
-        console.log("audioRef", audioRef)
-        if(!song){
-            console.warn("song not defined",song, audioRef);
-            return;
-        }
-        if(!song.downloadUrl){
-            console.warn("song.downloadurl not defined",song, audioRef);
-            return;
-        }
-        if(!audioRef){
-            console.warn("audioref not defined",song, audioRef);
-            return;
-        }
-        if(!audioRef.current){
-            console.warn("audioref.current not defined",song, audioRef);
+        if(!song || !song.downloadUrl || !audioRef || !audioRef.current){
+            console.warn("something not defined",song, audioRef);
             return;
         }
         let songUrls = song.downloadUrl;
@@ -99,7 +85,7 @@ export async function fetchAlbumSongs(type, id, context) {
         if (response.success) {
             let albumSongs = response.data.songs || response.data.topSongs || response.data;
             if (type == "song") {
-                playAndFetchSuggestions(albumSongs, context)
+                playAndFetchSuggestions(albumSongs[0], context)
                 return;
             }
             let updatedSongListCurrent = songList.filter(s => !s.old);
