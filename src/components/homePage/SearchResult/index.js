@@ -26,12 +26,12 @@ const SearchResults = () => {
             setLoading(true);
             try {
                 const topResult = await SearchGlobalAction(query);
-                if (topResult) setTopQuery(topResult.data.topQuery);
+                if (topResult) setTopQuery(topResult?.data?.topQuery);
 
                 let songResults = await SearchSongsAction(query);
 
                 // If no results, try searching with the first two words separately
-                if (songResults?.success && songResults.data.results.length === 0) {
+                if (songResults?.success && songResults?.data?.results?.length === 0) {
                     const words = query.split(" ");
                     const fallbackQuery1 = words[0] || "";
                     const fallbackQuery2 = words[1] || "";
