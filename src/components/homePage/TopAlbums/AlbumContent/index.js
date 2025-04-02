@@ -1,111 +1,66 @@
-import { All_Albums, mega_menu_3 } from "@/utils/cachedSongs";
+'use client'
+// import { All_Albums, mega_menu_3 } from "@/utils/cachedSongs";
+import { All_Albums } from "@/utils/cachedSongs";
 import TopAlbums from "..";
-import { fetchByLinkAction } from "@/app/actions";
+// import { fetchByLinkAction } from "@/app/actions"; // Remove server action import
 import { shuffleArray } from "@/utils/extraFunctions";
+import { useEffect, useState } from 'react';
 
+const AlbumContent = () => {
+    // const backendUrl = 'http://localhost:5000';
+    const [albumData, setAlbumData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-
-const AlbumContent = async () => {
-    try {
-        let MegaMenu3Playlists = await fetchByLinkAction(mega_menu_3);
-        let object_for_megaMenu3 = [
-            {
-                heading: "Charts",
-                data: MegaMenu3Playlists.charts
-            },
-            {
-                heading: "Ultimate Jams",
-                data: MegaMenu3Playlists.top_playlists
-            },
-            {
-                heading: "New Trending",
-                data: MegaMenu3Playlists.new_trending
-            },
-            {
-                heading: "New Albums",
-                data: MegaMenu3Playlists.new_albums
-            },
-            {
-                heading: "Top Hits",
-                data: MegaMenu3Playlists["promo:vx:data:68"]
-            },
-            {
-                heading: "On Repeat",
-                data: MegaMenu3Playlists["promo:vx:data:185"]
-            },
-            {
-                heading: "Chill Vibes",
-                data: MegaMenu3Playlists["promo:vx:data:113"]
-            },
-            {
-                heading: "Vibe Check",
-                data: MegaMenu3Playlists["promo:vx:data:116"]
-            },
-            {
-                heading: "Fresh Finds",
-                data: MegaMenu3Playlists["promo:vx:data:143"]
-            },
-            {
-                heading: "Epic Soundtracks",
-                data: MegaMenu3Playlists["promo:vx:data:76"]
-            }
-        ]
-
-        // Fetch all albums concurrently
-        let albumData = await Promise.all(
-            All_Albums.map(async (album) => {
-                const data = await fetchByLinkAction(album.link);
-                return { heading: album.heading, data: data || [] }
-            })
-        )
-
-        albumData = [...object_for_megaMenu3, ...albumData,]
-        // albumData = shuffleArray(albumData);
-        // albumData = [{heading: "Charts",data: MegaMenu3Playlists.charts},...albumData]
-
-        // const MegaMenu1 = await fetchByLinkAction(mega_menu_1);
-
-        // const artists = await Promise.all(
-        //     MegaMenu2.playlist.map(async (artist) => {
-        //         const data = await fetchArtistsByPermaLinkAction(artist.perma_url);
-        //         return data.data || [] 
-        //     })
-        // )
-
-        // console.log("artists: ",artists);
-
-        return (
-            <div className="p-2 mb-4 rounded-lg hide-scrollbar">
-                {
-                    albumData.map(({ heading, data }) => (
-                        <div key={heading}>
-                            <TopAlbums
-                                heading={heading}
-                                albums={data}
-                                emptyMessage="No trending albums available."
-                            />
-                        </div>
-                    ))
+    useEffect(() => {
+        const fetchAllData = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/jiosaavn-data`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
+                const data = await response.json();
+                console.log("Data from backend:", data);
+                setAlbumData(data);
+                setLoading(false);
+            } catch (err) {
+                console.error("Error fetching data from backend:", err);
+                setError("Failed to load albums. Please try again later.");
+                setLoading(false);
+            }
+        };
 
-                {/* <div>
-                    <TopArtists
-                        heading={"Top Artists"}
-                        albums={artists}
-                        emptyMessage="No trending albums available."
-                    />
-                </div> */}
-            </div>
-        )
+        fetchAllData();
+    }, []); // Empty dependency array to run only once on mount
 
-    } catch (error) {
-        console.error("Error fetching album data:", error);
+    if (loading) {
+        return <div className="p-4 bg-gray-100 dark:bg-gray-900 rounded-lg text-center">Loading albums...</div>;
+    }
+
+    if (error) {
         return (
             <div className="p-4 bg-gray-100 dark:bg-gray-900 rounded-lg text-center">
-                <p className="text-gray-800 dark:text-gray-300">Failed to load albums. Please try again later.</p>
+                <p className="text-gray-800 dark:text-gray-300">{error}</p>
             </div>
         );
     }
+
+    return (
+        <div className="p-2 mb-4 rounded-lg hide-scrollbar">
+            {
+                albumData.map(({ heading, data }) => (
+                    <div key={heading}>
+                        <TopAlbums
+                            heading={heading}
+                            albums={data}
+                            emptyMessage="No data available."
+                        />
+                    </div>
+                ))
+            }
+        </div>
+    );
 }
 
 export default AlbumContent;
