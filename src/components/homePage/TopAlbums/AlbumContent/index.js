@@ -20,9 +20,21 @@ const AlbumContent = () => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                const data = await response.json();
-                console.log("Data from backend:", data);
-                setAlbumData(data);
+                const MegaMenu3Playlists = await response.json();
+                console.log("Data from backend:", MegaMenu3Playlists);
+                const object_for_megaMenu3 = [
+                    { heading: "Charts", data: MegaMenu3Playlists.charts },
+                    { heading: "Ultimate Jams", data: MegaMenu3Playlists.top_playlists },
+                    { heading: "New Trending", data: MegaMenu3Playlists.new_trending },
+                    { heading: "New Albums", data: MegaMenu3Playlists.new_albums },
+                    { heading: "Top Hits", data: MegaMenu3Playlists["promo:vx:data:68"] },
+                    { heading: "On Repeat", data: MegaMenu3Playlists["promo:vx:data:185"] },
+                    { heading: "Chill Vibes", data: MegaMenu3Playlists["promo:vx:data:113"] },
+                    { heading: "Vibe Check", data: MegaMenu3Playlists["promo:vx:data:116"] },
+                    { heading: "Fresh Finds", data: MegaMenu3Playlists["promo:vx:data:143"] },
+                    { heading: "Epic Soundtracks", data: MegaMenu3Playlists["promo:vx:data:76"] }
+                ];
+                setAlbumData(object_for_megaMenu3);
                 setLoading(false);
             } catch (err) {
                 console.error("Error fetching data from backend:", err);
