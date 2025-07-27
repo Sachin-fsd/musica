@@ -14,7 +14,6 @@ export default function RootLayout({ children }) {
           <LeftSidebar />
         </div>
 
-        {/* Navbar spanning the top row */}
         <div className="col-span-2 md:col-span-2">
           <Navbar />
         </div>
