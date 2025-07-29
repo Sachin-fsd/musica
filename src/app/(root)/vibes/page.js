@@ -260,12 +260,12 @@ const VibesInterface = () => {
                             </div>
 
                             {/* Comment Button */}
-                            <div className="flex flex-col items-center">
+                            {/* <div className="flex flex-col items-center">
                                 <button className="w-12 h-12 bg-surface-dark/50 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110">
                                     <MessageCircle className="w-7 h-7 text-white" />
                                 </button>
                                 <span className="text-white text-xs mt-1 font-medium">{currentVibe.album?.name || "abc studios"}</span>
-                            </div>
+                            </div> */}
 
                             {/* Share Button */}
                             <div className="flex flex-col items-center">
