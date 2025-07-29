@@ -9,8 +9,12 @@ import { Button } from "../ui/button";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import RightSidebar from "../rightSidebar";
 import { Slider } from "./BottomSlider";
+import { usePathname } from "next/navigation";
+import BottomNavBar from "../bottomNavBar/BottomNavBar";
 
 const Bottombar = () => {
+    const pathname = usePathname();
+    if (pathname == "/vibes") return null;
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [imageError, setImageError] = useState(false);
 
@@ -27,7 +31,7 @@ const Bottombar = () => {
     if (!currentSong) return null;
 
     return (
-        <div className="fixed bottom-0 left-0 w-full bg-gray-900 text-white shadow-lg p-4 pt-0 flex flex-col items-center justify-between flex-grow z-10">
+        <div className="w-full bg-gray-900 text-white shadow-lg p-4 pt-0 flex flex-col items-center justify-between flex-grow z-10">
             {/* Seek Bar */}
             <div className="w-full pb-1">
                 <Slider

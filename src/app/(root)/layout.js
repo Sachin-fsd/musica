@@ -3,6 +3,7 @@ import RightSidebar from "@/components/rightSidebar";
 import Navbar from "@/components/navbar";
 import UserState from "@/context";
 import Bottombar from "@/components/bottomBar";
+import BottomNavBar from "@/components/bottomNavBar/BottomNavBar";
 
 export default function RootLayout({ children }) {
   return (
@@ -30,7 +31,13 @@ export default function RootLayout({ children }) {
 
         {/* Bottom Player for small and medium screens */}
         <div className="md:fixed md:bottom-0 w-full col-span-2 lg:hidden">
-          <Bottombar />
+          <div className="">
+            <Bottombar />
+          </div>
+
+          <div className="">
+            <BottomNavBar />
+          </div>
         </div>
       </div>
     </UserState>

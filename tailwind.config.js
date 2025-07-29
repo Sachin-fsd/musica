@@ -56,13 +56,36 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        neon: {
+					blue: 'hsl(var(--neon-blue))',
+					purple: 'hsl(var(--neon-purple))',
+					pink: 'hsl(var(--neon-pink))',
+					cyan: 'hsl(var(--neon-cyan))'
+				},
+				surface: {
+					dark: 'hsl(var(--dark-surface))',
+					darker: 'hsl(var(--darker-surface))'
+				}
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
-        "lg-calc": "calc(var(--radius) / 1.5)", // Define a calculated custom radius
       },
+      backgroundImage: {
+				'gradient-neon': 'var(--gradient-neon)',
+				'gradient-overlay': 'var(--gradient-overlay)',
+			},
+			boxShadow: {
+				'glow-neon': 'var(--glow-neon)',
+				'glow-pink': 'var(--glow-pink)',
+				'glow-purple': 'var(--glow-purple)',
+			},
+			animationVibe: {
+				'spin-slow': 'spin 8s linear infinite',
+				'pulse-neon': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+				'bounce-subtle': 'bounce 1s infinite',
+			},
       keyframes: {
         "caret-blink": {
           "0%,70%,100%": { opacity: "1" },

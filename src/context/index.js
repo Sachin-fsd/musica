@@ -29,7 +29,7 @@ export default function UserState({ children }) {
             const storedSongList = JSON.parse(localStorage.getItem("songList")) || null;
 
             // Validate stored data
-            const validSongList = Array.isArray(storedSongList) && storedSongList.length > 0 ? storedSongList : songs;
+            const validSongList = Array.isArray(storedSongList) && storedSongList.length > 0 && storedSongList[0].id ? storedSongList : songs;
             const validCurrentSong = storedCurrentSong && storedCurrentSong.id
                 ? storedCurrentSong
                 : validSongList[0];
@@ -44,6 +44,8 @@ export default function UserState({ children }) {
             // Update state
             setSongList(updatedSongList);
             setCurrentSong(validCurrentSong);
+            console.log("songList", updatedSongList)
+            console.log("valid song list", validSongList)
         } catch (error) {
             console.error("Error parsing localStorage data", error);
             setSongList(songs);
