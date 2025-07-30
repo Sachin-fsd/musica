@@ -3,6 +3,7 @@ import { Play, Pause, Heart, MessageCircle, Share, MoreHorizontal } from 'lucide
 import { UserContext } from '@/context';
 import { formatTime } from '@/utils/extraFunctions';
 import { decode } from 'he';
+import { cn } from '@/lib/utils';
 
 const SongCard = ({ song, isActive, isPlaying }) => {
     // 1. Get global state. No setters needed here.
@@ -26,15 +27,18 @@ const SongCard = ({ song, isActive, isPlaying }) => {
     };
 
     return (
-        <div className="relative w-full h-full flex-shrink-0 overflow-hidden">
+        <div className="relative w-full h-full overflow-hidden">
             {/* Background Image */}
-            <img
-                src={song.image[2]?.url}
-                alt={song.name}
-                className="absolute inset-0 w-full h-full object-cover z-0"
-                draggable={false}
-                style={{ userSelect: "none", pointerEvents: "none" }}
-            />
+            <div className='absolute inset-0 h-full w-full flex flex-1 justify-center items-center z-0 p-3 pb-[100px]'>
+                <img
+                    src={song.image[2]?.url}
+                    alt={song.name}
+                    className=""
+                    draggable={false}
+                    style={{ userSelect: "none", pointerEvents: "none" }}
+                />
+
+            </div>
 
             {/* Overlays for better text readability */}
             <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60" />
@@ -56,7 +60,7 @@ const SongCard = ({ song, isActive, isPlaying }) => {
                         <img
                             src={song.artists.primary[0]?.image[1]?.url}
                             alt={song.artists.primary[0]?.name}
-                            className="w-12 h-12 rounded-full border-2 border-white/50 object-cover"
+                            className={cn("w-12 h-12 rounded-full border-2 border-white/50 object-cover", isPlaying ? "animate-spin duration-1000" : "")}
                         />
                     </div>
                     <h1 className="text-white text-3xl font-bold mb-2 leading-tight shadow-lg">{decode(song.name)}</h1>
