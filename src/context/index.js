@@ -9,7 +9,7 @@ export const UserContext = createContext(null);
 
 export default function UserState({ children }) {
     // --- State Definitions ---
-    const [songList, setSongList] = useState([songFormat]);
+    const [songList, setSongList] = useState([songFormat, songFormat, songFormat]);
     const [currentSong, setCurrentSong] = useState(songFormat);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [playing, setPlaying] = useState(false);
