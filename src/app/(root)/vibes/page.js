@@ -25,65 +25,32 @@ const SongReels = () => {
         const container = containerRef.current;
         if (!container) return;
 
-        const handleScrollStart = () => {
-            startScrollY.current = container.scrollTop;
-            startIndex.current = currentIndex;
-        };
-
-        container.addEventListener('touchstart', handleScrollStart, { passive: true });
-        container.addEventListener('mousedown', handleScrollStart, { passive: true });
-
-        return () => {
-            container.removeEventListener('touchstart', handleScrollStart);
-            container.removeEventListener('mousedown', handleScrollStart);
-        };
-    }, [currentIndex]);
-
-    console.log("currentIndex", currentIndex)
-
-    // 2. Main effect to synchronize the active song with the global state
-    useEffect(() => {
         let scrollTimeout = null;
 
-        const handleScroll = () => {
-            if (!containerRef.current) return;
-            const container = containerRef.current;
-            const cardHeight = container.clientHeight;
-            const scrollTop = container.scrollTop;
+        const handleWheel = (e) => {
+            e.preventDefault();
+            clearTimeout(scrollTimeout);
 
-            if (scrollTimeout) clearTimeout(scrollTimeout);
             scrollTimeout = setTimeout(() => {
-                // Calculate direction
-                const delta = scrollTop - startScrollY.current;
-                let newIndex = startIndex.current;
+                const scrollDown = e.deltaY > 0;
 
-                if (Math.abs(delta) > cardHeight / 4) { // threshold for swipe
-                    if (delta > 0 && currentIndex < songList.length - 1) {
-                        newIndex = startIndex.current + 1;
-                    } else if (delta < 0 && currentIndex > 0) {
-                        newIndex = startIndex.current - 1;
+                if (scrollDown) {
+                    if (currentIndex < songList.length - 1) {
+                        playSongAtIndex(currentIndex + 1);
+                    }
+                } else {
+                    if (currentIndex > 0) {
+                        playSongAtIndex(currentIndex - 1);
                     }
                 }
-
-                // Snap to the new index
-                container.scrollTo({
-                    top: newIndex * cardHeight,
-                    behavior: 'smooth'
-                });
-
-                if (newIndex !== currentIndex) {
-                    playSongAtIndex(newIndex);
-                }
-            }, 150);
+            }, 100); // Debounce time
         };
 
-        const container = containerRef.current;
-        if (container) {
-            container.addEventListener('scroll', handleScroll, { passive: true });
-        }
+        container.addEventListener('wheel', handleWheel, { passive: false });
+
         return () => {
-            if (container) container.removeEventListener('scroll', handleScroll);
-            if (scrollTimeout) clearTimeout(scrollTimeout);
+            container.removeEventListener('wheel', handleWheel);
+            clearTimeout(scrollTimeout);
         };
     }, [currentIndex, songList.length, playSongAtIndex]);
 

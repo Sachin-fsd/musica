@@ -183,11 +183,7 @@ export default function UserState({ children }) {
     useEffect(() => {
 
         const addRelatedSongs = async () => {
-            console.log("start", currentSong, currentIndex, songList.length)
-
             if (currentIndex >= songList.length - 2 && currentSong?.id) {
-                console.log("inside if", currentSong, currentIndex)
-
                 setLoading(true);
                 const response = await SearchSongSuggestionAction(currentSong.id);
                 if (response.success) {
