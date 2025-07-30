@@ -80,14 +80,14 @@ const SongCard = ({ song, isActive, isPlaying }) => {
                         <Heart className={`w-8 h-8 ${liked ? 'text-red-500 fill-red-500' : 'text-white'}`} />
                         <span className="text-white text-xs mt-1">Like</span>
                     </button>
-                    <button className="flex flex-col items-center hover:scale-110 transition-transform">
+                    {/* <button className="flex flex-col items-center hover:scale-110 transition-transform">
                         <MessageCircle className="w-8 h-8 text-white" />
                         <span className="text-white text-xs mt-1">Chat</span>
                     </button>
                     <button className="flex flex-col items-center hover:scale-110 transition-transform">
                         <Share className="w-8 h-8 text-white" />
                         <span className="text-white text-xs mt-1">Share</span>
-                    </button>
+                    </button> */}
                 </div>
             </div>
         </div>

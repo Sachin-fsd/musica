@@ -32,15 +32,16 @@ export const NavItem = ({ icon: Icon, label, link, active = false, show = true }
     return (
         <Link href={link} className="flex flex-col items-center group flex-1">
             <div className={`p-2 rounded-full transition-all duration-300 flex items-center justify-center ${active
-                ? 'bg-gradient-neon shadow-glow-neon'
-                : 'hover:bg-white/10'
+                    ? 'bg-white/10 ring-2 ring-white/40 shadow-md'
+                    : 'hover:bg-white/10'
                 }`}>
-                <div className={`w-6 h-6 flex items-center justify-center ${active ? 'text-darker-surface' : 'text-white/80'
+                <div className={`w-6 h-6 flex items-center justify-center ${active ? 'text-white' : 'text-white/80'
                     }`}>
                     {Icon}
                 </div>
             </div>
-            <span className={`text-[11px] font-medium mt-1 ${active ? 'text-neon-blue' : 'text-white/60'} hidden xs:block`}>
+            <span className={`text-[11px] font-medium mt-1 ${active ? 'text-white' : 'text-white/60'
+                } hidden xs:block`}>
                 {label}
             </span>
         </Link>

@@ -43,7 +43,7 @@ const SongReels = () => {
                         playSongAtIndex(currentIndex - 1);
                     }
                 }
-            }, 100); // Debounce time
+            }, 200); // Debounce time
         };
 
         container.addEventListener('wheel', handleWheel, { passive: false });
