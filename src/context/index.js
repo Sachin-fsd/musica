@@ -1,391 +1,245 @@
-'use client'
+'use client';
+import { createContext, useRef, useState, useEffect, useCallback } from "react";
 import { SearchSongSuggestionAction } from "@/app/actions";
 import { songFormat, songs } from "@/utils/cachedSongs";
 import { shuffleArray } from "@/utils/extraFunctions";
-import { createContext, useRef, useState, useEffect } from "react";
+import { createPlaylistFromSuggestions } from "@/utils/playListUtils";
 
 export const UserContext = createContext(null);
 
 export default function UserState({ children }) {
-    const [currentIndex, setCurrentIndex] = useState(0);
+    // --- State Definitions ---
+    const [songList, setSongList] = useState([songFormat]);
     const [currentSong, setCurrentSong] = useState(songFormat);
-    const [currentId, setCurrentId] = useState(0);
+    const [currentIndex, setCurrentIndex] = useState(0);
     const [playing, setPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [isLooping, setIsLooping] = useState(false);
-    const audioRef = useRef(null);
-    const [songList, setSongList] = useState([songFormat, songFormat, songFormat, songFormat, songFormat, songFormat]);
+    const [manualQuality, setManualQuality] = useState("very_high");
     const [loading, setLoading] = useState(false);
-    const [searchResults, setSearchResults] = useState([])
-    const [manualQuality, setManualQuality] = useState("very_high"); // State for manual quality selection
+    const [searchResults, setSearchResults] = useState([]);
     const [isJamChecked, setIsJamChecked] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    const audioRef = useRef(null);
 
+    // --- Core Playback Logic ---
+
+    const playSongAtIndex = useCallback((index) => {
+        if (index >= 0 && index < songList.length) {
+            setCurrentIndex(index);
+            setCurrentSong(songList[index]);
+            setPlaying(true);
+        }
+    }, [songList]);
+
+    // in index.js
+
+    const playSongAndCreateQueue = useCallback(async (song) => {
+        // First, check if the song is already in the current song list
+        const existingSongIndex = songList.findIndex(s => s.id === song.id);
+
+        if (existingSongIndex !== -1) {
+            // --- SONG ALREADY EXISTS ---
+            // The song is in the queue, so just play it at its current position.
+            playSongAtIndex(existingSongIndex);
+
+        } else {
+            // --- SONG IS NEW ---
+            setLoading(true);
+            const newPlaylist = await createPlaylistFromSuggestions(song, songList);
+            setSongList(newPlaylist);
+            setCurrentSong(song);
+            setPlaying(true);
+            setLoading(false);
+            // The new song is now at the top of the new list
+            setCurrentIndex(0);
+        }
+    }, [songList, playSongAtIndex]);
+
+    const handleNext = useCallback(() => {
+        const nextIndex = (currentIndex + 1) % songList.length;
+        playSongAtIndex(nextIndex);
+    }, [currentIndex, songList.length, playSongAtIndex]);
+
+    const handlePrev = useCallback(() => {
+        const prevIndex = (currentIndex - 1 + songList.length) % songList.length;
+        playSongAtIndex(prevIndex);
+    }, [currentIndex, songList.length, playSongAtIndex]);
+
+    const togglePlayPause = () => {
+        setPlaying(!playing);
+    };
+
+    const handleSeek = (e) => {
+        const seekTime = e[0];
+        if (audioRef.current) {
+            audioRef.current.currentTime = seekTime;
+            setCurrentTime(seekTime);
+        }
+    };
+
+    // --- useEffect Hooks for Side Effects ---
+
+    // Effect 1: Initialize state from LocalStorage on mount
     useEffect(() => {
         try {
-            // Safely parse stored values
-            const storedCurrentSong = JSON.parse(localStorage.getItem("currentSong")) || null;
-            const storedSongList = JSON.parse(localStorage.getItem("songList")) || null;
+            const storedSongList = JSON.parse(localStorage.getItem("songList"));
+            const storedCurrentSong = JSON.parse(localStorage.getItem("currentSong"));
 
-            // Validate stored data
-            const validSongList = Array.isArray(storedSongList) && storedSongList.length > 0 && storedSongList[0].id ? storedSongList : songs;
-            const validCurrentSong = storedCurrentSong && storedCurrentSong.id
-                ? storedCurrentSong
-                : validSongList[0];
+            let initialSongs = Array.isArray(storedSongList) && storedSongList.length > 0 ? storedSongList : songs;
+            let initialCurrentSong = storedCurrentSong?.id ? storedCurrentSong : initialSongs[0];
 
-            // Ensure songList doesn't exceed 10 songs
-            let updatedSongList = validSongList;
-            if (updatedSongList.length > 20) {
-                updatedSongList = updatedSongList.filter(s => s.id !== validCurrentSong.id).slice(0, 20);
-                updatedSongList.unshift(validCurrentSong);
+            // Ensure the current song is at the start of a potentially oversized list
+            if (initialSongs.length > 20) {
+                const otherSongs = initialSongs.filter(s => s.id !== initialCurrentSong.id);
+                initialSongs = [initialCurrentSong, ...otherSongs.slice(0, 19)];
             }
 
-            // Update state
-            setSongList(updatedSongList);
-            setCurrentSong(validCurrentSong);
-            console.log("songList", updatedSongList)
-            console.log("valid song list", validSongList)
+            setSongList(initialSongs);
+            setCurrentSong(initialCurrentSong);
+            const initialIndex = initialSongs.findIndex(s => s.id === initialCurrentSong.id);
+            setCurrentIndex(Math.max(0, initialIndex));
+
         } catch (error) {
-            console.error("Error parsing localStorage data", error);
+            console.error("Error initializing state from localStorage", error);
             setSongList(songs);
             setCurrentSong(songs[0]);
         }
     }, []);
 
+    // Effect 2: Persist state to LocalStorage
     useEffect(() => {
-        if (songList && Array.isArray(songList) && songList.length > 0) {
-            localStorage.setItem("songList", JSON.stringify(songList));
-        }
-    }, [songList]);
-
-    useEffect(() => {
-        if (currentSong && currentSong.id) {
+        if (currentSong?.id) {
             localStorage.setItem("currentSong", JSON.stringify(currentSong));
         }
-    }, [currentSong]);
-
-
-    // handle seek of slider
-    const handleSeek = (e) => {
-        const seekTime = e[0];
-        audioRef.current.currentTime = seekTime;
-        setCurrentTime(seekTime);
-    };
-
-    const togglePlayPause = () => {
-        if (playing) {
-            audioRef?.current.pause();
-        } else {
-            audioRef?.current.play();
+        if (songList.length > 1) { // Avoid saving the initial placeholder
+            localStorage.setItem("songList", JSON.stringify(songList));
         }
-        setPlaying(!playing);
-    };
+    }, [currentSong, songList]);
 
-    // update audioref with song 
+    // Effect 3: Main audio element and Media Session handler
     useEffect(() => {
-        const handleTimeUpdate = () => {
-            setCurrentTime(audioRef?.current.currentTime);
-            setDuration(audioRef?.current.duration);
-        };
+        const audioElement = audioRef.current;
+        if (!audioElement || !currentSong?.id) return;
 
-        audioRef?.current?.addEventListener('timeupdate', handleTimeUpdate);
+        // Determine audio quality
+        const qualityMap = { low: 0, medium: 1, average: 2, high: 3, very_high: 4 };
+        const qualityIndex = qualityMap[manualQuality] ?? 4;
+        const qualityUrl = currentSong.downloadUrl?.[qualityIndex]?.url;
 
-        return () => {
-            if (audioRef?.current) {
-                audioRef?.current.removeEventListener('timeupdate', handleTimeUpdate);
-            }
-        };
-    }, [audioRef?.current]);
-
-    // // if album ends add related songs at end
-    useEffect(() => {
-        const currentIndex = songList?.findIndex(song => song?.id === currentSong?.id);
-
-        const addRelatedSongs = async () => {
-            // console.log("context add related song function ran",songList, currentIndex)
-            if (currentIndex === songList?.length - 1) { // Check if the current song is the last in the list
-                const response = await SearchSongSuggestionAction(currentSong?.id);
-                // console.log("response of context add related",response)
-                if (response.success) {
-                    let relatedResults = response.data;
-
-                    relatedResults = relatedResults.filter(
-                        relatedSong => !songList?.some(song => song?.id === relatedSong.id)
-                    )
-
-                    relatedResults = shuffleArray(relatedResults)
-                    // console.log("Related funxt in context",relatedResults)
-
-                    setSongList((prevList) => [...prevList, ...relatedResults]);
-                }
-            }
-        };
-
-        if (currentIndex !== -1) { // Ensure the current song is in the list
-            addRelatedSongs();
-        }
-    }, [songList, currentSong]);
-
-    useEffect(() => {
-        if (songList && songList.length > 0) {
-            // Determine the index of the next song and the song after that
-            const nextIndex = (currentIndex + 1) % songList.length;
-            const nextNextIndex = (currentIndex + 2) % songList.length;
-
-            // Preload the next song
-            const nextSong = songList[nextIndex];
-            const nextSongAudio = new Audio(nextSong.downloadUrl[4].url);
-            nextSongAudio.load();
-
-            // Optionally preload the song after next
-            const nextNextSong = songList[nextNextIndex];
-            const nextNextSongAudio = new Audio(nextNextSong.downloadUrl[4].url);
-            nextNextSongAudio.load();
-        }
-    }, [currentIndex, songList]); // This runs when the currentIndex or songList changes
-
-    // handles song end
-    useEffect(() => {
-        const handleSongEnd = () => {
-            if (!isLooping) {
-                const nextIndex = (currentIndex + 1) % songList?.length;
-                const nextSong = songList[nextIndex];
-
-                // Set the next song and play it
-                setCurrentIndex(nextIndex);
-                setCurrentSong(nextSong);
-
-                // Use a callback pattern to ensure `setPlaying(true)` happens after song is set
-                setPlaying(true);
-            }
-        };
-
-        // Check if audioRef and current are defined
-        if (audioRef?.current) {
-            audioRef.current.addEventListener('ended', handleSongEnd);
-        }
-
-        return () => {
-            // Clean up the event listener when the component unmounts
-            if (audioRef?.current) {
-                audioRef.current.removeEventListener('ended', handleSongEnd);
-            }
-        };
-    }, [isLooping, currentIndex, songList, setCurrentIndex, setCurrentSong]);
-
-    // Function to adjust the song quality
-    const adjustQuality = () => {
-        if (!currentSong) return;
-
-        let qualityUrl;
-
-
-        if (manualQuality) {
-            // If manual quality is selected, use it
-            const qualityIndex = {
-                low: 0,
-                medium: 1,
-                average: 2,
-                high: 3,
-                very_high: 4
-            }[manualQuality];
-            qualityUrl = currentSong?.downloadUrl[qualityIndex]?.url;
-        } else {
-            qualityUrl = currentSong?.downloadUrl[4].url;
-        }
-
-        return qualityUrl;
-    };
-
-    // spacebar to pause and play music
-    useEffect(() => {
-        const handleSpacebar = (e) => {
-            // Check if the spacebar is pressed and no input elements are focused
-            if (e.code === "Space" && !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) {
-                e.preventDefault(); // Prevent any default spacebar action
-                // play pause function here
-                togglePlayPause()
-            }
-        };
-
-        window.addEventListener("keydown", handleSpacebar);
-
-        return () => {
-            window.removeEventListener("keydown", handleSpacebar);
-        };
-    }, [playing]);
-
-
-    // play song on a quality
-    useEffect(() => {
-        if (!currentSong) return;
-
-        const audioElement = audioRef?.current;
-
-        // Preserve the current playback position
-        const currentTime = audioElement.currentTime;
-
-        // Adjust quality only when the song changes
-        const qualityUrl = adjustQuality();
-        if (qualityUrl) {
-            // Update the audio source
+        // Update audio source only if it has changed
+        if (audioElement.src !== qualityUrl) {
             audioElement.src = qualityUrl;
-
-            // Reload the audio element
             audioElement.load();
-
-            // Seek to the previously stored playback position
-            audioElement.currentTime = currentTime;
         }
-        // Prevent song from auto-playing when paused
+
+        // Handle play/pause state
         if (playing) {
-            audioElement.play();
-        }
-    }, [manualQuality]);  // Depend on manualQuality as well
-
-
-    // when current song changes
-    useEffect(() => {
-        if (!currentSong) return;
-
-        // Adjust quality only when the song changes
-        const qualityUrl = adjustQuality();
-        if (qualityUrl) {
-            audioRef.current.src = qualityUrl;
-        }
-
-        // Prevent song from auto-playing when paused
-        if (playing) {
-            audioRef?.current.play();
-        }
-
-    }, [currentSong]);
-
-    // when song is playing add its name to site title
-    useEffect(() => {
-        if (currentSong && playing) {
-            document.title = `${currentSong?.name} - Musica NextGen`;
+            audioElement.play().catch(e => console.error("Playback error:", e));
         } else {
-            document.title = `Musica NextGen Music`;
+            audioElement.pause();
         }
 
+        // Update document title
+        document.title = playing ? `${currentSong.name} - Musica NextGen` : `Musica NextGen Music`;
+
+        // Update Media Session API
         if ("mediaSession" in navigator) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: currentSong.name,
+                artist: currentSong.artists?.primary[0]?.name,
+                album: currentSong.album?.name,
+                artwork: [{ src: currentSong.image?.[2]?.url, sizes: "500x500", type: "image/jpeg" }],
+            });
             navigator.mediaSession.playbackState = playing ? "playing" : "paused";
         }
-    }, [playing, currentSong])
 
-    const handlePrev = () => {
-        setCurrentIndex((prevIndex) => {
-            // If there's only one song, stay on the same song
-            if (songList?.length === 1) {
-                return prevIndex;
-            }
-            return (prevIndex === 0 ? songList?.length - 1 : prevIndex - 1);
-        });
-        const prevIndex = currentIndex === 0 ? songList?.length - 1 : currentIndex - 1;
-        setCurrentIndex(prevIndex);
-        setCurrentSong(songList[prevIndex]);
-        if (playing) setPlaying(true);
-    };
+    }, [currentSong, playing, manualQuality]);
 
-    const handleNext = () => {
-        const nextIndex = (currentIndex + 1) % songList?.length;
-        setCurrentIndex(nextIndex);
-        setCurrentSong(songList[nextIndex]);
-        if (playing) setPlaying(true);
-    };
 
-    // for notification song player
+    // Effect 4: Attach audio event listeners
     useEffect(() => {
-        if ("mediaSession" in navigator && currentSong) {
+        const audioElement = audioRef.current;
+        if (!audioElement) return;
 
-            navigator.mediaSession.metadata = new MediaMetadata({
-                title: currentSong?.name,
-                artist: currentSong?.artists?.primary[0].name,
-                album: currentSong?.album?.name,
-                artwork: [
-                    {
-                        src: currentSong?.image[2]?.url, // URL to the song's image
-                        sizes: "500x500", // Image size
-                        type: "image/jpg", // Or image/jpeg depending on your file
-                    },
-                ],
-            });
+        const handleTimeUpdate = () => {
+            setCurrentTime(audioElement.currentTime);
+            setDuration(audioElement.duration || 0);
+        };
+        const handleSongEnd = () => handleNext();
 
-            // Set media controls for play, pause, etc.
-            navigator.mediaSession.setActionHandler("play", () => {
-                audioRef?.current.play();
-                setPlaying(true);
-            });
-            navigator.mediaSession.setActionHandler("pause", () => {
-                audioRef?.current.pause();
-                setPlaying(false);
-            });
+        audioElement.addEventListener("timeupdate", handleTimeUpdate);
+        audioElement.addEventListener("ended", handleSongEnd);
 
-            navigator.mediaSession.setActionHandler('nexttrack', () => {
-                handleNext();
-            });
-
-            navigator.mediaSession.setActionHandler('previoustrack', () => {
-                handlePrev();
-            });
+        return () => {
+            audioElement.removeEventListener("timeupdate", handleTimeUpdate);
+            audioElement.removeEventListener("ended", handleSongEnd);
+        };
+    }, [handleNext]);
 
 
+    // Effect 5: Fetch related songs when nearing the end of the playlist
+    useEffect(() => {
 
+        const addRelatedSongs = async () => {
+            console.log("start", currentSong, currentIndex, songList.length)
+
+            if (currentIndex >= songList.length - 2 && currentSong?.id) {
+                console.log("inside if", currentSong, currentIndex)
+
+                setLoading(true);
+                const response = await SearchSongSuggestionAction(currentSong.id);
+                if (response.success) {
+                    const newSongs = response.data.filter(
+                        relatedSong => !songList.some(song => song.id === relatedSong.id)
+                    );
+                    setSongList(prevList => [...prevList, ...shuffleArray(newSongs)]);
+                }
+                setLoading(false);
+            }
+        };
+        addRelatedSongs();
+    }, [currentIndex, songList, currentSong]);
+
+
+    // Effect 6: Handle spacebar play/pause
+    useEffect(() => {
+        const handleSpacebar = (e) => {
+            if (e.code === "Space" && !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) {
+                e.preventDefault();
+                togglePlayPause();
+            }
+        };
+        window.addEventListener("keydown", handleSpacebar);
+        return () => window.removeEventListener("keydown", handleSpacebar);
+    }, []); // Empty dependency to only attach once
+
+    // --- Setup Media Session Action Handlers ---
+    useEffect(() => {
+        if ("mediaSession" in navigator) {
+            navigator.mediaSession.setActionHandler("play", () => setPlaying(true));
+            navigator.mediaSession.setActionHandler("pause", () => setPlaying(false));
+            navigator.mediaSession.setActionHandler("nexttrack", handleNext);
+            navigator.mediaSession.setActionHandler("previoustrack", handlePrev);
         }
-    }, [currentSong]);
-
-    // fetch random album then random song
+    }, [handleNext, handlePrev]);
 
 
-    let value = {
-        currentSong,
-        setCurrentSong,
-        playing,
-        setPlaying,
-        currentTime,
-        setCurrentTime,
-        duration,
-        setDuration,
-        isLooping,
-        setIsLooping,
-        audioRef,
-        handleSeek,
-        currentIndex,
-        setCurrentIndex,
-        setSongList,
-        songList,
-        currentId,
-        setCurrentId,
-        loading,
-        setLoading,
-        handleNext,
-        handlePrev,
-        manualQuality,
-        setManualQuality,
-        togglePlayPause,
-        searchResults,
-        setSearchResults,
-        isJamChecked,
-        setIsJamChecked,
-        searchQuery,
-        setSearchQuery
+    // --- Context Value ---
+    const value = {
+        currentSong, setCurrentSong, playing, setPlaying, currentTime, setCurrentTime,
+        duration, setDuration, isLooping, setIsLooping, audioRef, handleSeek,
+        currentIndex, setCurrentIndex, songList, setSongList, loading, setLoading,
+        handleNext, handlePrev, manualQuality, setManualQuality, togglePlayPause,
+        searchResults, setSearchResults, isJamChecked, setIsJamChecked, searchQuery, setSearchQuery,
+        playSongAndCreateQueue, playSongAtIndex
     };
 
     return (
         <UserContext.Provider value={value}>
             {children}
-            <audio
-                ref={audioRef}
-                onPlay={() => setPlaying(true)}
-                onPause={() => setPlaying(false)}
-                onLoadedData={() => {
-                    // audioRef?.current.currentTime = currentTime;
-                    audioRef?.current.duration ? setDuration(audioRef.current.duration) : setDuration(0)
-                }}
-                loop={isLooping}
-            />
+            <audio ref={audioRef} loop={isLooping} />
         </UserContext.Provider>
     );
 }

@@ -1,242 +1,91 @@
 'use server'
 
-export async function SearchGlobalAction(query) {
+/**
+ * A centralized API fetch helper to handle requests, responses, and errors.
+ * @param {string} endpoint - The API endpoint to hit (e.g., '/search/songs').
+ * @param {object} [params] - An object of query parameters to be added to the URL.
+ * @returns {Promise<object>} - The JSON data from the API or a standard error object.
+ */
+async function apiFetch(endpoint, params = {}) {
+    const { FETCH_URL } = process.env;
+    if (!FETCH_URL) {
+        throw new Error("FETCH_URL environment variable is not set.");
+    }
+
+    // Construct the query string from the params object
+    const queryString = new URLSearchParams(params).toString();
+    const url = `${FETCH_URL}${endpoint}${queryString ? `?${queryString}` : ''}`;
+
     try {
-        const response = await fetch(`${process.env.FETCH_URL}/search?query=${encodeURIComponent(query)}`);
+        const response = await fetch(url);
 
         if (!response.ok) {
-            throw new Error('Failed to fetch songs');
+            // Catches HTTP errors like 404 or 500
+            throw new Error(`API request failed with status ${response.status}`);
         }
 
-        const data = await response.json(); // Parse JSON data from response
+        const data = await response.json();
+
         if (!data.success) {
-            return null
+            // Handles cases where the API itself returns a failure message
+            return { success: false, message: data.msg || 'API returned an unsuccessful response.' };
         }
-        // console.log("data",data)
 
-        return data; // Return the parsed data
+        return data; // Returns the full successful data object
     } catch (error) {
-        console.error('Error fetching songs:', error);
-        return {
-            msg: "Song Not Found",
-            ok: false
-        } // Return null or handle error state as needed
+        console.error(`Error fetching from ${url}:`, error.message);
+        return { success: false, message: error.message || 'An unknown error occurred.' };
     }
 }
 
+// --- Action Functions ---
 
-export async function SearchSongsAction(songId) {
-    // console.log("local env",process.env.FETCH_URL)
-    try {
-        const response = await fetch(`${process.env.FETCH_URL}/search/songs?query=${encodeURIComponent(songId)}`);
+export const SearchGlobalAction = (query) => 
+    apiFetch('/search', { query: encodeURIComponent(query) });
 
-        if (!response.ok) {
-            throw new Error('Failed to fetch songs');
-        }
+export const SearchSongsAction = (query) => 
+    apiFetch('/search/songs', { query: encodeURIComponent(query) });
 
-        const data = await response.json(); // Parse JSON data from response
-        if (!data.success) {
-            return null
-        }
-        // console.log("data",data)
+export const SearchSongSuggestionAction = (songId) => 
+    apiFetch(`/songs/${songId}/suggestions`);
 
-        return data; // Return the parsed data
-    } catch (error) {
-        console.error('Error fetching songs:', error);
-        return {
-            msg: "Song Not Found",
-            ok: false
-        } // Return null or handle error state as needed
+export const GetAlbumSongsByIdAction = (albumId) => 
+    apiFetch('/albums', { id: albumId });
+
+export const GetSongsByIdAction = (type, id) => {
+    // This action has special URL formatting based on type
+    if (type === 'song') {
+        return apiFetch(`/songs/${id}`);
     }
-}
+    return apiFetch(`/${type}s`, { id: id });
+};
 
+export const fetchArtistsByPermaLinkAction = (link) => 
+    apiFetch('/artists', { link });
 
-export async function SearchSongSuggestionAction(songId) {
-    try {
+export const fetchPlaylistsByIdAction = (playlistId) => 
+    apiFetch('/playlists', { id: playlistId });
 
-
-        const response = await fetch(`${process.env.FETCH_URL}/songs/${songId}/suggestions`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch songs');
-        }
-        const data = await response.json();
-
-        if (data.success) {
-            return data;
-        }
-        return null;
-    } catch (error) {
-        console.error('Error fetching songs:', error);
-        return {
-            msg: "Song Not Found",
-            ok: false
-        }
-    }
-}
-
-
-export async function GetAlbumSongsByIdAction(albumId) {
-    try {
-
-        const response = await fetch(`${process.env.FETCH_URL}/albums?id=${albumId}`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch songs');
-        }
-        const data = await response.json();
-
-        if (data.success) {
-            return data;
-        }
-        return {
-            msg: "Not Found",
-            ok: false
-        };
-    } catch (error) {
-        console.error('Error fetching songs:', error);
-        return {
-            msg: "Song Not Found",
-            ok: false
-        }
-    }
-}
-
-
-export async function GetSongsByIdAction(type, id) {
-    try {
-        if (type === "song") {
-            const response = await fetch(`${process.env.FETCH_URL}/${type}s/${id}`);
-            if (!response.ok) {
-                throw new Error('Failed to fetch songs');
-            }
-            const data = await response.json();
-
-            if (data.success) {
-                return data;
-            }
-            return {
-                msg: "Not Found",
-                ok: false
-            };
-        }
-
-        // console.log("server",type,id)
-        const response = await fetch(`${process.env.FETCH_URL}/${type}s?id=${id}`);
-        // console.log(response)
-        if (!response.ok) {
-            throw new Error('Failed to fetch songs');
-        }
-        const data = await response.json();
-
-        if (data.success) {
-            return data;
-        }
-        return {
-            msg: "Not Found",
-            ok: false
-        };
-    } catch (error) {
-        console.error('Error fetching songs:', error);
-        return {
-            msg: "Song Not Found",
-            ok: false
-        }
-    }
-}
-
+/**
+ * Fetches data directly from a full URL. Use for external or pre-signed URLs.
+ * @param {string} link - The full URL to fetch.
+ * @returns {Promise<object|null>}
+ */
 export async function fetchByLinkAction(link) {
     try {
         const response = await fetch(link, {
             headers: {
-                'Content-Type': 'application/json',
                 'Accept': 'application/json',
             }
-        })
-        // const contentType = response.headers.get("content-type");
-        // if (!response.ok || !contentType || !contentType.includes("application/json")) {
-        //     console.error('Unexpected response format:', await response.text());
-        //     return null;
-        // }
-        // console.log(response)
-        const data = await response.json();
+        });
 
-        return data;
+        if (!response.ok) {
+            throw new Error(`Request to link failed with status ${response.status}`);
+        }
+        
+        return await response.json();
     } catch (error) {
-        console.error('Error fetching trending albums:', error);
+        console.error('Error fetching by link:', error);
         return null;
     }
 }
-
-export async function fetchArtistsByPermaLinkAction(link) {
-    try {
-
-        const response = await fetch(`${process.env.FETCH_URL}/artists?link=${link}`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch songs');
-        }
-        const data = await response.json();
-
-        if (data.success) {
-            return data;
-        }
-        return {
-            msg: "Not Found",
-            ok: false
-        };
-    } catch (error) {
-        console.error('Error fetching songs:', error);
-        return {
-            msg: "Song Not Found",
-            ok: false
-        }
-    }
-}
-
-//for playlists
-
-export async function fetchPlaylistsByIdAction(playlistId) {
-    try {
-
-        const response = await fetch(`${process.env.FETCH_URL}/playlists?id=${playlistId}`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch songs');
-        }
-        const data = await response.json();
-
-        if (data.success) {
-            return data;
-        }
-        return {
-            msg: "Not Found",
-            ok: false
-        };
-    } catch (error) {
-        console.error('Error fetching songs:', error);
-        return {
-            msg: "Song Not Found",
-            ok: false
-        }
-    }
-}
-
-// export async function fetchPlaylistsByIdAction(id) {
-//     try {
-//         const response = await fetch(id, {
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 'Accept': 'application/json',
-//             }
-//         })
-//         // const contentType = response.headers.get("content-type");
-//         // if (!response.ok || !contentType || !contentType.includes("application/json")) {
-//         //     console.error('Unexpected response format:', await response.text());
-//         //     return null;
-//         // }
-//         // console.log(response)
-//         const data = await response.json();
-
-//         return data;
-//     } catch (error) {
-//         console.error('Error fetching trending albums:', error);
-//         return null;
-//     }
-// }

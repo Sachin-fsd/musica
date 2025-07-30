@@ -7,6 +7,7 @@ import { Button } from '../ui/button';
 import { toast } from 'sonner';
 import { decodeHtml } from '@/utils';
 import { Slider } from '../ui/slider';
+import { formatTime } from '@/utils/extraFunctions';
 
 const Player = () => {
     const [isDownloading, setIsDownloading] = useState(false);
@@ -52,11 +53,7 @@ const Player = () => {
         setIsLooping(!isLooping);
     };
 
-    const formatTime = (time) => {
-        const minutes = Math.floor(time / 60);
-        const seconds = Math.floor(time % 60);
-        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    };
+    
 
     return (
         <div className="flex flex-col items-center justify-center p-3 pt-0">

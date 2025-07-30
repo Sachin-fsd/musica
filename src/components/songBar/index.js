@@ -1,204 +1,156 @@
 'use client';
+
 import { toast } from "sonner";
 import { EllipsisVertical, ListMusic, Play, Plus, Trash2 } from "lucide-react";
 import { Label } from "../ui/label";
 import { Skeleton } from "../ui/skeleton";
 import { useContext, useState, useCallback, useEffect, useMemo } from "react";
 import { UserContext } from "@/context";
-import { playAndFetchSuggestions } from "@/utils/playAndFetchSuggestionUtils";
 import { decodeHtml, htmlParser } from "@/utils";
 import { Button } from "../ui/button";
-import { debounce } from "lodash";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import TouchableOpacity from "../ui/touchableOpacity";
+// Assume you have this new utility function imported
+// import { createPlaylistFromSuggestions } from "@/utils/playlistUtils";
 
-const SongBar = ({ song, searched }) => {
+
+const SongBar = ({ song }) => {
+
     const {
+        playing ,
         currentSong,
-        setCurrentIndex,
-        currentIndex,
-        setSongList,
-        songList,
         setCurrentSong,
         setPlaying,
-        audioRef,
-        setCurrentId,
+        songList,
+        setSongList,
         loading,
-        setLoading,
+        playSongAndCreateQueue, // Assume this new function is from your context
     } = useContext(UserContext);
 
-    const [decodedName, setDecodedName] = useState(song?.name);
     const [imageError, setImageError] = useState(false);
 
-    // Set song name and album name
-    useEffect(() => {
-        if (song?.name) {
-            const formattedName = htmlParser(song.name);
-            setDecodedName(formattedName.length > 15 ? formattedName.substring(0, 15) + '...' : formattedName);
-        }
-    }, [song]);
+    // Memoize derived state for cleaner rendering logic
+    const isSongInQueue = useMemo(() => songList?.some(s => s.id === song?.id), [songList, song?.id]);
+    const isCurrentlyPlaying = useMemo(() => currentSong?.id === song?.id, [currentSong?.id, song?.id]);
 
-    // Handle plus click with debounce
-    const debouncedHandlePlusClick = useMemo(() => debounce(() => {
-        const songExists = songList?.find(s => s.id === song?.id);
-        if (!songExists) {
-            const newSongList = [...songList, song];
-            setSongList(newSongList);
-        }
-    }, 300), [songList, song]);
+    const decodedName = useMemo(() => {
+        if (!song?.name) return '';
+        const formattedName = htmlParser(song.name);
+        return formattedName.length > 25 ? formattedName.substring(0, 25) + '...' : formattedName;
+    }, [song?.name]);
 
-    // Handle songbar click
+    // --- Event Handlers ---
+
     const handleClick = useCallback(() => {
-        if (!song || loading) return; // Skip if no song or already loading
-        audioRef.current.src = song.downloadUrl[4].url;
-        audioRef.current.play();
-        const context = { setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId, currentSong };
-        playAndFetchSuggestions(song, context).catch((error) => console.error("Error in handleClick:", error));
-    }, [song, setCurrentIndex, currentIndex, setSongList, songList, setCurrentSong, setPlaying, audioRef, setCurrentId, currentSong, loading]);
+        // Prevent actions while another song is loading
+        if (loading) return;
 
-    // Handle remove song
-    const handleRemoveSong = () => {
-        if (songList[currentIndex].id === song?.id) {
-            toast.error("Cannot remove the currently playing song");
+        if (isCurrentlyPlaying) {
+            // If the clicked song is the one already playing, just toggle its play/pause state
+            setPlaying(!playing);
+        } else {
+            // If it's a new song, delegate the entire complex process to the context
+            playSongAndCreateQueue(song);
+        }
+    }, [loading, isCurrentlyPlaying, playing, song, setPlaying, playSongAndCreateQueue]);
+
+    const handleAddNext = useCallback(() => {
+        // Remove the song if it already exists in the list
+        const filteredList = songList.filter(s => s.id !== song.id);
+        // Find the index of the currently playing song
+        const currentIdx = filteredList.findIndex(s => s.id === currentSong.id);
+        // Insert the new song right after the current one
+        filteredList.splice(currentIdx + 1, 0, song);
+        setSongList(filteredList);
+        toast.success("Added to queue!");
+    }, [song, songList, currentSong, setSongList]);
+
+    const handleAddToQueue = useCallback(() => {
+        if (!isSongInQueue) {
+            setSongList([...songList, song]);
+            toast.success("Added to queue!");
+        }
+    }, [song, songList, isSongInQueue, setSongList]);
+
+    const handleRemove = useCallback(() => {
+        if (isCurrentlyPlaying) {
+            toast.error("Cannot remove the currently playing song.");
             return;
         }
-        if (songList?.length > 3) {
-            const updatedSongList = songList.filter(s => s.id !== song?.id);
-            const currentSongIndex = updatedSongList.findIndex(s => s.id === currentSong?.id);
-            setCurrentIndex(currentSongIndex);
-            setSongList(updatedSongList);
-        } else {
-            toast.warning("Minimum 3 songs required");
-        }
-    };
-
-    // Format timing to show only minutes and seconds
-    const formatDuration = useCallback((durationInSeconds) => {
-        const minutes = Math.floor(durationInSeconds / 60);
-        const seconds = durationInSeconds % 60;
-        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-    }, []);
-
-    // Adds the song to the next position
-    const handleAddNextSong = () => {
-        const updatedList = [...songList];
-        const currentSongIndex = updatedList.findIndex(s => s.id === currentSong?.id);
-        if (currentSongIndex === -1) return;
-        const songIndex = updatedList.findIndex(s => s.id === song?.id);
-        if (songIndex !== -1) updatedList.splice(songIndex, 1);
-        updatedList.splice(currentSongIndex + 1, 0, song);
+        const updatedList = songList.filter(s => s.id !== song.id);
         setSongList(updatedList);
-    };
+        // The context should automatically update the currentIndex if needed
+    }, [song, isCurrentlyPlaying, songList, setSongList]);
 
-    // Fallback image handling
-    const handleImageError = () => setImageError(true);
 
-    // Render skeleton if no song is present
-    if (!song) {
-        return (
-            <div className="flex justify-between items-center py-1 border-b border-gray-200 dark:border-gray-700">
-                <Skeleton className="w-10 h-10 rounded object-cover mr-4" />
-                <div className="flex-1">
-                    <Label className="font-bold text-gray-900 dark:text-gray-100 truncate text-sm"></Label>
-                </div>
-            </div>
-        );
+    if (!song?.id) {
+        // Return a cleaner skeleton
+        return <Skeleton className="h-16 w-full rounded-lg" />;
     }
 
     return (
-        <div className="flex justify-between items-center p-2 bg-white dark:bg-slate-950 rounded-lg shadow-md w-full transition-transform duration-200 ease-in-out md:hover:scale-[1.01] md:hover:bg-gray-100 dark:md:hover:bg-gray-800 sm:hover:scale-[1] sm:hover:bg-transparent">
-            <TouchableOpacity className="relative flex items-center cursor-pointer mr-3" onClick={handleClick} style={{ flex: '1' }}>
-                {song?.image[1]?.url && !imageError ? (
-                    <img
-                        src={song?.image[1]?.url}
-                        height={45}
-                        width={45}
-                        loading="lazy"
-                        className="rounded object-cover mr-3"
-                        alt={`${decodedName} cover`}
-                        onError={handleImageError}
-                    />
-                ) : (
-                    <Skeleton className="w-10 h-10 rounded object-cover mr-3" />
-                )}
+        <div className="flex justify-between items-center p-2 bg-white dark:bg-slate-950 rounded-lg w-full transition-transform duration-200 ease-in-out md:hover:scale-[1.01] md:hover:bg-gray-100 dark:md:hover:bg-gray-800">
+            <TouchableOpacity className="relative flex items-center cursor-pointer mr-3 flex-1 overflow-hidden" onClick={handleClick}>
+                <img
+                    src={imageError ? '/fallback-image.png' : song.image[1]?.url}
+                    height={45}
+                    width={45}
+                    loading="lazy"
+                    className="rounded object-cover mr-3 flex-shrink-0"
+                    alt={decodedName}
+                    onError={() => setImageError(true)}
+                />
                 <div className="flex-1 overflow-hidden">
-                    {decodedName && (
-                        <Label className={`cursor-pointer font-medium text-gray-900 dark:text-gray-100 ${song?.id === currentSong?.id ? "font-bold dark:text-green-600 text-green-700" : ""} truncate text-sm whitespace-nowrap overflow-hidden text-ellipsis`}>
-                            {decodedName}
-                        </Label>
-                    )}
-                    {song?.artists?.primary[0]?.name && (
-                        <p className="text-xs text-gray-600 dark:text-gray-400 truncate whitespace-nowrap overflow-hidden text-ellipsis">
-                            {decodeHtml(song?.artists?.primary[0]?.name)} <span> • </span>
-                        </p>
-                    )}
+                    <Label className={`font-medium truncate text-sm whitespace-nowrap ${isCurrentlyPlaying ? "font-bold text-green-600" : "text-gray-900 dark:text-gray-100"}`}>
+                        {decodedName}
+                    </Label>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 truncate whitespace-nowrap">
+                        {decodeHtml(song.artists?.primary[0]?.name)}
+                    </p>
                 </div>
-                {song?.id !== currentSong?.id && (
-                    <div className="absolute top-0 left-0 flex items-center justify-center opacity-0 transition-opacity duration-300 md:hover:opacity-100">
-                        <div className="bg-black bg-opacity-50 rounded-full p-2 outline-slate-700">
-                            <Play className="p-0 text-white" />
-                        </div>
-                    </div>
-                )}
-            </TouchableOpacity >
+            </TouchableOpacity>
 
             <div className="flex items-center space-x-2">
-                {song?.id !== currentSong?.id && (
-                    <span className="text-xs text-gray-700 dark:text-gray-300 mr-1">{formatDuration(song?.duration)}</span>
+                {isCurrentlyPlaying ? (
+                    <div className="sound-waves">
+                        <div className="wave" /><div className="wave" /><div className="wave" />
+                    </div>
+                ) : (
+                    <span className="text-xs text-gray-700 dark:text-gray-300">
+                        {`${Math.floor(song.duration / 60)}:${String(song.duration % 60).padStart(2, '0')}`}
+                    </span>
                 )}
-                <Label variant="simple" disabled={loading}>
-                    {songList?.find(s => s.id === song?.id) ? (
-                        currentSong?.id === song?.id ? (
-                            <div className="flex items-center gap-2 pr-2">
-                                <div className="sound-waves">
-                                    <div className="wave"></div>
-                                    <div className="wave"></div>
-                                    <div className="wave"></div>
-                                </div>
-                            </div>
-                        ) : (
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="simple">
-                                        <EllipsisVertical className="text-gray-500 dark:text-gray-300 cursor-pointer size-5" />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent className="w-56">
-                                    <DropdownMenuGroup>
-                                        <DropdownMenuItem onClick={handleRemoveSong} className="bg-red-300 dark:bg-red-600">
-                                            <Trash2 className="mr-2 h-4 w-4" />
-                                            <span>Remove from queue</span>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={handleAddNextSong}>
-                                            <ListMusic className="mr-2 h-4 w-4" />
-                                            <span>Play next</span>
-                                        </DropdownMenuItem>
-                                    </DropdownMenuGroup>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        )
-                    ) : (
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="simple">
-                                    <EllipsisVertical className="text-gray-500 dark:text-gray-300 cursor-pointer size-5" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-56">
-                                <DropdownMenuGroup>
-                                    <DropdownMenuItem onClick={debouncedHandlePlusClick}>
-                                        <Plus className="mr-2 h-4 w-4" />
-                                        <span>Add to queue</span>
+
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="simple" disabled={loading}>
+                            <EllipsisVertical className="text-gray-500 dark:text-gray-300 size-5" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56">
+                        <DropdownMenuGroup>
+                            {isSongInQueue ? (
+                                <>
+                                    <DropdownMenuItem onClick={handleRemove} className="text-red-600 focus:bg-red-100 dark:focus:bg-red-900">
+                                        <Trash2 className="mr-2 h-4 w-4" /> Remove from queue
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={handleAddNextSong}>
-                                        <ListMusic className="mr-2 h-4 w-4" />
-                                        <span>Play next</span>
+                                    <DropdownMenuItem onClick={handleAddNext}>
+                                        <ListMusic className="mr-2 h-4 w-4" /> Play next
                                     </DropdownMenuItem>
-                                </DropdownMenuGroup>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    )}
-                </Label>
+                                </>
+                            ) : (
+                                <>
+                                    <DropdownMenuItem onClick={handleAddToQueue}>
+                                        <Plus className="mr-2 h-4 w-4" /> Add to queue
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={handleAddNext}>
+                                        <ListMusic className="mr-2 h-4 w-4" /> Play next
+                                    </DropdownMenuItem>
+                                </>
+                            )}
+                        </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
         </div>
     );
