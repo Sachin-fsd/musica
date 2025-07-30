@@ -339,3 +339,9 @@ button:focus {
   object-fit: cover;
   object-position: center;
 }
+.bg-cover {
+  background-size: cover;
+}
+.bg-center {
+  background-position: center;
+}

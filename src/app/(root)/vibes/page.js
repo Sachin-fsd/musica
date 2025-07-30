@@ -5,8 +5,8 @@ import { UserContext } from '@/context';
 import SongCard from '@/components/vibes/SongCard';
 
 const SongReels = () => {
-    const startScrollY = useRef(0);
-    const startIndex = useRef(0);
+    const touchStartY = useRef(null);
+    const touchEndY = useRef(null);
     // 1. Get the complete song list and the necessary setters from the context
     const {
         songList,
@@ -20,6 +20,24 @@ const SongReels = () => {
 
     const containerRef = useRef(null);
     const scrollTimeoutRef = useRef(null);
+
+    const handleTouchStart = (e) => {
+        touchStartY.current = e.touches[0].clientY;
+    };
+
+    const handleTouchEnd = (e) => {
+        touchEndY.current = e.changedTouches[0].clientY;
+        const deltaY = touchStartY.current - touchEndY.current;
+        const threshold = 50; // Minimum swipe distance in px
+
+        if (Math.abs(deltaY) > threshold) {
+            if (deltaY > 0 && currentIndex < songList.length - 1) {
+                playSongAtIndex(currentIndex + 1);
+            } else if (deltaY < 0 && currentIndex > 0) {
+                playSongAtIndex(currentIndex - 1);
+            }
+        }
+    };
 
     useEffect(() => {
         const container = containerRef.current;
@@ -99,6 +117,8 @@ const SongReels = () => {
             {/* Main scroll container for song reels */}
             <main
                 ref={containerRef}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
                 className="h-full overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
             >
                 {songList.map((song, index) => (

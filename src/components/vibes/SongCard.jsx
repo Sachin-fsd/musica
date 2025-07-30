@@ -26,11 +26,14 @@ const SongCard = ({ song, isActive, isPlaying }) => {
     };
 
     return (
-        <div className="relative w-full h-screen flex-shrink-0 overflow-hidden">
+        <div className="relative w-full h-full flex-shrink-0 overflow-hidden">
             {/* Background Image */}
-            <div
-                className="absolute inset-0 bg-cover bg-center transform scale-110"
-                style={{ backgroundImage: `url(${song.image[2]?.url})` }}
+            <img
+                src={song.image[2]?.url}
+                alt={song.name}
+                className="absolute inset-0 w-full h-full object-cover z-0"
+                draggable={false}
+                style={{ userSelect: "none", pointerEvents: "none" }}
             />
 
             {/* Overlays for better text readability */}
