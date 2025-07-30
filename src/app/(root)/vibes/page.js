@@ -5,8 +5,8 @@ import { UserContext } from '@/context';
 import SongCard from '@/components/vibes/SongCard';
 
 const SongReels = () => {
-    const touchStartY = useRef(null);
-    const touchEndY = useRef(null);
+    const startScrollY = useRef(0);
+    const startIndex = useRef(0);
     // 1. Get the complete song list and the necessary setters from the context
     const {
         songList,
@@ -21,54 +21,39 @@ const SongReels = () => {
     const containerRef = useRef(null);
     const scrollTimeoutRef = useRef(null);
 
-    const handleTouchStart = (e) => {
-        touchStartY.current = e.touches[0].clientY;
-    };
-
-    const handleTouchEnd = (e) => {
-        touchEndY.current = e.changedTouches[0].clientY;
-        const deltaY = touchStartY.current - touchEndY.current;
-        const threshold = 50; // Minimum swipe distance in px
-
-        if (Math.abs(deltaY) > threshold) {
-            if (deltaY > 0 && currentIndex < songList.length - 1) {
-                playSongAtIndex(currentIndex + 1);
-            } else if (deltaY < 0 && currentIndex > 0) {
-                playSongAtIndex(currentIndex - 1);
-            }
-        }
-    };
-
     useEffect(() => {
         const container = containerRef.current;
         if (!container) return;
 
         let scrollTimeout = null;
 
-        const handleWheel = (e) => {
-            e.preventDefault();
-            clearTimeout(scrollTimeout);
+        const handleScroll = () => {
+            if (scrollTimeout) clearTimeout(scrollTimeout);
 
             scrollTimeout = setTimeout(() => {
-                const scrollDown = e.deltaY > 0;
+                const cardHeight = container.clientHeight;
+                const scrollTop = container.scrollTop;
+                // Find the nearest card index
+                const newIndex = Math.round(scrollTop / cardHeight);
 
-                if (scrollDown) {
-                    if (currentIndex < songList.length - 1) {
-                        playSongAtIndex(currentIndex + 1);
-                    }
-                } else {
-                    if (currentIndex > 0) {
-                        playSongAtIndex(currentIndex - 1);
-                    }
+                // Snap to the nearest card
+                container.scrollTo({
+                    top: newIndex * cardHeight,
+                    behavior: 'smooth'
+                });
+
+                // Change song if index changed
+                if (newIndex !== currentIndex && newIndex >= 0 && newIndex < songList.length) {
+                    playSongAtIndex(newIndex);
                 }
-            }, 200); // Debounce time
+            }, 120); // Debounce time
         };
 
-        container.addEventListener('wheel', handleWheel, { passive: false });
+        container.addEventListener('scroll', handleScroll, { passive: true });
 
         return () => {
-            container.removeEventListener('wheel', handleWheel);
-            clearTimeout(scrollTimeout);
+            container.removeEventListener('scroll', handleScroll);
+            if (scrollTimeout) clearTimeout(scrollTimeout);
         };
     }, [currentIndex, songList.length, playSongAtIndex]);
 
@@ -117,8 +102,6 @@ const SongReels = () => {
             {/* Main scroll container for song reels */}
             <main
                 ref={containerRef}
-                onTouchStart={handleTouchStart}
-                onTouchEnd={handleTouchEnd}
                 className="h-full overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
             >
                 {songList.map((song, index) => (
@@ -133,13 +116,13 @@ const SongReels = () => {
             </main>
 
             {/* Bottom indicator for current song index */}
-            <footer className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-50">
+            {/* <footer className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-50">
                 <div className="flex items-center space-x-2 bg-black/30 backdrop-blur-md rounded-full px-4 py-2">
                     <span className="text-white/80 text-sm">
                         {currentIndex + 1} / {songList.length}
                     </span>
                 </div>
-            </footer>
+            </footer> */}
         </div>
     );
 };
