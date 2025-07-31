@@ -1,14 +1,38 @@
-import React, { useState, useContext, useMemo } from 'react';
+import React, { useState, useContext, useMemo, useRef, useEffect } from 'react';
 import { Play, Pause, Heart, MessageCircle, Share, MoreHorizontal } from 'lucide-react';
 import { UserContext } from '@/context';
 import { formatTime } from '@/utils/extraFunctions';
 import { decode } from 'he';
 import { cn } from '@/lib/utils';
+import { Button } from '../ui/button';
 
 const SongCard = ({ song, isActive, isPlaying }) => {
     // 1. Get global state. No setters needed here.
     const { currentTime, duration, togglePlayPause } = useContext(UserContext);
     const [liked, setLiked] = useState(false);
+    const avatarRef = useRef(null);
+    const animationFrame = useRef(null);
+    const [angle, setAngle] = useState(0);
+
+    useEffect(() => {
+        if (isPlaying) {
+            const animate = () => {
+                setAngle(prev => {
+                    const next = prev + 0.5;
+                    avatarRef.current.style.transform = `rotate(${next}deg)`;
+                    return next;
+                });
+                animationFrame.current = requestAnimationFrame(animate);
+            };
+            animationFrame.current = requestAnimationFrame(animate);
+        } else {
+            if (animationFrame.current) {
+                cancelAnimationFrame(animationFrame.current);
+                animationFrame.current = null;
+            }
+        }
+    }, [isPlaying]);
+
 
     // 2. Calculate progress based on the global state, only if this card is active
     const progress = useMemo(() => {
@@ -27,13 +51,24 @@ const SongCard = ({ song, isActive, isPlaying }) => {
     };
 
     return (
-        <div className="relative w-full h-full overflow-hidden">
+        <div className="relative w-full h-[calc(100vh-60px)] md:h-full overflow-hidden">
             {/* Background Image */}
-            <div className='absolute inset-0 h-full w-full flex flex-1 justify-center items-center z-0 p-3 pb-[100px]'>
+
+            <div className="absolute inset-0 w-full h-full">
+                {/* The image itself, used as a background layer */}
+                <img
+                    src={song.image[2]?.url}
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-cover filter blur-2xl scale-110 opacity-60"
+                />
+                {/* A dark overlay to ensure text is readable */}
+                <div className="absolute inset-0 bg-black/70" />
+            </div>
+            <div className='absolute inset-0 h-full w-full flex flex-1 justify-center items-center'>
                 <img
                     src={song.image[2]?.url}
                     alt={song.name}
-                    className=""
+                    className="w-auto h-auto max-w-[75%] max-h-[45%] md:max-w-[400px] md:max-h-[400px] rounded-2xl shadow-2xl object-cover"
                     draggable={false}
                     style={{ userSelect: "none", pointerEvents: "none" }}
                 />
@@ -53,14 +88,18 @@ const SongCard = ({ song, isActive, isPlaying }) => {
             </div>
 
             {/* Main Content */}
-            <div className="relative h-full flex">
+            <div className="relative h-[calc(100vh-60px)] md:h-full flex">
                 {/* Left Side: Song Information */}
-                <div className="flex-1 flex flex-col justify-end p-6 pb-32">
+                <div className="flex-1 flex flex-col justify-end p-6">
                     <div className="mb-4">
                         <img
+                            ref={avatarRef}
                             src={song.artists.primary[0]?.image[1]?.url}
                             alt={song.artists.primary[0]?.name}
-                            className={cn("w-12 h-12 rounded-full border-2 border-white/50 object-cover", isPlaying ? "animate-spin duration-1000" : "")}
+                            className="w-12 h-12 rounded-full border-2 border-white/50 object-cover"
+                            style={{ transform: `rotate(${angle}deg)` }}
+
+                        // className={cn("w-12 h-12 rounded-full border-2 border-white/50 object-cover", isPlaying ? "animate-spin-artist duration-1000" : "")}
                         />
                     </div>
                     <h1 className="text-white text-3xl font-bold mb-2 leading-tight shadow-lg">{decode(song.name)}</h1>
@@ -75,8 +114,22 @@ const SongCard = ({ song, isActive, isPlaying }) => {
                     </div>
                 </div>
 
+                <div className="absolute inset-0 flex items-center justify-center">
+                    <Button
+                        size="lg"
+                        className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 border-0"
+                        onClick={togglePlayPause}
+                    >
+                        {isPlaying ? (
+                            <Pause className="w-8 h-8 text-white" />
+                        ) : (
+                            <Play className="w-8 h-8 text-white ml-1" />
+                        )}
+                    </Button>
+                </div>
+
                 {/* Right Side: Action Controls */}
-                <div className="w-20 flex flex-col justify-end items-center pb-32 space-y-6">
+                {/* <div className="w-20 flex flex-col justify-end items-center space-y-6 pb-6">
                     <button
                         onClick={togglePlayPause}
                         className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center hover:bg-white/30 transition-all duration-200 hover:scale-110"
@@ -87,15 +140,15 @@ const SongCard = ({ song, isActive, isPlaying }) => {
                         <Heart className={`w-8 h-8 ${liked ? 'text-red-500 fill-red-500' : 'text-white'}`} />
                         <span className="text-white text-xs mt-1">Like</span>
                     </button>
-                    {/* <button className="flex flex-col items-center hover:scale-110 transition-transform">
+                    <button className="flex flex-col items-center hover:scale-110 transition-transform">
                         <MessageCircle className="w-8 h-8 text-white" />
                         <span className="text-white text-xs mt-1">Chat</span>
                     </button>
                     <button className="flex flex-col items-center hover:scale-110 transition-transform">
                         <Share className="w-8 h-8 text-white" />
                         <span className="text-white text-xs mt-1">Share</span>
-                    </button> */}
-                </div>
+                    </button>
+                </div> */}
             </div>
         </div>
     );

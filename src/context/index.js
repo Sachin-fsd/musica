@@ -33,8 +33,6 @@ export default function UserState({ children }) {
         }
     }, [songList]);
 
-    // in index.js
-
     const playSongAndCreateQueue = useCallback(async (song) => {
         // First, check if the song is already in the current song list
         const existingSongIndex = songList.findIndex(s => s.id === song.id);
@@ -67,9 +65,9 @@ export default function UserState({ children }) {
         playSongAtIndex(prevIndex);
     }, [currentIndex, songList.length, playSongAtIndex]);
 
-    const togglePlayPause = () => {
-        setPlaying(!playing);
-    };
+    const togglePlayPause = useCallback(() => {
+        setPlaying(prevPlaying => !prevPlaying);
+    }, []);
 
     const handleSeek = (e) => {
         const seekTime = e[0];
@@ -209,7 +207,7 @@ export default function UserState({ children }) {
         };
         window.addEventListener("keydown", handleSpacebar);
         return () => window.removeEventListener("keydown", handleSpacebar);
-    }, []); // Empty dependency to only attach once
+    }, [togglePlayPause]); // Empty dependency to only attach once
 
     // --- Setup Media Session Action Handlers ---
     useEffect(() => {
@@ -235,7 +233,7 @@ export default function UserState({ children }) {
     return (
         <UserContext.Provider value={value}>
             {children}
-            <audio ref={audioRef} loop={isLooping} />
+            <audio ref={audioRef} loop={isLooping} preload="metadata" />
         </UserContext.Provider>
     );
 }

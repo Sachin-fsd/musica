@@ -10,8 +10,11 @@ import { UserContext } from "@/context";
 import { ThemeSwitch } from "../themeSwitch";
 import { PlaceholdersAndVanishInput } from "../ui/placeholders-and-vanish-input";
 import { toast } from "sonner";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
+    const pathname = usePathname();
+    if (pathname == "/vibes") return null;
     const { searchQuery, setSearchQuery, loading } = useContext(UserContext);
     const [isSearchPopoverOpen, setIsSearchPopoverOpen] = useState(false);
     const [isSheetOpen, setIsSheetOpen] = useState(false);

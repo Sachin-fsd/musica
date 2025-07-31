@@ -345,3 +345,6 @@ button:focus {
 .bg-center {
   background-position: center;
 }
+.animate-spin-artist {
+    animation: spin 10s linear infinite;
+}
