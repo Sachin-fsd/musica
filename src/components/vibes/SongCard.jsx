@@ -11,10 +11,6 @@ const SongCard = ({ song, isActive, isPlaying }) => {
     const { currentTime, duration, togglePlayPause, playing, handleSeek } = useContext(UserContext);
     const [showControls, setShowControls] = useState(false);
     const [liked, setLiked] = useState(false);
-    const avatarRef = useRef(null);
-    const animationFrame = useRef(null);
-    const [angle, setAngle] = useState(0);
-
 
     function handleScreenClick() {
         togglePlayPause()
@@ -23,26 +19,6 @@ const SongCard = ({ song, isActive, isPlaying }) => {
             setShowControls(false);
         }, 500)
     }
-
-    useEffect(() => {
-        if (isPlaying) {
-            const animate = () => {
-                setAngle(prev => {
-                    const next = prev + 0.5;
-                    avatarRef.current.style.transform = `rotate(${next}deg)`;
-                    return next;
-                });
-                animationFrame.current = requestAnimationFrame(animate);
-            };
-            animationFrame.current = requestAnimationFrame(animate);
-        } else {
-            if (animationFrame.current) {
-                cancelAnimationFrame(animationFrame.current);
-                animationFrame.current = null;
-            }
-        }
-    }, [isPlaying]);
-
 
     // 2. Calculate progress based on the global state, only if this card is active
     const progress = useMemo(() => {
@@ -61,10 +37,10 @@ const SongCard = ({ song, isActive, isPlaying }) => {
     };
 
     return (
-        <div className="relative w-full h-[calc(100vh-60px)] md:h-full overflow-hidden">
+        <div className="relative w-full h-[calc(100vh-60px)] md:h-full overflow-hidden hide-scrollbar">
             {/* Background Image */}
 
-            <div className="absolute inset-0 w-full h-full">
+            <div className="absolute inset-0 w-full h-full hide-scrollbar">
                 {/* The image itself, used as a background layer */}
                 <img
                     src={song.image[2]?.url}
@@ -95,17 +71,12 @@ const SongCard = ({ song, isActive, isPlaying }) => {
             {/* Main Content */}
             <div className="relative h-[calc(100vh-60px)] md:h-full flex">
                 {/* Left Side: Song Information */}
-                <div className="flex-1 flex flex-col justify-end p-6">
+                <div className="flex-1 flex flex-col justify-end p-5">
                     <div className="mb-4">
                         <img
-                            onClick={handleScreenClick}
-                            ref={avatarRef}
                             src={song.artists.primary[0]?.image[1]?.url}
                             alt={song.artists.primary[0]?.name}
                             className="w-12 h-12 rounded-full border-2 border-white/50 object-cover"
-                            style={{ transform: `rotate(${angle}deg)` }}
-
-                        // className={cn("w-12 h-12 rounded-full border-2 border-white/50 object-cover", isPlaying ? "animate-spin-artist duration-1000" : "")}
                         />
                     </div>
                     <h1 className="text-white text-3xl font-bold mb-2 leading-tight shadow-lg">{decode(song.name)}</h1>
@@ -125,6 +96,14 @@ const SongCard = ({ song, isActive, isPlaying }) => {
                         </div>
 
                     </div>
+                    <div className="w-full z-10 h-10 flex items-center">
+                        <Slider
+                            onValueChange={handleSeek}
+                            value={[currentTime]}
+                            max={duration}
+                            className="bg-gray-200 dark:bg-gray-800 rounded-full"
+                        />
+                    </div>
                 </div>
 
                 <div onClick={handleScreenClick} className={cn(
@@ -142,16 +121,6 @@ const SongCard = ({ song, isActive, isPlaying }) => {
                             <Play className="w-8 h-8 fill-white ml-1" />
                         )}
                     </button>
-                </div>
-                <div className="absolute bottom-0 left-0 w-full h-1 bg-white/20 mb-2">
-                    <div className="w-full pb-4">
-                        <Slider
-                            onValueChange={handleSeek}
-                            value={[currentTime]}
-                            max={duration}
-                            className="bg-gray-200 dark:bg-gray-800 rounded-full"
-                        />
-                    </div>
                 </div>
 
                 {/* Right Side: Action Controls */}
