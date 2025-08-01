@@ -4,11 +4,11 @@ import { UserContext } from '@/context';
 import { formatTime } from '@/utils/extraFunctions';
 import { decode } from 'he';
 import { cn } from '@/lib/utils';
-import { Button } from '../ui/button';
+import { Slider } from '../ui/slider';
 
 const SongCard = ({ song, isActive, isPlaying }) => {
     // 1. Get global state. No setters needed here.
-    const { currentTime, duration, togglePlayPause } = useContext(UserContext);
+    const { currentTime, duration, togglePlayPause, playing, handleSeek } = useContext(UserContext);
     const [showControls, setShowControls] = useState(false);
     const [liked, setLiked] = useState(false);
     const avatarRef = useRef(null);
@@ -80,7 +80,7 @@ const SongCard = ({ song, isActive, isPlaying }) => {
                     alt={song.name}
                     className="w-auto h-auto max-w-[75%] max-h-[45%] md:max-w-[400px] md:max-h-[400px] rounded-2xl shadow-2xl object-cover"
                     draggable={false}
-                    // style={{ userSelect: "none", pointerEvents: "none" }}
+                // style={{ userSelect: "none", pointerEvents: "none" }}
                 />
 
             </div>
@@ -90,12 +90,7 @@ const SongCard = ({ song, isActive, isPlaying }) => {
             <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/20" />
 
             {/* Progress Bar */}
-            <div className="absolute top-0 left-0 w-full h-1 bg-white/20">
-                <div
-                    className="h-full bg-white transition-all duration-150 ease-linear"
-                    style={{ width: `${progress}%` }}
-                />
-            </div>
+
 
             {/* Main Content */}
             <div className="relative h-[calc(100vh-60px)] md:h-full flex">
@@ -116,23 +111,30 @@ const SongCard = ({ song, isActive, isPlaying }) => {
                     <h1 className="text-white text-3xl font-bold mb-2 leading-tight shadow-lg">{decode(song.name)}</h1>
                     <p className="text-white/80 text-lg mb-2 shadow-md">{decode(song.artists.primary.map(a => a.name).join(', '))}</p>
                     <p className="text-white/60 text-sm mb-3 shadow-sm">{decode(song.album.name)} • {song.year}</p>
-                    <div className="flex items-center space-x-4 text-white/60 text-sm">
-                        <span>{formatPlayCount(song.playCount)} plays</span>
-                        <span>•</span>
-                        <span>{formatTime(song.duration)}</span>
-                        <span>•</span>
-                        <span className="capitalize">{song.language}</span>
+                    <div className="flex justify-between text-white/60 text-sm">
+                        <div className='flex items-center gap-1'>
+                            <span>{formatPlayCount(song.playCount)} plays</span>
+
+                            <span>•</span>
+                            <span className="capitalize">{song.language}</span>
+                        </div>
+                        <div>
+                            <span>{formatTime(currentTime)}</span>
+                            <span>/</span>
+                            <span>{formatTime(song.duration)}</span>
+                        </div>
+
                     </div>
                 </div>
 
                 <div onClick={handleScreenClick} className={cn(
-                    "absolute inset-0 flex items-center justify-center z-10 transition-all duration-300",
-                    showControls ? "opacity-100 scale-100" : "opacity-0 scale-125"
+                    "absolute inset-0 flex items-center justify-center transition-all duration-300",
+                    playing ? "opacity-0 scale-125" : "opacity-100 scale-100"
                     // showControls ? "opacity-100 scale-100" : "opacity-0 scale-125 pointer-events-none"
                 )}>
                     <button
                         className="w-20 h-20 rounded-full bg-black/30 backdrop-blur-md flex items-center justify-center"
-                        // onClick={handleScreenClick}
+                    // onClick={handleScreenClick}
                     >
                         {isPlaying ? (
                             <Pause className="w-8 h-8 fill-white" />
@@ -140,6 +142,16 @@ const SongCard = ({ song, isActive, isPlaying }) => {
                             <Play className="w-8 h-8 fill-white ml-1" />
                         )}
                     </button>
+                </div>
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-white/20 mb-2">
+                    <div className="w-full pb-4">
+                        <Slider
+                            onValueChange={handleSeek}
+                            value={[currentTime]}
+                            max={duration}
+                            className="bg-gray-200 dark:bg-gray-800 rounded-full"
+                        />
+                    </div>
                 </div>
 
                 {/* Right Side: Action Controls */}
