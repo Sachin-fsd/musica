@@ -105,7 +105,7 @@ const SongReels = () => {
                 className="h-full overflow-y-scroll snap-y snap-mandatory scrollbar-hide"
             >
                 {songList.map((song, index) => (
-                    <div key={song.id || index} className="snap-start h-screen w-full">
+                    <div key={index} className="snap-start h-screen w-full">
                         <SongCard
                             song={song}
                             isActive={index === currentIndex}

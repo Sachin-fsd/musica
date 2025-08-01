@@ -9,10 +9,20 @@ import { Button } from '../ui/button';
 const SongCard = ({ song, isActive, isPlaying }) => {
     // 1. Get global state. No setters needed here.
     const { currentTime, duration, togglePlayPause } = useContext(UserContext);
+    const [showControls, setShowControls] = useState(false);
     const [liked, setLiked] = useState(false);
     const avatarRef = useRef(null);
     const animationFrame = useRef(null);
     const [angle, setAngle] = useState(0);
+
+
+    function handleScreenClick() {
+        togglePlayPause()
+        setShowControls(true);
+        setTimeout(() => {
+            setShowControls(false);
+        }, 500)
+    }
 
     useEffect(() => {
         if (isPlaying) {
@@ -59,7 +69,7 @@ const SongCard = ({ song, isActive, isPlaying }) => {
                 <img
                     src={song.image[2]?.url}
                     alt=""
-                    className="absolute inset-0 w-full h-full object-cover filter blur-2xl scale-110 opacity-60"
+                    className="absolute inset-0 w-full h-full object-cover filter blur-2xl scale-110"
                 />
                 {/* A dark overlay to ensure text is readable */}
                 <div className="absolute inset-0 bg-black/70" />
@@ -70,7 +80,7 @@ const SongCard = ({ song, isActive, isPlaying }) => {
                     alt={song.name}
                     className="w-auto h-auto max-w-[75%] max-h-[45%] md:max-w-[400px] md:max-h-[400px] rounded-2xl shadow-2xl object-cover"
                     draggable={false}
-                    style={{ userSelect: "none", pointerEvents: "none" }}
+                    // style={{ userSelect: "none", pointerEvents: "none" }}
                 />
 
             </div>
@@ -93,6 +103,7 @@ const SongCard = ({ song, isActive, isPlaying }) => {
                 <div className="flex-1 flex flex-col justify-end p-6">
                     <div className="mb-4">
                         <img
+                            onClick={handleScreenClick}
                             ref={avatarRef}
                             src={song.artists.primary[0]?.image[1]?.url}
                             alt={song.artists.primary[0]?.name}
@@ -114,18 +125,21 @@ const SongCard = ({ song, isActive, isPlaying }) => {
                     </div>
                 </div>
 
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <Button
-                        size="lg"
-                        className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 border-0"
-                        onClick={togglePlayPause}
+                <div onClick={handleScreenClick} className={cn(
+                    "absolute inset-0 flex items-center justify-center z-10 transition-all duration-300",
+                    showControls ? "opacity-100 scale-100" : "opacity-0 scale-125"
+                    // showControls ? "opacity-100 scale-100" : "opacity-0 scale-125 pointer-events-none"
+                )}>
+                    <button
+                        className="w-20 h-20 rounded-full bg-black/30 backdrop-blur-md flex items-center justify-center"
+                        // onClick={handleScreenClick}
                     >
                         {isPlaying ? (
-                            <Pause className="w-8 h-8 text-white" />
+                            <Pause className="w-8 h-8 fill-white" />
                         ) : (
-                            <Play className="w-8 h-8 text-white ml-1" />
+                            <Play className="w-8 h-8 fill-white ml-1" />
                         )}
-                    </Button>
+                    </button>
                 </div>
 
                 {/* Right Side: Action Controls */}
