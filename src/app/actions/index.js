@@ -25,6 +25,7 @@ async function apiFetch(endpoint, params = {}) {
         }
 
         const data = await response.json();
+        console.log("data", data);
 
         if (!data.success) {
             // Handles cases where the API itself returns a failure message
@@ -40,16 +41,16 @@ async function apiFetch(endpoint, params = {}) {
 
 // --- Action Functions ---
 
-export const SearchGlobalAction = (query) => 
+export const SearchGlobalAction = (query) =>
     apiFetch('/search', { query: encodeURIComponent(query) });
 
-export const SearchSongsAction = (query) => 
+export const SearchSongsAction = (query) =>
     apiFetch('/search/songs', { query: encodeURIComponent(query) });
 
-export const SearchSongSuggestionAction = (songId) => 
+export const SearchSongSuggestionAction = (songId) =>
     apiFetch(`/songs/${songId}/suggestions`);
 
-export const GetAlbumSongsByIdAction = (albumId) => 
+export const GetAlbumSongsByIdAction = (albumId) =>
     apiFetch('/albums', { id: albumId });
 
 export const GetSongsByIdAction = (type, id) => {
@@ -60,10 +61,10 @@ export const GetSongsByIdAction = (type, id) => {
     return apiFetch(`/${type}s`, { id: id });
 };
 
-export const fetchArtistsByPermaLinkAction = (link) => 
+export const fetchArtistsByPermaLinkAction = (link) =>
     apiFetch('/artists', { link });
 
-export const fetchPlaylistsByIdAction = (playlistId) => 
+export const fetchPlaylistsByIdAction = (playlistId) =>
     apiFetch('/playlists', { id: playlistId });
 
 /**
@@ -82,7 +83,7 @@ export async function fetchByLinkAction(link) {
         if (!response.ok) {
             throw new Error(`Request to link failed with status ${response.status}`);
         }
-        
+
         return await response.json();
     } catch (error) {
         console.error('Error fetching by link:', error);

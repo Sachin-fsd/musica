@@ -12,6 +12,7 @@ export default function UserState({ children }) {
     const [songList, setSongList] = useState([songFormat, songFormat, songFormat]);
     const [currentSong, setCurrentSong] = useState(songFormat);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [currentId, setCurrentId] = useState("");
     const [playing, setPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
@@ -227,7 +228,7 @@ export default function UserState({ children }) {
         currentIndex, setCurrentIndex, songList, setSongList, loading, setLoading,
         handleNext, handlePrev, manualQuality, setManualQuality, togglePlayPause,
         searchResults, setSearchResults, isJamChecked, setIsJamChecked, searchQuery, setSearchQuery,
-        playSongAndCreateQueue, playSongAtIndex
+        playSongAndCreateQueue, playSongAtIndex, currentId, setCurrentId
     };
 
     return (

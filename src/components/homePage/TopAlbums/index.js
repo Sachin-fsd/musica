@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import AlbumBar from './AlbumBar';
 import { Label } from '@/components/ui/label';
 import TouchableOpacity from '@/components/ui/touchableOpacity';
 import { ExpandableAlbumCarousel } from './expandableAlbumCarousel';

@@ -53,7 +53,7 @@ const Player = () => {
         setIsLooping(!isLooping);
     };
 
-    
+
 
     return (
         <div className="flex flex-col items-center justify-center p-3 pt-0">
@@ -61,7 +61,7 @@ const Player = () => {
             {/* Slider */}
             <div className="w-full pb-3">
                 <Slider
-                    onValueChange={handleSeek}
+                    onValueChange={(value) => handleSeek(value[0])}
                     value={[currentTime || 0]}
                     max={duration || 0}
                     className="shadow-lg bg-gray-200 dark:bg-gray-800 rounded-lg"

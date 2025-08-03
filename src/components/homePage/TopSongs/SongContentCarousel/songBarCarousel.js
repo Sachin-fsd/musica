@@ -77,11 +77,11 @@ const SongBarCarousel = ({ song }) => {
                 <Label
                     className={`font-medium text-sm transition-colors ${isCurrentlyPlaying ? "text-green-600 dark:text-green-400" : "text-gray-800 dark:text-gray-300"}`}
                 >
-                    {song.name.length > 18 ? (
+                    {song.name?.length > 18 || song.title?.length > 18 ? (
                         <div className="w-full overflow-hidden">
                             <Marquee gradient={false} speed={25} pauseOnHover>
                                 {/* Add margin for seamless looping effect */}
-                                <span className="mr-6">{htmlParser(song.name)}</span>
+                                <span className="mr-6">{htmlParser(song.name || song.title)}</span>
                             </Marquee>
                         </div>
                     ) : (
