@@ -21,7 +21,7 @@ const AlbumContent = () => {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const MegaMenu3Playlists = await response.json();
-                console.log("Data from backend:", MegaMenu3Playlists);
+                // console.log("Data from backend:", MegaMenu3Playlists);
                 const object_for_megaMenu3 = [
                     { heading: "Charts", data: MegaMenu3Playlists.charts },
                     { heading: "Ultimate Jams", data: MegaMenu3Playlists.top_playlists },

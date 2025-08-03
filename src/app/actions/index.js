@@ -25,7 +25,6 @@ async function apiFetch(endpoint, params = {}) {
         }
 
         const data = await response.json();
-        console.log("data", data);
 
         if (!data.success) {
             // Handles cases where the API itself returns a failure message
