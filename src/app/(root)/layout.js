@@ -35,7 +35,7 @@ export default function RootLayout({ children }) {
             <Bottombar />
           </div>
 
-          <div className="">
+          <div className="md:hidden">
             <BottomNavBar />
           </div>
         </div>

@@ -4,6 +4,7 @@ import { SearchSongSuggestionAction } from "@/app/actions";
 import { songFormat, songs } from "@/utils/cachedSongs";
 import { shuffleArray } from "@/utils/extraFunctions";
 import { createPlaylistFromSuggestions } from "@/utils/playListUtils";
+import { useCurrentTimeStore } from "@/store/useCurrentTimeStore";
 
 export const UserContext = createContext(null);
 
@@ -14,15 +15,17 @@ export default function UserState({ children }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentId, setCurrentId] = useState("");
     const [playing, setPlaying] = useState(false);
-    const [currentTime, setCurrentTime] = useState(0);
+    // const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [isLooping, setIsLooping] = useState(false);
     const [manualQuality, setManualQuality] = useState("very_high");
     const [loading, setLoading] = useState(false);
-    const [searchResults, setSearchResults] = useState([]);
+    // const [searchResults, setSearchResults] = useState([]);
     const [isJamChecked, setIsJamChecked] = useState(false);
-    const [searchQuery, setSearchQuery] = useState("");
+    // const [searchQuery, setSearchQuery] = useState("");
     const audioRef = useRef(null);
+
+    const { currentTime, setCurrentTime } = useCurrentTimeStore()
 
     // --- Core Playback Logic ---
 
@@ -42,12 +45,20 @@ export default function UserState({ children }) {
             // --- SONG ALREADY EXISTS ---
             // The song is in the queue, so just play it at its current position.
             playSongAtIndex(existingSongIndex);
+            const response = await SearchSongSuggestionAction(song.id);
+            if (response?.success) {
+                const existingIds = new Set(songList.map(s => s.id));
+                const suggestions = shuffleArray(response.data).filter(
+                    (relatedSong) => relatedSong.id !== song.id && !existingIds.has(relatedSong.id)
+                );
+                setSongList(prev => [...prev, ...suggestions]);
+            }
 
         } else {
             // --- SONG IS NEW ---
             setLoading(true);
             const newPlaylist = await createPlaylistFromSuggestions(song, songList);
-            setSongList(newPlaylist);
+            setSongList([song, ...newPlaylist]);
             setCurrentSong(song);
             setPlaying(true);
             setLoading(false);
@@ -71,7 +82,7 @@ export default function UserState({ children }) {
     }, []);
 
     const handleSeek = (e) => {
-        const seekTime = e[0];
+        const seekTime = e;
         if (audioRef.current) {
             audioRef.current.currentTime = seekTime;
             setCurrentTime(seekTime);
@@ -227,7 +238,7 @@ export default function UserState({ children }) {
         duration, setDuration, isLooping, setIsLooping, audioRef, handleSeek,
         currentIndex, setCurrentIndex, songList, setSongList, loading, setLoading,
         handleNext, handlePrev, manualQuality, setManualQuality, togglePlayPause,
-        searchResults, setSearchResults, isJamChecked, setIsJamChecked, searchQuery, setSearchQuery,
+        isJamChecked, setIsJamChecked,
         playSongAndCreateQueue, playSongAtIndex, currentId, setCurrentId
     };
 

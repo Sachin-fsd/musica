@@ -60,7 +60,7 @@ const TopSearchResult = ({ topQuery }) => {
                 }
 
                 const newPlaylist = await createPlaylistFromSuggestions(songData, songList);
-                setSongList(newPlaylist);
+                setSongList([songData,...newPlaylist]);
                 setCurrentSong(songData);
                 setCurrentId(songData.id);
                 setCurrentIndex(0);

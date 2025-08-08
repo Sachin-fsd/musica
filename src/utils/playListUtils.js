@@ -11,7 +11,7 @@ export async function createPlaylistFromSuggestions(song, currentSongList) {
     if (!song?.id) return currentSongList;
 
     // Start with the selected song.
-    let newPlaylist = [song];
+    let newPlaylist = [];
 
     // Fetch and add related suggestions.
     const response = await SearchSongSuggestionAction(song.id);
