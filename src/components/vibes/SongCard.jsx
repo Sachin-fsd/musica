@@ -76,6 +76,7 @@ const SongCard = ({ song, isActive, isPlaying }) => {
                         <img
                             src={song.artists.primary[0]?.image[1]?.url}
                             alt={song.artists.primary[0]?.name}
+                            onerror="this.src='https://cdn.pixabay.com/photo/2022/02/26/18/16/peace-7036144_640.png'"
                             className="w-12 h-12 rounded-full border-2 border-white/50 object-cover"
                         />
                     </div>
