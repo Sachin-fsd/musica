@@ -2,14 +2,23 @@ import JamComponent from '@/components/friendsJam';
 import SearchResults from '@/components/homePage/SearchResult';
 import AlbumContent from '@/components/homePage/TopAlbums/AlbumContent';
 import SongContentCarousel from '@/components/homePage/TopSongs/SongContentCarousel';
+import ModernSearchResult from '@/components/newSearchResult/ModernSearchResult';
+import SearchInput from '@/components/searchInput/searchInput';
+import { Input } from '@/components/ui/input';
+import { Search } from 'lucide-react';
 
 const HomePage = () => {
 
   return (
-    <div className="bg-gradient-to-b from-gray-200 to-gray-100 dark:from-[#100023] dark:to-[#100023] p-4 md:p-5 mb-20 md:mb-0 text-gray-900 dark:text-gray-100">
+    <div className=" p-4 md:p-5 mb-20 md:mb-0">
       {/* Top Songs Section */}
+
+
+      {/* <SearchInput /> */}
+      <ModernSearchResult />
+
       <div id='searchResultsTop'>
-        <SearchResults  />
+        <SearchResults />
       </div>
 
       <div>
@@ -20,7 +29,6 @@ const HomePage = () => {
         <JamComponent />
       </div>
 
-      {/* Album Content Section */}
       <div>
         <AlbumContent />
       </div>

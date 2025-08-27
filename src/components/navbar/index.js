@@ -33,7 +33,7 @@ const Navbar = () => {
     ];
 
     return (
-        <div className="flex items-center justify-between p-2 bg-gray-200 dark:bg-[#100023] shadow-md">
+        <div className="flex items-center justify-between p-2 shadow-md">
             <div className="flex items-center">
                 <div className="block lg:hidden">
                     <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
@@ -83,7 +83,7 @@ const Navbar = () => {
                             onClick={() => setSearchQuery((e)=>e+"")}
                             aria-label="Search"
                         >
-                            <Search className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-200" />
+                            <Search className="text-white dark:text-white hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-200" />
                         </div>
 
                         {/* Input Field */}
