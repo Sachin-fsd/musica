@@ -79,6 +79,27 @@ const api = {
         return response.data;
     },
 
+    // Search by id
+    searchById: async (type, id) => {
+        if(type === "song"){
+            const response = await axios.get(`${BASE_URL}/songs/${id}`);
+            console.log(response)
+            return response.data;
+        }
+        const response = await axios.get(`${BASE_URL}/${type}s`, {
+            params: { id }
+        });
+        return response.data;
+    },
+    
+    // Search songs of artist
+    searchArtistSongs: async (id) => {
+        const response = await axios.get(`${BASE_URL}/artists/${id}/songs`);
+        return response.data;
+    },
+
+    
+
     // Get song suggestions based on a song ID
     getSongSuggestions: async (songId, limit = 10) => {
         const response = await axios.get(`${BASE_URL}/songs/${songId}/suggestions`, {

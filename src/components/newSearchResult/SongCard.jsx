@@ -1,10 +1,13 @@
 // import api, { Song } from "@/lib/api";
 // import { useSongStore } from "@/store/useSongStore";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import api from "@/lib/api";
 import { Separator } from "../ui/separator";
+import { UserContext } from "@/context";
+import { decode } from "he";
+import { Label } from "../ui/label";
 // import { Button, Image, Pressable, StyleSheet, Text, TouchableHighlight, View } from "react-native";
 // import { ThemedText } from "../ThemedText";
 
@@ -28,29 +31,8 @@ const SongCard = ({ data, search }) => {
     const [songs, setSongs] = useState([]);
     const [loadMorelLoading, setLoadMoreLoading] = useState(false);
     const [loading, setLoading] = useState(false);
+    const { playSongAndCreateQueue } = useContext(UserContext);
     const limit = 20;
-
-    // useEffect(() => {
-    //     const searchSongs = async () => {
-    //         if (!search) return;
-
-    //         try {
-    //             setLoading(true);
-    //             const response = await api.searchSongs(search, page, limit);
-
-    //             if (response.success) {
-    //                 setSongs(response.data.results);
-    //                 setTotalResults(response.data.total || 0);
-    //             }
-    //         } catch (error) {
-    //             console.error('Error searching songs:', error);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-    //     const timeout = setTimeout(searchSongs, 500);
-    //     return () => clearTimeout(timeout); // cleanup old timer
-    // }, [search, page]);
 
     useEffect(() => {
         setPage(0);
@@ -59,9 +41,10 @@ const SongCard = ({ data, search }) => {
     }, [search])
 
     const handleSongClick = async (song) => {
+        if (loading) return;
         try {
             if ("downloadUrl" in song) {
-                setCurrentSong(song);
+                playSongAndCreateQueue(song);
                 return;
             }
             setLoading(true);
@@ -69,7 +52,7 @@ const SongCard = ({ data, search }) => {
             const res = await fetch(`https://saavn.dev/api/songs/${song.id}`);
             const data = await res.json();
             if (data.success) {
-                setCurrentSong(data.data[0])
+                playSongAndCreateQueue(data.data[0])
             } else {
                 console.log("Error in fetching")
             }
@@ -81,6 +64,7 @@ const SongCard = ({ data, search }) => {
     }
 
     const handleLoadMore = () => {
+        if (loadMorelLoading) return;
         setPage(prevPage => prevPage + 1);
         const searchSongs = async () => {
             if (!search) return;
@@ -105,15 +89,14 @@ const SongCard = ({ data, search }) => {
 
     return (
         <div style={styles.container}>
-            <p>{page}</p>
-            <p style={{ marginBottom: 5 }} type="title">Songs</p>
+            {/* <p>{page}</p> */}
+            <Label className="text-xl font-bold text-sky-900 dark:text-sky-300 mb-4">Songs</Label>
             {songs.length == 0 && data.map((song) => (
                 <div key={song.id}>
                     <div
-
+                        className="sm:hover:scale-[99%] sm:hover:opacity-90 sm:hover:shadow-md transition duration-300 ease-in-out cursor-pointer"
                         style={styles.card}
-                        android_ripple={{ color: '#8696', borderless: false }}
-                        onPress={() => handleSongClick(song)}
+                        onClick={() => handleSongClick(song)}
                     >
                         <div>
                             <Image
@@ -121,25 +104,27 @@ const SongCard = ({ data, search }) => {
                                 style={styles.cover}
                                 height={100}
                                 width={100}
+                                alt="Song cover"
                             />
                         </div>
                         <div style={{ flex: 1 }}>
-                            <p style={{ color: "white", fontSize: 16 }} numberOfLines={1} ellipsizeMode="tail">{song.title}</p>
-                            <p style={styles.subtitle} numberOfLines={1} ellipsizeMode="tail">{song.primaryArtists}</p>
-                            <p style={styles.subtitle} numberOfLines={1} ellipsizeMode="tail">{song.album || song.description}</p>
+                            <p style={{ color: "white", fontSize: 16 }} ellipsizeMode="tail">{decode(song.title)}</p>
+                            <p style={styles.subtitle} ellipsizeMode="tail">{decode(song.primaryArtists)}</p>
+                            <p style={styles.subtitle} ellipsizeMode="tail">{decode(song.album) || decode(song.description)}</p>
                         </div>
                     </div>
                     <Separator />
                 </div>
             ))}
             {
-                songs.length && songs.map((song, index) => (
-                    <div key={song.id}>
+                songs.length > 0 && songs.map((song, index) => (
+                    <div key={song.id}
+                        className="sm:hover:scale-[99%] sm:hover:opacity-90 sm:hover:shadow-md transition duration-300 ease-in-out cursor-pointer"
+                    >
                         <div
-                            
+
                             style={styles.card}
-                            android_ripple={{ color: '#8696', borderless: false }}
-                            onPress={() => handleSongClick(song)}
+                            onClick={() => handleSongClick(song)}
                         >
                             <div style={styles.card}>
                                 <div>
@@ -148,12 +133,13 @@ const SongCard = ({ data, search }) => {
                                         height={100}
                                         width={100}
                                         style={styles.cover}
+                                        alt="Song Cover"
                                     />
                                 </div>
                                 <div style={{ flex: 1 }}>
-                                    <p style={{ color: "white", fontSize: 16 }} numberOfLines={1} ellipsizeMode="tail">{song.name}</p>
-                                    <p style={styles.subtitle} numberOfLines={1} ellipsizeMode="tail">{song.artists.primary.map(artist => artist.name).join(",")}</p>
-                                    <p style={styles.subtitle} numberOfLines={1} ellipsizeMode="tail">{song.album.name}</p>
+                                    <p style={{ color: "white", fontSize: 16 }} ellipsizeMode="tail">{decode(song.name)}</p>
+                                    <p style={styles.subtitle} ellipsizeMode="tail">{song.artists.primary.map(artist => artist.name).join(",")}</p>
+                                    <p style={styles.subtitle} ellipsizeMode="tail">{decode(song.album.name)}</p>
                                 </div>
                             </div>
                         </div>
@@ -194,6 +180,7 @@ const styles = {
     },
     loadbutton: {
         borderRadius: 10,
+        marginTop: 10
     }
 }
 

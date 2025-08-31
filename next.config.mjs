@@ -2,7 +2,7 @@
 const nextConfig = {
     reactStrictMode: false,
     images: {
-        domains: ["c.saavncdn.com", "anothercdn.net"], // add all image hostnames here
+        domains: ["c.saavncdn.com", "www.jiosaavn.com"], // add all image hostnames here
     },
 };
 

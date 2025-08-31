@@ -3,6 +3,7 @@
 
 import Image from "next/image";
 import { Separator } from "../ui/separator";
+import { Label } from "../ui/label";
 
 // interface PlaylistCardProps {
 //     id: string;
@@ -17,22 +18,23 @@ import { Separator } from "../ui/separator";
 const PlaylistCard = ({ data }) => {
     return (
         <div style={styles.container}>
-            <p style={{ marginBottom: 5 }} type="title">Playlists</p>
+            <Label className="text-xl font-bold text-sky-900 dark:text-sky-300 mb-4">Playlists</Label>
             {data.map((song) => (
                 <div key={song.id}>
-                    <div  style={styles.card}>
+                    <div style={styles.card}>
                         <div>
                             <Image
-                                src={ song.image?.[2]?.url || song.image?.[0]?.url }
+                                src={song.image?.[2]?.url || song.image?.[0]?.url}
                                 style={styles.cover}
                                 height={100}
                                 width={100}
+                                alt="Playlist Cover"
                             />
                         </div>
                         <div style={{ flex: 1 }}>
-                            <p style={{ color: "white", fontSize: 16 }} numberOfLines={1} ellipsizeMode="tail">{song.title}</p>
-                            <p style={styles.subtitle} numberOfLines={1} ellipsizeMode="tail">{song.type}</p>
-                            <p style={styles.subtitle} numberOfLines={1} ellipsizeMode="tail">{song.description}</p>
+                            <p style={{ color: "white", fontSize: 16 }} ellipsizeMode="tail">{song.title}</p>
+                            <p style={styles.subtitle} ellipsizeMode="tail">{song.type}</p>
+                            <p style={styles.subtitle} ellipsizeMode="tail">{song.description}</p>
                         </div>
                     </div>
                     <Separator />
