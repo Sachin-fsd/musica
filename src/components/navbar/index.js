@@ -71,13 +71,12 @@ const Navbar = () => {
                 </div>
             </div>
 
-            <div className="flex-grow mx-4 md:mx-8 max-w-lg">
+            {/* <div className="flex-grow mx-4 md:mx-8 max-w-lg">
                 <div className="hidden md:block">
                     <div
                         onSubmit={(e) => e.preventDefault()}
                         className="relative border dark:from-gray-800 dark:to-gray-900 rounded-full shadow-md transition-all duration-300 hover:shadow-lg"
                     >
-                        {/* Search Icon */}
                         <div
                             className="absolute inset-y-0 left-0 flex items-center pl-4 cursor-pointer z-10"
                             onClick={() => setSearchQuery((e)=>e+"")}
@@ -86,7 +85,6 @@ const Navbar = () => {
                             <Search className="text-white dark:text-white hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-200" />
                         </div>
 
-                        {/* Input Field */}
                         <PlaceholdersAndVanishInput
                             placeholders={placeholders}
                             value={searchQuery}
@@ -95,7 +93,6 @@ const Navbar = () => {
                             className="block w-full pl-2 py-2 text-sm rounded-full border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-gray-200 dark:bg-slate-950 placeholder-gray-500 dark:placeholder-gray-600 text-gray-900 dark:text-gray-300 transition-colors duration-200"
                         />
 
-                        {/* Loader or End Icon */}
                         <div className="absolute inset-y-0 right-10 flex items-center">
                             {loading ? (
                                 <Loader2 className="animate-spin text-blue-600 dark:text-blue-400" aria-label="Loading" />
@@ -103,11 +100,11 @@ const Navbar = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
 
             <div className="flex items-center justify-center">
-                <Popover className="md:hidden" open={isSearchPopoverOpen} onOpenChange={setIsSearchPopoverOpen}>
+                {/* <Popover className="md:hidden" open={isSearchPopoverOpen} onOpenChange={setIsSearchPopoverOpen}>
                     <PopoverTrigger className="md:hidden" asChild>
                         <button
                             className="p-2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 
@@ -121,13 +118,7 @@ const Navbar = () => {
                     </PopoverTrigger>
                     <PopoverContent className="transform transition-transform ease-out duration-200">
                         <div className="relative">
-                            {/* <div
-                                className="z-10 absolute inset-y-0 left-6 flex items-center pl-6 cursor-pointer"
-                                onClick={() => debouncedSearch(searchQuery)}
-                                aria-label="Search"
-                            >
-                                <Search className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-200" />
-                            </div> */}
+                            
                             <div>
                                 <PlaceholdersAndVanishInput
                                     placeholders={placeholders}
@@ -143,7 +134,7 @@ const Navbar = () => {
                             </div>
                         </div>
                     </PopoverContent>
-                </Popover>
+                </Popover> */}
 
                 <div className="ml-2 md:ml-6">
                     <ThemeSwitch />

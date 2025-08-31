@@ -41,7 +41,7 @@ export const NavItem = ({ icon: Icon, label, link, active = false, show = true }
                 </div>
             </div>
             <span className={`text-[11px] font-medium mt-1 ${active ? 'text-white' : 'text-white/60'
-                } hidden xs:block`}>
+                } `}>
                 {label}
             </span>
         </Link>

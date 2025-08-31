@@ -6,6 +6,7 @@ import ModernSearchResult from '@/components/newSearchResult/ModernSearchResult'
 import SearchInput from '@/components/searchInput/searchInput';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
+import { Suspense } from 'react';
 
 const HomePage = () => {
 
@@ -13,9 +14,10 @@ const HomePage = () => {
     <div className=" p-4 md:p-5 mb-20 md:mb-0">
       {/* Top Songs Section */}
 
-
+      <Suspense fallback={<div>Loading...</div>}>
+        <ModernSearchResult />
+      </Suspense>
       {/* <SearchInput /> */}
-      <ModernSearchResult />
 
       <div id='searchResultsTop'>
         <SearchResults />

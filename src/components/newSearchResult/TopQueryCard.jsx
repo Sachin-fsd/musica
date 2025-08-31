@@ -90,8 +90,8 @@ const styles = {
         textAlign: "center",
         justifyContent: "center",
         borderRadius: 10,
-        borderWidth: 1,
-        borderColor: "grey",
+        // borderWidth: 1,
+        // borderColor: "grey",
         cursor: "pointer",
     },
     cover: {

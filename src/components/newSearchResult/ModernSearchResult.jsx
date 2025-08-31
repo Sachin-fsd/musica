@@ -60,7 +60,7 @@ const ModernSearchResult = () => {
     return (
         <div style={{ flex: 1, padding: 20 }}>
             {/* Search box */}
-            <div className="mt-[10%] mb-10 w-[50%] mx-auto flex items-center relative">
+            <div className="mt-[10%] mb-10 w-[90%] sm:w-[60%] mx-auto flex items-center relative">
                 {/* search icon */}
                 <div
                     className="absolute inset-y-0 left-0 flex items-center pl-4 z-10"
