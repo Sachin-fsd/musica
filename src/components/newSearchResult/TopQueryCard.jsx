@@ -75,8 +75,8 @@ const TopQueryCard = ({ data }) => {
             </div>
 
             <p style={styles.title}>{decode(data.title)}</p>
-            <p style={styles.subtitle}>{decode(data.primaryArtists)}</p>
-            <p style={styles.subtitle}>{decode(data.album) || decode(data.description)}</p>
+            <p style={styles.subtitle}>{decode(data.primaryArtists || "")}</p>
+            <p style={styles.subtitle}>{decode(data.album || "") || decode(data.description)}</p>
             <p style={styles.subtitle}>{decode(data.type)}</p>
         </div>
     );
