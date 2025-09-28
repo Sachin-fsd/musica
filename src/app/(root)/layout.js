@@ -4,6 +4,7 @@ import Navbar from "@/components/navbar";
 import UserState from "@/context";
 import Bottombar from "@/components/bottomBar";
 import BottomNavBar from "@/components/bottomNavBar/BottomNavBar";
+import { Suspense } from "react";
 
 export default function RootLayout({ children }) {
   return (
@@ -31,9 +32,9 @@ export default function RootLayout({ children }) {
 
         {/* Bottom Player for small and medium screens */}
         <div className="md:fixed md:bottom-0 w-full col-span-2 lg:hidden">
-          <div className="">
+          <Suspense fallback={<div>Loading...</div>}>
             <Bottombar />
-          </div>
+          </Suspense>
 
           <div className="md:hidden">
             <BottomNavBar />

@@ -30,24 +30,24 @@ const ModernSearchResult = () => {
 
     // fetch when search changes
     useEffect(() => {
-        if (search === "") {
-            if (router && typeof router.replace === "function") {
-                router.replace("/browse", { scroll: false });
-            }
-            setResults(null);
-            setError("");
-            return;
-        }
 
         setLoading(true);
         setError("");
         const url = `?query=${encodeURIComponent(search)}`;
-        if (router && typeof router.replace === "function") {
-            router.replace(url, { scroll: false });
-        }
 
         const timeout = setTimeout(async () => {
             try {
+                if (search === "") {
+                    if (router && typeof router.replace === "function") {
+                        router.replace("/browse", { scroll: false });
+                    }
+                    setResults(null);
+                    setError("");
+                    return;
+                }
+                if (router && typeof router.replace === "function") {
+                    router.replace(url, { scroll: false });
+                }
                 const res = await fetch(
                     `https://saavn.dev/api/search?query=${encodeURIComponent(search)}`
                 );
