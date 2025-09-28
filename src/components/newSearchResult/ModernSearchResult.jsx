@@ -11,7 +11,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 const ModernSearchResult = () => {
-    const router = useRouter();
+    const router = useRouter()
     const searchParams = useSearchParams();
 
     const queryFromUrl = searchParams?.get("query") || "";
