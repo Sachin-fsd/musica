@@ -14,7 +14,7 @@ const ModernSearchResult = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const queryFromUrl = searchParams.get("query") || "";
+    const queryFromUrl = searchParams?.get("query") || "";
     const [search, setSearch] = useState(queryFromUrl);
     const [results, setResults] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -31,7 +31,9 @@ const ModernSearchResult = () => {
     // fetch when search changes
     useEffect(() => {
         if (search === "") {
-            router.replace("/browse", { scroll: false });
+            if (router && typeof router.replace === "function") {
+                router.replace("/browse", { scroll: false });
+            }
             setResults(null);
             setError("");
             return;
@@ -40,7 +42,9 @@ const ModernSearchResult = () => {
         setLoading(true);
         setError("");
         const url = `?query=${encodeURIComponent(search)}`;
-        router.replace(url, { scroll: false });
+        if (router && typeof router.replace === "function") {
+            router.replace(url, { scroll: false });
+        }
 
         const timeout = setTimeout(async () => {
             try {
@@ -65,7 +69,9 @@ const ModernSearchResult = () => {
         setSearch("");
         setResults(null);
         setError("");
-        router.replace("/browse", { scroll: false });
+        if (router && typeof router.replace === "function") {
+            router.replace("/browse", { scroll: false });
+        }
     };
 
     return (

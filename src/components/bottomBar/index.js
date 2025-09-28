@@ -1,7 +1,7 @@
 "use client";
 import { UserContext } from "@/context";
 import { Play, Pause, StepForward, ChevronDown } from "lucide-react";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { Label } from "../ui/label";
 import { decodeHtml, htmlParser } from "@/utils";
@@ -9,14 +9,41 @@ import { Button } from "../ui/button";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import RightSidebar from "../rightSidebar";
 import { Slider } from "./BottomSlider";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import BottomNavBar from "../bottomNavBar/BottomNavBar";
 
 const Bottombar = () => {
     const pathname = usePathname();
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
     if (pathname == "/vibes") return null;
-    const [isSheetOpen, setIsSheetOpen] = useState(false);
+
+    // Sync sheet open state with URL param
+    const isBarOpen = searchParams.get("bar") === "true";
+    const [isSheetOpen, setIsSheetOpen] = useState(isBarOpen);
     const [imageError, setImageError] = useState(false);
+
+    useEffect(() => {
+        setIsSheetOpen(isBarOpen);
+    }, [isBarOpen]);
+
+    // Update URL when sheet opens/closes
+    const handleSheetChange = (open) => {
+        setIsSheetOpen(open);
+        const params = new URLSearchParams(window.location.search);
+        if (open) {
+            params.set("bar", "true");
+        } else {
+            params.delete("bar");
+        }
+        const newUrl =
+            window.location.pathname +
+            (params.toString() ? `?${params.toString()}` : "");
+        if (router && typeof router.replace === "function") {
+            router.replace(newUrl, { scroll: false });
+        }
+    };
 
     const {
         togglePlayPause,
@@ -43,7 +70,7 @@ const Bottombar = () => {
             </div>
 
             {/* Main Bottom Bar */}
-            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+            <Sheet open={isSheetOpen} onOpenChange={handleSheetChange}>
                 <div className="flex w-full items-center justify-between">
                     {/* Song Details */}
                     <SheetTrigger asChild>
