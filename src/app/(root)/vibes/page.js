@@ -104,8 +104,8 @@ const SongReels = () => {
                 ref={containerRef}
                 className="h-full overflow-y-scroll snap-y snap-mandatory hide-scrollbar"
             >
-                {songList.map((song, index) => (
-                    <div key={index} className="snap-start h-screen w-full">
+                {Array.isArray(songList) && songList.map((song, index) => (
+                    <div key={song?.id || index} className="snap-start h-screen w-full">
                         <SongCard
                             song={song}
                             isActive={index === currentIndex}
