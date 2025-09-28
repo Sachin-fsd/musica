@@ -11,7 +11,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 const ModernSearchResult = () => {
-    const router = useRouter()
+    const router = useRouter();
     const searchParams = useSearchParams();
 
     const queryFromUrl = searchParams?.get("query") || "";
@@ -20,33 +20,37 @@ const ModernSearchResult = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    // sync search input with URL param
+    // Sync input with URL param
     useEffect(() => {
         setSearch(queryFromUrl);
-        if (!queryFromUrl) {
-            setResults(null);
-        }
+        if (!queryFromUrl) setResults(null);
     }, [queryFromUrl]);
 
-    // fetch when search changes
+    // Debounced search and URL update
     useEffect(() => {
-
         setLoading(true);
         setError("");
         const url = `?query=${encodeURIComponent(search)}`;
 
         const timeout = setTimeout(async () => {
-            try {
+            // Only update URL and search if running in browser and router is defined
+            if (typeof window !== "undefined" && router && typeof router.replace === "function") {
                 if (search === "") {
-                    if (router && typeof router.replace === "function") {
-                        router.replace("/browse", { scroll: false });
-                    }
+                    router.replace("/browse", { scroll: false });
                     setResults(null);
                     setError("");
+                    setLoading(false);
                     return;
                 }
-                if (router && typeof router.replace === "function") {
-                    router.replace(url, { scroll: false });
+                router.replace(url, { scroll: false });
+            }
+
+            try {
+                if (search === "") {
+                    setResults(null);
+                    setError("");
+                    setLoading(false);
+                    return;
                 }
                 const res = await fetch(
                     `https://saavn.dev/api/search?query=${encodeURIComponent(search)}`
@@ -69,7 +73,7 @@ const ModernSearchResult = () => {
         setSearch("");
         setResults(null);
         setError("");
-        if (router && typeof router.replace === "function") {
+        if (typeof window !== "undefined" && router && typeof router.replace === "function") {
             router.replace("/browse", { scroll: false });
         }
     };
