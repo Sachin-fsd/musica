@@ -6,9 +6,28 @@ import AlbumCard from "./AlbumCard";
 import ArtistCard from "./ArtistCard";
 import { Search, X } from "lucide-react";
 import { Input } from "../ui/input";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+
+// --- Helper Hook for Debouncing ---
+// This hook takes a value and returns a new value that only updates after the specified delay.
+const useDebounce = (value, delay) => {
+    const [debouncedValue, setDebouncedValue] = useState(value);
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedValue(value);
+        }, delay);
+
+        // Cleanup function to cancel the timeout if the value changes again
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [value, delay]);
+
+    return debouncedValue;
+};
 
 const ModernSearchResult = () => {
     const router = useRouter();
@@ -20,77 +39,86 @@ const ModernSearchResult = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    // Sync input with URL param
+    // Use the debounced value for API calls and URL updates
+    const debouncedSearch = useDebounce(search, 500);
+
+    // Effect 1: Sync the local search state if the URL query parameter changes (e.g., back/forward button)
     useEffect(() => {
-        setSearch(queryFromUrl);
-        if (!queryFromUrl) setResults(null);
+        if (queryFromUrl !== search) {
+            setSearch(queryFromUrl);
+        }
     }, [queryFromUrl]);
 
-    // Debounced search and URL update
+    // Effect 2: Fetch data and update URL based on the debounced search term.
+    // This effect is the core logic.
     useEffect(() => {
-        setLoading(true);
-        setError("");
-        const url = `?query=${encodeURIComponent(search)}`;
-
-        const timeout = setTimeout(async () => {
-            // Only update URL and search if running in browser and router is defined
-            if (typeof window !== "undefined" && router && typeof router.replace === "function") {
-                if (search === "") {
+        const fetchAndSetResults = async () => {
+            if (!debouncedSearch) {
+                // If the search is empty, clear everything and go back to the browse page.
+                setResults(null);
+                setError("");
+                setLoading(false);
+                // Ensure router is available before using it
+                if (router) {
                     router.replace("/browse", { scroll: false });
-                    setResults(null);
-                    setError("");
-                    setLoading(false);
-                    return;
                 }
+                return;
+            }
+
+            // Update the URL to match the current debounced search query
+            if (router) {
+                const url = `/browse?query=${encodeURIComponent(debouncedSearch)}`;
                 router.replace(url, { scroll: false });
             }
 
+            setLoading(true);
+            setError("");
+            setResults(null); // Clear previous results immediately
+
             try {
-                if (search === "") {
-                    setResults(null);
-                    setError("");
-                    setLoading(false);
-                    return;
-                }
                 const res = await fetch(
-                    `https://saavn.dev/api/search?query=${encodeURIComponent(search)}`
+                    `https://saavn.dev/api/search?query=${encodeURIComponent(
+                        debouncedSearch
+                    )}`
                 );
-                if (!res.ok) throw new Error("API error");
+
+                if (!res.ok) {
+                    throw new Error(`API error: ${res.statusText}`);
+                }
+
                 const data = await res.json();
-                setResults(data);
+                if (data.success) {
+                    setResults(data);
+                } else {
+                    throw new Error("API returned unsuccessful response.");
+                }
             } catch (err) {
-                setError("Failed to fetch results.");
+                console.error("Search fetch error:", err);
+                setError("Failed to fetch results. Please try again.");
                 setResults(null);
             } finally {
                 setLoading(false);
             }
-        }, 500);
+        };
 
-        return () => clearTimeout(timeout);
-    }, [search, router]);
+        fetchAndSetResults();
+    }, [debouncedSearch, router]); // Dependency array is now much cleaner
 
-    const clearSearch = () => {
+    const clearSearch = useCallback(() => {
         setSearch("");
         setResults(null);
         setError("");
-        if (typeof window !== "undefined" && router && typeof router.replace === "function") {
-            router.replace("/browse", { scroll: false });
-        }
-    };
+        // No need to manually call router.replace here, the useEffect above will handle it
+        // when `debouncedSearch` becomes empty.
+    }, []);
 
     return (
         <div style={{ flex: 1, padding: 20 }}>
             {/* Search box */}
             <div className="mt-[10%] mb-10 w-[90%] sm:w-[60%] mx-auto flex items-center relative">
-                {/* search icon */}
-                <div
-                    className="absolute inset-y-0 left-0 flex items-center pl-4 z-10"
-                    aria-label="Search"
-                >
+                <div className="absolute inset-y-0 left-0 flex items-center pl-4 z-10" aria-label="Search">
                     <Search className="text-white" />
                 </div>
-
-                {/* input */}
                 <Input
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
@@ -98,8 +126,6 @@ const ModernSearchResult = () => {
                     placeholder="Search for songs, artists or albums..."
                     autoComplete="off"
                 />
-
-                {/* clear button */}
                 {search && (
                     <button
                         onClick={clearSearch}
@@ -111,17 +137,13 @@ const ModernSearchResult = () => {
                 )}
             </div>
 
-            {/* Loading/Error */}
-            {loading && (
-                <div className="text-center text-white/80 py-8">Loading...</div>
-            )}
-            {error && (
-                <div className="text-center text-red-400 py-8">{error}</div>
-            )}
+            {/* Loading/Error State */}
+            {loading && <div className="text-center text-white/80 py-8">Loading...</div>}
+            {error && <div className="text-center text-red-400 py-8">{error}</div>}
 
-            {/* Results with fade in/out */}
+            {/* Results with animation */}
             <AnimatePresence>
-                {results && (
+                {!loading && !error && results && (
                     <motion.div
                         key="results"
                         initial={{ opacity: 0 }}
@@ -133,13 +155,13 @@ const ModernSearchResult = () => {
                         {results?.data?.topQuery?.results?.[0] && (
                             <TopQueryCard data={results.data.topQuery.results[0]} />
                         )}
-                        {Array.isArray(results?.data?.songs?.results) && results.data.songs.results.length > 0 && (
+                        {results?.data?.songs?.results?.length > 0 && (
                             <SongCard data={results.data.songs.results} search={search} />
                         )}
-                        {Array.isArray(results?.data?.albums?.results) && results.data.albums.results.length > 0 && (
+                        {results?.data?.albums?.results?.length > 0 && (
                             <AlbumCard data={results.data.albums.results} />
                         )}
-                        {Array.isArray(results?.data?.artists?.results) && results.data.artists.results.length > 0 && (
+                        {results?.data?.artists?.results?.length > 0 && (
                             <ArtistCard data={results.data.artists.results} />
                         )}
                     </motion.div>
