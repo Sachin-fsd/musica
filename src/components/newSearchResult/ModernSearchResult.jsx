@@ -10,17 +10,13 @@ import { useEffect, useState, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
-// --- Helper Hook for Debouncing (no changes needed here) ---
+// Debounce hook
 const useDebounce = (value, delay) => {
     const [debouncedValue, setDebouncedValue] = useState(value);
-
     useEffect(() => {
-        const handler = setTimeout(() => {
-            setDebouncedValue(value);
-        }, delay);
+        const handler = setTimeout(() => setDebouncedValue(value), delay);
         return () => clearTimeout(handler);
     }, [value, delay]);
-
     return debouncedValue;
 };
 
@@ -29,62 +25,54 @@ const ModernSearchResult = () => {
     const searchParams = useSearchParams();
 
     const queryFromUrl = searchParams?.get("query") || "";
+
     const [search, setSearch] = useState(queryFromUrl);
     const [results, setResults] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [navigationUpdate, setNavigationUpdate] = useState(false); // ✅ flag
 
     const debouncedSearch = useDebounce(search, 500);
 
-    // Effect 1: Sync local state with URL (no changes needed here)
+    // ✅ When queryFromUrl changes due to navigation (back/forward)
     useEffect(() => {
-        if (queryFromUrl !== search) {
+        if (navigationUpdate) {
             setSearch(queryFromUrl);
+            setNavigationUpdate(false); // reset flag
         }
-    }, [queryFromUrl]);
+    }, [queryFromUrl, navigationUpdate]);
 
-    // Effect 2: The Core Logic with a new, more robust guard
+    // Fetch results when debounced search changes
     useEffect(() => {
-        // --- MASTER GUARD ---
-        // Do absolutely nothing until the router is ready.
-        // This is the key to preventing the crash. The effect will
-        // re-run once the router object becomes available because
-        // 'router' is in the dependency array.
-        if (!router) {
-            return;
-        }
+        if (!router) return;
 
         const executeSearch = async () => {
-            // By the time we are inside this function, `router` is guaranteed to be available.
-
-            // Handle the case where the search is cleared
             if (!debouncedSearch) {
                 setResults(null);
                 setError("");
                 setLoading(false);
-                // Only update the path if it's not already the base path
+
                 if (window.location.pathname !== "/browse" || window.location.search) {
-                     router.replace("/browse", { scroll: false });
+                    setNavigationUpdate(false); // this is our push, not back/forward
+                    router.push("/browse", { scroll: false });
                 }
                 return;
             }
 
-            // Update URL first for a valid search term
             const url = `/browse?query=${encodeURIComponent(debouncedSearch)}`;
-            router.replace(url, { scroll: false });
-            
+            setNavigationUpdate(false); // ✅ mark as push event
+            router.push(url, { scroll: false });
+
             setLoading(true);
             setError("");
             setResults(null);
 
             try {
                 const res = await fetch(
-                    `https://saavn.dev/api/search?query=${encodeURIComponent(
-                        debouncedSearch
-                    )}`
+                    `https://saavn.dev/api/search?query=${encodeURIComponent(debouncedSearch)}`
                 );
                 if (!res.ok) throw new Error(`API error: ${res.statusText}`);
-                
+
                 const data = await res.json();
                 if (data.success) {
                     setResults(data);
@@ -101,20 +89,32 @@ const ModernSearchResult = () => {
         };
 
         executeSearch();
-        
-    }, [debouncedSearch, router]); // Keep `router` in the dependency array
+    }, [debouncedSearch, router]);
+
+    // ✅ Detect browser navigation (back/forward)
+    useEffect(() => {
+        const handler = () => setNavigationUpdate(true);
+        window.addEventListener("popstate", handler);
+        return () => window.removeEventListener("popstate", handler);
+    }, []);
 
     const clearSearch = useCallback(() => {
         setSearch("");
-    }, []);
+        setNavigationUpdate(false); // it’s our action, not back nav
+        router.push("/browse", { scroll: false });
+    }, [router]);
 
     return (
         <div style={{ flex: 1, padding: 20 }}>
-            {/* Search box */}
+            {/* Search Bar */}
             <div className="mt-[10%] mb-10 w-[90%] sm:w-[60%] mx-auto flex items-center relative">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-4 z-10" aria-label="Search">
+                <div
+                    className="absolute inset-y-0 left-0 flex items-center pl-4 z-10"
+                    aria-label="Search"
+                >
                     <Search className="text-white" />
                 </div>
+
                 <Input
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
@@ -122,6 +122,7 @@ const ModernSearchResult = () => {
                     placeholder="Search for songs, artists or albums..."
                     autoComplete="off"
                 />
+
                 {search && (
                     <button
                         onClick={clearSearch}
@@ -133,11 +134,11 @@ const ModernSearchResult = () => {
                 )}
             </div>
 
-            {/* Loading/Error State */}
+            {/* Loading / Error */}
             {loading && <div className="text-center text-white/80 py-8">Loading...</div>}
             {error && <div className="text-center text-red-400 py-8">{error}</div>}
 
-            {/* Results with animation */}
+            {/* Results */}
             <AnimatePresence>
                 {!loading && !error && results && (
                     <motion.div
