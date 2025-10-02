@@ -21,7 +21,7 @@ const AlbumContent = () => {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const MegaMenu3Playlists = await response.json();
-                // console.log("Data from backend:", MegaMenu3Playlists);
+                console.log("Data from backend:", MegaMenu3Playlists);
                 const object_for_megaMenu3 = [
                     { heading: "Charts", data: MegaMenu3Playlists.charts },
                     { heading: "Ultimate Jams", data: MegaMenu3Playlists.top_playlists },
@@ -32,7 +32,8 @@ const AlbumContent = () => {
                     { heading: "Chill Vibes", data: MegaMenu3Playlists["promo:vx:data:113"] },
                     { heading: "Vibe Check", data: MegaMenu3Playlists["promo:vx:data:116"] },
                     { heading: "Fresh Finds", data: MegaMenu3Playlists["promo:vx:data:143"] },
-                    { heading: "Epic Soundtracks", data: MegaMenu3Playlists["promo:vx:data:76"] }
+                    { heading: "Epic Soundtracks", data: MegaMenu3Playlists["promo:vx:data:76"] },
+                    { heading: "Chill Mood", data: MegaMenu3Playlists["promo:vx:data:21"] }
                 ];
                 setAlbumData(object_for_megaMenu3);
                 setLoading(false);

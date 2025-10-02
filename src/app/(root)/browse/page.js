@@ -17,11 +17,6 @@ const HomePage = () => {
       <Suspense fallback={<div>Loading...</div>}>
         <ModernSearchResult />
       </Suspense>
-      {/* <SearchInput /> */}
-
-      <div id='searchResultsTop'>
-        <SearchResults />
-      </div>
 
       <div>
         <SongContentCarousel />

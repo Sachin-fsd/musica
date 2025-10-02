@@ -3,7 +3,7 @@ import Image from "next/image";
 import React, { useCallback, useContext, useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "@/hooks/use-outside-click";
-import { Play } from "lucide-react";
+import { Pause, Play } from "lucide-react";
 import TouchableOpacity from "@/components/ui/touchableOpacity";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Label } from "@/components/ui/label";
@@ -16,24 +16,32 @@ import { UserContext } from "@/context";
 import { GetSongsByIdAction } from "@/app/actions";
 import SongBar from "@/components/songBar";
 import { Separator } from "@/components/ui/separator";
+import { createPlaylistFromEntity } from "@/utils/playListUtils";
 
-export function ExpandableAlbumCarousel({ albums }) {
+export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
     const [active, setActive] = useState(null);
     const [songs, setSongs] = useState([]);
     const id = useId();
     const ref = useRef(null);
     const [loading, setLoading] = useState(false);
     const [imageError, setImageError] = useState(false);
+    const [albumPlayingId, setAlbumPlayingId] = useState(null);
     const { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId } = useContext(UserContext);
 
     const truncateTitle = (title, maxLength = 24) => {
         return htmlParser(title?.length > maxLength ? `${title?.substring(0, maxLength)}...` : title);
     };
 
-    const handleAlbumPlay = useCallback(debounce((album) => {
-        const context = { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId };
-        fetchAlbumSongs(album?.type, album?.id, context);
-    }, 300), [currentSong, currentIndex, songList]);
+    const handleAlbumPlay = debounce(async (album) => {
+        console.log({ songs, album })
+        if (songs.length === 0) return;
+        setSongList(songs);
+        setCurrentSong(songs[0]);
+        setCurrentIndex(0);
+        setPlaying(true);
+        setCurrentId(songs[0]?.id);
+        setAlbumPlayingId(album.id);
+    }, 300);
 
     const handleFetchAlbumSongs = async (album) => {
         setLoading(true);
@@ -130,7 +138,7 @@ export function ExpandableAlbumCarousel({ albums }) {
                                     onClick={() => handleAlbumPlay(active)}
                                     layout
                                     className="px-4 py-3 text-sm rounded-full font-bold bg-green-500 sm:hover:bg-green-400 text-white">
-                                    <Play />
+                                    {albumPlayingId === active.id ? <Pause /> : <Play />}
                                 </motion.button>
                             </div>
 
@@ -159,6 +167,7 @@ export function ExpandableAlbumCarousel({ albums }) {
             ) : null}
         </AnimatePresence>
         <div
+            ref={softAlbumsRef}
             className="mx-auto w-full flex overflow-x-auto gap-4 py-4 hide-scrollbar"
             style={{ scrollSnapType: 'x mandatory' }}
         >

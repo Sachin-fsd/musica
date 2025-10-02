@@ -69,7 +69,7 @@ const ModernSearchResult = () => {
 
             try {
                 const res = await fetch(
-                    `https://saavn.dev/api/search?query=${encodeURIComponent(debouncedSearch)}`
+                    `${process.env.NEXT_PUBLIC_FETCH_URL}/search?query=${encodeURIComponent(debouncedSearch)}`
                 );
                 if (!res.ok) throw new Error(`API error: ${res.statusText}`);
 
