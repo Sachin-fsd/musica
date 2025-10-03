@@ -4,7 +4,7 @@ import { UserContext } from "@/context";
 import api from "@/lib/api";
 import { decode } from "he";
 import Image from "next/image";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 // export interface SongCardProps { 
 // id: string; 
@@ -20,7 +20,7 @@ import { useContext, useState } from "react";
 // }
 
 const TopQueryCard = ({ data }) => {
-    const { playSongAndCreateQueue, setSongList, setCurrentSong, setPlaying } =
+    const { playSongAndCreateQueue, setSongList, setCurrentSong, setPlaying, currentSong } =
         useContext(UserContext);
     const [loading, setLoading] = useState(false);
 
@@ -74,7 +74,7 @@ const TopQueryCard = ({ data }) => {
                 )}
             </div>
 
-            <p style={styles.title}>{decode(data.title)}</p>
+            <p className={`${currentSong.id == data.id ? "text-green-600" : "text-white"}`} style={styles.title}>{decode(data.title)}</p>
             <p style={styles.subtitle}>{decode(data.primaryArtists || "")}</p>
             <p style={styles.subtitle}>{decode(data.album || "") || decode(data.description)}</p>
             <p style={styles.subtitle}>{decode(data.type)}</p>
@@ -100,7 +100,6 @@ const styles = {
         borderRadius: 10,
     },
     title: {
-        color: "white",
         fontSize: 18,
         fontWeight: "bold",
         marginTop: 10,
