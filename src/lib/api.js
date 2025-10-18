@@ -1,7 +1,7 @@
 // API client for saavn.dev
 import axios from "axios";
 
-const BASE_URL = 'https://saavn.dev/api';
+const BASE_URL = process.env.NEXT_PUBLIC_FETCH_URL;
 
 // export interface ImageQuality {
 //   quality: string;

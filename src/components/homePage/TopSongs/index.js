@@ -1,91 +1,73 @@
-'use client';
+'use client'
 
-import SongComponent from './SongComponent';
-import { useContext, useEffect } from 'react';
+import { useContext, useRef } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Label } from '@/components/ui/label';
 import { UserContext } from '@/context';
-import { songs as defaultSongs } from '@/utils/cachedSongs';
+import SongBarCarousel from './SongContentCarousel/songBarCarousel';
+import TouchableOpacity from '@/components/ui/touchableOpacity';
+import { Skeleton } from '@/components/ui/skeleton';
 
-const SongContent = () => {
-    const { setSongList, songList, currentSong, setCurrentSong } = useContext(UserContext);
+const SongContentCarousel = () => {
+    const { songList } = useContext(UserContext);
+    const softAlbumsRef = useRef(null);
 
-    useEffect(() => {
-        let savedSongList = null;
-        try {
-            const storedData = localStorage.getItem('songList');
-            savedSongList = storedData ? JSON.parse(storedData) : null;
-        } catch (error) {
-            console.error("Error parsing song list from localStorage:", error);
-            localStorage.removeItem('songList'); // Remove invalid data
+    const scroll = (ref, direction) => {
+        if (ref.current) {
+            ref.current.scrollBy({
+                left: direction === 'left' ? -200 : 200,
+                behavior: 'smooth',
+            });
         }
-
-        if (savedSongList) {
-            setSongList(savedSongList);
-        } else {
-            setSongList(defaultSongs);
-        }
-    }, []);
-
-    useEffect(() => {
-        let savedSongList = null;
-        try {
-            const storedData = localStorage.getItem('songList');
-            savedSongList = storedData ? JSON.parse(storedData) : null;
-        } catch (error) {
-            console.error("Error parsing song list from localStorage:", error);
-            localStorage.removeItem('songList'); // Remove invalid data
-        }
-
-        if (savedSongList) {
-            setSongList(savedSongList);
-        } else {
-            setSongList(defaultSongs);
-        }
-    }, [setSongList]);
-
-    // useEffect(() => {
-    //     let savedCurrentSong = null;
-    //     try {
-    //         const storedData = localStorage.getItem('currentSong');
-    //         savedCurrentSong = storedData ? JSON.parse(storedData) : null;
-    //     } catch (error) {
-    //         console.error("Error parsing currentsong from localStorage:", error);
-    //         localStorage.removeItem('currentSong'); // Remove invalid data
-    //     }
-
-    //     if (savedCurrentSong) {
-    //         setCurrentSong(savedCurrentSong);
-    //     } 
-    // }, [setCurrentSong]);
-
-    // useEffect(() => {
-    //     try {
-    //         localStorage.setItem('songList', JSON.stringify(songList));
-    //     } catch (error) {
-    //         console.error("Error saving song list to localStorage:", error);
-    //     }
-    // }, [songList]);
-
-    // useEffect(() => {
-    //     try {
-    //         localStorage.setItem('currentSong', JSON.stringify(currentSong));
-    //     } catch (error) {
-    //         console.error("Error saving current song to localStorage:", error);
-    //     }
-    // }, [currentSong]);
-
-    if (!songList || songList?.length === 0) {
-        return (
-            <div className="text-center text-gray-500 dark:text-gray-400">
-                No songs available. Please try again later.
-            </div>
-        );
-    }
+    };
 
     return (
-        <div className="flex flex-col lg:flex-row gap-6">
-            <SongComponent songs={songList} heading="Now Playing" />
+        <div className='flex flex-col gap-8 mt-4'>
+            {/* Albums Section */}
+            <div className='flex-1'>
+                <div className='flex items-center justify-between mb-4'>
+                    <Label className="text-2xl font-bold text-sky-900 dark:text-white">Now Playing</Label>
+                    <div className='flex items-center space-x-2'>
+                        <button
+                            onClick={() => scroll(softAlbumsRef, 'left')}
+                            className='p-2 bg-white dark:bg-gray-800 shadow-sm rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition'>
+                            <ChevronLeft size={20} className='text-gray-600 dark:text-gray-300' />
+                        </button>
+                        <button
+                            onClick={() => scroll(softAlbumsRef, 'right')}
+                            className='p-2 bg-white dark:bg-gray-800 shadow-sm rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition'>
+                            <ChevronRight size={20} className='text-gray-600 dark:text-gray-300' />
+                        </button>
+                    </div>
+                </div>
+                <div className='relative max-w-full'>
+                    <div ref={softAlbumsRef} className='flex overflow-x-auto scroll-smooth hide-scrollbar'>
+                        {songList?.length > 0 ? (
+                            songList?.map((song, index) => (
+                                <div
+                                    key={index}
+                                    className='mr-1 sm:hover:bg-white dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-52 max-w-52 hover:shadow-md transition'
+                                >
+                                    {song?.image &&
+                                        <TouchableOpacity>
+                                            <SongBarCarousel song={song} index={index} />
+                                        </TouchableOpacity>
+                                    }
+                                </div>
+                            ))
+                        ) : (
+                            <div className='flex gap-1 overflow-x-auto scroll-smooth hide-scrollbar'>
+                                <Skeleton className="h-32 w-32 rounded" />
+                                <Skeleton className="h-32 w-32 rounded" />
+                                <Skeleton className="h-32 w-32 rounded" />
+                                <Skeleton className="h-32 w-32 rounded" />
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
 
-export default SongContent;
+export default SongContentCarousel;

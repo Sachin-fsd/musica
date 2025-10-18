@@ -20,7 +20,6 @@ export default function UserState({ children }) {
     const [isLooping, setIsLooping] = useState(false);
     const [manualQuality, setManualQuality] = useState("very_high");
     const [loading, setLoading] = useState(false);
-    // const [searchResults, setSearchResults] = useState([]);
     const [isJamChecked, setIsJamChecked] = useState(false);
     // const [searchQuery, setSearchQuery] = useState("");
     const audioRef = useRef(null);

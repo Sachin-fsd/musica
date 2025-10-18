@@ -10,7 +10,6 @@ import { Label } from "@/components/ui/label";
 import { htmlParser } from "@/utils";
 import SongsListComponent from "@/components/rightSidebar/songsList";
 import { debounce } from "lodash";
-import { fetchAlbumSongs } from "@/utils/playAndFetchSuggestionUtils";
 
 import { UserContext } from "@/context";
 import { GetSongsByIdAction } from "@/app/actions";

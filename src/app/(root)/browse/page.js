@@ -1,11 +1,7 @@
 import JamComponent from '@/components/friendsJam';
-import SearchResults from '@/components/homePage/SearchResult';
 import AlbumContent from '@/components/homePage/TopAlbums/AlbumContent';
-import SongContentCarousel from '@/components/homePage/TopSongs/SongContentCarousel';
+import SongContentCarousel from '@/components/homePage/TopSongs';
 import ModernSearchResult from '@/components/newSearchResult/ModernSearchResult';
-import SearchInput from '@/components/searchInput/searchInput';
-import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
 import { Suspense } from 'react';
 
 const HomePage = () => {

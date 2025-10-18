@@ -5,21 +5,14 @@ import { UserContext } from '@/context';
 import SongCard from '@/components/vibes/SongCard';
 
 const SongReels = () => {
-    const startScrollY = useRef(0);
-    const startIndex = useRef(0);
-    // 1. Get the complete song list and the necessary setters from the context
     const {
         songList,
-        setSongList, // You may need this if you plan to modify the list
         currentIndex,
-        setCurrentIndex,
         playing,
-        togglePlayPause,
         playSongAtIndex
     } = useContext(UserContext);
 
     const containerRef = useRef(null);
-    const scrollTimeoutRef = useRef(null);
 
     useEffect(() => {
         const container = containerRef.current;
