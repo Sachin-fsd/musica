@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
         </div>
 
         {/* Bottom Player for small and medium screens */}
-        <div className="md:fixed md:bottom-0 w-full col-span-2 lg:hidden">
+        <div className="md:fixed z-10 md:bottom-0 w-full col-span-2 lg:hidden">
           <Suspense fallback={<div>Loading...</div>}>
             <Bottombar />
           </Suspense>

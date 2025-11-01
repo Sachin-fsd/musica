@@ -1,6 +1,5 @@
 "use client";
-import Image from "next/image";
-import React, { useCallback, useContext, useEffect, useId, useRef, useState } from "react";
+import React, { useContext, useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "@/hooks/use-outside-click";
 import { Pause, Play } from "lucide-react";
@@ -8,15 +7,12 @@ import TouchableOpacity from "@/components/ui/touchableOpacity";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Label } from "@/components/ui/label";
 import { htmlParser } from "@/utils";
-import SongsListComponent from "@/components/rightSidebar/songsList";
 import { debounce } from "lodash";
-import { fetchAlbumSongs } from "@/utils/playAndFetchSuggestionUtils";
-
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { UserContext } from "@/context";
 import { GetSongsByIdAction } from "@/app/actions";
 import SongBar from "@/components/songBar";
 import { Separator } from "@/components/ui/separator";
-import { createPlaylistFromEntity } from "@/utils/playListUtils";
 
 export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
     const [active, setActive] = useState(null);
@@ -26,14 +22,21 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
     const [loading, setLoading] = useState(false);
     const [imageError, setImageError] = useState(false);
     const [albumPlayingId, setAlbumPlayingId] = useState(null);
-    const { currentSong, currentIndex, songList, setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId } = useContext(UserContext);
+    const { setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId } = useContext(UserContext);
+    const pathname = usePathname();
+    const router = useRouter();
+    const searchParams = useSearchParams();
 
     const truncateTitle = (title, maxLength = 24) => {
         return htmlParser(title?.length > maxLength ? `${title?.substring(0, maxLength)}...` : title);
     };
 
     const handleAlbumPlay = debounce(async (album) => {
-        console.log({ songs, album })
+        if(albumPlayingId === album.id){
+            setAlbumPlayingId(null);
+            setPlaying(false);
+            return
+        }
         if (songs.length === 0) return;
         setSongList(songs);
         setCurrentSong(songs[0]);
@@ -46,6 +49,7 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
     const handleFetchAlbumSongs = async (album) => {
         setLoading(true);
         try {
+            if (albumPlayingId === album.id) return;
             const fetchedSongs = await GetSongsByIdAction(album.type, album.id);
             if (fetchedSongs.success) {
                 let albumSongs = fetchedSongs.data.songs || fetchedSongs.data.topSongs || fetchedSongs.data;
@@ -63,6 +67,51 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
         }
     };
 
+    // Close album: if there's a prior history entry, go back; otherwise replace to remove param
+    const closeAlbum = () => {
+        // remove active immediately for UI responsiveness
+        setActive(null);
+
+        // if there's a previous history entry, go back to it; otherwise replace to remove param
+        try {
+            if (typeof window !== "undefined" && window.history.length > 1) {
+                router.back();
+            } else {
+                router.replace(pathname);
+            }
+        } catch (e) {
+            // fallback replace
+            try { router.replace(pathname); } catch (err) { console.log({ err }) }
+        }
+    };
+
+    useEffect(() => {
+        const albumId = searchParams.get("album");
+        if (albumId) {
+            // if active already matches, nothing to do
+            if (!active || String(active.id) !== String(albumId)) {
+                // try to find the album in provided albums list first
+                const found = albums.find(a => String(a.id) === String(albumId));
+                if (found) {
+                    setActive(found);
+                    // fetch songs for found album
+                    handleFetchAlbumSongs(found);
+                } else {
+                    // album not in list (direct link), create a minimal active object and fetch by id
+                    // const placeholder = { id: albumId, title: "Album", image: null };
+                    // setActive(placeholder);
+                    // handleFetchAlbumSongs({ id: albumId, type: "album" });
+                    return;
+                }
+            }
+        } else {
+            // no album param -> ensure modal closed
+            if (active) setActive(null);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchParams?.toString()]); // depend on query string change
+
+
     useEffect(() => {
         function onKeyDown(event) {
             if (event.key === "Escape") {
@@ -71,6 +120,8 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
         }
 
         if (active && typeof active === "object") {
+            const url = `${pathname}?album=${encodeURIComponent(active.id)}`;
+            router.push(url, { scroll: false });
             handleFetchAlbumSongs(active);
             document.body.style.overflow = "hidden";
         } else {
@@ -81,7 +132,10 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
         return () => window.removeEventListener("keydown", onKeyDown);
     }, [active]);
 
-    useOutsideClick(ref, () => setActive(null));
+    // useOutsideClick should close via closeAlbum so URL is kept in sync
+    useOutsideClick(ref, () => {
+        if (active) closeAlbum();
+    });
 
     return (<>
         <AnimatePresence>
@@ -103,7 +157,7 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0, transition: { duration: 0.05 } }}
                         className="flex absolute top-2 right-2 lg:hidden items-center justify-center bg-white dark:bg-gray-200 rounded-full h-6 w-6 shadow-md"
-                        onClick={() => setActive(null)}>
+                        onClick={() => closeAlbum()}>
                         <CloseIcon />
                     </motion.button>
                     <motion.div

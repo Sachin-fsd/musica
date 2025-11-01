@@ -21,7 +21,7 @@ const Navbar = () => {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
 
     function showName() {
-        toast("Made by Ujjawal Pandey")
+        toast("Made by Sachin Singh")
     }
 
     const placeholders = [
@@ -35,7 +35,7 @@ const Navbar = () => {
     return (
         <div className="flex items-center justify-between p-2 shadow-md">
             <div className="flex items-center">
-                <div className="block lg:hidden">
+                <div className="block md:hidden">
                     <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                         <SheetTrigger asChild>
                             <button className="p-2">
