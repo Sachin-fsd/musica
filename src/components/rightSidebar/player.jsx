@@ -47,13 +47,10 @@ const Player = () => {
         }
     };
 
-
     const loopSong = () => {
         audioRef.current.loop = !audioRef.current.loop;
         setIsLooping(!isLooping);
     };
-
-
 
     return (
         <div className="flex flex-col items-center justify-center p-3 pt-0">
