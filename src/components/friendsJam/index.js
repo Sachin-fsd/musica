@@ -189,7 +189,7 @@ export default function Jam() {
   if (!isJamChecked) return null;
 
   return (
-    <div className="fixed right-0 bottom-24 sm:right-6 w-full sm:w-[420px] max-h-[85vh]
+    <div className="fixed right-0 bottom-36 sm:right-6 w-full sm:w-[420px] max-h-[85vh]
       bg-slate-900 text-white rounded-t-xl sm:rounded-xl shadow-2xl flex flex-col z-10">
 
       {/* HEADER */}
