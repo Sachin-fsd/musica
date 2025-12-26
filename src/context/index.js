@@ -97,7 +97,7 @@ export default function UserState({ children }) {
             const storedSongList = JSON.parse(localStorage.getItem("songList"));
             const storedCurrentSong = JSON.parse(localStorage.getItem("currentSong"));
 
-            let initialSongs = Array.isArray(storedSongList) && storedSongList.length > 0 ? storedSongList : songs;
+            let initialSongs = Array.isArray(storedSongList) && (storedSongList.length > 0) && storedSongList[0]?.id ? storedSongList : songs;
             let initialCurrentSong = storedCurrentSong?.id ? storedCurrentSong : initialSongs[0];
 
             // Ensure the current song is at the start of a potentially oversized list
@@ -191,9 +191,11 @@ export default function UserState({ children }) {
 
     // Effect 5: Fetch related songs when nearing the end of the playlist
     useEffect(() => {
+        // Prevent running on initial render or if songList is empty
+        if (currentIndex === 0 || songList.length === 0 || !currentSong?.id) return;
 
         const addRelatedSongs = async () => {
-            if (currentIndex >= songList.length - 2 && currentSong?.id) {
+            if (currentIndex >= songList.length - 2) {
                 setLoading(true);
                 const response = await SearchSongSuggestionAction(currentSong.id);
                 if (response.success) {

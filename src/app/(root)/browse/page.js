@@ -1,11 +1,8 @@
-import JamComponent from '@/components/friendsJam';
-import SearchResults from '@/components/homePage/SearchResult';
+import Jam from '@/components/friendsJam';
+import JamPage from '@/components/friendsJam/jam';
 import AlbumContent from '@/components/homePage/TopAlbums/AlbumContent';
 import SongContentCarousel from '@/components/homePage/TopSongs/SongContentCarousel';
 import ModernSearchResult from '@/components/newSearchResult/ModernSearchResult';
-import SearchInput from '@/components/searchInput/searchInput';
-import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
 import { Suspense } from 'react';
 
 const HomePage = () => {
@@ -23,7 +20,7 @@ const HomePage = () => {
       </div>
 
       <div id='jam_section'>
-        <JamComponent />
+        <Jam />
       </div>
 
       <div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useContext, useRef } from 'react';
+import { useContext, useRef, useMemo } from 'react'; // Added useMemo
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { UserContext } from '@/context';
@@ -11,6 +11,31 @@ import { Skeleton } from '@/components/ui/skeleton';
 const SongContentCarousel = () => {
     const { songList } = useContext(UserContext);
     const softAlbumsRef = useRef(null);
+
+    // Memoize the song list rendering to avoid unnecessary re-calculations during render
+    const renderedSongs = useMemo(() => {
+        return songList?.length > 0 && typeof songList == 'object' ? (
+            songList?.map((song, index) => (
+                <div
+                    key={index}
+                    className='mr-1 sm:hover:bg-white dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-52 max-w-52 hover:shadow-md transition'
+                >
+                    {song?.image &&
+                        <TouchableOpacity>
+                            <SongBarCarousel song={song} index={index} />
+                        </TouchableOpacity>
+                    }
+                </div>
+            ))
+        ) : (
+            <div className='flex gap-1 overflow-x-auto scroll-smooth hide-scrollbar'>
+                <Skeleton className="h-32 w-32 rounded" />
+                <Skeleton className="h-32 w-32 rounded" />
+                <Skeleton className="h-32 w-32 rounded" />
+                <Skeleton className="h-32 w-32 rounded" />
+            </div>
+        );
+    }, [songList]);
 
     const scroll = (ref, direction) => {
         if (ref.current) {
@@ -42,27 +67,7 @@ const SongContentCarousel = () => {
                 </div>
                 <div className='relative max-w-full'>
                     <div ref={softAlbumsRef} className='flex overflow-x-auto scroll-smooth hide-scrollbar'>
-                        {songList?.length > 0 ? (
-                            songList?.map((song, index) => (
-                                <div
-                                    key={index}
-                                    className='mr-1 sm:hover:bg-white dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-52 max-w-52 hover:shadow-md transition'
-                                >
-                                    {song?.image &&
-                                        <TouchableOpacity>
-                                            <SongBarCarousel song={song} index={index} />
-                                        </TouchableOpacity>
-                                    }
-                                </div>
-                            ))
-                        ) : (
-                            <div className='flex gap-1 overflow-x-auto scroll-smooth hide-scrollbar'>
-                                <Skeleton className="h-32 w-32 rounded" />
-                                <Skeleton className="h-32 w-32 rounded" />
-                                <Skeleton className="h-32 w-32 rounded" />
-                                <Skeleton className="h-32 w-32 rounded" />
-                            </div>
-                        )}
+                        {renderedSongs}
                     </div>
                 </div>
             </div>

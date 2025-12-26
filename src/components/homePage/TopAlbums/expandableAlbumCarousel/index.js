@@ -144,7 +144,7 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 bg-black/50 backdrop-blur-sm h-full w-full z-10" />
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm h-full w-full z-0" />
             )}
         </AnimatePresence>
         <AnimatePresence>
