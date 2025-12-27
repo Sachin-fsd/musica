@@ -363,7 +363,7 @@ export default function Jam() {
         touchAction: "none",
         inset: "env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)",
       }}
-      className="fixed right-4 bottom-20 sm:right-6 sm:bottom-28 w-full sm:w-[400px] max-w-[95vw] max-h-[85vh]
+      className="fixed right-4 bottom-20 sm:right-6 sm:bottom-28 w-full sm:w-[400px] max-w-[95vw] max-h-[45vh]
         bg-slate-900/95 backdrop-blur-md text-white rounded-xl shadow-2xl border border-slate-700
         flex flex-col z-50 overflow-hidden"
     >
