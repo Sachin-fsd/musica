@@ -162,7 +162,7 @@ export default function Jam() {
     if (!isJamChecked) return;
 
     setSocketStatus("connecting");
-    const socket = io("http://localhost:8080", {
+    const socket = io(process.env.NEXT_PUBLIC_JAM_BACKEND_URL, {
       transports: ["websocket"],
       reconnection: false,
     });
