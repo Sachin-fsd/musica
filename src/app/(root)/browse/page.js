@@ -15,7 +15,7 @@ const HomePage = () => {
         <ModernSearchResult />
       </Suspense>
 
-      <div className='border-red-800 border-2 pb-2 overflow-hidden'>
+      <div>
         <SongContentCarousel />
       </div>
 

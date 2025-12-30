@@ -72,7 +72,7 @@ export default function Jam() {
       setChat([]);
       return
     }
-    const socket = io("http://localhost:8080", {
+    const socket = io(process.env.NEXT_PUBLIC_JAM_BACKEND_URL, {
       transports: ["websocket"],
       reconnection: false
     });
