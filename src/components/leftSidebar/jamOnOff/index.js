@@ -13,7 +13,7 @@ const JamOnOff = ({ setIsSheetOpen }) => {
         const JamSection = document.getElementById("jam_section");
 
         if (JamSection) {
-            JamSection.scrollIntoView({ behavior: "smooth", block: "end" });
+            JamSection.scrollIntoView({ behavior: "smooth", block: "center" });
         }
     }
 
