@@ -70,11 +70,13 @@ export default function UserState({ children }) {
     const handleNext = useCallback(() => {
         const nextIndex = (currentIndex + 1) % songList.length;
         playSongAtIndex(nextIndex);
+        setCurrentIndex(nextIndex);
     }, [currentIndex, songList.length, playSongAtIndex]);
 
     const handlePrev = useCallback(() => {
         const prevIndex = (currentIndex - 1 + songList.length) % songList.length;
         playSongAtIndex(prevIndex);
+        setCurrentIndex(prevIndex);
     }, [currentIndex, songList.length, playSongAtIndex]);
 
     const togglePlayPause = useCallback(() => {

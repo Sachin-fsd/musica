@@ -46,7 +46,7 @@ const useUsername = () => {
 export default function Jam() {
   const {
     songList, currentSong, playing, currentTime,
-    setSongList, setCurrentSong, setPlaying, setCurrentTime, isJamChecked
+    setSongList, setCurrentSong, setPlaying, setCurrentTime, isJamChecked, currentIndex, setCurrentIndex
   } = useContext(UserContext);
 
   const socketRef = useRef(null);
@@ -62,10 +62,11 @@ export default function Jam() {
   const [chat, setChat] = useState([]);
   const [message, setMessage] = useState("");
   const [socketStatus, setSocketStatus] = useState("disconnected");
+  const [incomingChange, setIncomingChange] = useState(false);
 
   // 🧠 One effect to rule them all
   useEffect(() => {
-    if (!isJamChecked){
+    if (!isJamChecked) {
       setFollowers([]);
       setListeningTo(null);
       setHostName(null);
@@ -91,10 +92,12 @@ export default function Jam() {
     socket.on("update-listeners", setFollowers);
 
     socket.on("sync-state", (state) => {
+      setIncomingChange(true);
       setSongList(state.songList || []);
       setCurrentSong(state.currentSong || null);
       setPlaying(!!state.playing);
       setCurrentTime(state.currentTime || 0);
+      setCurrentIndex(state.currentIndex)
     });
 
     socket.on("chat-message", (msg) => {
@@ -119,11 +122,15 @@ export default function Jam() {
 
   // 📤 Send state updates (debounced in practice, but keep simple)
   useEffect(() => {
-    const state = { songList, currentSong, playing, currentTime };
+    if (incomingChange) {
+      setIncomingChange(false);
+      return;
+    }
+    const state = { songList, currentSong, playing, currentTime, currentIndex };
     if (socketRef.current?.connected && followers.length > 0) {
       socketRef.current.emit("update-state", { state });
     }
-  }, [songList, currentSong, playing, followers.length]);
+  }, [songList, currentSong, playing, followers.length, currentIndex]);
 
   const followUser = (id, name) => {
     if (id === myId || !socketRef.current) return;
