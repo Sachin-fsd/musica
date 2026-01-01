@@ -1,6 +1,4 @@
-'use client';
-
-import React, { useState, useContext, useMemo } from 'react';
+import React, { memo, useState, useContext, useMemo } from 'react';
 import { Play, Pause, Heart, MessageCircle, Share, MoreHorizontal } from 'lucide-react';
 import { UserContext } from '@/context';
 import { formatTime } from '@/utils/extraFunctions';
@@ -8,7 +6,7 @@ import { decode } from 'he';
 import { cn } from '@/lib/utils';
 import { Slider } from '../ui/slider';
 
-const SongCard = ({ song, isActive, isPlaying }) => {
+const SongCard = memo(({ song, isActive, isPlaying }) => {
     // 1. Get global state.
     const { currentTime, duration, togglePlayPause, handleSeek } = useContext(UserContext);
     const [liked, setLiked] = useState(false);
@@ -118,6 +116,8 @@ const SongCard = ({ song, isActive, isPlaying }) => {
             </div>
         </div>
     );
-};
+});
+
+SongCard.displayName = 'SongCard';
 
 export default SongCard;

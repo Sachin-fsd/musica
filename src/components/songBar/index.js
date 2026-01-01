@@ -14,7 +14,19 @@ import TouchableOpacity from "../ui/touchableOpacity";
 // import { createPlaylistFromSuggestions } from "@/utils/playlistUtils";
 
 
-const SongBar = ({ song }) => {
+import { memo } from 'react';
+import { toast } from "sonner";
+import { EllipsisVertical, ListMusic, Play, Plus, Trash2 } from "lucide-react";
+import { Label } from "../ui/label";
+import { Skeleton } from "../ui/skeleton";
+import { useContext, useState, useCallback, useEffect, useMemo } from "react";
+import { UserContext } from "@/context";
+import { decodeHtml, htmlParser } from "@/utils";
+import { Button } from "../ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import TouchableOpacity from "../ui/touchableOpacity";
+
+const SongBar = memo(({ song }) => {
 
     const {
         playing ,
@@ -154,6 +166,8 @@ const SongBar = ({ song }) => {
             </div>
         </div>
     );
-};
+});
+
+SongBar.displayName = 'SongBar';
 
 export default SongBar;

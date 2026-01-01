@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useRef, useState, useEffect, useCallback } from "react";
+import { createContext, useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { SearchSongSuggestionAction } from "@/app/actions";
 import { songFormat, songs } from "@/utils/cachedSongs";
 import { shuffleArray } from "@/utils/extraFunctions";
@@ -83,13 +83,13 @@ export default function UserState({ children }) {
         setPlaying(prevPlaying => !prevPlaying);
     }, []);
 
-    const handleSeek = (e) => {
+    const handleSeek = useCallback((e) => {
         const seekTime = e;
         if (audioRef.current) {
             audioRef.current.currentTime = seekTime;
             setCurrentTime(seekTime);
         }
-    };
+    }, [setCurrentTime]);
 
     // --- useEffect Hooks for Side Effects ---
 
@@ -236,15 +236,19 @@ export default function UserState({ children }) {
     }, [handleNext, handlePrev]);
 
 
-    // --- Context Value ---
-    const value = {
+    // --- Context Value with useMemo to prevent unnecessary re-renders ---
+    const value = useMemo(() => ({
         currentSong, setCurrentSong, playing, setPlaying, currentTime, setCurrentTime,
         duration, setDuration, isLooping, setIsLooping, audioRef, handleSeek,
         currentIndex, setCurrentIndex, songList, setSongList, loading, setLoading,
         handleNext, handlePrev, manualQuality, setManualQuality, togglePlayPause,
         isJamChecked, setIsJamChecked,
         playSongAndCreateQueue, playSongAtIndex, currentId, setCurrentId
-    };
+    }), [
+        currentSong, playing, currentTime, duration, isLooping, audioRef, handleSeek,
+        currentIndex, songList, loading, handleNext, handlePrev, manualQuality,
+        isJamChecked, playSongAndCreateQueue, playSongAtIndex, currentId
+    ]);
 
     return (
         <UserContext.Provider value={value}>
