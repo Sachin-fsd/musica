@@ -12,6 +12,7 @@ node_modules
 
 # next.js
 .next
+.next/
 .vscode
 .next-app-template
 /.next/
