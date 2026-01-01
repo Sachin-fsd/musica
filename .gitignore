@@ -16,6 +16,9 @@ target/
 
 # Dependencies
 node_modules/
+.next
+.next/
+.vscode
 venv/
 .venv/
 .env

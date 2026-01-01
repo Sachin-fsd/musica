@@ -3,12 +3,7 @@ import LeftSidebarIcons from "./leftSidebarIcons";
 const LeftSidebar = () => {
     return (
         <div
-            className="
-        flex flex-col  p-4 pt-10 h-screen justify-center items-center
-        
-        
-        w-16 sm:w-20 md:w-20 lg:w-24
-      "
+            className="flex flex-col  p-4 pt-10 h-screen justify-center items-center w-16 sm:w-20 md:w-20 lg:w-24"
         >
             {/* <div className="flex-shrink-0 cursor-pointer mb-8">
                 <Menu className="text-2xl font-bold text-gray-800 dark:text-gray-100" />
