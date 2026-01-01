@@ -15,9 +15,9 @@ target/
 *.out
 
 # Dependencies
-node_modules/
 .next
 .next/
+node_modules/
 .vscode
 venv/
 .venv/
