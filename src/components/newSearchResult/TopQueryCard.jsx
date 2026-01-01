@@ -36,6 +36,10 @@ const TopQueryCard = ({ data }) => {
                     setSongList(response.data.songs);
                     setCurrentSong(response.data.songs[0]);
                     setPlaying(true);
+                } else if (data.type == "artist"){
+                    setSongList(response.data.topSongs);
+                    setCurrentSong(response.data.topSongs[0]);
+                    setPlaying(true);
                 }
             } else {
                 console.log("Error fetching top query", response);

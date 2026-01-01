@@ -9,6 +9,7 @@ import { Input } from "../ui/input";
 import { useEffect, useState, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { Skeleton } from "../ui/skeleton";
 
 // Debounce hook
 const useDebounce = (value, delay) => {
@@ -107,7 +108,7 @@ const ModernSearchResult = () => {
     return (
         <div style={{ flex: 1, padding: 20 }}>
             {/* Search Bar */}
-            <div className="mt-[10%] mb-10 w-[90%] sm:w-[60%] mx-auto flex items-center relative">
+            <div className="mt-[10%] mb-10 w-[90%] sm:w-[80%] mx-auto flex items-center relative">
                 <div
                     className="absolute inset-y-0 left-0 flex items-center pl-4 z-10"
                     aria-label="Search"
@@ -135,7 +136,13 @@ const ModernSearchResult = () => {
             </div>
 
             {/* Loading / Error */}
-            {loading && <div className="text-center text-white/80 py-8">Loading...</div>}
+            {loading && <div className="text-center text-white/80 py-8">
+                <div className="space-y-2">
+                    <Skeleton className="h-16 rounded-lg" />
+                    <Skeleton className="h-16 rounded-lg" />
+                    <Skeleton className="h-16 rounded-lg" />
+                </div>
+            </div>}
             {error && <div className="text-center text-red-400 py-8">{error}</div>}
 
             {/* Results */}

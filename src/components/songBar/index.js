@@ -1,19 +1,5 @@
 'use client';
 
-import { toast } from "sonner";
-import { EllipsisVertical, ListMusic, Play, Plus, Trash2 } from "lucide-react";
-import { Label } from "../ui/label";
-import { Skeleton } from "../ui/skeleton";
-import { useContext, useState, useCallback, useEffect, useMemo } from "react";
-import { UserContext } from "@/context";
-import { decodeHtml, htmlParser } from "@/utils";
-import { Button } from "../ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import TouchableOpacity from "../ui/touchableOpacity";
-// Assume you have this new utility function imported
-// import { createPlaylistFromSuggestions } from "@/utils/playlistUtils";
-
-
 import { memo } from 'react';
 import { toast } from "sonner";
 import { EllipsisVertical, ListMusic, Play, Plus, Trash2 } from "lucide-react";

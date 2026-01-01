@@ -46,7 +46,7 @@ const useUsername = () => {
 export default function Jam() {
   const {
     songList, currentSong, playing, currentTime,
-    setSongList, setCurrentSong, setPlaying, setCurrentTime, isJamChecked, currentIndex, setCurrentIndex
+    setSongList, setCurrentSong, setPlaying, isJamChecked, currentIndex, setCurrentIndex, handleSeek
   } = useContext(UserContext);
 
   const socketRef = useRef(null);
@@ -93,11 +93,11 @@ export default function Jam() {
 
     socket.on("sync-state", (state) => {
       setIncomingChange(true);
-      setSongList(state.songList || []);
-      setCurrentSong(state.currentSong || null);
+      setSongList(state.songList || songList);
+      setCurrentSong(state.currentSong || songList[0]);
       setPlaying(!!state.playing);
-      setCurrentTime(state.currentTime || 0);
-      setCurrentIndex(state.currentIndex)
+      handleSeek(state.currentTime || 0);
+      setCurrentIndex(state.currentIndex || 0)
     });
 
     socket.on("chat-message", (msg) => {

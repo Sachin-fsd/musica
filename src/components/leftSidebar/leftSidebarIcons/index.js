@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import AdjustSongQuality from "../AdjustSongQuality";
 import InstallPromptIcon from "../installApp/installPrompt";
 import JamOnOff from "../jamOnOff";
+import { ThemeSwitch } from "@/components/themeSwitch";
 
 const LeftSidebarIcons = ({ setIsSheetOpen }) => {
     const pathname = usePathname();
@@ -38,6 +39,7 @@ const LeftSidebarIcons = ({ setIsSheetOpen }) => {
                 <AdjustSongQuality setIsSheetOpen={setIsSheetOpen}/>
                 <InstallPromptIcon />
                 <JamOnOff setIsSheetOpen={setIsSheetOpen}/>
+                <ThemeSwitch />
             </div>
         </div>
     );

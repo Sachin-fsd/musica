@@ -12,11 +12,12 @@ import { PlaceholdersAndVanishInput } from "../ui/placeholders-and-vanish-input"
 import { toast } from "sonner";
 import { usePathname } from "next/navigation";
 import { useSearchStore } from "@/store/useSearchStore";
+import Image from "next/image";
 
 const Navbar = () => {
     const pathname = usePathname();
     if (pathname == "/vibes") return null;
-    const { searchQuery, setSearchQuery, isLoading:loading } = useSearchStore();
+    const { searchQuery, setSearchQuery, isLoading: loading } = useSearchStore();
     const [isSearchPopoverOpen, setIsSearchPopoverOpen] = useState(false);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
 
@@ -65,8 +66,8 @@ const Navbar = () => {
                 </div>
 
                 <div className="ml-2 md:ml-4 cursor-pointer">
-                    <p className="text-2xl font-bold text-gray-800 dark:text-gray-100" onDoubleClick={showName}>
-                        Musi<span className="text-blue-500">ca</span>
+                    <p className="text-2xl font-bold text-gray-800 dark:text-gray-100 flex" onDoubleClick={showName}>
+                        <span><Image src={'/favicon.png'} alt="Logo" width={30} height={30} /></span>Musi<span className="text-blue-500">ca</span>
                     </p>
                 </div>
             </div>
@@ -103,8 +104,8 @@ const Navbar = () => {
             </div> */}
 
 
-            <div className="flex items-center justify-center">
-                {/* <Popover className="md:hidden" open={isSearchPopoverOpen} onOpenChange={setIsSearchPopoverOpen}>
+            {/* <div className="flex items-center justify-center"> */}
+            {/* <Popover className="md:hidden" open={isSearchPopoverOpen} onOpenChange={setIsSearchPopoverOpen}>
                     <PopoverTrigger className="md:hidden" asChild>
                         <button
                             className="p-2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 
@@ -136,13 +137,13 @@ const Navbar = () => {
                     </PopoverContent>
                 </Popover> */}
 
-                <div className="ml-2 md:ml-6">
+            {/* <div className="ml-2 md:ml-6">
                     <ThemeSwitch />
-                </div>
-                {/* <div className="ml-2 md:ml-6">
+                </div> */}
+            {/* <div className="ml-2 md:ml-6">
                     <InstallPromptIcon />
                 </div> */}
-            </div>
+            {/* </div> */}
         </div>
     );
 };
