@@ -57,7 +57,7 @@ const SongCard = memo(({ song, isActive, isPlaying }) => {
                 <img
                     src={imageUrl} // FIX: Use safe variable
                     alt={songTitle} // FIX: Use safe variable
-                    className="w-auto h-auto max-w-[75%] max-h-[45%] md:max-w-[400px] md:max-h-[400px] rounded-2xl shadow-2xl object-cover"
+                    className="w-auto h-auto max-w-[75%] max-h-[45%] md:max-w-[400px] md:max-h-[400px] rounded-2xl shadow-2xl object-cover -translate-y-7"
                     draggable={false}
                 />
             </div>
@@ -105,7 +105,7 @@ const SongCard = memo(({ song, isActive, isPlaying }) => {
                 </div>
 
                 <div onClick={togglePlayPause} className={cn(
-                    "absolute inset-0 flex items-center justify-center transition-opacity duration-300",
+                    "absolute inset-0 flex items-center justify-center transition-opacity duration-300 -translate-y-7",
                     isPlaying ? "opacity-0" : "opacity-100"
                 )}>
                     <button className="w-20 h-20 rounded-full bg-black/30 backdrop-blur-md flex items-center justify-center">

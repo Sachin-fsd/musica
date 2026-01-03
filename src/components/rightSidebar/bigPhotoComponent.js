@@ -13,7 +13,7 @@ const BigPhotoComponent = () => {
         <div className="flex flex-col h-full rounded-lg p-4 shadow-md overflow-auto">
             {/* Carousel - takes up a small portion */}
             <div className="rounded text-center">
-                <div>
+                <div className="justify-items-center">
                     {currentSong && currentSong?.image?.[2]?.url && (
                         <MainSongPhoto src={currentSong.image[2].url} alt={currentSong.name} />
                     )}

@@ -3,6 +3,7 @@ import JamPage from '@/components/friendsJam/jam';
 import AlbumContent from '@/components/homePage/TopAlbums/AlbumContent';
 import SongContentCarousel from '@/components/homePage/TopSongs/SongContentCarousel';
 import ModernSearchResult from '@/components/newSearchResult/ModernSearchResult';
+import { Spinner } from '@/components/ui/spinner';
 import { Suspense } from 'react';
 
 const HomePage = () => {
@@ -11,7 +12,7 @@ const HomePage = () => {
     <div className=" p-4 md:p-5 mb-20 md:mb-0">
       {/* Top Songs Section */}
 
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div><Spinner /></div>}>
         <ModernSearchResult />
       </Suspense>
 

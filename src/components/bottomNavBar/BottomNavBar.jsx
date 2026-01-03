@@ -9,7 +9,7 @@ import Link from "next/link";
 const BottomNavBar = () => {
     const pathname = usePathname();
     return (
-        <nav className=" z-50 w-full bg-gradient-to-r from-[#181c2f] via-[#1a223f] to-[#181c2f] shadow-xl border border-white/10 px-4 py-2 flex items-center justify-between backdrop-blur-md m-auto">
+        <nav className=" z-50 w-full bg-gradient-to-r from-[#181c2f] via-[#1a223f] to-[#181c2f] shadow-xl border border-white/10 px-4 py-1 flex items-center justify-between backdrop-blur-md m-auto">
             {leftIcons.map((icon, index) => (
                 <NavItem
                     key={index}

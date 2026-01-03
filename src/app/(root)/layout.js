@@ -5,6 +5,7 @@ import UserState from "@/context";
 import Bottombar from "@/components/bottomBar";
 import BottomNavBar from "@/components/bottomNavBar/BottomNavBar";
 import { Suspense } from "react";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function RootLayout({ children }) {
   return (
@@ -32,7 +33,7 @@ export default function RootLayout({ children }) {
 
         {/* Bottom Player for small and medium screens */}
         <div className="md:fixed z-10 md:bottom-0 w-full col-span-2 lg:hidden">
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div><Spinner /></div>}>
             <Bottombar />
           </Suspense>
 

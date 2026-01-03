@@ -3,6 +3,7 @@
 import React, { useRef, useEffect, useContext } from 'react';
 import { UserContext } from '@/context';
 import SongCard from '@/components/vibes/SongCard';
+import Image from 'next/image';
 
 const SongReels = () => {
     const startScrollY = useRef(0);
@@ -57,20 +58,6 @@ const SongReels = () => {
         };
     }, [currentIndex, songList.length, playSongAtIndex]);
 
-    // 3. Effect for keyboard navigation
-    // useEffect(() => {
-    //     const handleKeyDown = (e) => {
-    //         // Spacebar toggles play/pause for the current song
-    //         if (e.key === ' ') {
-    //             e.preventDefault();
-    //             togglePlayPause();
-    //         }
-    //     };
-
-    //     window.addEventListener('keydown', handleKeyDown);
-    //     return () => window.removeEventListener('keydown', handleKeyDown);
-    // }, [togglePlayPause]);
-
     // 4. Effect to scroll the view when currentIndex changes (e.g., from external controls)
     useEffect(() => {
         if (containerRef.current) {
@@ -87,7 +74,10 @@ const SongReels = () => {
         <div className="relative w-full h-screen bg-black overflow-hidden">
             {/* Header with song progress indicators */}
             <header className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gradient-to-b from-black/50 to-transparent">
-                <h1 className="text-white text-lg font-semibold">Vibes</h1>
+                <span className='flex'>
+                    <span><Image src="/favicon.png" alt="Logo" width={30} height={30} /></span>
+                    <h1 className="text-white text-lg font-semibold">Vibes</h1>
+                </span>
                 {/* <div className="flex items-center space-x-1">
                     {songList.map((_, index) => (
                         <div
