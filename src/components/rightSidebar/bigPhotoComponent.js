@@ -12,9 +12,9 @@ const BigPhotoComponent = () => {
     const router = useRouter();
 
     const { currentTime, duration, handleSeek, songList, currentSong, currentIndex } = useContext(UserContext);
-    function artistClick(name) {
-        // const url = `/browse?query=${encodeURIComponent(name)}`;
-        // router.push(url, { scroll: false });
+    function handleClick(name) {
+        const url = `/browse?query=${encodeURIComponent(name)}`;
+        router.push(url, { scroll: false });
     }
     return (
         <div className="flex flex-col h-full rounded-lg p-4 shadow-md overflow-auto">
@@ -54,7 +54,7 @@ const BigPhotoComponent = () => {
                                 <>
                                     <div>
                                         <h3 className="text-lg font-semibold mb-1">{currentSong.name}</h3>
-                                        <p className="text-sm text-gray-500">{currentSong.album?.name}</p>
+                                        <p onClick={() => handleClick(currentSong.album?.name)} className="text-sm text-gray-500 cursor-pointer">{currentSong.album?.name}</p>
                                     </div>
 
                                     <Separator />
@@ -64,7 +64,7 @@ const BigPhotoComponent = () => {
                                             <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Artists</p>
                                             <div className="flex flex-wrap gap-3">
                                                 {currentSong.artists?.primary?.map((artist, idx) => (
-                                                    <div key={idx} onClick={() => artistClick(artist.name)} className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full pr-3 py-1">
+                                                    <div key={idx} onClick={() => handleClick(artist.name)} className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full pr-3 py-1 cursor-pointer">
                                                         {artist.image?.[0]?.url && (
                                                             <img
                                                                 src={artist.image[0].url}
@@ -83,7 +83,7 @@ const BigPhotoComponent = () => {
                                                 <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Lyricist</p>
                                                 <div className="flex flex-wrap gap-3">
                                                     {currentSong.artists.all.filter(a => a.role === 'lyricist').map((lyricist, idx) => (
-                                                        <div key={idx} className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full pr-3 py-1">
+                                                        <div key={idx} className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full pr-3 py-1 cursor-pointer">
                                                             {lyricist.image?.[0]?.url && (
                                                                 <img
                                                                     src={lyricist.image[0].url}
