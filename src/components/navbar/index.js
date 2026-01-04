@@ -25,14 +25,6 @@ const Navbar = () => {
         toast("Made by Sachin Singh")
     }
 
-    const placeholders = [
-        "Arjit Singh Songs",
-        "Search for artists",
-        "Search for haryanavi songs",
-        "Search you favourite playlist",
-        "Latest Albums",
-    ];
-
     return (
         <div className="flex items-center justify-between p-2 shadow-md">
             <div className="flex items-center">

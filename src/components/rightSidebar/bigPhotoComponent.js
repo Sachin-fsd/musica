@@ -7,6 +7,7 @@ import SongBar from "../songBar";
 import { Separator } from "../ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { useRouter } from "next/navigation";
+import { decode } from "he";
 
 const BigPhotoComponent = () => {
     const router = useRouter();
@@ -62,9 +63,9 @@ const BigPhotoComponent = () => {
                                     <div className="space-y-3">
                                         <div>
                                             <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Artists</p>
-                                            <div className="flex flex-wrap gap-3">
+                                            <div className="grid grid-cols-2 gap-3">
                                                 {currentSong.artists?.primary?.map((artist, idx) => (
-                                                    <div key={idx} onClick={() => handleClick(artist.name)} className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full pr-3 py-1 cursor-pointer">
+                                                    <div key={idx} onClick={() => handleClick(decode(artist.name))} className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full pr-3 py-1 cursor-pointer">
                                                         {artist.image?.[0]?.url && (
                                                             <img
                                                                 src={artist.image[0].url}
@@ -72,7 +73,7 @@ const BigPhotoComponent = () => {
                                                                 className="w-8 h-8 rounded-full object-cover"
                                                             />
                                                         )}
-                                                        <span className="text-sm">{artist.name}</span>
+                                                        <span className="text-sm">{decode(artist.name)}</span>
                                                     </div>
                                                 ))}
                                             </div>
@@ -91,7 +92,7 @@ const BigPhotoComponent = () => {
                                                                     className="w-8 h-8 rounded-full object-cover"
                                                                 />
                                                             )}
-                                                            <span className="text-sm">{lyricist.name}</span>
+                                                            <span className="text-sm">{decode(lyricist.name)}</span>
                                                         </div>
                                                     ))}
                                                 </div>

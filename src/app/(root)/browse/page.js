@@ -2,6 +2,7 @@ import Jam from '@/components/friendsJam';
 import JamPage from '@/components/friendsJam/jam';
 import AlbumContent from '@/components/homePage/TopAlbums/AlbumContent';
 import SongContentCarousel from '@/components/homePage/TopSongs/SongContentCarousel';
+import Lyrics from '@/components/lyrics/lyrics';
 import ModernSearchResult from '@/components/newSearchResult/ModernSearchResult';
 import { Spinner } from '@/components/ui/spinner';
 import { Suspense } from 'react';
@@ -15,6 +16,10 @@ const HomePage = () => {
       <Suspense fallback={<div><Spinner /></div>}>
         <ModernSearchResult />
       </Suspense>
+
+      <div className='my-4'>
+        <Lyrics />
+      </div>
 
       <div>
         <SongContentCarousel />

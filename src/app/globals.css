@@ -205,20 +205,6 @@
   }
 }
 
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -226,42 +212,6 @@
   to {
     transform: rotate(360deg);
   }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-.read-the-docs {
-  color: #888;
-}
-
-.bg-gradient-neon {
-  background: linear-gradient(90deg, #00eaff 0%, #ff00cc 100%);
-}
-.shadow-glow-neon {
-  box-shadow: 0 0 8px 2px #00eaff, 0 0 16px 4px #ff00cc;
-}
-.text-neon-blue {
-  color: #00eaff;
-}
-.text-neon-pink {
-  color: #ff00cc;
-}
-@keyframes fade-in-out {
-  0% { opacity: 0; transform: scale(0.8);}
-  10% { opacity: 1; transform: scale(1);}
-  90% { opacity: 1; transform: scale(1);}
-  100% { opacity: 0; transform: scale(1.2);}
-}
-.animate-fade-in-out {
-  animation: fade-in-out 0.6s both;
-}
-
-.vibes-root {
-  overscroll-behavior-y: contain;
-  /* or: overscroll-behavior: none; */
 }
 
 .scrollbar-hide::-webkit-scrollbar {
@@ -285,12 +235,6 @@ button, .no-select {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-}
-
-.glass {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* Custom animations */
@@ -324,9 +268,9 @@ button, .no-select {
 }
 
 /* Smooth transitions for all interactive elements */
-* {
+/* * {
   transition: transform 0.2s ease, opacity 0.2s ease, background-color 0.2s ease;
-}
+} */
 
 /* Better focus states */
 button:focus {
@@ -335,16 +279,19 @@ button:focus {
 }
 
 /* Ensure proper aspect ratios for images */
-.vibe-img {
-  object-fit: cover;
-  object-position: center;
-}
 .bg-cover {
   background-size: cover;
 }
 .bg-center {
   background-position: center;
 }
-.animate-spin-artist {
-    animation: spin 10s linear infinite;
+
+.lyrics-scroll {
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.lyrics-scroll::-webkit-scrollbar {
+  display: none;
 }
