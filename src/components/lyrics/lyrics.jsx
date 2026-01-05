@@ -167,7 +167,7 @@ function Lyrics() {
 
     if (loading) {
         return (
-            <div className="w-[90vw] h-[80vh] flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
+            <div className="w-full h-4 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
                 <Loader2 className="w-12 h-12 mb-4 animate-spin" />
                 <p>Loading lyrics...</p>
             </div>
@@ -175,14 +175,14 @@ function Lyrics() {
     }
 
     if (error || !lyrics || lyrics.instrumental) {
-        return null
-        // return (
-        //     <div className="w-[90vw] h-[80vh] flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
-        //         <AlertCircle className="w-12 h-12 mb-4 opacity-50" />
-        //         <p className="text-lg mb-2">Lyrics not available</p>
-        //         <p className="text-sm opacity-75">for {currentSong.name}</p>
-        //     </div>
-        // );
+        // return null
+        return (
+            <div className="w-full h-[20%] flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
+                <AlertCircle className="w-12 h-12 mb-4 opacity-50" />
+                <p className="text-lg mb-2">Lyrics not available</p>
+                <p className="text-sm opacity-75">for {currentSong.name}</p>
+            </div>
+        );
     }
 
     // if (lyrics.instrumental) {
@@ -195,20 +195,20 @@ function Lyrics() {
     // }
 
     return (
-        <div className="w-full h-[90vh] flex flex-col rounded-xl shadow-lg overflow-hidden">
+        <div className="w-[90%] h-[90vh] flex flex-col rounded-xl shadow-lg overflow-hidden border-2">
             {/* Lyrics Container with fixed height */}
             <div
                 ref={lyricsContainerRef}
                 onScroll={handleUserScroll}
-                className=" lyrics-scroll flex-1 overflow-y-auto px-6 py-8 relative"
+                className=" lyrics-scroll flex-1 overflow-y-auto px-6 relative"
             >
                 {lyrics.synced ? (
                     // Synced Lyrics - Add padding to center the content
                     <div className="max-w-3xl mx-auto">
                         {/* Top spacer to center first line */}
-                        <div style={{ height: 'calc(40vh - 100px)' }} />
+                        {/* <div style={{ height: 'calc(40vh - 100px)' }} /> */}
 
-                        <div className="space-y-6">
+                        <div className="space-y-6 mt-2">
                             {lyrics.synced.map((line, index) => (
                                 <div
                                     key={index}
@@ -227,7 +227,7 @@ function Lyrics() {
                         </div>
 
                         {/* Bottom spacer to center last line */}
-                        <div style={{ height: 'calc(40vh - 100px)' }} />
+                        {/* <div style={{ height: 'calc(40vh - 100px)' }} /> */}
                     </div>
                 ) : (
                     // Plain Lyrics

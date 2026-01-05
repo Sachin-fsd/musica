@@ -5,6 +5,7 @@ import { leftIcons } from "@/utils";
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import React from "react";
 
 const BottomNavBar = () => {
     const pathname = usePathname();
@@ -32,15 +33,17 @@ export const NavItem = ({ icon: Icon, label, link, active = false, show = true }
     return (
         <Link href={link} className="flex flex-col items-center group flex-1">
             <div className={`p-2 rounded-full transition-all duration-300 flex items-center justify-center ${active
-                    ? 'bg-white/10 ring-2 ring-white/40 shadow-md'
+                    ? ''
                     : 'hover:bg-white/10'
                 }`}>
-                <div className={`w-6 h-6 flex items-center justify-center ${active ? 'text-white' : 'text-white/80'
-                    }`}>
-                    {Icon}
+                <div className={`w-6 h-6 flex items-center justify-center`}>
+                    {React.cloneElement(Icon, {
+                        fill: active ? "currentColor" : "none",
+                        stroke: active ? "none" : "currentColor"
+                    })}
                 </div>
             </div>
-            <span className={`text-[11px] font-medium mt-1 ${active ? 'text-white' : 'text-white/60'
+            <span className={`text-[11px] font-medium mt-1 ${active ? 'text-white' : 'text-white/50'
                 } `}>
                 {label}
             </span>

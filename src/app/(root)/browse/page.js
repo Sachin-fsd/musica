@@ -17,7 +17,7 @@ const HomePage = () => {
         <ModernSearchResult />
       </Suspense>
 
-      <div className='my-4'>
+      <div className='my-4 flex justify-center'>
         <Lyrics />
       </div>
 

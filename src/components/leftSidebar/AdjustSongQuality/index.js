@@ -51,12 +51,12 @@ export default function AdjustSongQuality({setIsSheetOpen}) {
           <div className="flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300">
             <Cog />
           </div>
-          <span className="text-xs text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300 font-bold">
-            Quality
+          <span className="flex-1 text-center md:text-left md:text-xs text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300 font-bold">
+            Quality {`(${labels[manualQuality]})`}
           </span>
-          <span className="md:text-xs text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300 font-bold whitespace-nowrap md:ml-0 ml-1">
+          {/* <span className="flex-1 text-center md:text-left md:text-xs text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300 font-bold whitespace-nowrap md:ml-0 ml-1">
             {`(${labels[manualQuality]})`}
-          </span>
+          </span> */}
           
         </Label>
       </PopoverTrigger>
