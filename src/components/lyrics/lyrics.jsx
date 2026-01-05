@@ -174,24 +174,25 @@ function Lyrics() {
         );
     }
 
-    if (error || !lyrics) {
-        return (
-            <div className="w-[90vw] h-[80vh] flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
-                <AlertCircle className="w-12 h-12 mb-4 opacity-50" />
-                <p className="text-lg mb-2">Lyrics not available</p>
-                <p className="text-sm opacity-75">for {currentSong.name}</p>
-            </div>
-        );
+    if (error || !lyrics || lyrics.instrumental) {
+        return null
+        // return (
+        //     <div className="w-[90vw] h-[80vh] flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
+        //         <AlertCircle className="w-12 h-12 mb-4 opacity-50" />
+        //         <p className="text-lg mb-2">Lyrics not available</p>
+        //         <p className="text-sm opacity-75">for {currentSong.name}</p>
+        //     </div>
+        // );
     }
 
-    if (lyrics.instrumental) {
-        return (
-            <div className="w-[90vw] h-[80vh] flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
-                <Music className="w-16 h-16 mb-4 opacity-50" />
-                <p className="text-lg">Instrumental Track</p>
-            </div>
-        );
-    }
+    // if (lyrics.instrumental) {
+    //     return (
+    //         <div className="w-[90vw] h-[80vh] flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
+    //             <Music className="w-16 h-16 mb-4 opacity-50" />
+    //             <p className="text-lg">Instrumental Track</p>
+    //         </div>
+    //     );
+    // }
 
     return (
         <div className="w-full h-[90vh] flex flex-col rounded-xl shadow-lg overflow-hidden">

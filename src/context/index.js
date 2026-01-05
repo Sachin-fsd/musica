@@ -180,13 +180,23 @@ export default function UserState({ children }) {
             setDuration(audioElement.duration || 0);
         };
         const handleSongEnd = () => handleNext();
+        const handleLoadedMetadata = () => {
+            setDuration(audioElement.duration || 0);
+        };
+        const handleDurationChange = () => {
+            setDuration(audioElement.duration || 0);
+        };
 
         audioElement.addEventListener("timeupdate", handleTimeUpdate);
         audioElement.addEventListener("ended", handleSongEnd);
+        audioElement.addEventListener("loadedmetadata", handleLoadedMetadata);
+        audioElement.addEventListener("durationchange", handleDurationChange);
 
         return () => {
             audioElement.removeEventListener("timeupdate", handleTimeUpdate);
             audioElement.removeEventListener("ended", handleSongEnd);
+            audioElement.removeEventListener("loadedmetadata", handleLoadedMetadata);
+            audioElement.removeEventListener("durationchange", handleDurationChange);
         };
     }, [handleNext]);
 

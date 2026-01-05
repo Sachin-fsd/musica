@@ -115,7 +115,7 @@ const ModernSearchResult = () => {
 
   return (
     <div style={{ flex: 1, padding: 20 }} ref={searchContainerRef}>
-      <div className="mt-[8%] w-[90%] sm:w-[80%] mx-auto flex items-center relative">
+      <div className="w-[90%] sm:w-[80%] mx-auto flex items-center relative">
         <div
           className="absolute inset-y-0 left-0 flex items-center pl-4 z-10"
           aria-label="Search"
