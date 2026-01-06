@@ -33,20 +33,6 @@ const ModernSearchResult = () => {
   const searchContainerRef = useRef(null);
   const debouncedSearch = useDebounce(search, 500);
 
-  // ✅ Sync search input with URL query parameter whenever it changes
-  useEffect(() => {
-    if (queryFromUrl !== search) {
-      setSearch(queryFromUrl);
-      // Scroll to search when URL query changes (from other components)
-      if (queryFromUrl && searchContainerRef.current) {
-        searchContainerRef.current.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'start' 
-        });
-      }
-    }
-  }, [queryFromUrl]);
-
   // ✅ Fetch results when debounced search changes
   useEffect(() => {
     if (!router) return;

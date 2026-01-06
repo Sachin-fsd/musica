@@ -56,12 +56,12 @@ function Lyrics() {
 
     // Fetch lyrics when song changes
     useEffect(() => {
-        const fetchLyrics = async () => {
-            if (!currentSong) {
-                setLyrics(null);
-                return;
-            }
+        if (!currentSong || !currentSong.id) {
+            setLyrics(null);
+            return;
+        }
 
+        const fetchLyrics = async () => {
             setLoading(true);
             setError(null);
             setCurrentLineIndex(-1);
@@ -90,12 +90,15 @@ function Lyrics() {
 
                 const parsedSynced = parseSyncedLyrics(data.syncedLyrics);
 
+                console.log("here", params, response, data, parsedSynced)
+
                 setLyrics({
                     synced: parsedSynced,
                     plain: data.plainLyrics,
                     instrumental: data.instrumental
                 });
             } catch (err) {
+                console.error('Error fetching lyrics:', err, currentSong);
                 setError(err.message);
                 setLyrics(null);
             } finally {
@@ -156,7 +159,7 @@ function Lyrics() {
         };
     }, []);
 
-    if (!currentSong) {
+    if (!currentSong || !currentSong.id) {
         return (
             <div className="w-[90vw] h-[80vh] flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
                 <Music className="w-16 h-16 mb-4 opacity-50" />
@@ -167,7 +170,7 @@ function Lyrics() {
 
     if (loading) {
         return (
-            <div className="w-full h-4 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
+            <div className="w-full h-8 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
                 <Loader2 className="w-12 h-12 mb-4 animate-spin" />
                 <p>Loading lyrics...</p>
             </div>

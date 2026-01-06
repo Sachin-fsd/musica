@@ -30,7 +30,7 @@ const JamOnOff = ({ setIsSheetOpen }) => {
                 // disabled={false}
                 />
             </div>
-            <span className="flex-1 text-center md:text-left md:text-xs text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300 font-bold">
+            <span className="flex-1 text-center md:text-xs text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300 font-bold">
                 Jam {isJamChecked ? "On" : "Off"}
             </span>
         </div>

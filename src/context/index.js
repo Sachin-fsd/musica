@@ -207,7 +207,7 @@ export default function UserState({ children }) {
         if (currentIndex === 0 || songList.length === 0 || !currentSong?.id) return;
 
         const addRelatedSongs = async () => {
-            if (currentIndex >= songList.length - 2) {
+            if (currentIndex >= songList.length - 4) {
                 setLoading(true);
                 const response = await SearchSongSuggestionAction(currentSong.id);
                 if (response.success) {
