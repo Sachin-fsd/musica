@@ -122,9 +122,15 @@ export async function fetchLyricsAction(artistName, trackName, albumName, durati
     const url = `${LYRICS_API_URL}/get?${params}`;
 
     try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            headers: {
+                'User-Agent': 'Musica-App/1.0',
+                'Accept': 'application/json'
+            }
+        });
         if (!response.ok) {
-            throw new Error('Lyrics not found');
+            console.error(`Lyrics API responded with status ${response.status}: ${response.statusText}`);
+            throw new Error(`Lyrics not found (${response.status})`);
         }
 
         const data = await response.json();
@@ -136,7 +142,7 @@ export async function fetchLyricsAction(artistName, trackName, albumName, durati
             instrumental: data.instrumental
         };
     } catch (error) {
-        console.error('Error fetching lyrics:', error);
+        console.error('Error fetching lyrics:', error.message, 'URL:', url);
         throw new Error(error.message || 'Failed to fetch lyrics');
     }
 }
