@@ -43,7 +43,7 @@ const SongCard = memo(({ song, isActive, isPlaying }) => {
     const songYear = song.year || "";
 
     return (
-        <div className="relative w-full h-[calc(100vh-60px)] md:h-full overflow-hidden hide-scrollbar">
+        <div className="lyrics-scroll relative w-full h-[calc(100vh-60px)] md:h-full overflow-hidden hide-scrollbar">
             {/* Background Image */}
             <div className="absolute inset-0 w-full h-full hide-scrollbar">
                 <img

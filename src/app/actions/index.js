@@ -89,3 +89,54 @@ export async function fetchByLinkAction(link) {
         return null;
     }
 }
+
+// Parse synced lyrics into array of {time, text}
+const parseSyncedLyrics = (syncedLyrics) => {
+    if (!syncedLyrics) return null;
+    const lines = syncedLyrics.split('\n').filter(line => line.trim());
+    return lines.map(line => {
+        const match = line.match(/\[(\d+):(\d+\.\d+)\]\s*(.*)/);
+        if (match) {
+            const minutes = parseInt(match[1]);
+            const seconds = parseFloat(match[2]);
+            const time = minutes * 60 + seconds;
+            return { time, text: match[3] };
+        }
+        return null;
+    }).filter(Boolean);
+};
+
+export async function fetchLyricsAction(artistName, trackName, albumName, duration) {
+    const { LYRICS_API_URL } = process.env;
+    if (!LYRICS_API_URL) {
+        throw new Error("LYRICS_API_URL environment variable is not set.");
+    }
+
+    const params = new URLSearchParams({
+        artist_name: artistName,
+        track_name: trackName,
+        album_name: albumName,
+        duration: duration.toString()
+    });
+
+    const url = `${LYRICS_API_URL}/get?${params}`;
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error('Lyrics not found');
+        }
+
+        const data = await response.json();
+        const parsedSynced = parseSyncedLyrics(data.syncedLyrics);
+
+        return {
+            synced: parsedSynced,
+            plain: data.plainLyrics,
+            instrumental: data.instrumental
+        };
+    } catch (error) {
+        console.error('Error fetching lyrics:', error);
+        throw new Error(error.message || 'Failed to fetch lyrics');
+    }
+}

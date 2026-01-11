@@ -6,20 +6,24 @@ import Lyrics from '@/components/lyrics/lyrics';
 import ModernSearchResult from '@/components/newSearchResult/ModernSearchResult';
 import { Spinner } from '@/components/ui/spinner';
 import { Suspense } from 'react';
+import StyledLyrics from '@/components/lyrics/styledLyrics';
 
 const HomePage = () => {
 
   return (
     <div className=" p-4 md:p-5 mb-20 md:mb-0">
       {/* Top Songs Section */}
+      <div className='my-4 flex justify-center'>
+        <StyledLyrics />
+      </div>
 
       <Suspense fallback={<div><Spinner /></div>}>
         <ModernSearchResult />
       </Suspense>
 
-      <div className='my-4 flex justify-center'>
+      {/* <div className='my-4 flex justify-center'>
         <Lyrics />
-      </div>
+      </div> */}
 
       <div>
         <SongContentCarousel />

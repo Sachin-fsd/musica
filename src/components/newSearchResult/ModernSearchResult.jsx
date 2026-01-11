@@ -111,7 +111,7 @@ const ModernSearchResult = () => {
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="pl-12 pr-12 h-20 py-4 text-xl"
+          className="pl-12 pr-12 h-20 py-3 text-xl rounded-3xl"
           placeholder="Search for songs, artists or albums..."
           autoComplete="off"
         />

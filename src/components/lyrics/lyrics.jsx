@@ -3,9 +3,11 @@
 import { UserContext } from '@/context'
 import React, { useContext, useState, useEffect, useRef } from 'react'
 import { Music, AlertCircle, Loader2 } from 'lucide-react'
+import { fetchLyricsAction } from '@/app/actions'
+import { useLyricsStore } from '@/store/useLyricsStore'
 
 function Lyrics() {
-    const { currentSong, playing, currentTime, handleSeek } = useContext(UserContext);
+    const { currentSong, playing, currentTime, handleSeek, setPlaying } = useContext(UserContext);
     const [lyrics, setLyrics] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -15,27 +17,11 @@ function Lyrics() {
     const currentLineRef = useRef(null);
     const scrollTimeoutRef = useRef(null);
 
-    // Parse synced lyrics into array of {time, text}
-    const parseSyncedLyrics = (syncedLyrics) => {
-        if (!syncedLyrics) return null;
-
-        const lines = syncedLyrics.split('\n').filter(line => line.trim());
-        return lines.map(line => {
-            const match = line.match(/\[(\d+):(\d+\.\d+)\]\s*(.*)/);
-            if (match) {
-                const minutes = parseInt(match[1]);
-                const seconds = parseFloat(match[2]);
-                const time = minutes * 60 + seconds;
-                return { time, text: match[3] };
-            }
-            return null;
-        }).filter(Boolean);
-    };
-
     // Handle line click to seek
     const handleLineClick = (time) => {
         if (handleSeek) {
             handleSeek(time);
+            if (!playing) setPlaying(true);
         }
     };
 
@@ -62,6 +48,14 @@ function Lyrics() {
         }
 
         const fetchLyrics = async () => {
+            const { getLyrics, setLyrics: setCachedLyrics } = useLyricsStore.getState();
+            const cached = getLyrics(currentSong.id);
+            if (cached) {
+                setLyrics(cached);
+                setLoading(false);
+                return;
+            }
+
             setLoading(true);
             setError(null);
             setCurrentLineIndex(-1);
@@ -73,30 +67,10 @@ function Lyrics() {
                 const albumName = currentSong.album?.name || '';
                 const duration = currentSong.duration || 0;
 
-                const params = new URLSearchParams({
-                    artist_name: artistName,
-                    track_name: trackName,
-                    album_name: albumName,
-                    duration: duration.toString()
-                });
+                const data = await fetchLyricsAction(artistName, trackName, albumName, duration);
 
-                const response = await fetch(`https://lrclib.net/api/get?${params}`);
-
-                if (!response.ok) {
-                    throw new Error('Lyrics not found');
-                }
-
-                const data = await response.json();
-
-                const parsedSynced = parseSyncedLyrics(data.syncedLyrics);
-
-                console.log("here", params, response, data, parsedSynced)
-
-                setLyrics({
-                    synced: parsedSynced,
-                    plain: data.plainLyrics,
-                    instrumental: data.instrumental
-                });
+                setLyrics(data);
+                setCachedLyrics(currentSong.id, data);
             } catch (err) {
                 console.error('Error fetching lyrics:', err, currentSong);
                 setError(err.message);
@@ -160,32 +134,34 @@ function Lyrics() {
     }, []);
 
     if (!currentSong || !currentSong.id) {
-        return (
-            <div className="w-[90vw] h-[80vh] flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
-                <Music className="w-16 h-16 mb-4 opacity-50" />
-                <p className="text-lg">No song playing</p>
-            </div>
-        );
+        return null
+        // return (
+        //     <div className="w-full h-8 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
+        //         <Music className="w-16 h-16 mb-4 opacity-50" />
+        //         <p className="text-lg">No song playing</p>
+        //     </div>
+        // );
     }
 
     if (loading) {
-        return (
-            <div className="w-full h-8 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
-                <Loader2 className="w-12 h-12 mb-4 animate-spin" />
-                <p>Loading lyrics...</p>
-            </div>
-        );
+        return null;
+        // return (
+        //     <div className="w-full h-8 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
+        //         <Loader2 className="w-12 h-12 mb-4 animate-spin" />
+        //         <p>Loading lyrics...</p>
+        //     </div>
+        // );
     }
 
     if (error || !lyrics || lyrics.instrumental) {
-        // return null
-        return (
-            <div className="w-full h-[20%] flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
-                <AlertCircle className="w-12 h-12 mb-4 opacity-50" />
-                <p className="text-lg mb-2">Lyrics not available</p>
-                <p className="text-sm opacity-75">for {currentSong.name}</p>
-            </div>
-        );
+        return null
+        // return (
+        //     <div className="w-full h-[20%] flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
+        //         <AlertCircle className="w-12 h-12 mb-4 opacity-50" />
+        //         <p className="text-lg mb-2">Lyrics not available</p>
+        //         <p className="text-sm opacity-75">for {currentSong.name}</p>
+        //     </div>
+        // );
     }
 
     // if (lyrics.instrumental) {
@@ -208,20 +184,18 @@ function Lyrics() {
                 {lyrics.synced ? (
                     // Synced Lyrics - Add padding to center the content
                     <div className="max-w-3xl mx-auto">
-                        {/* Top spacer to center first line */}
-                        {/* <div style={{ height: 'calc(40vh - 100px)' }} /> */}
 
-                        <div className="space-y-6 mt-2">
+                        <div className="space-y-1 mt-2">
                             {lyrics.synced.map((line, index) => (
                                 <div
                                     key={index}
                                     ref={index === currentLineIndex ? currentLineRef : null}
                                     onClick={() => handleLineClick(line.time)}
                                     className={`transition-all duration-300 text-center cursor-pointer select-none ${index === currentLineIndex
-                                        ? 'text-gray-900 dark:text-white text-3xl md:text-4xl font-bold opacity-100'
+                                        ? 'text-gray-900 dark:text-white text-lg md:text-xl font-bold opacity-100'
                                         : index < currentLineIndex
-                                            ? 'text-gray-500 dark:text-gray-500 text-xl md:text-2xl opacity-60 hover:opacity-80'
-                                            : 'text-gray-600 dark:text-gray-600 text-xl md:text-2xl opacity-40 hover:opacity-60'
+                                            ? 'text-gray-500 dark:text-gray-500 text-base md:text-xl opacity-60 hover:opacity-80'
+                                            : 'text-gray-600 dark:text-gray-600 text-base md:text-xl opacity-40 hover:opacity-60'
                                         } ${line.text ? 'py-3' : 'py-2'}`}
                                 >
                                     {line.text || '♪'}
@@ -229,8 +203,6 @@ function Lyrics() {
                             ))}
                         </div>
 
-                        {/* Bottom spacer to center last line */}
-                        {/* <div style={{ height: 'calc(40vh - 100px)' }} /> */}
                     </div>
                 ) : (
                     // Plain Lyrics

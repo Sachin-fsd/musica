@@ -92,7 +92,7 @@ const SongReels = () => {
             {/* Main scroll container for song reels */}
             <main
                 ref={containerRef}
-                className="h-full overflow-y-scroll snap-y snap-mandatory hide-scrollbar"
+                className="lyrics-scroll h-full overflow-y-scroll snap-y snap-mandatory hide-scrollbar"
             >
                 {Array.isArray(songList) && songList.map((song, index) => (
                     <div key={song?.id || index} className="snap-start h-screen w-full">
