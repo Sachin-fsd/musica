@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useContext } from 'react'
+import React, { useContext, useRef, useState, useEffect } from 'react'
 import { UserContext } from "@/context";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import SongBar from '../songBar';
@@ -11,10 +11,20 @@ import Lyrics from '../lyrics/lyrics';
 
 const RightSidebarTabs = () => {
     const { songList, currentSong } = useContext(UserContext);
+    const [activeTab, setActiveTab] = useState('songlist');
+    const containerRef = useRef(null);
+
+    useEffect(() => {
+        if (activeTab == 'lyrics') {
+            console.log(containerRef.current)
+            let rightSideBarTabsId = document.getElementById('right_sidebar_tabs');
+            rightSideBarTabsId.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+    }, [activeTab])
 
     return (
-        <div className="flex w-full flex-col mt-6">
-            <Tabs defaultValue="songlist">
+        <div ref={containerRef} className="flex w-full flex-col mt-6" id='right_sidebar_tabs'>
+            <Tabs value={activeTab} onValueChange={setActiveTab} defaultValue="songlist">
                 <TabsList className="grid w-full grid-cols-3">
                     <TabsTrigger value="songlist">Songs</TabsTrigger>
                     <TabsTrigger value="info">Info</TabsTrigger>

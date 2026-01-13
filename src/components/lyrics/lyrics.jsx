@@ -174,7 +174,7 @@ function Lyrics() {
     // }
 
     return (
-        <div className="w-[90%] h-[90vh] flex flex-col rounded-xl shadow-lg overflow-hidden border-2">
+        <div className="w-[90%] h-[70vh] flex flex-col rounded-xl shadow-lg overflow-hidden border-2">
             {/* Lyrics Container with fixed height */}
             <div
                 ref={lyricsContainerRef}

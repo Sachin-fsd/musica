@@ -34,13 +34,13 @@ function StyledLyrics() {
       setLoading(true);
       setError(null);
       setCurrentLineIndex(-1);
-      
+
       try {
         const artistName = currentSong.artists?.primary?.[0]?.name || '';
         const trackName = currentSong.name || '';
         const albumName = currentSong.album?.name || '';
         const duration = currentSong.duration || 0;
-        
+
         const data = await fetchLyricsAction(artistName, trackName, albumName, duration);
         setLyrics(data);
         setCachedLyrics(currentSong.id, data);
@@ -65,7 +65,7 @@ function StyledLyrics() {
     let left = 0;
     let right = lyrics.synced.length - 1;
     let activeIndex = -1;
-    
+
     while (left <= right) {
       const mid = Math.floor((left + right) / 2);
       if (lyrics.synced[mid].time <= currentTime) {
@@ -110,8 +110,8 @@ function StyledLyrics() {
   // Render only the current line with animation
   if (lyrics.synced && lyrics.synced.length > 0) {
     const currentLine = currentLineIndex >= 0 ? lyrics.synced[currentLineIndex] : null;
-    
-    if(!currentLine){
+
+    if (!currentLine) {
       return null;
     }
     // if (!currentLine || !currentLine.text) {
@@ -121,18 +121,14 @@ function StyledLyrics() {
     //     </div>
     //   );
     // }
-    let words = currentLine?.text?.split(' ');
-    words.unshift('🎵');
-    words.push('🎵');
-    const centerIndex = Math.floor(words?.length / 2);
+    const words = currentLine?.text?.split(' ');
 
     return (
       <div className="w-[90%] h-22 flex items-center justify-center rounded-xl shadow-lg overflow-hidden">
         <div className="lyric-container w-full h-full flex items-center justify-center p-8">
-          <div 
-            className={`lyric-line transition-opacity duration-300 ${
-              isVisible ? 'animate-in' : 'animate-out'
-            }`}
+          <div
+            className={`lyric-line transition-opacity duration-300 ${isVisible ? 'animate-in' : 'animate-out'
+              }`}
             style={{
               fontFamily: "'Segoe UI', 'Arial Rounded MT Bold', 'Helvetica Rounded', sans-serif",
               textShadow: '0 0 15px rgba(255, 255, 255, 0.7)',
@@ -143,17 +139,11 @@ function StyledLyrics() {
             {words.map((word, index) => (
               <span
                 key={index}
-                className={`inline-block mx-1 font-bold ${
-                  index === centerIndex 
-                    ? 'text-red-500 text-4xl md:text-5xl' 
-                    : 'text-white text-3xl md:text-4xl'
-                }`}
+                className={`inline-block mx-1 font-bold text-white text-3xl md:text-4xl`}
                 style={{
                   transformOrigin: 'center',
                   display: 'inline-block',
-                  textShadow: index === centerIndex 
-                    ? '0 0 20px rgba(239, 68, 68, 0.8)' 
-                    : '0 0 15px rgba(255, 255, 255, 0.7)'
+                  textShadow: '0 0 15px rgba(255, 255, 255, 0.7)'
                 }}
               >
                 {word}
@@ -178,7 +168,6 @@ function StyledLyrics() {
           .animate-in {
             animation: 
               zoomIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards,
-              vibrate 1.5s ease-in-out 0.6s infinite;
           }
 
           @keyframes zoomIn {
@@ -193,14 +182,6 @@ function StyledLyrics() {
               opacity: 1;
               transform: scale(1) rotate(0);
             }
-          }
-
-          @keyframes vibrate {
-            0%, 100% { transform: translateX(0) rotate(0); }
-            20% { transform: translateX(-2px) rotate(-0.5deg); }
-            40% { transform: translateX(2px) rotate(0.5deg); }
-            60% { transform: translateX(-1px) rotate(-0.3deg); }
-            80% { transform: translateX(1px) rotate(0.3deg); }
           }
 
           /* Exit Animation */
