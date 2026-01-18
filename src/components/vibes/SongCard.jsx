@@ -43,9 +43,9 @@ const SongCard = memo(({ song, isActive, isPlaying }) => {
     const songYear = song.year || "";
 
     return (
-        <div className="lyrics-scroll relative w-full h-[calc(100vh-60px)] md:h-full overflow-hidden hide-scrollbar">
+        <div className="relative w-full h-all overflow-hidden">
             {/* Background Image */}
-            <div className="absolute inset-0 w-full h-full hide-scrollbar">
+            <div className="absolute inset-0 w-full h-full">
                 <img
                     src={imageUrl} // FIX: Use safe variable
                     alt=""
@@ -57,7 +57,7 @@ const SongCard = memo(({ song, isActive, isPlaying }) => {
                 <img
                     src={imageUrl} // FIX: Use safe variable
                     alt={songTitle} // FIX: Use safe variable
-                    className="w-auto h-auto max-w-[75%] max-h-[45%] md:max-w-[400px] md:max-h-[400px] rounded-2xl shadow-2xl object-cover -translate-y-7"
+                    className="w-auto h-auto max-w-[75%] max-h-[40%] md:max-w-[400px] md:max-h-[400px] rounded-2xl shadow-2xl object-cover -translate-y-16"
                     draggable={false}
                 />
             </div>
@@ -67,7 +67,7 @@ const SongCard = memo(({ song, isActive, isPlaying }) => {
             <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/20" />
             
             {/* Main Content */}
-            <div className="relative h-[calc(100vh-60px)] md:h-full flex">
+            <div className="relative h-full flex">
                 <div className="flex-1 flex flex-col justify-end p-5">
                     {artistImageUrl && ( // FIX: Only render artist image if it exists
                         <div className="mb-4">

@@ -39,7 +39,7 @@ export default function RootLayout({ children }) {
         <meta property="og:url" content="https://musica-steel.vercel.app" />
 
       </head>
-      <body className={`${inter.className} min-h-screen h-all overflow-x-hidden `}>
+      <body className={`${inter.className} h-all overflow-hidden `}>
         <NextUIProvider>
           <ThemeProvider
             attribute="class"
