@@ -102,6 +102,8 @@ const SongCard = memo(({ song, isActive, isPlaying }) => {
                             className="bg-gray-200 dark:bg-gray-800 rounded-full"
                         />
                     </div>
+                    <div className="w-full z-10 h-10 flex items-center pb-10">
+                    </div>
                 </div>
 
                 <div onClick={togglePlayPause} className={cn(
