@@ -57,7 +57,7 @@ const SongCard = memo(({ song, isActive, isPlaying }) => {
                 <img
                     src={imageUrl} // FIX: Use safe variable
                     alt={songTitle} // FIX: Use safe variable
-                    className="w-auto h-auto max-w-[75%] max-h-[40%] md:max-w-[400px] md:max-h-[400px] rounded-2xl shadow-2xl object-cover -translate-y-16"
+                    className="w-auto h-auto max-w-[75%] max-h-[45%] md:max-w-[400px] md:max-h-[400px] rounded-2xl shadow-2xl object-cover -translate-y-10"
                     draggable={false}
                 />
             </div>
