@@ -209,6 +209,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -220,8 +221,10 @@
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 /* Smooth scrolling behavior */
@@ -230,7 +233,8 @@ html {
 }
 
 /* Prevent text selection on interactive elements */
-button, .no-select {
+button,
+.no-select {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -243,6 +247,7 @@ button, .no-select {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -255,9 +260,12 @@ button, .no-select {
 
 /* Pulse animation for play button */
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.05);
   }
@@ -282,6 +290,7 @@ button:focus {
 .bg-cover {
   background-size: cover;
 }
+
 .bg-center {
   background-position: center;
 }
@@ -292,6 +301,21 @@ button:focus {
   -ms-overflow-style: none;
 }
 
+.x-scroll {
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.x-scroll::-webkit-scrollbar {
+  display: none;
+}
+
 .lyrics-scroll::-webkit-scrollbar {
   display: none;
+}
+
+.h-all {
+  height: 100vh;
+  height: 100dvh;
 }

@@ -71,31 +71,22 @@ const SongReels = () => {
 
 
     return (
-        <div className="relative w-full h-screen bg-black overflow-hidden">
+        <div className="relative w-full h-all bg-black overflow-hidden">
             {/* Header with song progress indicators */}
             <header className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gradient-to-b from-black/50 to-transparent">
                 <span className='flex'>
                     <span><Image src="/favicon.png" alt="Logo" width={30} height={30} /></span>
                     <h1 className="text-white text-lg font-semibold">Vibes</h1>
                 </span>
-                {/* <div className="flex items-center space-x-1">
-                    {songList.map((_, index) => (
-                        <div
-                            key={index}
-                            className={`w-1 h-6 rounded-full transition-colors duration-300 ${index === currentIndex ? 'bg-white' : 'bg-white/30'
-                                }`}
-                        />
-                    ))}
-                </div> */}
             </header>
 
             {/* Main scroll container for song reels */}
             <main
                 ref={containerRef}
-                className="lyrics-scroll h-full overflow-y-scroll snap-y snap-mandatory hide-scrollbar"
+                className="lyrics-scroll h-all overflow-y-scroll snap-y snap-mandatory hide-scrollbar"
             >
-                {Array.isArray(songList) && songList.map((song, index) => (
-                    <div key={song?.id || index} className="snap-start h-screen w-full">
+                {songList.length > 2 && songList.map((song, index) => (
+                    <div key={song?.id || index} className="snap-start h-all w-full snap-always">
                         <SongCard
                             song={song}
                             isActive={index === currentIndex}
@@ -104,15 +95,6 @@ const SongReels = () => {
                     </div>
                 ))}
             </main>
-
-            {/* Bottom indicator for current song index */}
-            {/* <footer className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-50">
-                <div className="flex items-center space-x-2 bg-black/30 backdrop-blur-md rounded-full px-4 py-2">
-                    <span className="text-white/80 text-sm">
-                        {currentIndex + 1} / {songList.length}
-                    </span>
-                </div>
-            </footer> */}
         </div>
     );
 };

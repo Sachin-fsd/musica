@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { UserContext } from "@/context";
 import { useCallback, useContext, useState, useMemo } from "react";
 import { Pause, Play } from "lucide-react";
-import { htmlParser } from "@/utils";
+import { decode } from "he";
 import dynamic from "next/dynamic";
 
 // Dynamically import Marquee to prevent hydration issues with this third-party library
@@ -53,9 +53,9 @@ const SongBarCarousel = ({ song }) => {
             {/* Image Container */}
             <div className="relative w-full" style={{ aspectRatio: "1 / 1" }}>
                 <img
-                    src={imageError ? '/path/to/fallback-image.png' : song.image[2]?.url}
+                    src={imageError ? '/fallback/artist-film.png' : song.image[2]?.url}
                     alt={`${song.name} cover`}
-                    className="absolute inset-0 w-full h-full object-cover rounded-md transition-transform duration-300 group-hover:scale-105"
+                    className="absolute inset-0 w-full h-full object-cover rounded-md transition-transform duration-300 group-hover:scale-100"
                     onError={() => setImageError(true)}
                     loading="lazy"
                 />
@@ -75,18 +75,9 @@ const SongBarCarousel = ({ song }) => {
             {/* Song Title Section */}
             <div className="w-full mt-2 text-center px-2">
                 <Label
-                    className={`font-medium text-sm transition-colors ${isCurrentlyPlaying ? "text-green-600 dark:text-green-400" : "text-gray-800 dark:text-gray-300"}`}
+                    className={`font-medium text-ellipsis text-sm transition-colors ${isCurrentlyPlaying ? "text-green-600 dark:text-green-400" : "text-gray-800 dark:text-gray-300"}`}
                 >
-                    {song.name?.length > 18 || song.title?.length > 18 ? (
-                        <div className="w-full overflow-hidden">
-                            <Marquee gradient={false} speed={25} pauseOnHover>
-                                {/* Add margin for seamless looping effect */}
-                                <span className="mr-6">{htmlParser(song.name || song.title)}</span>
-                            </Marquee>
-                        </div>
-                    ) : (
-                        htmlParser(song.name)
-                    )}
+                    {decode(song.name)}
                 </Label>
             </div>
         </div>

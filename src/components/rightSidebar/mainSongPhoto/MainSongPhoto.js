@@ -1,14 +1,17 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import ColorThief from '../../../../node_modules/colorthief/dist/color-thief.mjs';
+import { UserContext } from "@/context";
 
-const MainSongPhoto = ({ src, alt }) => {
+const MainSongPhoto = () => {
+  const { currentSong } = useContext(UserContext);
   const [glowColor, setGlowColor] = useState("");
   const imgRef = useRef(null);
 
   // Ensuring the image is loaded before extracting the color
   useEffect(() => {
+    if (!currentSong || !currentSong?.image[2]?.url) return;
     const image = imgRef.current;
     if (image) {
       // Adding event listener to ensure the image is loaded
@@ -24,7 +27,7 @@ const MainSongPhoto = ({ src, alt }) => {
         image.removeEventListener("load", onLoadHandler);
       };
     }
-  }, [src]); // Adding src as a dependency to re-run effect if the image changes
+  }, [currentSong]); // Adding src as a dependency to re-run effect if the image changes
 
   const extractColor = () => {
     const colorThief = new ColorThief();
@@ -47,8 +50,8 @@ const MainSongPhoto = ({ src, alt }) => {
     >
       <img
         ref={imgRef}
-        src={src}
-        alt={alt}
+        src={currentSong?.image[2].url || '/favicon.png'}
+        alt={currentSong?.name}
         onLoad={extractColor}
         style={{
           display: "block",

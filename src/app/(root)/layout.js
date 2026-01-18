@@ -10,7 +10,7 @@ import { Spinner } from "@/components/ui/spinner";
 export default function RootLayout({ children }) {
   return (
     <UserState>
-      <div className="grid h-screen w-screen grid-rows-[auto,1fr]">
+      <div className="grid h-all w-screen grid-rows-[auto,1fr] overflow-hidden">
 
         {/* Navbar spans full width */}
         <div className="col-span-full">

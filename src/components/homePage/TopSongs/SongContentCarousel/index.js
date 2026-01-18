@@ -18,7 +18,7 @@ const SongContentCarousel = () => {
             songList?.map((song, index) => (
                 <div
                     key={index}
-                    className='mr-1 sm:hover:bg-white dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-52 max-w-52 hover:shadow-md transition'
+                    className='x-scroll mr-1 sm:hover:bg-white dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-52 max-w-52 hover:shadow-md transition'
                 >
                     {song?.image &&
                         <TouchableOpacity>

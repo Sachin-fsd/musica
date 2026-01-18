@@ -143,6 +143,5 @@ export async function fetchLyricsAction(artistName, trackName, albumName, durati
         };
     } catch (error) {
         console.error('Error fetching lyrics:', error.message, 'URL:', url);
-        throw new Error(error.message || 'Failed to fetch lyrics');
     }
 }
