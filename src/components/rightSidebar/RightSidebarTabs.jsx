@@ -16,7 +16,6 @@ const RightSidebarTabs = () => {
 
     useEffect(() => {
         if (activeTab == 'lyrics') {
-            console.log(containerRef.current)
             let rightSideBarTabsId = document.getElementById('right_sidebar_tabs');
             rightSideBarTabsId.scrollIntoView({ behavior: "smooth", block: "start" });
         }

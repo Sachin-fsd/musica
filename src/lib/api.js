@@ -83,7 +83,6 @@ const api = {
     searchById: async (type, id) => {
         if(type === "song"){
             const response = await axios.get(`${BASE_URL}/songs/${id}`);
-            console.log(response)
             return response.data;
         }
         const response = await axios.get(`${BASE_URL}/${type}s`, {

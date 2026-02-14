@@ -23,11 +23,12 @@ const ArtistCard = ({ data }) => {
     const { setSongList, setCurrentSong, setPlaying } = useContext(UserContext);
 
     async function handleClick(artist) {
-        if (!artist.id || loading) return;
+        if (!artist?.id || loading) return;
         try {
             setLoading(true);
             const response = await api.searchArtistSongs(artist.id);
-            if (response.success) {
+            console.log("artist response", response)
+            if (response.success && response.data.songs.length > 1) {
                 setSongList(response.data.songs);
                 setCurrentSong(response.data.songs[0]);
                 setPlaying(true);
