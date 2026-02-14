@@ -7,6 +7,7 @@ import { Label } from "../ui/label";
 import api from "@/lib/api";
 import { useContext, useState } from "react";
 import { UserContext } from "@/context";
+import { toast } from "sonner";
 
 
 // interface ArtistCardProps {
@@ -28,11 +29,12 @@ const ArtistCard = ({ data }) => {
             setLoading(true);
             const response = await api.searchArtistSongs(artist.id);
             console.log("artist response", response)
-            if (response.success && response.data.songs.length > 1) {
+            if (response.success && response.data.songs.length >= 1) {
                 setSongList(response.data.songs);
                 setCurrentSong(response.data.songs[0]);
                 setPlaying(true);
             } else {
+                toast("🥲 No Songs to play")
                 console.log("Error fetching artist in artist card", response)
             }
         } catch (error) {
