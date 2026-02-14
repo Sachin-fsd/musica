@@ -57,8 +57,13 @@ export default function UserState({ children }) {
         } else {
             // --- SONG IS NEW ---
             setLoading(true);
-            const newPlaylist = await createPlaylistFromSuggestions(song, songList);
-            setSongList([song, ...newPlaylist]);
+            const response = await SearchSongSuggestionAction(song.id);
+            if (response?.success && response.data.length > 1) {
+                const suggestions = shuffleArray(response.data);
+                setSongList([song, ...suggestions]);
+            } else {
+                setSongList([song, ...songList.reverse()]);
+            }
             setCurrentSong(song);
             setPlaying(true);
             setLoading(false);
