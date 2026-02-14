@@ -28,7 +28,6 @@ const ArtistCard = ({ data }) => {
         try {
             setLoading(true);
             const response = await api.searchArtistSongs(artist.id);
-            console.log("artist response", response)
             if (response.success && response.data.songs.length >= 1) {
                 setSongList(response.data.songs);
                 setCurrentSong(response.data.songs[0]);
