@@ -10,7 +10,7 @@ export const leftIcons = [
             width="20"
             focusable="false"
             aria-hidden="true"
-            style={{ pointerEvents: 'none', display: 'inherit', width: '100%', height: '100%' }}
+            style={{ pointerEvents: 'none', display: 'inherit', width: '70%', height: '70%' }}
         >
             <path d="m11.485 2.143-8 4.8-2 1.2a1 1 0 001.03 1.714L3 9.567V20a2 2 0 002 2h5v-8h4v8h5a2 2 0 002-2V9.567l.485.29a1 1 0 001.03-1.714l-2-1.2-8-4.8a1 1 0 00-1.03 0Z" />
         </svg>,
