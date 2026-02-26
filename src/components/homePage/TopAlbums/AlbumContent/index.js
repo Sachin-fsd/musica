@@ -33,7 +33,9 @@ const AlbumContent = () => {
                     { heading: "Vibe Check", data: MegaMenu3Playlists["promo:vx:data:116"] },
                     { heading: "Fresh Finds", data: MegaMenu3Playlists["promo:vx:data:143"] },
                     { heading: "Epic Soundtracks", data: MegaMenu3Playlists["promo:vx:data:76"] },
-                    { heading: "Chill Mood", data: MegaMenu3Playlists["promo:vx:data:21"] }
+                    { heading: "Chill Mood", data: MegaMenu3Playlists["promo:vx:data:21"] },
+                    { heading: "Liked By All", data: MegaMenu3Playlists["promo:vx:data:31"] },
+                    { heading: "Artist Recos", data: MegaMenu3Playlists["artist_recos"] },
                 ];
                 setAlbumData(object_for_megaMenu3);
                 setLoading(false);

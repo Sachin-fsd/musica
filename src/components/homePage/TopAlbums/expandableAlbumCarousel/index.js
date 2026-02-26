@@ -50,6 +50,7 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
         setLoading(true);
         try {
             if (albumPlayingId === album.id) return;
+            if(album.type == "radio_station") album.type = "artist";
             const fetchedSongs = await GetSongsByIdAction(album.type, album.id);
             if (fetchedSongs.success) {
                 let albumSongs = fetchedSongs.data.songs || fetchedSongs.data.topSongs || fetchedSongs.data;
