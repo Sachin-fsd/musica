@@ -5,6 +5,7 @@ import React, { useContext, useState, useEffect, useRef } from 'react'
 import { Music, AlertCircle, Loader2 } from 'lucide-react'
 import { fetchLyricsAction } from '@/app/actions'
 import { useLyricsStore } from '@/store/useLyricsStore'
+import Image from 'next/image'
 
 function Lyrics() {
     const { currentSong, playing, currentTime, handleSeek, setPlaying } = useContext(UserContext);
@@ -144,24 +145,22 @@ function Lyrics() {
     }
 
     if (loading) {
-        return null;
-        // return (
-        //     <div className="w-full h-8 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
-        //         <Loader2 className="w-12 h-12 mb-4 animate-spin" />
-        //         <p>Loading lyrics...</p>
-        //     </div>
-        // );
+        return (
+            <div className="w-full h-[10%] flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
+                <Loader2 className="w-12 h-12 mb-4 animate-spin" />
+                <p>Loading lyrics...</p>
+            </div>
+        );
     }
 
     if (error || !lyrics || lyrics.instrumental) {
-        return null
-        // return (
-        //     <div className="w-full h-[20%] flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
-        //         <AlertCircle className="w-12 h-12 mb-4 opacity-50" />
-        //         <p className="text-lg mb-2">Lyrics not available</p>
-        //         <p className="text-sm opacity-75">for {currentSong.name}</p>
-        //     </div>
-        // );
+        return (
+            <div className="w-full h-[20%] flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
+                <p className="text-lg mb-2"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgn5yYdC82HD44DWCV9hpnzziigmPrababJYcCzBzjhRE696Nc7lwZZ3Wuc5K62ozkzEh_GE6wIw0WF1hG1glNyJACANrKjuTEtsaY8wILxl6LuPzTD5am8fYz-CPMiLutsEEB7GqBGnNYQtSsGknfO44Vgqqs2gm5RDM0orAMx3S_MDbYmh27gFul1fgPZ/s320/a-cartoon-panda-bear-with-blue-eyes-and-a-sad-expression-free-vector-removebg-preview.png" alt="logo" /></p>
+                <p className="text-lg mb-2">Lyrics not available</p>
+                <p className="text-sm opacity-75">for {currentSong.name}</p>
+            </div>
+        );
     }
 
     // if (lyrics.instrumental) {

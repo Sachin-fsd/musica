@@ -57,7 +57,7 @@ const RightSidebarTabs = () => {
                                 <div className="space-y-3">
                                     <div>
                                         <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Artists</p>
-                                        <div className="grid grid-cols-2 gap-3">
+                                        <div className="flex flex-wrap gap-3">
                                             {currentSong.artists?.primary?.map((artist, idx) => (
                                                 <div key={idx} onClick={() => handleClick(decode(artist.name))} className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full pr-3 py-1 cursor-pointer">
                                                     {artist.image?.[0]?.url && (

@@ -107,12 +107,6 @@ export default function UserState({ children }) {
             let initialSongs = Array.isArray(storedSongList) && (storedSongList.length > 0) && storedSongList[0]?.id ? storedSongList : songs;
             let initialCurrentSong = storedCurrentSong?.id ? storedCurrentSong : initialSongs[0];
 
-            // Ensure the current song is at the start of a potentially oversized list
-            if (initialSongs.length > 20) {
-                const otherSongs = initialSongs.filter(s => s.id !== initialCurrentSong.id);
-                initialSongs = [initialCurrentSong, ...otherSongs.slice(0, 19)];
-            }
-
             setSongList(initialSongs);
             setCurrentSong(initialCurrentSong);
             const initialIndex = initialSongs.findIndex(s => s.id === initialCurrentSong.id);
