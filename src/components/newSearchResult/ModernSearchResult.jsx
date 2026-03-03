@@ -24,12 +24,12 @@ const ModernSearchResult = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryFromUrl = searchParams?.get("query") || "";
-  
+
   const [search, setSearch] = useState(queryFromUrl);
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  
+
   const searchContainerRef = useRef(null);
   const debouncedSearch = useDebounce(search, 500);
 
@@ -51,16 +51,16 @@ const ModernSearchResult = () => {
 
       // Scroll to search input when search starts
       if (searchContainerRef.current) {
-        searchContainerRef.current.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'start' 
+        searchContainerRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
         });
       }
 
       // Update URL with search query
       const url = `/browse?query=${encodeURIComponent(debouncedSearch)}`;
       const currentUrl = `${window.location.pathname}${window.location.search}`;
-      
+
       // Only push to history if URL is different
       if (currentUrl !== url) {
         router.push(url, { scroll: false });
@@ -75,7 +75,7 @@ const ModernSearchResult = () => {
           `${process.env.NEXT_PUBLIC_FETCH_URL}/search?query=${encodeURIComponent(debouncedSearch)}`
         );
         if (!res.ok) throw new Error(`API error: ${res.statusText}`);
-        
+
         const data = await res.json();
         if (data.success) {
           setResults(data);
@@ -127,11 +127,44 @@ const ModernSearchResult = () => {
       </div>
 
       {loading && (
-        <div className="text-center text-white/80 py-8">
-          <div className="space-y-2">
-            <Skeleton className="h-16 rounded-lg" />
-            <Skeleton className="h-16 rounded-lg" />
-            <Skeleton className="h-16 rounded-lg" />
+        <div style={{ flex: 1, marginTop: 20 }}>
+          {/* TopQueryCard Skeleton */}
+          <div className="w-[90%] sm:w-[80%] mx-auto p-2.5 m-2.5 text-center">
+            <Skeleton className="w-[150px] h-[150px] rounded-lg mx-auto mb-4" />
+            <Skeleton className="h-6 w-40 mx-auto mb-2" />
+            <Skeleton className="h-4 w-32 mx-auto mb-2" />
+            <Skeleton className="h-4 w-28 mx-auto mb-2" />
+            <Skeleton className="h-4 w-20 mx-auto" />
+          </div>
+
+          {/* SongCard Skeleton */}
+          <div className="w-[90%] sm:w-[80%] mx-auto mt-5">
+            <Skeleton className="h-6 w-16 mb-4" />
+            {[1, 2, 3].map((i) => (
+              <div key={`song-${i}`} className="flex flex-row items-center mb-2.5">
+                <Skeleton className="w-[100px] h-[100px] rounded-lg flex-shrink-0" />
+                <div className="flex-1 ml-2.5">
+                  <Skeleton className="h-4 w-full mb-2" />
+                  <Skeleton className="h-3 w-5/6 mb-2" />
+                  <Skeleton className="h-3 w-2/3" />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* AlbumCard Skeleton */}
+          <div className="w-[90%] sm:w-[80%] mx-auto mt-5">
+            <Skeleton className="h-6 w-20 mb-4" />
+            {[1, 2, 3].map((i) => (
+              <div key={`album-${i}`} className="flex flex-row items-center mb-2.5">
+                <Skeleton className="w-[100px] h-[100px] rounded-lg flex-shrink-0" />
+                <div className="flex-1 ml-2.5">
+                  <Skeleton className="h-4 w-full mb-2" />
+                  <Skeleton className="h-3 w-5/6 mb-2" />
+                  <Skeleton className="h-3 w-2/3" />
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
@@ -142,9 +175,9 @@ const ModernSearchResult = () => {
         {!loading && !error && results && (
           <motion.div
             key="results"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
             style={{ flex: 1, marginTop: 20 }}
           >

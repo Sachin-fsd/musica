@@ -61,8 +61,8 @@ const SongBarCarousel = ({ song }) => {
                 />
 
                 {/* Play/Pause Button Overlay */}
-                <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/40 transition-all duration-300">
-                    <div className="bg-green-500 p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100">
+                <div className="absolute inset-0 flex items-center justify-center bg-black/0 sm:group-hover:bg-black/40 transition-all duration-300">
+                    <div className="bg-green-500 p-3 rounded-full shadow-lg opacity-0 sm:group-hover:opacity-100 transition-all duration-300 scale-75 group-hover:scale-100">
                         {isCurrentlyPlaying && playing ? (
                             <Pause className="w-6 h-6 text-black fill-black" />
                         ) : (

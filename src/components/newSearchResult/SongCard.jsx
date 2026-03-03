@@ -134,7 +134,7 @@ const SongCard = ({ data, search }) => {
     }
 
     return (
-        <div style={styles.container}>
+        <div className="w-[90%] sm:w-[80%] mx-auto mt-5">
             <Label className="text-xl font-bold text-sky-900 dark:text-sky-300 mb-4">
                 Songs
             </Label>
@@ -186,7 +186,7 @@ const SongCard = ({ data, search }) => {
 };
 
 const styles = {
-    container: { marginTop: 20 },
+    // container: { marginTop: 20 },
     cover: { flex: 1, width: 100, height: 100, borderRadius: 10, margin: 10 },
     card: { display: "flex", flexDirection: "row", marginBottom: 10, alignItems: "center" },
     subtitle: { color: "grey", fontSize: 14, width: "auto" },

@@ -42,7 +42,7 @@ const ArtistCard = ({ data }) => {
     }
 
     return (
-        <div style={styles.container}>
+        <div className="w-[90%] sm:w-[80%] mx-auto mt-5">
             <Label className="text-xl font-bold text-sky-900 dark:text-sky-300 mb-4">Artists</Label>
             {data.map((song) => (
                 <div key={song.id}
