@@ -66,7 +66,7 @@ const SongContentCarousel = () => {
                     </div>
                 </div>
                 <div className='relative max-w-full'>
-                    <div ref={softAlbumsRef} className='flex overflow-x-auto scroll-smooth hide-scrollbar'>
+                    <div ref={softAlbumsRef} className='flex overflow-x-auto no-scrollbar' style={{'scrollbar-width':'none'}}>
                         {renderedSongs}
                     </div>
                 </div>

@@ -173,7 +173,7 @@ function Lyrics() {
     // }
 
     return (
-        <div className="w-[90%] h-[70vh] flex flex-col rounded-xl shadow-lg overflow-hidden border-2">
+        <div className="w-[100%] h-[70vh] flex flex-col rounded-xl shadow-lg overflow-hidden border-2">
             {/* Lyrics Container with fixed height */}
             <div
                 ref={lyricsContainerRef}
@@ -193,8 +193,8 @@ function Lyrics() {
                                     className={`transition-all duration-300 text-center cursor-pointer select-none ${index === currentLineIndex
                                         ? 'text-gray-900 dark:text-white text-lg md:text-xl font-bold opacity-100'
                                         : index < currentLineIndex
-                                            ? 'text-gray-500 dark:text-gray-500 text-base md:text-xl opacity-60 hover:opacity-80'
-                                            : 'text-gray-600 dark:text-gray-600 text-base md:text-xl opacity-40 hover:opacity-60'
+                                            ? 'text-gray-50 dark:text-gray-50 text-base md:text-xl opacity-60 hover:opacity-80'
+                                            : 'text-gray-50 dark:text-gray-50 text-base md:text-xl opacity-40 hover:opacity-60'
                                         } ${line.text ? 'py-3' : 'py-2'}`}
                                 >
                                     {line.text || '♪'}
