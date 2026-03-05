@@ -223,8 +223,8 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
         </AnimatePresence>
         <div
             ref={softAlbumsRef}
-            className="mx-auto w-full flex overflow-x-auto gap-4 py-4 hide-scrollbar"
-            style={{ scrollSnapType: 'x mandatory' }}
+            className="mx-auto w-full flex overflow-x-auto gap-4 py-4 no-scrollbar"
+            style={{'scrollbar-width':'none'}}
         >
             {albums.map((card, index) => (
                 <div
