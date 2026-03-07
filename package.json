@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:ci": "jest --coverage --runInBand"
   },
   "dependencies": {
     "@nextui-org/react": "^2.4.6",
@@ -55,6 +58,12 @@
     "zustand": "^5.0.7"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^14.3.1",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.35",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8",
     "supabase": "^1.192.5",
     "tailwindcss": "^3.4.1"
