@@ -107,6 +107,44 @@ Welcome to the **Musica - Next Gen Music Site**, a platform where music comes al
 
 ---
 
+
+## ✅ CI/CD + Testing Workflow
+
+You can keep your current branch-based workflow and automate checks before merge:
+
+1. Create a feature branch from `main`.
+2. Open a Pull Request to `main`.
+3. GitHub Actions runs CI automatically:
+   - `npm ci`
+   - `npm run test:ci`
+   - `npm run build`
+4. Merge only when CI is green.
+5. After merge to `main`, deploy runs automatically via Vercel workflow.
+
+### Added automation files
+
+- `.github/workflows/ci.yml` → runs tests + build on PRs and pushes to `main`.
+- `.github/workflows/deploy-vercel.yml` → deploys `main` to Vercel (and supports manual trigger).
+- `jest.config.cjs`, `jest.setup.js` → test runner setup.
+- `__tests__/` → starter tests you can expand as features are added.
+
+### Required GitHub secrets for deployment
+
+Set this in your GitHub repository settings:
+
+- `VERCEL_TOKEN`: Vercel personal access token with deploy permissions.
+- `VERCEL_ORG_ID`: Vercel team/account org ID for the project.
+- `VERCEL_PROJECT_ID`: Vercel project ID to allow non-interactive deploys in CI.
+
+### Useful local commands
+
+```bash
+npm run test
+npm run test:watch
+npm run test:ci
+npm run build
+```
+
 ## 🤝 Contributions
 
 Feel free to fork this repository and open a pull request with improvements or bug fixes. Contributions are always welcome! 💪
