@@ -133,8 +133,6 @@ You can keep your current branch-based workflow and automate checks before merge
 Set this in your GitHub repository settings:
 
 - `VERCEL_TOKEN`: Vercel personal access token with deploy permissions.
-- `VERCEL_ORG_ID`: Vercel team/account org ID for the project.
-- `VERCEL_PROJECT_ID`: Vercel project ID to allow non-interactive deploys in CI.
 
 ### Useful local commands
 
