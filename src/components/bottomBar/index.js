@@ -16,6 +16,7 @@ import {
 import RightSidebar from "../rightSidebar";
 import { Slider } from "./BottomSlider";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 
 const Bottombar = () => {
   const pathname = usePathname();
@@ -97,12 +98,16 @@ const Bottombar = () => {
             <div className="flex w-full items-center justify-between">
               <div className="flex items-center space-x-4 cursor-pointer">
                 {currentSong?.image?.[0]?.url && !imageError ? (
-                  <img
+                  <Image
+                    height={50}
+                    width={50}
                     src={currentSong.image[0].url}
-                    loading="lazy"
-                    className="rounded-lg w-12 h-12 object-cover"
                     alt={`${currentSong.name} cover`}
-                    onError={() => setImageError(true)}
+                    className="rounded-lg object-cover"
+                    loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.src = "https://www.jiosaavn.com/_i/3.0/artist-default-music.png";
+                    }}
                   />
                 ) : (
                   <Skeleton className="w-12 h-12 rounded-lg bg-gray-700" />

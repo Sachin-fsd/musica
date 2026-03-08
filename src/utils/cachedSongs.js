@@ -1926,3 +1926,265 @@ export const All_Albums = [
     },
 
 ]
+
+const searchResult = {
+    "topQuery": {
+        "results": [
+            {
+                "id": "10660301",
+                "title": "Raabta",
+                "image": [
+                    {
+                        "quality": "50x50",
+                        "url": "https://c.saavncdn.com/023/Raabta-Hindi-2017-50x50.jpg"
+                    },
+                    {
+                        "quality": "150x150",
+                        "url": "https://c.saavncdn.com/023/Raabta-Hindi-2017-150x150.jpg"
+                    },
+                    {
+                        "quality": "500x500",
+                        "url": "https://c.saavncdn.com/023/Raabta-Hindi-2017-500x500.jpg"
+                    }
+                ],
+                "url": "https://www.jiosaavn.com/album/raabta/CKUSdZyuX0E_",
+                "type": "album",
+                "language": "hindi",
+                "description": "2017 · Hindi Film"
+            }
+        ],
+        "position": 0
+    },
+    "songs": {
+        "results": [
+            {
+                "id": "xJZBjDck",
+                "title": "Raabta (From &quot;Agent Vinod&quot;)",
+                "image": [
+                    {
+                        "quality": "50x50",
+                        "url": "https://c.saavncdn.com/840/Best-Of-Arijit-Singh-Collection-Of-Romantic-Songs-Hindi-2025-20251203161112-50x50.jpg"
+                    },
+                    {
+                        "quality": "150x150",
+                        "url": "https://c.saavncdn.com/840/Best-Of-Arijit-Singh-Collection-Of-Romantic-Songs-Hindi-2025-20251203161112-150x150.jpg"
+                    },
+                    {
+                        "quality": "500x500",
+                        "url": "https://c.saavncdn.com/840/Best-Of-Arijit-Singh-Collection-Of-Romantic-Songs-Hindi-2025-20251203161112-500x500.jpg"
+                    }
+                ],
+                "album": "Best Of Arijit Singh - Collection Of Romantic Songs",
+                "url": "https://www.jiosaavn.com/song/raabta-from-agent-vinod/CCIxcx50VFg",
+                "type": "song",
+                "description": "Best Of Arijit Singh - Collection Of Romantic Songs · Arijit Singh, Pritam, Amitabh Bhattacharya",
+                "primaryArtists": "Arijit Singh, Pritam, Amitabh Bhattacharya",
+                "singers": "Arijit Singh, Pritam, Amitabh Bhattacharya",
+                "language": "hindi"
+            },
+            {
+                "id": "Wn_eONzu",
+                "title": "Raabta",
+                "image": [
+                    {
+                        "quality": "50x50",
+                        "url": "https://c.saavncdn.com/603/Agent-Vinod-2012-50x50.jpg"
+                    },
+                    {
+                        "quality": "150x150",
+                        "url": "https://c.saavncdn.com/603/Agent-Vinod-2012-150x150.jpg"
+                    },
+                    {
+                        "quality": "500x500",
+                        "url": "https://c.saavncdn.com/603/Agent-Vinod-2012-500x500.jpg"
+                    }
+                ],
+                "album": "Agent Vinod",
+                "url": "https://www.jiosaavn.com/song/raabta/JwY0VDt,TUY",
+                "type": "song",
+                "description": "Agent Vinod · Pritam, Arijit Singh",
+                "primaryArtists": "Pritam, Arijit Singh",
+                "singers": "Pritam, Arijit Singh",
+                "language": "hindi"
+            },
+            {
+                "id": "lR3vjGyV",
+                "title": "Raabta (Kehte Hain Khuda Ne)",
+                "image": [
+                    {
+                        "quality": "50x50",
+                        "url": "https://c.saavncdn.com/603/Agent-Vinod-2012-50x50.jpg"
+                    },
+                    {
+                        "quality": "150x150",
+                        "url": "https://c.saavncdn.com/603/Agent-Vinod-2012-150x150.jpg"
+                    },
+                    {
+                        "quality": "500x500",
+                        "url": "https://c.saavncdn.com/603/Agent-Vinod-2012-500x500.jpg"
+                    }
+                ],
+                "album": "Agent Vinod",
+                "url": "https://www.jiosaavn.com/song/raabta-kehte-hain-khuda-ne/HDpYRx53TmU",
+                "type": "song",
+                "description": "Agent Vinod · Pritam, Shreya Ghoshal, Arijit Singh",
+                "primaryArtists": "Pritam, Shreya Ghoshal, Arijit Singh",
+                "singers": "Pritam, Shreya Ghoshal, Arijit Singh",
+                "language": "hindi"
+            }
+        ],
+        "position": 1
+    },
+    "albums": {
+        "results": [
+            {
+                "id": "10660301",
+                "title": "Raabta",
+                "image": [
+                    {
+                        "quality": "50x50",
+                        "url": "https://c.saavncdn.com/023/Raabta-Hindi-2017-50x50.jpg"
+                    },
+                    {
+                        "quality": "150x150",
+                        "url": "https://c.saavncdn.com/023/Raabta-Hindi-2017-150x150.jpg"
+                    },
+                    {
+                        "quality": "500x500",
+                        "url": "https://c.saavncdn.com/023/Raabta-Hindi-2017-500x500.jpg"
+                    }
+                ],
+                "artist": "JAM8, Sourav Roy, Sohrabuddin",
+                "url": "https://www.jiosaavn.com/album/raabta/CKUSdZyuX0E_",
+                "type": "album",
+                "description": "2017 · Hindi Film · JAM8, Sourav Roy, Sohrabuddin",
+                "year": "2017",
+                "songIds": "0-5hUtBO, wlyGmMNW, kj-rNRSR, xbDXx4RA, Otl9gukS, Xo1Z1OwW",
+                "language": "hindi"
+            },
+            {
+                "id": "47904311",
+                "title": "Raabta",
+                "image": [
+                    {
+                        "quality": "50x50",
+                        "url": "https://c.saavncdn.com/139/Raabta-Hindi-2023-20230830134708-50x50.jpg"
+                    },
+                    {
+                        "quality": "150x150",
+                        "url": "https://c.saavncdn.com/139/Raabta-Hindi-2023-20230830134708-150x150.jpg"
+                    },
+                    {
+                        "quality": "500x500",
+                        "url": "https://c.saavncdn.com/139/Raabta-Hindi-2023-20230830134708-500x500.jpg"
+                    }
+                ],
+                "artist": "Jubin Nautiyal, Chirantan Bhatt, Junaid Wasi",
+                "url": "https://www.jiosaavn.com/album/raabta/MTxzVxfj3M8_",
+                "type": "album",
+                "description": "2023 · Hindi Album · Jubin Nautiyal, Chirantan Bhatt, Junaid Wasi",
+                "year": "2023",
+                "songIds": "RZHXvWST",
+                "language": "hindi"
+            },
+            {
+                "id": "42429636",
+                "title": "Raabta",
+                "image": [
+                    {
+                        "quality": "50x50",
+                        "url": "https://c.saavncdn.com/000/Raabta-Hindi-2023-20230208193931-50x50.jpg"
+                    },
+                    {
+                        "quality": "150x150",
+                        "url": "https://c.saavncdn.com/000/Raabta-Hindi-2023-20230208193931-150x150.jpg"
+                    },
+                    {
+                        "quality": "500x500",
+                        "url": "https://c.saavncdn.com/000/Raabta-Hindi-2023-20230208193931-500x500.jpg"
+                    }
+                ],
+                "artist": "Abdul Hannan & Rovalio",
+                "url": "https://www.jiosaavn.com/album/raabta/OFKr,cW0xKU_",
+                "type": "album",
+                "description": "2023 · Hindi Album · Abdul Hannan & Rovalio",
+                "year": "2023",
+                "songIds": "fk6lxEtX",
+                "language": "hindi"
+            }
+        ],
+        "position": 2
+    },
+    "artists": {
+        "results": [
+            {
+                "id": "4789181",
+                "title": "Die Raabtal Dirndln",
+                "image": [
+                    {
+                        "quality": "50x50",
+                        "url": "https://www.jiosaavn.com/_i/3.0/artist-default-music.png"
+                    },
+                    {
+                        "quality": "150x150",
+                        "url": "https://www.jiosaavn.com/_i/3.0/artist-default-music.png"
+                    },
+                    {
+                        "quality": "500x500",
+                        "url": "https://www.jiosaavn.com/_i/3.0/artist-default-music.png"
+                    }
+                ],
+                "type": "artist",
+                "description": "Singer",
+                "position": 1
+            },
+            {
+                "id": "17899659",
+                "title": "Raabta Kumar",
+                "image": [
+                    {
+                        "quality": "50x50",
+                        "url": "https://www.jiosaavn.com/_i/3.0/artist-default-music.png"
+                    },
+                    {
+                        "quality": "150x150",
+                        "url": "https://www.jiosaavn.com/_i/3.0/artist-default-music.png"
+                    },
+                    {
+                        "quality": "500x500",
+                        "url": "https://www.jiosaavn.com/_i/3.0/artist-default-music.png"
+                    }
+                ],
+                "type": "artist",
+                "description": "Lyricist",
+                "position": 2
+            },
+            {
+                "id": "9828901",
+                "title": "Raabtal Dirndln & Naschkatzen",
+                "image": [
+                    {
+                        "quality": "50x50",
+                        "url": "https://www.jiosaavn.com/_i/3.0/artist-default-film.png"
+                    },
+                    {
+                        "quality": "150x150",
+                        "url": "https://www.jiosaavn.com/_i/3.0/artist-default-film.png"
+                    },
+                    {
+                        "quality": "500x500",
+                        "url": "https://www.jiosaavn.com/_i/3.0/artist-default-film.png"
+                    }
+                ],
+                "type": "artist",
+                "description": "Primary",
+                "position": 3
+            }
+        ],
+        "position": 4
+    },
+    "playlists": {
+        "results": [],
+        "position": 3
+    }
+}
