@@ -132,7 +132,7 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
 
         window.addEventListener("keydown", onKeyDown);
         return () => window.removeEventListener("keydown", onKeyDown);
-    }, [active, handleFetchAlbumSongs, pathname, router]);
+    }, [active, pathname, router]);
 
     // useOutsideClick should close via closeAlbum so URL is kept in sync
     useOutsideClick(ref, () => {
@@ -170,7 +170,7 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
                             <Image
                                 src={active.image || "/placeholder.png"}
                                 alt={active.title}
-                                height={320}
+                                fill
                                 className="flex-none w-full sm:rounded-t-3xl object-cover"
                                 onError={() => setImageError(true)}
                             />
