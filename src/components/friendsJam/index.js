@@ -109,7 +109,7 @@ export default function Jam() {
       socket.disconnect();
       setChat([]);
     };
-  }, [isJamChecked, username]);
+  }, [isJamChecked, username, handleSeek, setCurrentIndex, setCurrentSong, setPlaying, setSongList, songList]);
 
   // 🔁 Auto-reconnect
   useEffect(() => {
@@ -118,7 +118,7 @@ export default function Jam() {
       const t = setTimeout(() => socketRef.current?.connect(), 5000);
       return () => clearTimeout(t);
     }
-  }, [socketStatus]);
+  }, [socketStatus, isJamChecked]);
 
   // 📤 Send state updates (debounced in practice, but keep simple)
   useEffect(() => {
@@ -130,7 +130,7 @@ export default function Jam() {
     if (socketRef.current?.connected && followers.length > 0) {
       socketRef.current.emit("update-state", { state });
     }
-  }, [songList, currentSong, playing, followers.length, currentIndex]);
+  }, [songList, currentSong, playing, followers.length, currentIndex, currentTime, incomingChange]);
 
   const followUser = (id, name) => {
     if (id === myId || !socketRef.current) return;

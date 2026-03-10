@@ -13,6 +13,7 @@ import { UserContext } from "@/context";
 import { GetSongsByIdAction } from "@/app/actions";
 import SongBar from "@/components/songBar";
 import { Separator } from "@/components/ui/separator";
+import Image from "next/image";
 
 export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
     const [active, setActive] = useState(null);
@@ -32,7 +33,7 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
     };
 
     const handleAlbumPlay = debounce(async (album) => {
-        if(albumPlayingId === album.id){
+        if (albumPlayingId === album.id) {
             setAlbumPlayingId(null);
             setPlaying(false);
             return
@@ -50,7 +51,7 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
         setLoading(true);
         try {
             if (albumPlayingId === album.id) return;
-            if(album.type == "radio_station") album.type = "artist";
+            if (album.type == "radio_station") album.type = "artist";
             const fetchedSongs = await GetSongsByIdAction(album.type, album.id);
             if (fetchedSongs.success) {
                 let albumSongs = fetchedSongs.data.songs || fetchedSongs.data.topSongs || fetchedSongs.data;
@@ -131,7 +132,7 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
 
         window.addEventListener("keydown", onKeyDown);
         return () => window.removeEventListener("keydown", onKeyDown);
-    }, [active]);
+    }, [active, handleFetchAlbumSongs, pathname, router]);
 
     // useOutsideClick should close via closeAlbum so URL is kept in sync
     useOutsideClick(ref, () => {
@@ -166,10 +167,11 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
                         ref={ref}
                         className="w-full max-w-[500px] h-full md:h-fit flex flex-col bg-white dark:bg-gray-900 sm:rounded-3xl">
                         <motion.div layoutId={`image-${active.title}-${id}`}>
-                            <img
+                            <Image
                                 src={active.image || "/placeholder.png"}
                                 alt={active.title}
-                                className="flex-none w-full h-80 sm:rounded-t-3xl object-cover"
+                                height={320}
+                                className="flex-none w-full sm:rounded-t-3xl object-cover"
                                 onError={() => setImageError(true)}
                             />
                         </motion.div>
@@ -224,7 +226,7 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
         <div
             ref={softAlbumsRef}
             className="mx-auto w-full flex overflow-x-auto gap-4 py-4 no-scrollbar"
-            style={{'scrollbar-width':'none'}}
+            style={{ 'scrollbar-width': 'none' }}
         >
             {albums.map((card, index) => (
                 <div
@@ -239,10 +241,11 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
                             <motion.div className="relative w-full pb-[100%]">
                                 <div className="absolute top-0 left-0 w-full h-full">
                                     {card?.image && !imageError ? (
-                                        <img
+                                        <Image
                                             src={card?.image}
                                             alt={`${card?.title} cover`}
-                                            className="absolute top-0 left-0 w-full h-full rounded-md object-cover"
+                                            fill
+                                            className="absolute inset-0 rounded-md object-cover"
                                             onError={() => setImageError(true)}
                                         />
                                     ) : (

@@ -23,7 +23,7 @@ const SongContent = () => {
         } else {
             setSongList(defaultSongs);
         }
-    }, []);
+    }, [setSongList]);
 
     useEffect(() => {
         let savedSongList = null;

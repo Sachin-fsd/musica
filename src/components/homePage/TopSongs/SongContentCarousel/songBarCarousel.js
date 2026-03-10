@@ -7,6 +7,7 @@ import { useCallback, useContext, useState, useMemo } from "react";
 import { Pause, Play } from "lucide-react";
 import { decode } from "he";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 
 // Dynamically import Marquee to prevent hydration issues with this third-party library
 const Marquee = dynamic(() => import("react-fast-marquee"), { ssr: false });
@@ -52,10 +53,11 @@ const SongBarCarousel = ({ song }) => {
         >
             {/* Image Container */}
             <div className="relative w-full" style={{ aspectRatio: "1 / 1" }}>
-                <img
+                <Image
                     src={imageError ? '/fallback/artist-film.png' : song.image[2]?.url}
                     alt={`${song.name} cover`}
-                    className="absolute inset-0 w-full h-full object-cover rounded-md transition-transform duration-300 group-hover:scale-100"
+                    fill
+                    className="absolute inset-0 object-cover rounded-md transition-transform duration-300 group-hover:scale-100"
                     onError={() => setImageError(true)}
                     loading="lazy"
                 />
