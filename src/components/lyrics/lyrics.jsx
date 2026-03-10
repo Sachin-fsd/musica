@@ -123,7 +123,7 @@ function Lyrics() {
                 behavior: 'smooth'
             });
         }
-    }, [currentTime, lyrics, playing]);
+    }, [currentTime, lyrics, playing, autoScroll]);
 
     // Cleanup timeout on unmount
     useEffect(() => {
@@ -156,7 +156,9 @@ function Lyrics() {
     if (error || !lyrics || lyrics.instrumental) {
         return (
             <div className="w-full h-[20%] flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
-                <p className="text-lg mb-2"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgn5yYdC82HD44DWCV9hpnzziigmPrababJYcCzBzjhRE696Nc7lwZZ3Wuc5K62ozkzEh_GE6wIw0WF1hG1glNyJACANrKjuTEtsaY8wILxl6LuPzTD5am8fYz-CPMiLutsEEB7GqBGnNYQtSsGknfO44Vgqqs2gm5RDM0orAMx3S_MDbYmh27gFul1fgPZ/s320/a-cartoon-panda-bear-with-blue-eyes-and-a-sad-expression-free-vector-removebg-preview.png" alt="logo" /></p>
+                <p className="text-lg mb-2">
+                    <Image height={60} width={60} src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgn5yYdC82HD44DWCV9hpnzziigmPrababJYcCzBzjhRE696Nc7lwZZ3Wuc5K62ozkzEh_GE6wIw0WF1hG1glNyJACANrKjuTEtsaY8wILxl6LuPzTD5am8fYz-CPMiLutsEEB7GqBGnNYQtSsGknfO44Vgqqs2gm5RDM0orAMx3S_MDbYmh27gFul1fgPZ/s320/a-cartoon-panda-bear-with-blue-eyes-and-a-sad-expression-free-vector-removebg-preview.png" alt="logo" />
+                    </p>
                 <p className="text-lg mb-2">Lyrics not available</p>
                 <p className="text-sm opacity-75">for {currentSong.name}</p>
             </div>

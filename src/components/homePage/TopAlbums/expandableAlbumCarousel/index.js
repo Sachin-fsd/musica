@@ -13,6 +13,7 @@ import { UserContext } from "@/context";
 import { GetSongsByIdAction } from "@/app/actions";
 import SongBar from "@/components/songBar";
 import { Separator } from "@/components/ui/separator";
+import Image from "next/image";
 
 export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
     const [active, setActive] = useState(null);
@@ -131,7 +132,7 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
 
         window.addEventListener("keydown", onKeyDown);
         return () => window.removeEventListener("keydown", onKeyDown);
-    }, [active]);
+    }, [active, pathname, router]);
 
     // useOutsideClick should close via closeAlbum so URL is kept in sync
     useOutsideClick(ref, () => {
@@ -166,10 +167,11 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
                         ref={ref}
                         className="w-full max-w-[500px] h-full md:h-fit flex flex-col bg-white dark:bg-gray-900 sm:rounded-3xl">
                         <motion.div layoutId={`image-${active.title}-${id}`}>
-                            <img
+                            <Image
                                 src={active.image || "/placeholder.png"}
                                 alt={active.title}
-                                className="flex-none w-full h-80 sm:rounded-t-3xl object-cover"
+                                height={320}
+                                className="flex-none w-full sm:rounded-t-3xl object-cover"
                                 onError={() => setImageError(true)}
                             />
                         </motion.div>
