@@ -7,9 +7,9 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { UserContext } from "@/context";
 import { GetSongsByIdAction } from "@/app/actions";
 import SongBar from "@/components/songBar";
+import { decode } from "he";
 
 /* ─── tiny helpers ─────────────────────────────────────────── */
-const htmlStrip = (str = "") => str.replace(/<[^>]*>/g, "");
 const truncate = (str = "", n = 22) =>
   str.length > n ? str.slice(0, n).trimEnd() + "…" : str;
 
@@ -189,11 +189,11 @@ export function ExpandableAlbumCarousel({ albums = [], softAlbumsRef }) {
                 <div className="absolute bottom-0 left-0 right-0 px-4 pb-4 flex items-end justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <h2 className="text-white font-semibold text-lg leading-tight truncate">
-                      {htmlStrip(active.title)}
+                      {decode(active.title)}
                     </h2>
                     {active.description && (
                       <p className="text-white/60 text-xs mt-0.5 line-clamp-2">
-                        {htmlStrip(active.description)}
+                        {decode(active.description)}
                       </p>
                     )}
                   </div>
@@ -303,7 +303,7 @@ function AlbumCard({ album, layoutId, isPlaying, onClick }) {
       {/* title */}
       <div className="px-2.5 py-2">
         <p className="text-white/90 text-xs font-medium leading-snug truncate">
-          {htmlStrip(album.title) || <span className="block h-3 bg-neutral-700 rounded animate-pulse w-3/4" />}
+          {decode(album.title) || <span className="block h-3 bg-neutral-700 rounded animate-pulse w-3/4" />}
         </p>
       </div>
     </motion.button>
