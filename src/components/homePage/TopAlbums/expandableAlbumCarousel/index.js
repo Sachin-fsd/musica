@@ -33,7 +33,7 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
     };
 
     const handleAlbumPlay = debounce(async (album) => {
-        if (albumPlayingId === album.id) {
+        if(albumPlayingId === album.id){
             setAlbumPlayingId(null);
             setPlaying(false);
             return
@@ -51,7 +51,7 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
         setLoading(true);
         try {
             if (albumPlayingId === album.id) return;
-            if (album.type == "radio_station") album.type = "artist";
+            if(album.type == "radio_station") album.type = "artist";
             const fetchedSongs = await GetSongsByIdAction(album.type, album.id);
             if (fetchedSongs.success) {
                 let albumSongs = fetchedSongs.data.songs || fetchedSongs.data.topSongs || fetchedSongs.data;
@@ -170,7 +170,7 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
                             <Image
                                 src={active.image || "/placeholder.png"}
                                 alt={active.title}
-                                fill
+                                height={320}
                                 className="flex-none w-full sm:rounded-t-3xl object-cover"
                                 onError={() => setImageError(true)}
                             />
@@ -226,7 +226,7 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
         <div
             ref={softAlbumsRef}
             className="mx-auto w-full flex overflow-x-auto gap-4 py-4 no-scrollbar"
-            style={{ 'scrollbar-width': 'none' }}
+            style={{'scrollbar-width':'none'}}
         >
             {albums.map((card, index) => (
                 <div
@@ -241,11 +241,10 @@ export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
                             <motion.div className="relative w-full pb-[100%]">
                                 <div className="absolute top-0 left-0 w-full h-full">
                                     {card?.image && !imageError ? (
-                                        <Image
+                                        <img
                                             src={card?.image}
                                             alt={`${card?.title} cover`}
-                                            fill
-                                            className="absolute inset-0 rounded-md object-cover"
+                                            className="absolute top-0 left-0 w-full h-full rounded-md object-cover"
                                             onError={() => setImageError(true)}
                                         />
                                     ) : (
