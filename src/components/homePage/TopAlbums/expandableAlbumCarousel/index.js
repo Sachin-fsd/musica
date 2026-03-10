@@ -1,294 +1,330 @@
 "use client";
-import React, { useContext, useEffect, useId, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useOutsideClick } from "@/hooks/use-outside-click";
-import { Pause, Play } from "lucide-react";
-import TouchableOpacity from "@/components/ui/touchableOpacity";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Label } from "@/components/ui/label";
-import { htmlParser } from "@/utils";
+import { Pause, Play, X, Music2 } from "lucide-react";
 import { debounce } from "lodash";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { UserContext } from "@/context";
 import { GetSongsByIdAction } from "@/app/actions";
 import SongBar from "@/components/songBar";
-import { Separator } from "@/components/ui/separator";
+import { decode } from "he";
 
-export function ExpandableAlbumCarousel({ albums, softAlbumsRef }) {
-    const [active, setActive] = useState(null);
-    const [songs, setSongs] = useState([]);
+/* ─── tiny helpers ─────────────────────────────────────────── */
+const truncate = (str = "", n = 22) =>
+    str.length > n ? str.slice(0, n).trimEnd() + "…" : str;
+
+/* ─── overlay / modal variants ─────────────────────────────── */
+const backdropVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+    exit: { opacity: 0, transition: { duration: 0.18 } },
+};
+const modalVariants = {
+    hidden: { opacity: 0, y: 28, scale: 0.97 },
+    visible: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 380, damping: 32 } },
+    exit: { opacity: 0, y: 16, scale: 0.97, transition: { duration: 0.16 } },
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   MAIN COMPONENT
+═══════════════════════════════════════════════════════════════ */
+export function ExpandableAlbumCarousel({ albums = [], softAlbumsRef }) {
     const id = useId();
-    const ref = useRef(null);
+    const modalRef = useRef(null);
+    const [active, setActive] = useState(null);   // album object | null
+    const [songs, setSongs] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [imageError, setImageError] = useState(false);
-    const [albumPlayingId, setAlbumPlayingId] = useState(null);
+    const [playingId, setPlayingId] = useState(null);
+
     const { setSongList, setCurrentIndex, setCurrentSong, setPlaying, setCurrentId } = useContext(UserContext);
     const pathname = usePathname();
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const truncateTitle = (title, maxLength = 24) => {
-        return htmlParser(title?.length > maxLength ? `${title?.substring(0, maxLength)}...` : title);
-    };
+    /* ── URL sync: open from ?album=id ─────────────────────────── */
+    useEffect(() => {
+        const albumId = searchParams.get("album");
+        if (!albumId) { if (active) closeModal(false); return; }
+        if (active && String(active.id) === String(albumId)) return;
+        const found = albums.find((a) => String(a.id) === String(albumId));
+        if (found) openModal(found, false); // false = don't push URL again
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchParams?.toString()]);
 
-    const handleAlbumPlay = debounce(async (album) => {
-        if(albumPlayingId === album.id){
-            setAlbumPlayingId(null);
-            setPlaying(false);
-            return
+    /* ── keyboard esc ───────────────────────────────────────────── */
+    useEffect(() => {
+        const handler = (e) => { if (e.key === "Escape" && active == true) closeModal(); };
+        window.addEventListener("keydown", handler);
+        return () => window.removeEventListener("keydown", handler);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [active]);
+
+    /* ── body scroll lock ───────────────────────────────────────── */
+    useEffect(() => {
+        document.body.style.overflow = active ? "hidden" : "";
+        return () => { document.body.style.overflow = ""; };
+    }, [active]);
+
+    /* ── outside click ──────────────────────────────────────────── */
+    useEffect(() => {
+        if (!active) return;
+        const handler = (e) => {
+            if (modalRef.current && !modalRef.current.contains(e.target)) closeModal();
+        };
+        document.addEventListener("mousedown", handler);
+        document.addEventListener("touchstart", handler);
+        return () => {
+            document.removeEventListener("mousedown", handler);
+            document.removeEventListener("touchstart", handler);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [active]);
+
+    /* ── open ───────────────────────────────────────────────────── */
+    const openModal = useCallback((album, pushUrl = true) => {
+        setActive(album);
+        setSongs([]);
+        fetchSongs(album);
+        if (pushUrl) {
+            router.push(`${pathname}?album=${encodeURIComponent(album.id)}`, { scroll: false });
         }
-        if (songs.length === 0) return;
-        setSongList(songs);
-        setCurrentSong(songs[0]);
-        setCurrentIndex(0);
-        setPlaying(true);
-        setCurrentId(songs[0]?.id);
-        setAlbumPlayingId(album.id);
-    }, 300);
+    }, [pathname, router]);
 
-    const handleFetchAlbumSongs = async (album) => {
+    /* ── close ──────────────────────────────────────────────────── */
+    const closeModal = useCallback((updateUrl = true) => {
+        setActive(null);
+        if (updateUrl) {
+            window.history.length > 1 ? router.back() : router.replace(pathname);
+        }
+    }, [pathname, router]);
+
+    /* ── fetch songs ────────────────────────────────────────────── */
+    const fetchSongs = useCallback(async (album) => {
         setLoading(true);
         try {
-            if (albumPlayingId === album.id) return;
-            if(album.type == "radio_station") album.type = "artist";
-            const fetchedSongs = await GetSongsByIdAction(album.type, album.id);
-            if (fetchedSongs.success) {
-                let albumSongs = fetchedSongs.data.songs || fetchedSongs.data.topSongs || fetchedSongs.data;
-                setSongs(albumSongs || []);
-                active.image = fetchedSongs.data.image[2].url;
-                active.description = fetchedSongs.data.description;
+            const type = album.type === "radio_station" ? "artist" : album.type;
+            const res = await GetSongsByIdAction(type, album.id);
+            if (res.success) {
+                const list = res.data.songs || res.data.topSongs || res.data || [];
+                setSongs(list);
+                setActive((prev) => prev
+                    ? { ...prev, image: res.data.image?.[2]?.url ?? prev.image, description: res.data.description ?? prev.description }
+                    : prev
+                );
             } else {
                 setSongs([]);
             }
-        } catch (error) {
-            console.error("Error fetching songs:", error);
-            setSongs([]);
-        } finally {
-            setLoading(false);
+        } catch { setSongs([]); }
+        finally { setLoading(false); }
+    }, []);
+
+    /* ── play album ─────────────────────────────────────────────── */
+    const handlePlay = useCallback(debounce((album) => {
+        if (playingId === album.id) {
+            setPlayingId(null); setPlaying(false); return;
         }
-    };
+        if (!songs.length) return;
+        setSongList(songs);
+        setCurrentSong(songs[0]);
+        setCurrentIndex(0);
+        setCurrentId(songs[0]?.id);
+        setPlaying(true);
+        setPlayingId(album.id);
+    }, 280), [songs, playingId]);
 
-    // Close album: if there's a prior history entry, go back; otherwise replace to remove param
-    const closeAlbum = () => {
-        // remove active immediately for UI responsiveness
-        setActive(null);
-
-        // if there's a previous history entry, go back to it; otherwise replace to remove param
-        try {
-            if (typeof window !== "undefined" && window.history.length > 1) {
-                router.back();
-            } else {
-                router.replace(pathname);
-            }
-        } catch (e) {
-            // fallback replace
-            try { router.replace(pathname); } catch (err) { console.log({ err }) }
-        }
-    };
-
-    useEffect(() => {
-        const albumId = searchParams.get("album");
-        if (albumId) {
-            // if active already matches, nothing to do
-            if (!active || String(active.id) !== String(albumId)) {
-                // try to find the album in provided albums list first
-                const found = albums.find(a => String(a.id) === String(albumId));
-                if (found) {
-                    setActive(found);
-                    // fetch songs for found album
-                    handleFetchAlbumSongs(found);
-                } else {
-                    // album not in list (direct link), create a minimal active object and fetch by id
-                    // const placeholder = { id: albumId, title: "Album", image: null };
-                    // setActive(placeholder);
-                    // handleFetchAlbumSongs({ id: albumId, type: "album" });
-                    return;
-                }
-            }
-        } else {
-            // no album param -> ensure modal closed
-            if (active) setActive(null);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchParams?.toString()]); // depend on query string change
-
-
-    useEffect(() => {
-        function onKeyDown(event) {
-            if (event.key === "Escape") {
-                setActive(null);
-            }
-        }
-
-        if (active && typeof active === "object") {
-            const url = `${pathname}?album=${encodeURIComponent(active.id)}`;
-            router.push(url, { scroll: false });
-            handleFetchAlbumSongs(active);
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "auto";
-        }
-
-        window.addEventListener("keydown", onKeyDown);
-        return () => window.removeEventListener("keydown", onKeyDown);
-    }, [active]);
-
-    // useOutsideClick should close via closeAlbum so URL is kept in sync
-    useOutsideClick(ref, () => {
-        if (active) closeAlbum();
-    });
-
-    return (<>
-        <AnimatePresence>
-            {active && typeof active === "object" && (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="fixed inset-0 bg-black/50 backdrop-blur-sm h-full w-full z-0" />
-            )}
-        </AnimatePresence>
-        <AnimatePresence>
-            {active && typeof active === "object" ? (
-                <div className="fixed inset-0 grid place-items-center z-[100]">
-                    <motion.button
-                        key={`button-${active.title}-${id}`}
-                        layout
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0, transition: { duration: 0.05 } }}
-                        className="flex absolute top-2 right-2 lg:hidden items-center justify-center bg-white dark:bg-gray-200 rounded-full h-6 w-6 shadow-md"
-                        onClick={() => closeAlbum()}>
-                        <CloseIcon />
-                    </motion.button>
+    /* ──────────────────────────────────────────────────────────── */
+    return (
+        <>
+            {/* ── Backdrop ── */}
+            <AnimatePresence>
+                {active && (
                     <motion.div
-                        layoutId={`card-${active.title}-${id}`}
-                        ref={ref}
-                        className="w-full max-w-[500px] h-full md:h-fit flex flex-col bg-white dark:bg-gray-900 sm:rounded-3xl">
-                        <motion.div layoutId={`image-${active.title}-${id}`}>
-                            <img
-                                src={active.image || "/placeholder.png"}
-                                alt={active.title}
-                                className="flex-none w-full h-80 sm:rounded-t-3xl object-cover"
-                                onError={() => setImageError(true)}
-                            />
-                        </motion.div>
+                        key="backdrop"
+                        variants={backdropVariants}
+                        initial="hidden" animate="visible" exit="exit"
+                        className="fixed inset-0 z-[90] bg-black/60 backdrop-blur-md"
+                    />
+                )}
+            </AnimatePresence>
 
-                        <div className="flex flex-1 flex-col">
-                            <div className="flex-none flex justify-between items-start p-4">
-                                <div>
-                                    <motion.h3
-                                        layoutId={`title-${active.title}-${id}`}
-                                        className="font-medium text-gray-700 dark:text-gray-200 text-base">
-                                        {active.title}
-                                    </motion.h3>
-                                    <motion.p
-                                        layoutId={`description-${active.title}-${id}`}
-                                        className="text-gray-600 dark:text-gray-400 text-sm">
-                                        {htmlParser(active.description)}
-                                    </motion.p>
-                                </div>
-
-                                <motion.button
-                                    onClick={() => handleAlbumPlay(active)}
-                                    layout
-                                    className="px-4 py-3 text-sm rounded-full font-bold bg-green-500 sm:hover:bg-green-400 text-white">
-                                    {albumPlayingId === active.id ? <Pause /> : <Play />}
-                                </motion.button>
-                            </div>
-
-                            <div className="flex-1 overflow-hidden px-4 pt-4">
-                                <motion.div
-                                    layout
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    className="text-gray-600 text-xs md:text-sm flex flex-col flex-1 items-start overflow-y-auto max-h-[35vh] dark:text-gray-400">
-                                    {loading ? (
-                                        "Loading..."
-                                    ) : (
-                                        songs.map((song, index) => (
-                                            <React.Fragment key={index}>
-                                                <SongBar song={song} />
-                                                <Separator />
-                                            </React.Fragment>
-                                        ))
-                                    )}
-                                </motion.div>
-                            </div>
-                        </div>
-                    </motion.div>
-                </div>
-            ) : null}
-        </AnimatePresence>
-        <div
-            ref={softAlbumsRef}
-            className="mx-auto w-full flex overflow-x-auto gap-4 py-4 no-scrollbar"
-            style={{'scrollbar-width':'none'}}
-        >
-            {albums.map((card, index) => (
-                <div
-                    onClick={() => setActive(card)}
-                    key={index}
-                    className="mr-1 sm:hover:bg-gray-100 dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-[144px] sm:sm:hover:shadow-md transition">
-                    <TouchableOpacity>
+            {/* ── Modal ── */}
+            <AnimatePresence>
+                {active && (
+                    <motion.div
+                        key="modal-wrap"
+                        className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4"
+                    >
                         <motion.div
-                            style={{ scrollSnapAlign: 'center' }}
-                            layoutId={`card-${card.title}-${id}`}
-                            className="relative flex flex-col items-center rounded-lg overflow-hidden w-full cursor-pointer transition-transform transform sm:hover:scale-105">
-                            <motion.div className="relative w-full pb-[100%]">
-                                <div className="absolute top-0 left-0 w-full h-full">
-                                    {card?.image && !imageError ? (
-                                        <img
-                                            src={card?.image}
-                                            alt={`${card?.title} cover`}
-                                            className="absolute top-0 left-0 w-full h-full rounded-md object-cover"
-                                            onError={() => setImageError(true)}
-                                        />
-                                    ) : (
-                                        <Skeleton className="absolute top-0 left-0 w-full h-full rounded" />
-                                    )}
-                                </div>
-                                <div className=" absolute w-full h-full flex bottom-0 right-0  duration-75  sm:sm:hover:translate-x-0 translate-x-12 ">
-                                    <div className="absolute bottom-0 right-0 -translate-x-1 -translate-y-1 bg-green-600 bg-opacity-100 rounded-full p-3 sm:hover:scale-105 sm:hover:bg-green-500">
-                                        <Play className="w-5 h-5 text-black fill-black" />
-                                    </div>
-                                </div>
-                            </motion.div>
+                            ref={modalRef}
+                            variants={modalVariants}
+                            initial="hidden" animate="visible" exit="exit"
+                            className="relative w-full sm:max-w-md bg-[#0f0f0f] sm:rounded-2xl overflow-hidden shadow-2xl flex flex-col"
+                            style={{ maxHeight: "90dvh" }}
+                        >
+                            {/* close btn */}
+                            <button
+                                onClick={() => closeModal()}
+                                className="absolute top-3 right-3 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                                aria-label="Close"
+                            >
+                                <X size={15} className="text-white" />
+                            </button>
 
-                            <motion.div className="w-full mt-2 px-2">
-                                {card?.title ? (
-                                    <Label className="font-bold text-gray-800 dark:text-gray-300 text-sm">
-                                        {truncateTitle(card.title)}
-                                    </Label>
+                            {/* cover */}
+                            <div className="relative w-full aspect-[16/9] sm:aspect-square flex-none overflow-hidden">
+                                {active.image ? (
+                                    <img
+                                        src={active.image}
+                                        alt={active.title}
+                                        className="w-full h-full object-cover"
+                                    />
                                 ) : (
-                                    <Skeleton className="h-4 w-full rounded" />
+                                    <div className="w-full h-full bg-neutral-800 flex items-center justify-center">
+                                        <Music2 size={48} className="text-neutral-600" />
+                                    </div>
                                 )}
-                            </motion.div>
+                                {/* gradient overlay */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f0f] via-transparent to-transparent" />
+                                {/* title pinned on cover bottom */}
+                                <div className="absolute bottom-0 left-0 right-0 px-4 pb-4 flex items-end justify-between gap-3">
+                                    <div className="flex-1 min-w-0">
+                                        <h2 className="text-white font-semibold text-lg leading-tight truncate">
+                                            {decode(active.title)}
+                                        </h2>
+                                        {active.description && (
+                                            <p className="text-white/60 text-xs mt-0.5 line-clamp-2">
+                                                {decode(active.description)}
+                                            </p>
+                                        )}
+                                    </div>
+                                    <button
+                                        onClick={() => handlePlay(active)}
+                                        disabled={loading}
+                                        className="flex-none flex items-center justify-center w-11 h-11 rounded-full bg-green-500 hover:bg-green-400 active:scale-95 transition-all shadow-lg disabled:opacity-40"
+                                        aria-label={playingId === active.id ? "Pause" : "Play"}
+                                    >
+                                        {playingId === active.id
+                                            ? <Pause size={18} className="text-black fill-black" />
+                                            : <Play size={18} className="text-black fill-black" />}
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* song list */}
+                            <div className="flex-1 overflow-y-auto overscroll-contain">
+                                {loading ? (
+                                    <SongListSkeleton />
+                                ) : songs.length > 0 ? (
+                                    songs.map((song, i) => (
+                                        <React.Fragment key={song?.id ?? i}>
+                                            <SongBar song={song} />
+                                            {i < songs.length - 1 && (
+                                                <div className="mx-4 h-px bg-white/5" />
+                                            )}
+                                        </React.Fragment>
+                                    ))
+                                ) : (
+                                    <div className="flex items-center justify-center h-24 text-white/30 text-sm">
+                                        No songs found
+                                    </div>
+                                )}
+                            </div>
                         </motion.div>
-                    </TouchableOpacity>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* ── Carousel ── */}
+            <div
+                ref={softAlbumsRef}
+                className="flex gap-3 overflow-x-auto py-3 px-1 no-scrollbar"
+                style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
+            >
+                {albums.map((album, i) => (
+                    <AlbumCard
+                        key={album.id ?? i}
+                        album={album}
+                        layoutId={`card-${album.title}-${id}`}
+                        isPlaying={playingId === album.id}
+                        onClick={() => openModal(album)}
+                    />
+                ))}
+            </div>
+        </>
+    );
+}
+
+/* ─── AlbumCard ─────────────────────────────────────────────── */
+function AlbumCard({ album, layoutId, isPlaying, onClick }) {
+    const [imgErr, setImgErr] = useState(false);
+
+    return (
+        <motion.button
+            layoutId={layoutId}
+            onClick={onClick}
+            whileTap={{ scale: 0.95 }}
+            className="group flex-none w-36 text-left rounded-xl overflow-hidden bg-neutral-900 hover:bg-neutral-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
+        >
+            {/* square cover */}
+            <div className="relative w-full aspect-square overflow-hidden">
+                {album.image && !imgErr ? (
+                    <img
+                        src={album.image}
+                        alt={album.title}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        onError={() => setImgErr(true)}
+                        loading="lazy"
+                    />
+                ) : (
+                    <div className="w-full h-full bg-neutral-800 flex items-center justify-center">
+                        <Music2 size={28} className="text-neutral-600" />
+                    </div>
+                )}
+                {/* play badge */}
+                <div className="absolute inset-0 flex items-end justify-end p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="flex items-center justify-center w-9 h-9 rounded-full bg-green-500 shadow-lg">
+                        {isPlaying
+                            ? <Pause size={15} className="text-black fill-black" />
+                            : <Play size={15} className="text-black fill-black" />}
+                    </span>
+                </div>
+                {isPlaying && (
+                    <span className="absolute top-2 left-2 flex gap-0.5 items-end h-4">
+                        {[1, 1.6, 0.8].map((d, i) => (
+                            <span
+                                key={i}
+                                className="w-1 bg-green-400 rounded-full animate-bounce"
+                                style={{ height: `${d * 14}px`, animationDelay: `${i * 0.12}s` }}
+                            />
+                        ))}
+                    </span>
+                )}
+            </div>
+            {/* title */}
+            <div className="px-2.5 py-2">
+                <p className="text-white/90 text-xs font-medium leading-snug truncate">
+                    {decode(album.title) || <span className="block h-3 bg-neutral-700 rounded animate-pulse w-3/4" />}
+                </p>
+            </div>
+        </motion.button>
+    );
+}
+
+/* ─── Skeleton loader ───────────────────────────────────────── */
+function SongListSkeleton() {
+    return (
+        <div className="p-4 flex flex-col gap-3">
+            {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded bg-neutral-800 animate-pulse flex-none" />
+                    <div className="flex-1 space-y-1.5">
+                        <div className="h-3 bg-neutral-800 rounded animate-pulse w-3/4" />
+                        <div className="h-2.5 bg-neutral-800 rounded animate-pulse w-1/2" />
+                    </div>
                 </div>
             ))}
         </div>
-    </>);
+    );
 }
 
-export const CloseIcon = () => (
-    <motion.svg
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0, transition: { duration: 0.05 } }}
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="h-4 w-4 text-black">
-        <path d="M18 6L6 18" />
-        <path d="M6 6l12 12" />
-    </motion.svg>
-);
+export default ExpandableAlbumCarousel;

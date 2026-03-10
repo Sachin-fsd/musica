@@ -28,7 +28,7 @@ jobs:
 
       - name: Build
         run: npm run build
-      
+
       - name: Deploy to Vercel
         if: github.event_name == 'push'
         run: npx vercel deploy --prod --yes --token "$VERCEL_TOKEN"
