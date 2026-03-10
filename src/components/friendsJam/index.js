@@ -109,7 +109,7 @@ export default function Jam() {
       socket.disconnect();
       setChat([]);
     };
-  }, [isJamChecked, username, handleSeek, setCurrentIndex, setCurrentSong, setPlaying, setSongList, songList]);
+  }, [isJamChecked, username, handleSeek, setCurrentIndex, setCurrentSong, setPlaying, setSongList]);
 
   // 🔁 Auto-reconnect
   useEffect(() => {
