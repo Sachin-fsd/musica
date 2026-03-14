@@ -198,18 +198,6 @@ function StyledLyrics() {
     );
   }
 
-  // Fallback for plain lyrics (shouldn't happen with synced lyrics)
-  return (
-    <div className="w-[90%] h-[90vh] flex flex-col rounded-xl shadow-lg overflow-hidden border-2">
-      <div className="flex-1 overflow-y-auto px-6">
-        <div className="max-w-3xl mx-auto">
-          <pre className="text-gray-700 dark:text-gray-300 text-xl leading-relaxed whitespace-pre-wrap font-sans text-center mt-8">
-            {lyrics?.plain || '♪'}
-          </pre>
-        </div>
-      </div>
-    </div>
-  );
 }
 
 export default StyledLyrics;

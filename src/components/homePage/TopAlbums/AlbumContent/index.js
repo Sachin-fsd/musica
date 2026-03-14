@@ -12,7 +12,7 @@ const AlbumContent = () => {
             try {
                 setLoading(true);
                 const StoredAlbumData = JSON.parse(localStorage.getItem("albumsFetched"));
-                if (StoredAlbumData.time + (12 * 60 * 60 * 1000) < new Date) {
+                if (StoredAlbumData && StoredAlbumData.time + (12 * 60 * 60 * 1000) < new Date) {
                     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/jiosaavn-data`);
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
