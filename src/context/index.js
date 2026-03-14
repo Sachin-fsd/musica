@@ -47,11 +47,9 @@ export default function UserState({ children }) {
             playSongAtIndex(existingSongIndex);
             const response = await SearchSongSuggestionAction(song.id);
             if (response?.success) {
-                const existingIds = new Set(songList.map(s => s.id));
-                const suggestions = shuffleArray(response.data).filter(
-                    (relatedSong) => relatedSong.id !== song.id && !existingIds.has(relatedSong.id)
-                );
-                setSongList(prev => [...prev, ...suggestions]);
+                const suggestions = shuffleArray(response.data)
+                const existingIds = new Set([...songList,...suggestions].map(s => s.id));
+                setSongList(existingIds);
             }
 
         } else {
@@ -75,13 +73,11 @@ export default function UserState({ children }) {
     const handleNext = useCallback(() => {
         const nextIndex = (currentIndex + 1) % songList.length;
         playSongAtIndex(nextIndex);
-        setCurrentIndex(nextIndex);
     }, [currentIndex, songList.length, playSongAtIndex]);
 
     const handlePrev = useCallback(() => {
         const prevIndex = (currentIndex - 1 + songList.length) % songList.length;
         playSongAtIndex(prevIndex);
-        setCurrentIndex(prevIndex);
     }, [currentIndex, songList.length, playSongAtIndex]);
 
     const togglePlayPause = useCallback(() => {
