@@ -48,7 +48,7 @@ export default function UserState({ children }) {
             const response = await SearchSongSuggestionAction(song.id);
             if (response?.success) {
                 const suggestions = shuffleArray(response.data)
-                const existingIds = new Set([...songList,...suggestions].map(s => s.id));
+                const newSongList = [...new Set([...songList,...suggestions].map(s => s.id))];
                 setSongList(existingIds);
             }
 
