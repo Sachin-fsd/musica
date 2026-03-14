@@ -35,7 +35,7 @@ const AlbumContent = () => {
                     ];
                     const StoredAlbumData = { albumsArray: object_for_megaMenu3, time: new Date };
                     setAlbumData(object_for_megaMenu3);
-                    localStorage.setItem("albumsFetched", JSON.parse(StoredAlbumData))
+                    localStorage.setItem("albumsFetched", JSON.stringify(StoredAlbumData))
                 }
                 else {
                     setAlbumData(StoredAlbumData.albumsArray);
