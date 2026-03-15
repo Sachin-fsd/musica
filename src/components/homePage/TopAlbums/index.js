@@ -45,7 +45,7 @@ const TopAlbums = ({ heading, albums, data }) => {
                     }
                 </div>
                 <div className='relative max-w-full'>
-                    <div className='flex overflow-x-auto' style={{'scrollbar-width':'none'}}>
+                    <div className='flex overflow-x-auto' style={{'scrollbarWidth':'none'}}>
                         {albums?.length > 0 ? (
                             <ExpandableAlbumCarousel softAlbumsRef={softAlbumsRef} albums={albums} />
                         ) : (

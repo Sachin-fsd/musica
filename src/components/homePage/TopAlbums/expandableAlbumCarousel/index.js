@@ -171,7 +171,7 @@ export function ExpandableAlbumCarousel({ albums = [], softAlbumsRef }) {
                             </button>
 
                             {/* cover */}
-                            <div className="relative w-full aspect-[16/9] sm:aspect-square flex-none overflow-hidden">
+                            <div className="relative w-full aspect-[16/9] flex-none overflow-hidden">
                                 {active.image ? (
                                     <img
                                         src={active.image}
@@ -211,7 +211,7 @@ export function ExpandableAlbumCarousel({ albums = [], softAlbumsRef }) {
                             </div>
 
                             {/* song list */}
-                            <div className="flex-1 overflow-y-auto overscroll-contain">
+                            <div className="flex-1 overflow-y-auto overscroll-contain overflow-x-hidden">
                                 {loading ? (
                                     <SongListSkeleton />
                                 ) : songs.length > 0 ? (
