@@ -36,7 +36,7 @@ export const NavItem = ({ icon: Icon, label, link, active = false, show = true }
                     ? ''
                     : 'hover:bg-white/10'
                 }`}>
-                <div className={`w-6 h-6 flex items-center justify-center`}>
+                <div className={`w-10 h-10 flex items-center justify-center`}>
                     {React.cloneElement(Icon, {
                         fill: active ? "currentColor" : "none",
                         stroke: active ? "none" : "currentColor"
