@@ -55,7 +55,7 @@ const TopQueryCard = ({ data }) => {
         <div
             style={styles.container}
             onClick={handleClick}
-            className="sm:hover:scale-[99%] sm:hover:opacity-90 sm:hover:shadow-md transition duration-300 ease-in-out cursor-pointer"
+            className="flex flex-col sm:hover:scale-[99%] sm:hover:opacity-90 sm:hover:shadow-md transition duration-300 ease-in-out cursor-pointer"
         >
             <div className="relative justify-items-center">
                 <Image
