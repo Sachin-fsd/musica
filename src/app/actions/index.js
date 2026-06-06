@@ -106,163 +106,162 @@ const parseSyncedLyrics = (syncedLyrics) => {
     }).filter(Boolean);
 };
 
-// Simple string similarity score (0-1)
-const calculateSimilarity = (str1, str2) => {
-    const s1 = str1.toLowerCase().trim();
-    const s2 = str2.toLowerCase().trim();
+const tryFetchLyrics = async (artistName, trackName, albumName, duration, lyricsApiUrl) => {
+    const params = new URLSearchParams({
+        artist_name: artistName,
+        track_name: trackName,
+        album_name: albumName,
+        duration: duration.toString()
+    });
 
-    if (s1 === s2) return 1;
+    const url = `${lyricsApiUrl}/get?${params}`;
+    const response = await fetch(url, {
+        headers: {
+            'User-Agent': 'Musica-App/1.0',
+            'Accept': 'application/json'
+        }
+    });
 
-    // Remove common punctuation and extra spaces
-    const clean1 = s1.replace(/[^\w\s]/g, '').replace(/\s+/g, ' ');
-    const clean2 = s2.replace(/[^\w\s]/g, '').replace(/\s+/g, ' ');
+    if (response.ok) {
+        const data = await response.json();
+        const parsedSynced = parseSyncedLyrics(data.syncedLyrics);
+        return {
+            synced: parsedSynced,
+            plain: data.plainLyrics,
+            instrumental: data.instrumental
+        };
+    }
 
-    if (clean1 === clean2) return 0.95;
-
-    // Levenshtein distance approach for partial matches
-    const longer = clean1.length > clean2.length ? clean1 : clean2;
-    const shorter = clean1.length > clean2.length ? clean2 : clean1;
-
-    if (longer.length === 0) return 1;
-
-    const editDistance = getEditDistance(shorter, longer);
-    return (longer.length - editDistance) / longer.length;
+    return null;
 };
 
-// Calculate edit distance for fuzzy matching
-const getEditDistance = (s1, s2) => {
-    const costs = [];
-    for (let i = 0; i <= s1.length; i++) {
-        let lastValue = i;
-        for (let j = 0; j <= s2.length; j++) {
-            if (i === 0) {
-                costs[j] = j;
-            } else if (j > 0) {
-                let newValue = costs[j - 1];
-                if (s1.charAt(i - 1) !== s2.charAt(j - 1)) {
-                    newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+const normalizeString = (str) => {
+    return str.toLowerCase().trim().replace(/[^\w\s]/g, '');
+};
+
+const searchLyrics = async (trackName, artistNames, lyricsApiUrl) => {
+    const searchQuery = encodeURIComponent(trackName);
+    const url = `${lyricsApiUrl}/search?q=${searchQuery}`;
+
+    try {
+        const response = await fetch(url, {
+            headers: {
+                'User-Agent': 'Musica-App/1.0',
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            return null;
+        }
+
+        const results = await response.json();
+
+        if (!Array.isArray(results) || results.length === 0) {
+            return null;
+        }
+
+        // Filter: only results with synced lyrics
+        const withSyncedLyrics = results.filter(r => r.syncedLyrics);
+
+        if (withSyncedLyrics.length === 0) {
+            return null;
+        }
+
+        // Primary match: track name (normalized comparison)
+        const normalizedTarget = normalizeString(trackName);
+        const trackMatches = withSyncedLyrics.filter(r =>
+            normalizeString(r.trackName).includes(normalizedTarget) ||
+            normalizedTarget.includes(normalizeString(r.trackName))
+        );
+
+        if (trackMatches.length === 0) {
+            return null;
+        }
+
+        // If multiple track matches, prefer by artist name
+        if (trackMatches.length > 1 && artistNames.length > 0) {
+            const normalizedArtists = artistNames.map(a => normalizeString(a));
+
+            for (const result of trackMatches) {
+                const resultArtistNorm = normalizeString(result.artistName);
+                if (normalizedArtists.some(artist =>
+                    resultArtistNorm.includes(artist) || artist.includes(resultArtistNorm)
+                )) {
+                    return result;
                 }
-                costs[j - 1] = lastValue;
-                lastValue = newValue;
             }
         }
-        if (i > 0) costs[s2.length] = lastValue;
+
+        // Return first match with synced lyrics
+        return trackMatches[0];
+    } catch (error) {
+        console.error('Error searching lyrics:', error.message);
+        return null;
     }
-    return costs[s2.length];
 };
 
-// Calculate match score for a song result
-const calculateMatchScore = (result, artistName, trackName, albumName, duration) => {
-    let score = 0;
-
-    // Track name match (40% weight)
-    const trackSimilarity = calculateSimilarity(result.trackName, trackName);
-    score += trackSimilarity * 40;
-
-    // Artist name match (35% weight)
-    const artistSimilarity = calculateSimilarity(result.artistName, artistName);
-    score += artistSimilarity * 35;
-
-    // Album name match (15% weight) - optional
-    let albumSimilarity = 0;
-    if (albumName && result.albumName) {
-        albumSimilarity = calculateSimilarity(result.albumName, albumName);
-    } else if (!albumName && !result.albumName) {
-        albumSimilarity = 1;
-    }
-    score += albumSimilarity * 15;
-
-    // Duration match (10% weight) - allow 3 second tolerance
-    const durationDiff = Math.abs(result.duration - duration);
-    const durationSimilarity = durationDiff <= 3 ? 1 : Math.max(0, 1 - (durationDiff / 10));
-    score += durationSimilarity * 10;
-
-    return score;
-};
-
-export async function fetchLyricsAction(artistName, trackName, albumName, duration) {
+export async function fetchLyricsAction(currentSong) {
     const { LYRICS_API_URL } = process.env;
     if (!LYRICS_API_URL) {
         throw new Error("LYRICS_API_URL environment variable is not set.");
     }
 
+    if (!currentSong) {
+        throw new Error("No song provided");
+    }
+
+    const trackName = currentSong.name || '';
+    const albumName = currentSong.album?.name || '';
+    const duration = currentSong.duration || 0;
+    const primaryArtists = currentSong.artists?.primary || [];
+    const artistNames = primaryArtists.map(a => a?.name).filter(Boolean);
+
     try {
-        // Step 1: Try exact match first
-        const exactParams = new URLSearchParams({
-            artist_name: artistName,
-            track_name: trackName,
-            album_name: albumName,
-            duration: duration.toString()
-        });
+        // Try 1: Exact match with primary artist
+        if (artistNames.length > 0) {
+            const artistName = artistNames[0];
+            const result = await tryFetchLyrics(artistName, trackName, albumName, duration, LYRICS_API_URL);
+            if (result) return result;
 
-        const exactUrl = `${LYRICS_API_URL}/get?${exactParams}`;
-        const exactResponse = await fetch(exactUrl, {
-            headers: {
-                'User-Agent': 'Musica-App/1.0',
-                'Accept': 'application/json'
+            // Try 2: With duration tolerance (±5 seconds)
+            for (let durOffset of [-5, 5]) {
+                const adjustedDuration = duration + durOffset;
+                const result = await tryFetchLyrics(artistName, trackName, albumName, adjustedDuration, LYRICS_API_URL);
+                if (result) return result;
             }
-        });
 
-        if (exactResponse.ok) {
-            const data = await exactResponse.json();
-            const parsedSynced = parseSyncedLyrics(data.syncedLyrics);
+            // Try 3: With each additional artist
+            if (artistNames.length > 1) {
+                for (let i = 1; i < artistNames.length; i++) {
+                    const altArtistName = artistNames[i];
+                    const result = await tryFetchLyrics(altArtistName, trackName, albumName, duration, LYRICS_API_URL);
+                    if (result) return result;
+
+                    // Try with duration tolerance for alternative artists too
+                    for (let durOffset of [-5, 5]) {
+                        const adjustedDuration = duration + durOffset;
+                        const result = await tryFetchLyrics(altArtistName, trackName, albumName, adjustedDuration, LYRICS_API_URL);
+                        if (result) return result;
+                    }
+                }
+            }
+        }
+
+        // Try 4: Fall back to search API
+        console.log('Exact match failed, attempting search API...');
+        const searchResult = await searchLyrics(trackName, artistNames, LYRICS_API_URL);
+
+        if (searchResult) {
+            const parsedSynced = parseSyncedLyrics(searchResult.syncedLyrics);
             return {
                 synced: parsedSynced,
-                plain: data.plainLyrics,
-                instrumental: data.instrumental
+                plain: searchResult.plainLyrics,
+                instrumental: searchResult.instrumental
             };
         }
 
-        // Step 2: Fall back to search with fuzzy matching
-        console.log('Exact match failed, attempting fuzzy search...');
-
-        const searchParams = new URLSearchParams({
-            query: `${artistName} ${trackName}`
-        });
-
-        const searchUrl = `${LYRICS_API_URL}/search?${searchParams}`;
-        const searchResponse = await fetch(searchUrl, {
-            headers: {
-                'User-Agent': 'Musica-App/1.0',
-                'Accept': 'application/json'
-            }
-        });
-
-        if (!searchResponse.ok) {
-            throw new Error(`Lyrics search failed (${searchResponse.status})`);
-        }
-
-        const results = await searchResponse.json();
-
-        if (!Array.isArray(results) || results.length === 0) {
-            throw new Error('No search results found');
-        }
-
-        // Find best match based on scoring algorithm
-        const scoredResults = results.map(result => ({
-            ...result,
-            matchScore: calculateMatchScore(result, artistName, trackName, albumName, duration)
-        }));
-
-        // Sort by score descending
-        scoredResults.sort((a, b) => b.matchScore - a.matchScore);
-
-        const bestMatch = scoredResults[0];
-
-        console.log(`Fuzzy match found with score ${bestMatch.matchScore.toFixed(2)}:`, {
-            track: bestMatch.trackName,
-            artist: bestMatch.artistName,
-            album: bestMatch.albumName,
-            duration: bestMatch.duration
-        });
-
-        const parsedSynced = parseSyncedLyrics(bestMatch.syncedLyrics);
-        return {
-            synced: parsedSynced,
-            plain: bestMatch.plainLyrics,
-            instrumental: bestMatch.instrumental
-        };
-
+        throw new Error('Lyrics not found');
     } catch (error) {
         console.error('Error fetching lyrics:', error.message);
     }

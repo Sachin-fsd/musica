@@ -40,17 +40,19 @@ export default function UserState({ children }) {
     const playSongAndCreateQueue = useCallback(async (song) => {
         // First, check if the song is already in the current song list
         const existingSongIndex = songList.findIndex(s => s.id === song.id);
-
+        if(loading) return;
         if (existingSongIndex !== -1) {
             // --- SONG ALREADY EXISTS ---
             // The song is in the queue, so just play it at its current position.
             playSongAtIndex(existingSongIndex);
+            setLoading(true);
             const response = await SearchSongSuggestionAction(song.id);
             if (response?.success) {
                 const suggestions = shuffleArray(response.data)
-                const newSongList = [...new Set([...songList,...suggestions].map(s => s.id))];
-                setSongList(existingIds);
+                const newSongList = [...new Set([...songList,...suggestions])];
+                setSongList(newSongList);
             }
+            setLoading(false);
 
         } else {
             // --- SONG IS NEW ---
@@ -102,7 +104,6 @@ export default function UserState({ children }) {
 
             let initialSongs = Array.isArray(storedSongList) && (storedSongList.length > 0) && storedSongList[0]?.id ? storedSongList : songs;
             let initialCurrentSong = storedCurrentSong?.id ? storedCurrentSong : initialSongs[0];
-
             setSongList(initialSongs);
             setCurrentSong(initialCurrentSong);
             const initialIndex = initialSongs.findIndex(s => s.id === initialCurrentSong.id);
@@ -199,17 +200,17 @@ export default function UserState({ children }) {
     // Effect 5: Fetch related songs when nearing the end of the playlist
     useEffect(() => {
         // Prevent running on initial render or if songList is empty
-        if (currentIndex === 0 || songList.length === 0 || !currentSong?.id) return;
+        if (currentIndex === 0 || songList.length === 0 || !currentSong?.id || loading) return;
 
         const addRelatedSongs = async () => {
             if (currentIndex >= songList.length - 4) {
                 setLoading(true);
                 const response = await SearchSongSuggestionAction(currentSong.id);
-                if (response.success) {
-                    const newSongs = response.data.filter(
-                        relatedSong => !songList.some(song => song.id === relatedSong.id)
-                    );
-                    setSongList(prevList => [...prevList, ...shuffleArray(newSongs)]);
+                if (response.success && response.data.length > 0) {
+                    // const newSongs = response.data.filter(
+                    //     relatedSong => !songList.some(song => song.id === relatedSong.id)
+                    // );
+                    setSongList(prevList => [...new Set([...prevList, ...shuffleArray(response.data)])]);
                 }
                 setLoading(false);
             }

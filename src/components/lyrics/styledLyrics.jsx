@@ -36,12 +36,12 @@ function StyledLyrics() {
       setCurrentLineIndex(-1);
 
       try {
-        const artistName = currentSong.artists?.primary?.[0]?.name || '';
-        const trackName = currentSong.name || '';
-        const albumName = currentSong.album?.name || '';
-        const duration = currentSong.duration || 0;
+        // const artistName = currentSong.artists?.primary?.[0]?.name || '';
+        // const trackName = currentSong.name || '';
+        // const albumName = currentSong.album?.name || '';
+        // const duration = currentSong.duration || 0;
 
-        const data = await fetchLyricsAction(artistName, trackName, albumName, duration);
+        const data = await fetchLyricsAction(currentSong);
         setLyrics(data);
         setCachedLyrics(currentSong.id, data);
       } catch (err) {

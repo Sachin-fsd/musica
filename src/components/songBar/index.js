@@ -22,7 +22,7 @@ const SongBar = memo(({ song }) => {
         songList,
         setSongList,
         loading,
-        playSongAndCreateQueue, // Assume this new function is from your context
+        playSongAndCreateQueue, 
     } = useContext(UserContext);
 
     const [imageError, setImageError] = useState(false);
@@ -40,6 +40,7 @@ const SongBar = memo(({ song }) => {
     // --- Event Handlers ---
 
     const handleClick = useCallback(() => {
+        console.log("song clicked", {song, loading})
         // Prevent actions while another song is loading
         if (loading) return;
 
