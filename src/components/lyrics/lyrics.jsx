@@ -14,6 +14,7 @@ function Lyrics() {
     const [error, setError] = useState(null);
     const [currentLineIndex, setCurrentLineIndex] = useState(-1);
     const [autoScroll, setAutoScroll] = useState(true);
+    const [isVisible, setIsVisible] = useState(false);
     const lyricsContainerRef = useRef(null);
     const currentLineRef = useRef(null);
     const scrollTimeoutRef = useRef(null);
@@ -44,7 +45,8 @@ function Lyrics() {
     // Fetch lyrics when song changes
     useEffect(() => {
         if (!currentSong || !currentSong.id) {
-            setLyrics(null);
+            setIsVisible(false);
+            setTimeout(() => setLyrics(null), 300);
             return;
         }
 
@@ -53,6 +55,7 @@ function Lyrics() {
             const cached = getLyrics(currentSong.id);
             if (cached) {
                 setLyrics(cached);
+                setIsVisible(true);
                 setLoading(false);
                 return;
             }
@@ -67,10 +70,12 @@ function Lyrics() {
 
                 setLyrics(data);
                 setCachedLyrics(currentSong.id, data);
+                setIsVisible(true);
             } catch (err) {
                 console.error('Error fetching lyrics:', err, currentSong);
                 setError(err.message);
-                setLyrics(null);
+                setIsVisible(false);
+                setTimeout(() => setLyrics(null), 300);
             } finally {
                 setLoading(false);
             }
@@ -148,9 +153,11 @@ function Lyrics() {
         );
     }
 
-    if (error || !lyrics || lyrics.instrumental) {
+    if (error || !lyrics || !lyrics.synced) {
         return (
-            <div className="w-full h-[20%] flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
+            <div className={`w-full h-[20%] flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg transition-opacity duration-300 ${
+                isVisible ? 'opacity-100' : 'opacity-0'
+            }`}>
                 <p className="text-lg mb-2"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgn5yYdC82HD44DWCV9hpnzziigmPrababJYcCzBzjhRE696Nc7lwZZ3Wuc5K62ozkzEh_GE6wIw0WF1hG1glNyJACANrKjuTEtsaY8wILxl6LuPzTD5am8fYz-CPMiLutsEEB7GqBGnNYQtSsGknfO44Vgqqs2gm5RDM0orAMx3S_MDbYmh27gFul1fgPZ/s320/a-cartoon-panda-bear-with-blue-eyes-and-a-sad-expression-free-vector-removebg-preview.png" alt="logo" /></p>
                 <p className="text-lg mb-2">Lyrics not available</p>
                 <p className="text-sm opacity-75">for {currentSong.name}</p>
@@ -168,17 +175,18 @@ function Lyrics() {
     // }
 
     return (
-        <div className="w-[100%] h-[70vh] flex flex-col rounded-xl shadow-lg overflow-hidden border-2">
-            {/* Lyrics Container with fixed height */}
+        <div className={`w-[100%] h-[70vh] flex flex-col rounded-xl shadow-lg overflow-hidden border-2 transition-opacity duration-300 ${
+            isVisible ? 'opacity-100' : 'opacity-0'
+        }`}>
+            {/* Lyrics Container with fixed height and fade animation */}
             <div
                 ref={lyricsContainerRef}
                 onScroll={handleUserScroll}
-                className=" lyrics-scroll flex-1 overflow-y-auto px-6 relative"
+                className="lyrics-scroll flex-1 overflow-y-auto px-6 relative"
             >
-                {lyrics.synced ? (
-                    // Synced Lyrics - Add padding to center the content
+                {lyrics.synced && (
+                    // Synced Lyrics
                     <div className="max-w-3xl mx-auto">
-
                         <div className="space-y-1 mt-2">
                             {lyrics.synced.map((line, index) => (
                                 <div
@@ -196,16 +204,6 @@ function Lyrics() {
                                 </div>
                             ))}
                         </div>
-
-                    </div>
-                ) : (
-                    // Plain Lyrics
-                    <div className="max-w-3xl mx-auto">
-                        <div style={{ height: 'calc(40vh - 100px)' }} />
-                        <pre className="text-gray-700 dark:text-gray-300 text-xl leading-relaxed whitespace-pre-wrap font-sans text-center">
-                            {lyrics.plain}
-                        </pre>
-                        <div style={{ height: 'calc(40vh - 100px)' }} />
                     </div>
                 )}
             </div>

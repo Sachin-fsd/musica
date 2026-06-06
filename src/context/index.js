@@ -40,7 +40,7 @@ export default function UserState({ children }) {
     const playSongAndCreateQueue = useCallback(async (song) => {
         // First, check if the song is already in the current song list
         const existingSongIndex = songList.findIndex(s => s.id === song.id);
-        if(loading) return;
+        if (loading) return;
         if (existingSongIndex !== -1) {
             // --- SONG ALREADY EXISTS ---
             // The song is in the queue, so just play it at its current position.
@@ -49,7 +49,11 @@ export default function UserState({ children }) {
             const response = await SearchSongSuggestionAction(song.id);
             if (response?.success) {
                 const suggestions = shuffleArray(response.data)
-                const newSongList = [...new Set([...songList,...suggestions])];
+                const newSongList = [
+                    ...new Map(
+                        [...songList, ...suggestions].map(song => [song.id, song])
+                    ).values()
+                ];
                 setSongList(newSongList);
             }
             setLoading(false);
@@ -210,7 +214,13 @@ export default function UserState({ children }) {
                     // const newSongs = response.data.filter(
                     //     relatedSong => !songList.some(song => song.id === relatedSong.id)
                     // );
-                    setSongList(prevList => [...new Set([...prevList, ...shuffleArray(response.data)])]);
+                    const suggestions = shuffleArray(response.data)
+                    const newSongList = [
+                        ...new Map(
+                            [...songList, ...suggestions].map(song => [song.id, song])
+                        ).values()
+                    ];
+                    setSongList(newSongList);
                 }
                 setLoading(false);
             }

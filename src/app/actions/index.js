@@ -124,12 +124,9 @@ const tryFetchLyrics = async (artistName, trackName, albumName, duration, lyrics
 
     if (response.ok) {
         const data = await response.json();
+        if (!data.syncedLyrics) return null;
         const parsedSynced = parseSyncedLyrics(data.syncedLyrics);
-        return {
-            synced: parsedSynced,
-            plain: data.plainLyrics,
-            instrumental: data.instrumental
-        };
+        return { synced: parsedSynced };
     }
 
     return null;
@@ -218,20 +215,29 @@ export async function fetchLyricsAction(currentSong) {
     const artistNames = primaryArtists.map(a => a?.name).filter(Boolean);
 
     try {
-        // Try 1: Exact match with primary artist
+        // Try 1: Search API first
+        console.log('Attempting search API...');
+        const searchResult = await searchLyrics(trackName, artistNames, LYRICS_API_URL);
+
+        if (searchResult && searchResult.syncedLyrics) {
+            const parsedSynced = parseSyncedLyrics(searchResult.syncedLyrics);
+            return { synced: parsedSynced };
+        }
+
+        // Try 2: Fall back to /get with exact match and duration tolerance
         if (artistNames.length > 0) {
             const artistName = artistNames[0];
             const result = await tryFetchLyrics(artistName, trackName, albumName, duration, LYRICS_API_URL);
             if (result) return result;
 
-            // Try 2: With duration tolerance (±5 seconds)
+            // With duration tolerance (±5 seconds)
             for (let durOffset of [-5, 5]) {
                 const adjustedDuration = duration + durOffset;
                 const result = await tryFetchLyrics(artistName, trackName, albumName, adjustedDuration, LYRICS_API_URL);
                 if (result) return result;
             }
 
-            // Try 3: With each additional artist
+            // Try with each additional artist
             if (artistNames.length > 1) {
                 for (let i = 1; i < artistNames.length; i++) {
                     const altArtistName = artistNames[i];
@@ -246,19 +252,6 @@ export async function fetchLyricsAction(currentSong) {
                     }
                 }
             }
-        }
-
-        // Try 4: Fall back to search API
-        console.log('Exact match failed, attempting search API...');
-        const searchResult = await searchLyrics(trackName, artistNames, LYRICS_API_URL);
-
-        if (searchResult) {
-            const parsedSynced = parseSyncedLyrics(searchResult.syncedLyrics);
-            return {
-                synced: parsedSynced,
-                plain: searchResult.plainLyrics,
-                instrumental: searchResult.instrumental
-            };
         }
 
         throw new Error('Lyrics not found');

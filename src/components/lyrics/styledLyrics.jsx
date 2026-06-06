@@ -36,11 +36,6 @@ function StyledLyrics() {
       setCurrentLineIndex(-1);
 
       try {
-        // const artistName = currentSong.artists?.primary?.[0]?.name || '';
-        // const trackName = currentSong.name || '';
-        // const albumName = currentSong.album?.name || '';
-        // const duration = currentSong.duration || 0;
-
         const data = await fetchLyricsAction(currentSong);
         setLyrics(data);
         setCachedLyrics(currentSong.id, data);
@@ -114,17 +109,11 @@ function StyledLyrics() {
     if (!currentLine) {
       return null;
     }
-    // if (!currentLine || !currentLine.text) {
-    //   return (
-    //     <div className="w-[90%] h-8 flex items-center justify-center">
-    //       <div className="text-4xl opacity-30">♪</div>
-    //     </div>
-    //   );
-    // }
+    
     const words = currentLine?.text?.split(' ');
 
     return (
-      <div className="w-[90%] h-22 flex items-center justify-center rounded-xl shadow-lg overflow-hidden">
+      <div className="w-[90%] h-22 flex items-center justify-center rounded-xl shadow-lg overflow-hidden h-[100px]">
         <div className="lyric-container w-full h-full flex items-center justify-center p-8">
           <div
             className={`lyric-line transition-opacity duration-300 ${isVisible ? 'animate-in' : 'animate-out'
