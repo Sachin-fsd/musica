@@ -40,7 +40,6 @@ const SongBar = memo(({ song }) => {
     // --- Event Handlers ---
 
     const handleClick = useCallback(() => {
-        console.log("song clicked", {song, loading})
         // Prevent actions while another song is loading
         if (loading) return;
 
