@@ -1,5 +1,7 @@
 'use server'
 
+import { selectBestLyricsMatch } from '@/lib/lyricsAiAgent';
+
 /**
  * A centralized API fetch helper to handle requests, responses, and errors.
  * @param {string} endpoint - The API endpoint to hit (e.g., '/search/songs').
@@ -132,11 +134,8 @@ const tryFetchLyrics = async (artistName, trackName, albumName, duration, lyrics
     return null;
 };
 
-const normalizeString = (str) => {
-    return str.toLowerCase().trim().replace(/[^\w\s]/g, '');
-};
-
-const searchLyrics = async (trackName, artistNames, lyricsApiUrl) => {
+const searchLyrics = async (currentSong, lyricsApiUrl) => {
+    const trackName = currentSong.name || '';
     const searchQuery = encodeURIComponent(trackName);
     const url = `${lyricsApiUrl}/search?q=${searchQuery}`;
 
@@ -158,40 +157,9 @@ const searchLyrics = async (trackName, artistNames, lyricsApiUrl) => {
             return null;
         }
 
-        // Filter: only results with synced lyrics
-        const withSyncedLyrics = results.filter(r => r.syncedLyrics);
-
-        if (withSyncedLyrics.length === 0) {
-            return null;
-        }
-
-        // Primary match: track name (normalized comparison)
-        const normalizedTarget = normalizeString(trackName);
-        const trackMatches = withSyncedLyrics.filter(r =>
-            normalizeString(r.trackName).includes(normalizedTarget) ||
-            normalizedTarget.includes(normalizeString(r.trackName))
-        );
-
-        if (trackMatches.length === 0) {
-            return null;
-        }
-
-        // If multiple track matches, prefer by artist name
-        if (trackMatches.length > 1 && artistNames.length > 0) {
-            const normalizedArtists = artistNames.map(a => normalizeString(a));
-
-            for (const result of trackMatches) {
-                const resultArtistNorm = normalizeString(result.artistName);
-                if (normalizedArtists.some(artist =>
-                    resultArtistNorm.includes(artist) || artist.includes(resultArtistNorm)
-                )) {
-                    return result;
-                }
-            }
-        }
-
-        // Return first match with synced lyrics
-        return trackMatches[0];
+        // Use AI agent to select best match
+        const bestMatch = await selectBestLyricsMatch(currentSong, results);
+        return bestMatch;
     } catch (error) {
         console.error('Error searching lyrics:', error.message);
         return null;
@@ -211,13 +179,13 @@ export async function fetchLyricsAction(currentSong) {
     const trackName = currentSong.name || '';
     const albumName = currentSong.album?.name || '';
     const duration = currentSong.duration || 0;
-    const primaryArtists = currentSong.artists?.primary || [];
+    const primaryArtists = currentSong.artists?.all || [];
     const artistNames = primaryArtists.map(a => a?.name).filter(Boolean);
 
     try {
-        // Try 1: Search API first
-        console.log('Attempting search API...');
-        const searchResult = await searchLyrics(trackName, artistNames, LYRICS_API_URL);
+        // Try 1: Search API with AI agent filtering
+        // console.log('Attempting search API with AI agent...');
+        const searchResult = await searchLyrics(currentSong, LYRICS_API_URL);
 
         if (searchResult && searchResult.syncedLyrics) {
             const parsedSynced = parseSyncedLyrics(searchResult.syncedLyrics);

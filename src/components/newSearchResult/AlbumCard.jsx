@@ -71,9 +71,9 @@ const AlbumCard = ({ data }) => {
                                 />
                             </div>
                             <div style={{ flex: 1 }}>
-                                <p style={{ color: "white", fontSize: 16 }} ellipsizeMode="tail">{decode(song.title)}</p>
-                                <p style={styles.subtitle} ellipsizeMode="tail">{decode(song.artist)}</p>
-                                <p style={styles.subtitle} ellipsizeMode="tail">{decode(song.description)}</p>
+                                <p style={{ color: "white", fontSize: 16 }} >{decode(song.title)}</p>
+                                <p style={styles.subtitle} >{decode(song.artist)}</p>
+                                <p style={styles.subtitle} >{decode(song.description)}</p>
                             </div>
                         </div>
                         <Separator />

@@ -65,9 +65,9 @@ const ArtistCard = ({ data }) => {
                             />
                         </div>
                         <div style={{ flex: 1 }}>
-                            <p style={{ color: "white", fontSize: 16 }} ellipsizeMode="tail">{song.title}</p>
-                            <p style={styles.subtitle} ellipsizeMode="tail">{song.type}</p>
-                            <p style={styles.subtitle} ellipsizeMode="tail">{song.description}</p>
+                            <p style={{ color: "white", fontSize: 16 }} >{song.title}</p>
+                            <p style={styles.subtitle} >{song.type}</p>
+                            <p style={styles.subtitle} >{song.description}</p>
                         </div>
                     </div>
                     <Separator />
