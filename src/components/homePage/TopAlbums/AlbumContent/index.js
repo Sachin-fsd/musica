@@ -1,4 +1,5 @@
 'use client'
+import { FetchAllAlbums } from "@/app/actions";
 import TopAlbums from "..";
 import { useEffect, useState } from 'react';
 
@@ -13,11 +14,8 @@ const AlbumContent = () => {
                 setLoading(true);
                 const StoredAlbumData = JSON.parse(localStorage.getItem("albumsFetched"));
                 if (!StoredAlbumData || StoredAlbumData.time + (12 * 60 * 60 * 1000) < new Date) {
-                    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/jiosaavn-data`);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const MegaMenu3Playlists = await response.json();
+
+                    const MegaMenu3Playlists = await FetchAllAlbums();
                     const object_for_megaMenu3 = [
                         { heading: "Charts", data: MegaMenu3Playlists.charts },
                         { heading: "Ultimate Jams", data: MegaMenu3Playlists.top_playlists },
@@ -30,7 +28,7 @@ const AlbumContent = () => {
                         { heading: "Vibe Check", data: MegaMenu3Playlists["promo:vx:data:116"] },
                         { heading: "Fresh Finds", data: MegaMenu3Playlists["promo:vx:data:143"] },
                         { heading: "Epic Soundtracks", data: MegaMenu3Playlists["promo:vx:data:76"] },
-                        { heading: "Chill Mood", data: MegaMenu3Playlists["promo:vx:data:21"] },
+                        { heading: "Chill Mood", data: MegaMenu3Playlists["city_mod"] },
                         { heading: "Liked By All", data: MegaMenu3Playlists["promo:vx:data:31"] },
                     ];
                     const StoredAlbumData = { albumsArray: object_for_megaMenu3, time: new Date };

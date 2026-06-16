@@ -45,6 +45,32 @@ async function apiFetch(endpoint, params = {}) {
 export const SearchGlobalAction = (query) =>
     apiFetch('/search', { query: encodeURIComponent(query) });
 
+export const FetchAllAlbums = async () => {
+    const { BACKEND_URL } = process.env;
+    if (!BACKEND_URL) {
+        throw new Error("BACKEND_URL environment variable is not set.");
+    }
+
+    // Construct the query string from the params object
+    const url = `${BACKEND_URL}/jiosaavn-data`;
+
+    try {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            // Catches HTTP errors like 404 or 500
+            throw new Error(`API request failed with status ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        return data; // Returns the full successful data object
+    } catch (error) {
+        console.error(`Error fetching from ${url}:`, error.message);
+        return { success: false, message: error.message || 'An unknown error occurred.' };
+    }
+}
+
 export const SearchSongsAction = (query) =>
     apiFetch('/search/songs', { query: encodeURIComponent(query) });
 
