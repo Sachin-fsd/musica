@@ -5,9 +5,10 @@ import { Download, Loader, Pause, Play, Repeat, Repeat1, SkipBack, SkipForward }
 import { useContext, useState } from 'react';
 import { Button } from '../ui/button';
 import { toast } from 'sonner';
-import { decodeHtml } from '@/utils';
 import { Slider } from '../ui/slider';
 import { formatTime } from '@/utils/extraFunctions';
+import { decode } from "he";
+
 
 const Player = () => {
     const [isDownloading, setIsDownloading] = useState(false);
@@ -74,18 +75,15 @@ const Player = () => {
                 {currentSong && currentSong?.name && (
                     <div>
                         <p className="font-semibold text-xl text-gray-900 dark:text-white truncate max-w-xs mx-auto">
-                            {decodeHtml(currentSong?.name)}
+                            {decode(currentSong?.name)}
                         </p>
                         <p className="font-mono text-gray-600 dark:text-gray-400 text-sm truncate max-w-xs mx-auto">
-                            {decodeHtml(
+                            {decode(
                                 (currentSong?.artists?.primary?.slice(0, 2) || [])
                                     .map((a) => a.name)
                                     .join(', ')
                             )}
                         </p>
-                        {/* <p className="font-mono text-gray-600 dark:text-gray-400 text-sm truncate max-w-xs mx-auto">
-                            {decodeHtml(currentSong?.album?.name)}
-                        </p> */}
                     </div>
                 )}
             </div>

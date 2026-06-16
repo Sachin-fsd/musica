@@ -2,7 +2,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from '@/context';
 import { Skeleton } from '../ui/skeleton';
-import { decodeHtml } from '@/utils';
+import { decode } from "he";
+
 
 const SongCarousel = ({ songs }) => {
     const { currentSong, setCurrentSong, currentIndex, setCurrentIndex } = useContext(UserContext);
@@ -91,10 +92,10 @@ const SongCarousel = ({ songs }) => {
             {songs && songs.length > 0 && (
                 <div className="mt-5 text-center">
                     <p className="font-semibold font-mono truncate max-w-xs mx-auto">
-                        {decodeHtml(songs[currentIndex]?.name)}
+                        {decode(songs[currentIndex]?.name)}
                     </p>
                     <p className="font-mono text-gray-400 text-xs truncate max-w-xs mx-auto">
-                        {decodeHtml(
+                        {decode(
                             songs[currentIndex]?.artists?.primary
                                 ?.slice(0, 2)
                                 .map((a) => a.name)
@@ -102,7 +103,7 @@ const SongCarousel = ({ songs }) => {
                         )}
                     </p>
                     <p className="font-mono text-gray-400 text-xs truncate max-w-xs mx-auto">
-                        {decodeHtml(currentSong?.album?.name)}
+                        {decode(currentSong?.album?.name)}
                     </p>
                 </div>
             )}

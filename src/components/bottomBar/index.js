@@ -5,8 +5,9 @@ import { Play, Pause, StepForward, ChevronDown } from "lucide-react";
 import { useContext, useState, useEffect } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { Label } from "../ui/label";
-import { decodeHtml, htmlParser } from "@/utils";
 import { Button } from "../ui/button";
+import { decode } from "he";
+
 import {
   Sheet,
   SheetClose,
@@ -117,7 +118,7 @@ const Bottombar = () => {
                 <div className="flex flex-col overflow-hidden">
                   {currentSong?.name ? (
                     <Label className="font-semibold text-gray-100 truncate text-base cursor-pointer">
-                      {decodeHtml(currentSong.name)}
+                      {decode(currentSong.name)}
                     </Label>
                   ) : (
                     <Skeleton className="w-32 h-4 mb-1 bg-gray-700" />
@@ -125,7 +126,7 @@ const Bottombar = () => {
 
                   {currentSong?.artists?.primary?.[0]?.name && (
                     <p className="text-sm text-gray-400 truncate">
-                      {htmlParser(currentSong.artists.primary[0].name)}
+                      {decode(currentSong.artists.primary[0].name)}
                     </p>
                   )}
                 </div>

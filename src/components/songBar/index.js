@@ -7,10 +7,10 @@ import { Label } from "../ui/label";
 import { Skeleton } from "../ui/skeleton";
 import { useContext, useState, useCallback, useEffect, useMemo } from "react";
 import { UserContext } from "@/context";
-import { decodeHtml, htmlParser } from "@/utils";
 import { Button } from "../ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import TouchableOpacity from "../ui/touchableOpacity";
+import { decode } from "he";
 
 const SongBar = memo(({ song }) => {
 
@@ -33,7 +33,7 @@ const SongBar = memo(({ song }) => {
 
     const decodedName = useMemo(() => {
         if (!song?.name) return '';
-        const formattedName = htmlParser(song.name);
+        const formattedName = decode(song.name);
         return formattedName.length > 25 ? formattedName.substring(0, 25) + '...' : formattedName;
     }, [song?.name]);
 
@@ -103,7 +103,7 @@ const SongBar = memo(({ song }) => {
                         {decodedName}
                     </Label>
                     <p className="text-xs text-gray-600 dark:text-gray-400 truncate whitespace-nowrap">
-                        {decodeHtml(song.artists?.primary[0]?.name)}
+                        {decode(song.artists?.primary[0]?.name)}
                     </p>
                 </div>
             </TouchableOpacity>
