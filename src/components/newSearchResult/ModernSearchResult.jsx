@@ -99,8 +99,8 @@ const ModernSearchResult = () => {
   }, [router]);
 
   return (
-    <div style={{ flex: 1, padding: 20 }} ref={searchContainerRef}>
-      <div className="w-[90%] sm:w-[80%] mx-auto flex items-center relative">
+    <div style={{ flex: 1, padding: 16 }} ref={searchContainerRef}>
+      <div className="w-[90%] sm:w-[70%] mx-auto flex items-center relative">
         <div
           className="absolute inset-y-0 left-0 flex items-center pl-4 z-10"
           aria-label="Search"
@@ -110,7 +110,7 @@ const ModernSearchResult = () => {
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="pl-12 pr-12 h-20 py-3 text-xl rounded-3xl"
+          className="pl-12 pr-12 h-16 py-1 text-xl rounded-3xl"
           placeholder="Search for songs, artists or albums..."
           autoComplete="off"
         />
