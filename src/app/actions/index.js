@@ -1,7 +1,5 @@
 'use server'
 
-import { selectBestLyricsMatch } from '@/lib/lyricsAiAgent';
-
 /**
  * A centralized API fetch helper to handle requests, responses, and errors.
  * @param {string} endpoint - The API endpoint to hit (e.g., '/search/songs').
@@ -162,30 +160,54 @@ const tryFetchLyrics = async (artistName, trackName, albumName, duration, lyrics
 
 const searchLyrics = async (currentSong, lyricsApiUrl) => {
     const trackName = currentSong.name || '';
-    const searchQuery = encodeURIComponent(trackName);
-    const url = `${lyricsApiUrl}/search?q=${searchQuery}`;
+    const albumName = currentSong.album?.name || '';
 
     try {
-        const response = await fetch(url, {
+        // Attempt 1: Search with song name only
+        let searchQuery = encodeURIComponent(trackName);
+        let url = `${lyricsApiUrl}/search?q=${searchQuery}`;
+        let response = await fetch(url, {
             headers: {
                 'User-Agent': 'Musica-App/1.0',
                 'Accept': 'application/json'
             }
         });
 
-        if (!response.ok) {
-            return null;
+        if (response.ok) {
+            const results = await response.json();
+            if (Array.isArray(results) && results.length > 0) {
+                // Find result with synced lyrics that matches album name
+                const matchedByAlbum = results.find(result =>
+                    result.syncedLyrics &&
+                    result.album &&
+                    result.album.toLowerCase() === albumName.toLowerCase()
+                );
+                if (matchedByAlbum) return matchedByAlbum;
+            }
         }
 
-        const results = await response.json();
+        // Attempt 2: Search with song name + album name
+        if (albumName) {
+            searchQuery = encodeURIComponent(`${trackName} ${albumName}`);
+            url = `${lyricsApiUrl}/search?q=${searchQuery}`;
+            response = await fetch(url, {
+                headers: {
+                    'User-Agent': 'Musica-App/1.0',
+                    'Accept': 'application/json'
+                }
+            });
 
-        if (!Array.isArray(results) || results.length === 0) {
-            return null;
+            if (response.ok) {
+                const results = await response.json();
+                if (Array.isArray(results) && results.length > 0) {
+                    // Find first result with synced lyrics
+                    const withSyncedLyrics = results.find(result => result.syncedLyrics);
+                    if (withSyncedLyrics) return withSyncedLyrics;
+                }
+            }
         }
 
-        // Use AI agent to select best match
-        const bestMatch = await selectBestLyricsMatch(currentSong, results);
-        return bestMatch;
+        return null;
     } catch (error) {
         console.error('Error searching lyrics:', error.message);
         return null;

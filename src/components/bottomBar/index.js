@@ -12,6 +12,7 @@ import {
   SheetClose,
   SheetContent,
   SheetTrigger,
+  SheetTitle,
 } from "../ui/sheet";
 import RightSidebar from "../rightSidebar";
 import { Slider } from "./BottomSlider";
@@ -163,6 +164,7 @@ const Bottombar = () => {
           side="bottom"
           className="h-full w-full bg-gradient-to-b bg-fuchsia-300 dark:from-slate-950 dark:to-gray-900 rounded-t-lg p-0"
         >
+          <SheetTitle className="sr-only">Now Playing</SheetTitle>
           <div className="flex flex-col h-full">
             <div className="flex justify-between items-center ml-2 mt-2">
               <SheetClose asChild>
