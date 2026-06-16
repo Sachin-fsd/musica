@@ -9,6 +9,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Skeleton } from "../ui/skeleton";
+import { SearchGlobalAction } from "@/app/actions";
 
 // Debounce hook
 const useDebounce = (value, delay) => {
@@ -71,12 +72,10 @@ const ModernSearchResult = () => {
       setResults(null);
 
       try {
-        const res = await fetch(
-          `/api/proxy/search?query=${encodeURIComponent(debouncedSearch)}`
-        );
-        if (!res.ok) throw new Error(`API error: ${res.statusText}`);
+        const data = await SearchGlobalAction(debouncedSearch);
+        if (!data) throw new Error(`API error: ${data.statusText}`);
 
-        const data = await res.json();
+        // const data = await res.json();
         if (data.success) {
           setResults(data);
         } else {
