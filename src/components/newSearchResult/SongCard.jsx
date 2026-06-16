@@ -96,8 +96,7 @@ const SongCard = ({ data, search }) => {
                 return;
             }
             setSongDetailsLoading(song.id);
-            const res = await fetch(`${process.env.NEXT_PUBLIC_FETCH_URL}/songs/${song.id}`);
-            const result = await res.json();
+            const result = await api.searchById("song", song.id);
             if (result.success && result.data.length > 0) {
                 playSongAndCreateQueue(result.data[0]); // already detailed
             } else {

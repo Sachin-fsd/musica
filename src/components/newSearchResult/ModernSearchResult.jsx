@@ -72,7 +72,7 @@ const ModernSearchResult = () => {
 
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_FETCH_URL}/search?query=${encodeURIComponent(debouncedSearch)}`
+          `/api/proxy/search?query=${encodeURIComponent(debouncedSearch)}`
         );
         if (!res.ok) throw new Error(`API error: ${res.statusText}`);
 
