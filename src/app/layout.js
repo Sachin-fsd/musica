@@ -13,7 +13,7 @@ export const metadata = {
   title: "Musica NextGen Music",
   description: "Made with 💖 ",
   icons: {
-    icon: 'public\favicon.svg'
+    icon: 'public/favicon.png'
   }
 };
 
