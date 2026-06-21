@@ -8,6 +8,7 @@ import api from "@/lib/api";
 import { useContext, useState } from "react";
 import { UserContext } from "@/context";
 import { toast } from "sonner";
+import { fetchArtistSongsAction } from "@/app/actions";
 
 
 // interface ArtistCardProps {
@@ -27,7 +28,7 @@ const ArtistCard = ({ data }) => {
         if (!artist?.id || loading) return;
         try {
             setLoading(true);
-            const response = await api.searchArtistSongs(artist.id);
+            const response = await fetchArtistSongsAction(artist.id);
             if (response.success && response.data.songs.length >= 1) {
                 setSongList(response.data.songs);
                 setCurrentSong(response.data.songs[0]);

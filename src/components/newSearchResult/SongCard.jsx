@@ -6,6 +6,7 @@ import { Separator } from "../ui/separator";
 import { UserContext } from "@/context";
 import { decode } from "he";
 import { Label } from "../ui/label";
+import { GetSongsByIdAction, SearchSongsAction } from "@/app/actions";
 
 // 🔥 Universal normalizer → always detailed schema
 const toDetailedSong = (song) => {
@@ -96,7 +97,7 @@ const SongCard = ({ data, search }) => {
                 return;
             }
             setSongDetailsLoading(song.id);
-            const result = await api.searchById("song", song.id);
+            const result = await GetSongsByIdAction("song", song.id);
             if (result.success && result.data.length > 0) {
                 playSongAndCreateQueue(result.data[0]); // already detailed
             } else {
@@ -114,7 +115,7 @@ const SongCard = ({ data, search }) => {
         if (loadMoreLoading || !search) return;
         setLoadMoreLoading(true);
         try {
-            const response = await api.searchSongs(search, page + 1, 20);
+            const response = await SearchSongsAction(search, page + 1, 20);
             if (response.success && response.data.results.length > 0) {
                 const newNormalized = response.data.results.map(toDetailedSong);
                 setSongs((prev) => [...prev, ...newNormalized]);

@@ -1,5 +1,6 @@
 "use client"
 
+import { GetSongsByIdAction } from "@/app/actions";
 import { UserContext } from "@/context";
 import api from "@/lib/api";
 import { decode } from "he";
@@ -28,7 +29,7 @@ const TopQueryCard = ({ data }) => {
         if (!data.id || loading) return;
         try {
             setLoading(true);
-            const response = await api.searchById(data.type, data.id);
+            const response = await GetSongsByIdAction(data.type, data.id);
             if (response.success) {
                 if (data.type === "song") {
                     playSongAndCreateQueue(response.data[0]);

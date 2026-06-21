@@ -9,6 +9,7 @@ import { useContext, useState } from "react";
 import { UserContext } from "@/context";
 import api from "@/lib/api";
 import { Label } from "../ui/label";
+import { GetSongsByIdAction } from "@/app/actions";
 
 
 // interface AlbumCardProps {
@@ -36,7 +37,7 @@ const AlbumCard = ({ data }) => {
         if (loading || !album.id) return;
         try {
             setLoading(true);
-            const response = await api.searchById(album.type, album.id);
+            const response = await GetSongsByIdAction(album.type, album.id);
             if (response.success) {
                 setSongList(response.data.songs);
                 setCurrentSong(response.data.songs[0]);

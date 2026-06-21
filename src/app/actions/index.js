@@ -69,8 +69,8 @@ export const FetchAllAlbums = async () => {
     }
 }
 
-export const SearchSongsAction = (query) =>
-    apiFetch('/search/songs', { query: encodeURIComponent(query) });
+export const SearchSongsAction = (query, page, limit) =>
+    apiFetch('/search/songs', { query: encodeURIComponent(query), page, limit });
 
 export const SearchSongSuggestionAction = (songId) =>
     apiFetch(`/songs/${songId}/suggestions`);
@@ -86,8 +86,8 @@ export const GetSongsByIdAction = (type, id) => {
     return apiFetch(`/${type}s`, { id: id });
 };
 
-export const fetchArtistsByPermaLinkAction = (link) =>
-    apiFetch('/artists', { link });
+export const fetchArtistSongsAction = (id) =>
+    apiFetch(`/artists/${id}/songs`);
 
 export const fetchPlaylistsByIdAction = (playlistId) =>
     apiFetch('/playlists', { id: playlistId });
