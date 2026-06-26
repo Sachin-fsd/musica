@@ -2,7 +2,6 @@
 
 import { GetSongsByIdAction } from "@/app/actions";
 import { UserContext } from "@/context";
-import api from "@/lib/api";
 import { decode } from "he";
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
@@ -37,7 +36,7 @@ const TopQueryCard = ({ data }) => {
                     setSongList(response.data.songs);
                     setCurrentSong(response.data.songs[0]);
                     setPlaying(true);
-                } else if (data.type == "artist"){
+                } else if (data.type == "artist") {
                     setSongList(response.data.topSongs);
                     setCurrentSong(response.data.topSongs[0]);
                     setPlaying(true);
@@ -79,8 +78,7 @@ const TopQueryCard = ({ data }) => {
                 )}
             </div>
 
-            <p className={`${currentSong.id == data.id ? "text-green-600" : "text-white"}`} style={styles.title}>{decode(data.title)}</p>
-            <p style={styles.subtitle}>{decode(data.primaryArtists || "")}</p>
+            <p className={`${currentSong.id === data.id ? "text-green-600" : "text-white"} break-words whitespace-normal w-full text-center`} style={styles.title}> {decode(data.title)} </p>            <p style={styles.subtitle}>{decode(data.primaryArtists || "")}</p>
             <p style={styles.subtitle}>{decode(data.album || "") || decode(data.description)}</p>
             <p style={styles.subtitle}>{decode(data.type)}</p>
         </div>

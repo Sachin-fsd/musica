@@ -4,7 +4,6 @@
 import Image from "next/image";
 import { Separator } from "../ui/separator";
 import { Label } from "../ui/label";
-import api from "@/lib/api";
 import { useContext, useState } from "react";
 import { UserContext } from "@/context";
 import { toast } from "sonner";

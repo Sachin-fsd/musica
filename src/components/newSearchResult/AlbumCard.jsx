@@ -7,7 +7,6 @@ import { Separator } from "../ui/separator";
 import { decode } from "he";
 import { useContext, useState } from "react";
 import { UserContext } from "@/context";
-import api from "@/lib/api";
 import { Label } from "../ui/label";
 import { GetSongsByIdAction } from "@/app/actions";
 

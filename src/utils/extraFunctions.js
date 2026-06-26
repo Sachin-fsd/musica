@@ -1,3 +1,5 @@
+import { SearchSongSuggestionAction } from "@/app/actions";
+
 export function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         // Generate a random index from 0 to i
@@ -13,4 +15,21 @@ export const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+};
+
+export const fetchSuggestions = async (songId) => {
+    const response = await SearchSongSuggestionAction(songId);
+    if (response?.success && response.data?.length > 0) {
+        return shuffleArray(response.data);
+    }
+    return [];
+};
+
+// Merges lists and removes duplicates using Map
+export const mergeUniqueSongs = (baseList, newSongs) => {
+    return [
+        ...new Map(
+            [...baseList, ...newSongs].map(s => [s.id, s])
+        ).values()
+    ];
 };

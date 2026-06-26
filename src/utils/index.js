@@ -1,6 +1,3 @@
-
-
-
 export const leftIcons = [
     {
         image: <svg

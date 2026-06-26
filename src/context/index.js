@@ -1,10 +1,9 @@
 'use client';
 import { createContext, useRef, useState, useEffect, useCallback, useMemo } from "react";
-import { SearchSongSuggestionAction } from "@/app/actions";
 import { songFormat, songs } from "@/utils/cachedSongs";
-import { shuffleArray } from "@/utils/extraFunctions";
-import { createPlaylistFromSuggestions } from "@/utils/playListUtils";
+import { fetchSuggestions, mergeUniqueSongs, shuffleArray } from "@/utils/extraFunctions";
 import { useCurrentTimeStore } from "@/store/useCurrentTimeStore";
+import { decode } from "he";
 
 export const UserContext = createContext(null);
 
@@ -38,47 +37,46 @@ export default function UserState({ children }) {
     }, [songList]);
 
     const playSongAndCreateQueue = useCallback(async (song) => {
-        // First, check if the song is already in the current song list
-        const existingSongIndex = songList.findIndex(s => s.id === song.id);
-        if (loading) return;
-        if (existingSongIndex !== -1) {
-            // --- SONG ALREADY EXISTS ---
-            // The song is in the queue, so just play it at its current position.
-            playSongAtIndex(existingSongIndex);
-            setLoading(true);
-            const response = await SearchSongSuggestionAction(song.id);
-            if (response?.success) {
-                const suggestions = shuffleArray(response.data)
-                const newSongList = [
-                    ...new Map(
-                        [...songList, ...suggestions].map(song => [song.id, song])
-                    ).values()
-                ];
-                setSongList(newSongList);
-            }
-            setLoading(false);
+        try {
+            if (loading) return;
+            const existingSongIndex = songList.findIndex(s => s.id === song.id);
 
-        } else {
-            // --- SONG IS NEW ---
             setLoading(true);
-            const response = await SearchSongSuggestionAction(song.id);
-            if (response?.success && response.data.length > 1) {
-                const suggestions = shuffleArray(response.data);
-                setSongList([song, ...suggestions]);
+
+            if (existingSongIndex !== -1) {
+                // --- SONG ALREADY EXISTS ---
+                playSongAtIndex(existingSongIndex);
+                const suggestions = await fetchSuggestions(song.id);
+                if (suggestions.length > 0) {
+                    setSongList(mergeUniqueSongs(songList, suggestions));
+                }
             } else {
-                setSongList([song, ...songList.reverse()]);
+                // --- SONG IS NEW ---
+                setCurrentIndex(0);
+                setCurrentSong(song);
+                setPlaying(true);
+                const suggestions = await fetchSuggestions(song.id);
+                if (suggestions.length > 1) {
+                    setSongList([song, ...suggestions]);
+                } else {
+                    setSongList([song, ...songList.reverse()]); // Kept your original fallback logic
+                }
             }
-            setCurrentSong(song);
-            setPlaying(true);
+        } catch (error) {
+            console.error("Error in playSongAndCreateQueue:", error);
+        } finally {
             setLoading(false);
-            // The new song is now at the top of the new list
-            setCurrentIndex(0);
         }
-    }, [songList, playSongAtIndex]);
 
-    const handleNext = useCallback(() => {
+    }, [songList, playSongAtIndex, loading]);
+
+    const handleNext = useCallback(async () => {
         const nextIndex = (currentIndex + 1) % songList.length;
         playSongAtIndex(nextIndex);
+        const suggestions = await fetchSuggestions(songList[nextIndex]?.id);
+        if (suggestions.length > 0) {
+            setSongList(mergeUniqueSongs(songList, suggestions));
+        }
     }, [currentIndex, songList.length, playSongAtIndex]);
 
     const handlePrev = useCallback(() => {
@@ -154,12 +152,12 @@ export default function UserState({ children }) {
         }
 
         // Update document title
-        document.title = playing ? `${currentSong.name} - Musica NextGen` : `Musica NextGen Music`;
+        document.title = playing ? `${decode(currentSong.name)} - Musica NextGen` : `Musica NextGen Music`;
 
         // Update Media Session API
         if ("mediaSession" in navigator) {
             navigator.mediaSession.metadata = new MediaMetadata({
-                title: currentSong.name,
+                title: decode(currentSong.name),
                 artist: currentSong.artists?.primary[0]?.name,
                 album: currentSong.album?.name,
                 artwork: [{ src: currentSong.image?.[2]?.url, sizes: "500x500", type: "image/jpeg" }],
@@ -199,35 +197,6 @@ export default function UserState({ children }) {
             audioElement.removeEventListener("durationchange", handleDurationChange);
         };
     }, [handleNext]);
-
-
-    // Effect 5: Fetch related songs when nearing the end of the playlist
-    useEffect(() => {
-        // Prevent running on initial render or if songList is empty
-        if (currentIndex === 0 || songList.length === 0 || !currentSong?.id || loading) return;
-
-        const addRelatedSongs = async () => {
-            if (currentIndex >= songList.length - 4) {
-                setLoading(true);
-                const response = await SearchSongSuggestionAction(currentSong.id);
-                if (response.success && response.data.length > 0) {
-                    // const newSongs = response.data.filter(
-                    //     relatedSong => !songList.some(song => song.id === relatedSong.id)
-                    // );
-                    const suggestions = shuffleArray(response.data)
-                    const newSongList = [
-                        ...new Map(
-                            [...songList, ...suggestions].map(song => [song.id, song])
-                        ).values()
-                    ];
-                    setSongList(newSongList);
-                }
-                setLoading(false);
-            }
-        };
-        addRelatedSongs();
-    }, [currentIndex, songList, currentSong]);
-
 
     // Effect 6: Handle spacebar play/pause
     useEffect(() => {

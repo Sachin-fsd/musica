@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import api from "@/lib/api";
 import { Separator } from "../ui/separator";
 import { UserContext } from "@/context";
 import { decode } from "he";
