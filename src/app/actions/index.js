@@ -237,20 +237,20 @@ export async function fetchLyricsAction(currentSong) {
 
         if (searchResult && searchResult.syncedLyrics) {
             const parsedSynced = parseSyncedLyrics(searchResult.syncedLyrics);
-            return { synced: parsedSynced };
+            return { synced: parsedSynced, id: currentSong.id };
         }
 
         // Try 2: Fall back to /get with exact match and duration tolerance
         if (artistNames.length > 0) {
             const artistName = artistNames[0];
             const result = await tryFetchLyrics(artistName, trackName, albumName, duration, LYRICS_API_URL);
-            if (result) return result;
+            if (result) return { ...result, id: currentSong.id };
 
             // With duration tolerance (±5 seconds)
             for (let durOffset of [-5, 5]) {
                 const adjustedDuration = duration + durOffset;
                 const result = await tryFetchLyrics(artistName, trackName, albumName, adjustedDuration, LYRICS_API_URL);
-                if (result) return result;
+                if (result) return { ...result, id: currentSong.id };
             }
 
             // Try with each additional artist
@@ -258,13 +258,13 @@ export async function fetchLyricsAction(currentSong) {
                 for (let i = 1; i < artistNames.length; i++) {
                     const altArtistName = artistNames[i];
                     const result = await tryFetchLyrics(altArtistName, trackName, albumName, duration, LYRICS_API_URL);
-                    if (result) return result;
+                    if (result) return { ...result, id: currentSong.id };
 
                     // Try with duration tolerance for alternative artists too
                     for (let durOffset of [-5, 5]) {
                         const adjustedDuration = duration + durOffset;
                         const result = await tryFetchLyrics(altArtistName, trackName, albumName, adjustedDuration, LYRICS_API_URL);
-                        if (result) return result;
+                        if (result) return { ...result, id: currentSong.id };
                     }
                 }
             }

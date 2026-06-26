@@ -36,39 +36,59 @@ export default function UserState({ children }) {
         }
     }, [songList]);
 
+    const latestSongRequestRef = useRef(null);
+
     const playSongAndCreateQueue = useCallback(async (song) => {
         try {
-            if (loading) return;
-            const existingSongIndex = songList.findIndex(s => s.id === song.id);
+            // 1. Remove the blocking 'if (loading) return;'
 
             setLoading(true);
+            // 2. Track the latest song clicked
+            latestSongRequestRef.current = song.id;
 
+            const existingSongIndex = songList.findIndex(s => s.id === song.id);
+
+            // 3. Play the song IMMEDIATELY for instant UI feedback
             if (existingSongIndex !== -1) {
-                // --- SONG ALREADY EXISTS ---
                 playSongAtIndex(existingSongIndex);
-                const suggestions = await fetchSuggestions(song.id);
-                if (suggestions.length > 0) {
-                    setSongList(mergeUniqueSongs(songList, suggestions));
-                }
             } else {
-                // --- SONG IS NEW ---
                 setCurrentIndex(0);
                 setCurrentSong(song);
                 setPlaying(true);
-                const suggestions = await fetchSuggestions(song.id);
+                // Temporarily slot the new song in so the UI feels fast
+                setSongList(prev => [song, ...prev]);
+            }
+
+            // 4. Fetch the suggestions in the background
+            const suggestions = await fetchSuggestions(song.id);
+
+            // 5. THE CRITICAL CHECK: Did the user click another song while we waited?
+            if (latestSongRequestRef.current !== song.id) {
+                console.log("Stale request discarded for:", song.name);
+                return; // Exit early, do not update the songList!
+            }
+
+            // 6. If it's still the active request, safely update the queue
+            if (existingSongIndex !== -1) {
+                if (suggestions.length > 0) {
+                    setSongList(prevList => mergeUniqueSongs(prevList, suggestions));
+                }
+            } else {
                 if (suggestions.length > 1) {
                     setSongList([song, ...suggestions]);
                 } else {
-                    setSongList([song, ...songList.reverse()]); // Kept your original fallback logic
+                    setSongList(prev => [song, ...prev.reverse()]); // Your fallback
                 }
             }
         } catch (error) {
             console.error("Error in playSongAndCreateQueue:", error);
         } finally {
-            setLoading(false);
+            // Only turn off loading if this was the final request
+            if (latestSongRequestRef.current === song.id) {
+                setLoading(false);
+            }
         }
-
-    }, [songList, playSongAtIndex, loading]);
+    }, [songList, playSongAtIndex]); // Notice we removed 'loading' from dependencies
 
     const handleNext = useCallback(async () => {
         const nextIndex = (currentIndex + 1) % songList.length;

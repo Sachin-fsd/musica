@@ -117,7 +117,7 @@ const Bottombar = () => {
 
                 <div className="flex flex-col overflow-hidden">
                   {currentSong?.name ? (
-                    <Label className="font-semibold text-gray-100 truncate text-base cursor-pointer whitespace-normal w-full text-center">
+                    <Label className="font-semibold text-gray-100 truncate text-base cursor-pointer whitespace-normal w-full">
                       {decode(currentSong.name)}
                     </Label>
                   ) : (

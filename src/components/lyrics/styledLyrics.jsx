@@ -26,7 +26,7 @@ function StyledLyrics() {
       const { getLyrics, setLyrics: setCachedLyrics } = useLyricsStore.getState();
       const cached = getLyrics(currentSong.id);
       if (cached) {
-        setLyrics(cached);
+        setLyrics({ ...cached, id: currentSong.id });
         setLoading(false);
         return;
       }
@@ -98,7 +98,7 @@ function StyledLyrics() {
     return null;
   }
 
-  if (error || !lyrics || lyrics.instrumental) {
+  if (error || !lyrics || lyrics.instrumental || lyrics.id !== currentSong.id) {
     return null;
   }
 
@@ -109,7 +109,7 @@ function StyledLyrics() {
     if (!currentLine) {
       return null;
     }
-    
+
     const words = currentLine?.text?.split(' ');
 
     return (

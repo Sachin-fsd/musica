@@ -40,8 +40,6 @@ const SongBar = memo(({ song }) => {
     // --- Event Handlers ---
 
     const handleClick = useCallback(() => {
-        // Prevent actions while another song is loading
-        if (loading) return;
 
         if (isCurrentlyPlaying) {
             // If the clicked song is the one already playing, just toggle its play/pause state
