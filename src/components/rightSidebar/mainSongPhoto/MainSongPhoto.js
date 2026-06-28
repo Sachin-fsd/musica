@@ -10,33 +10,33 @@ const MainSongPhoto = () => {
   const imgRef = useRef(null);
 
   // Ensuring the image is loaded before extracting the color
-  useEffect(() => {
-    if (!currentSong || !currentSong?.image[2]?.url) return;
-    const image = imgRef.current;
-    if (image) {
-      // Adding event listener to ensure the image is loaded
-      const onLoadHandler = () => extractColor();
-      if (image.complete) {
-        extractColor();
-      } else {
-        image.addEventListener("load", onLoadHandler);
-      }
+  // useEffect(() => {
+  //   if (!currentSong || !currentSong?.image[2]?.url) return;
+  //   const image = imgRef.current;
+  //   if (image) {
+  //     // Adding event listener to ensure the image is loaded
+  //     const onLoadHandler = () => extractColor();
+  //     if (image.complete) {
+  //       extractColor();
+  //     } else {
+  //       image.addEventListener("load", onLoadHandler);
+  //     }
 
-      // Cleanup event listener when component unmounts or image changes
-      return () => {
-        image.removeEventListener("load", onLoadHandler);
-      };
-    }
-  }, [currentSong]); // Adding src as a dependency to re-run effect if the image changes
+  //     // Cleanup event listener when component unmounts or image changes
+  //     return () => {
+  //       image.removeEventListener("load", onLoadHandler);
+  //     };
+  //   }
+  // }, [currentSong]); // Adding src as a dependency to re-run effect if the image changes
 
-  const extractColor = () => {
-    const colorThief = new ColorThief();
-    const image = imgRef.current;
-    if (image) {
-      const [r, g, b] = colorThief.getColor(image);
-      setGlowColor(`rgb(${r}, ${g}, ${b})`);
-    }
-  };
+  // const extractColor = () => {
+  //   const colorThief = new ColorThief();
+  //   const image = imgRef.current;
+  //   if (image) {
+  //     const [r, g, b] = colorThief.getColor(image);
+  //     setGlowColor(`rgb(${r}, ${g}, ${b})`);
+  //   }
+  // };
 
   return (
     <div
@@ -44,7 +44,7 @@ const MainSongPhoto = () => {
         position: "relative",
         display: "inline-block",
         borderRadius: "8px",
-        boxShadow: `0 0 20px 6px ${glowColor}`,
+        // boxShadow: `0 0 20px 6px ${glowColor}`,
         transition: "box-shadow 0.3s ease", // Smooth transition for the glow effect
       }}
     >
@@ -52,7 +52,7 @@ const MainSongPhoto = () => {
         ref={imgRef}
         src={currentSong?.image[2].url || '/favicon.png'}
         alt={currentSong?.name}
-        onLoad={extractColor}
+        // onLoad={extractColor}
         style={{
           display: "block",
           borderRadius: "8px",

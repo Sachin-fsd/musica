@@ -120,7 +120,7 @@ function StyledLyrics() {
               }`}
             style={{
               fontFamily: "'Segoe UI', 'Arial Rounded MT Bold', 'Helvetica Rounded', sans-serif",
-              textShadow: '0 0 15px rgba(255, 255, 255, 0.7)',
+              // textShadow: '0 0 15px rgba(255, 255, 255, 0.7)',
               textAlign: 'center',
               maxWidth: '90vw'
             }}
@@ -132,7 +132,7 @@ function StyledLyrics() {
                 style={{
                   transformOrigin: 'center',
                   display: 'inline-block',
-                  textShadow: '0 0 15px rgba(255, 255, 255, 0.7)'
+                  // textShadow: '0 0 15px rgba(255, 255, 255, 0.7)'
                 }}
               >
                 {word}

@@ -1,23 +1,23 @@
+"use client";
+
 import { useContext, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import { Separator } from "../ui/separator";
 import { UserContext } from "@/context";
 import { decode } from "he";
-import { Label } from "../ui/label";
 import { GetSongsByIdAction, SearchSongsAction } from "@/app/actions";
+import { Play, Loader2 } from "lucide-react";
 
 // 🔥 Universal normalizer → always detailed schema
 const toDetailedSong = (song) => {
     if (!song) return null;
 
-    // Already looks detailed (artists.primary exists), merge with slim props if needed
     const isDetailed = !!song.artists?.primary;
 
     return {
         id: song.id || "",
-        name: song.name || song.title || "",              // prefer detailed.name
-        title: song.title || song.name || "",             // keep slim.title if exists
+        name: song.name || song.title || "",
+        title: song.title || song.name || "",
         type: song.type || "song",
         year: song.year || null,
         releaseDate: song.releaseDate || null,
@@ -59,7 +59,6 @@ const toDetailedSong = (song) => {
     };
 };
 
-
 // 🔥 Extract UI safe display values
 const getSongDisplay = (song) => ({
     title: song.name || "",
@@ -79,7 +78,7 @@ const SongCard = ({ data, search }) => {
     // Normalize initial data
     useEffect(() => {
         if (data && data.length > 0) {
-            const normalized = data.map(toDetailedSong);
+            const normalized = data.map(toDetailedSong).filter(Boolean);
             setSongs(normalized);
         } else {
             setSongs([]);
@@ -90,20 +89,23 @@ const SongCard = ({ data, search }) => {
     // Handle click → always safe detailed schema
     const handleSongClick = async (song) => {
         if (songDetailsLoading === song.id) return;
+        
         try {
             if (song.downloadUrl && song.downloadUrl.length > 0) {
                 playSongAndCreateQueue(song);
                 return;
             }
+            
             setSongDetailsLoading(song.id);
             const result = await GetSongsByIdAction("song", song.id);
-            if (result.success && result.data.length > 0) {
+            
+            if (result?.success && result.data?.length > 0) {
                 playSongAndCreateQueue(result.data[0]); // already detailed
             } else {
-                console.log("Error in fetching song details");
+                console.error("Error in fetching song details", result);
             }
         } catch (error) {
-            console.log(error);
+            console.error("Error playing song:", error);
         } finally {
             setSongDetailsLoading(null);
         }
@@ -112,11 +114,12 @@ const SongCard = ({ data, search }) => {
     // Load more → normalize again
     const handleLoadMore = async () => {
         if (loadMoreLoading || !search) return;
+        
         setLoadMoreLoading(true);
         try {
             const response = await SearchSongsAction(search, page + 1, 20);
-            if (response.success && response.data.results.length > 0) {
-                const newNormalized = response.data.results.map(toDetailedSong);
+            if (response?.success && response.data?.results?.length > 0) {
+                const newNormalized = response.data.results.map(toDetailedSong).filter(Boolean);
                 setSongs((prev) => [...prev, ...newNormalized]);
                 setPage((prev) => prev + 1);
                 setTotalResults(response.data.total || 0);
@@ -133,63 +136,91 @@ const SongCard = ({ data, search }) => {
     }
 
     return (
-        <div className="w-[90%] sm:w-[80%] mx-auto mt-5">
-            <Label className="text-xl font-bold text-sky-900 dark:text-sky-300 mb-4">
-                Songs
-            </Label>
-
+        <div className="w-full flex flex-col space-y-2">
             {songs.map((song, index) => {
                 const display = getSongDisplay(song);
+                const isActive = currentSong?.id === song.id;
+                const isLoading = songDetailsLoading === song.id;
+
                 return (
                     <div
                         key={`${song.id}-${index}`}
+                        onClick={() => handleSongClick(song)}
+                        role="button"
+                        tabIndex={0}
+                        className="group flex items-center gap-4 p-3 rounded-xl hover:bg-secondary/50 transition-colors duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                     >
-                        <div
-                            className="sm:hover:scale-[99%] sm:hover:opacity-90 sm:hover:shadow-md transition duration-300 ease-in-out cursor-pointer"
-                            style={styles.card}
-                            onClick={() => handleSongClick(song)}
-                        >
-                            <div>
-                                <Image
-                                    src={display.image}
-                                    style={styles.cover}
-                                    height={100}
-                                    width={100}
-                                    alt="Song cover"
-                                />
-                            </div>
-                            <div style={{ flex: 1, marginLeft: 10 }}>
-                                <p className={`${currentSong.id === song.id ? "font-bold text-green-600" : "text-white"}`} style={{ fontSize: 16 }}>
-                                    {songDetailsLoading === song.id
-                                        ? "Loading..."
-                                        : decode(display.title)}
-                                </p>
-                                <p style={styles.subtitle}>{decode(display.artists)}</p>
-                                <p style={styles.subtitle}>{decode(display.album)}</p>
-                            </div>
+                        {/* Cover Image & Overlays */}
+                        <div className="relative shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-md overflow-hidden shadow-sm">
+                            <Image
+                                src={display.image}
+                                fill
+                                sizes="(max-width: 640px) 56px, 64px"
+                                className="object-cover"
+                                alt={decode(display.title)}
+                            />
+
+                            {/* Hover Play Overlay */}
+                            {!isLoading && !isActive && (
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-200">
+                                    <Play className="w-6 h-6 fill-white text-white ml-1" />
+                                </div>
+                            )}
+
+                            {/* Loading Overlay */}
+                            {isLoading && (
+                                <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                                    <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                                </div>
+                            )}
+                            
+                            {/* Active Playing Equalizer (when not hovering/loading) */}
+                            {isActive && !isLoading && (
+                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center group-hover:opacity-0 transition-opacity">
+                                    <div className="flex gap-[2px] items-end h-4">
+                                        <span className="w-1 h-4 bg-primary animate-[bounce_1s_infinite]"></span>
+                                        <span className="w-1 h-2 bg-primary animate-[bounce_1s_infinite_0.2s]"></span>
+                                        <span className="w-1 h-3 bg-primary animate-[bounce_1s_infinite_0.4s]"></span>
+                                    </div>
+                                </div>
+                            )}
                         </div>
-                        <Separator />
+
+                        {/* Song Info */}
+                        <div className="flex flex-col flex-1 min-w-0 justify-center">
+                            <h4 className={`text-base font-semibold truncate ${isActive ? "text-primary" : "text-foreground group-hover:text-primary transition-colors"}`}>
+                                {decode(display.title)}
+                            </h4>
+                            <p className="text-sm text-muted-foreground truncate mt-0.5">
+                                {decode(display.artists)} {display.album && `• ${decode(display.album)}`}
+                            </p>
+                        </div>
                     </div>
                 );
             })}
 
+            {/* Load More Button */}
             {songs.length < totalResults && (
-                <div style={styles.loadbutton}>
-                    <Button onClick={handleLoadMore} disabled={loadMoreLoading}>
-                        {loadMoreLoading ? `Loading...` : "Load More"}
+                <div className="pt-4 pb-2 flex justify-center">
+                    <Button 
+                        variant="secondary"
+                        onClick={handleLoadMore} 
+                        disabled={loadMoreLoading}
+                        className="rounded-full px-8"
+                    >
+                        {loadMoreLoading ? (
+                            <>
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                Loading...
+                            </>
+                        ) : (
+                            "Load More"
+                        )}
                     </Button>
                 </div>
             )}
         </div>
     );
-};
-
-const styles = {
-    // container: { marginTop: 20 },
-    cover: { flex: 1, width: 100, height: 100, borderRadius: 10, margin: 10 },
-    card: { display: "flex", flexDirection: "row", marginBottom: 10, alignItems: "center" },
-    subtitle: { color: "grey", fontSize: 14, width: "auto" },
-    loadbutton: { borderRadius: 10, marginTop: 10 },
 };
 
 export default SongCard;

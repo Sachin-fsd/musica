@@ -54,7 +54,7 @@ const Player = () => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center p-3 pt-0">
+        <div className="flex flex-col items-center justify-center pt-0">
 
             {/* Slider */}
             <div className="w-full pb-3">

@@ -22,7 +22,7 @@ const RightSidebarTabs = () => {
     }, [activeTab])
 
     return (
-        <div ref={containerRef} className="flex w-full flex-col mt-6" id='right_sidebar_tabs'>
+        <div ref={containerRef} className="flex w-full flex-col" id='right_sidebar_tabs'>
             <Tabs value={activeTab} onValueChange={setActiveTab} defaultValue="songlist">
                 <TabsList className="grid w-full grid-cols-3">
                     <TabsTrigger value="songlist">Songs</TabsTrigger>

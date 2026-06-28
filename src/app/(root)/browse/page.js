@@ -13,9 +13,9 @@ const HomePage = () => {
   return (
     <div className=" p-4 md:p-5 mb-20 md:mb-0">
       {/* Top Songs Section */}
-      <div className='my-4 flex justify-center'>
+      {/* <div className='my-4 flex justify-center'>
         <StyledLyrics />
-      </div>
+      </div> */}
 
       <Suspense fallback={<div><Spinner /></div>}>
         <ModernSearchResult />

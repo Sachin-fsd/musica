@@ -1,111 +1,100 @@
-// import { utilsStyles } from "@/styles";
-// import { FlatList, Image, StyleSheet, Text, View } from "react-native";
-// import { ThemedText } from "../ThemedText";
+"use client";
 
 import Image from "next/image";
-import { Separator } from "../ui/separator";
 import { decode } from "he";
 import { useContext, useState } from "react";
 import { UserContext } from "@/context";
-import { Label } from "../ui/label";
 import { GetSongsByIdAction } from "@/app/actions";
-
-
-// interface AlbumCardProps {
-//     id: string;
-//     title: string;
-//     image: { quality: string; url: string }[];
-//     artist: string;
-//     url: string;
-//     type: string;
-//     description: string;
-//     year: string;
-//     songIds: string;
-//     language: string;
-// }
-
-// const ItemDivider = () => (
-//     <div style={{ ...utilsStyles.itemSeparator, marginVertical: 9, marginLeft: 60 }} />
-// )
+import { Play, Loader2 } from "lucide-react";
 
 const AlbumCard = ({ data }) => {
-    const [loading, setLoading] = useState(false);
+    const [loadingId, setLoadingId] = useState(null);
     const { setSongList, setCurrentSong, setPlaying } = useContext(UserContext);
 
+    if (!data || data.length === 0) return null;
+
     async function handleClick(album) {
-        if (loading || !album.id) return;
+        if (loadingId === album.id || !album.id) return;
+        
         try {
-            setLoading(true);
-            const response = await GetSongsByIdAction(album.type, album.id);
-            if (response.success) {
+            setLoadingId(album.id);
+            const response = await GetSongsByIdAction(album.type || "album", album.id);
+            
+            if (response?.success && response.data?.songs?.length > 0) {
                 setSongList(response.data.songs);
                 setCurrentSong(response.data.songs[0]);
                 setPlaying(true);
             } else {
-                console.log("Error fetching album in album card", response)
+                console.error("Error fetching album details:", response);
             }
         } catch (error) {
-            console.log("Error in albums card click", error);
+            console.error("Error in album card click:", error);
         } finally {
-            setLoading(false);
+            setLoadingId(null);
         }
     }
 
     return (
-        <div className="w-[90%] sm:w-[80%] mx-auto mt-5">
-            <Label className="text-xl font-bold text-sky-900 dark:text-sky-300 mb-4">Albums</Label>
-            {
-                data.length && data.map((song, index) => (
-                    <div key={song.id}
-                        onClick={() => handleClick(song)}
-                        className="sm:hover:scale-[99%] sm:hover:opacity-90 sm:hover:shadow-md transition duration-300 ease-in-out cursor-pointer"
-                    >
-                        <div style={styles.card}>
-                            <div>
+        <div className="w-full">
+            {/* Grid Layout for Albums */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 pt-2">
+                {data.map((album) => {
+                    const imageUrl = album.image?.[2]?.url || album.image?.[1]?.url || album.image?.[0]?.url || "/placeholder-image.jpg";
+                    const isLoading = loadingId === album.id;
+                    const subtitle = album.artist || album.description || "";
+
+                    return (
+                        <div
+                            key={album.id}
+                            onClick={() => handleClick(album)}
+                            role="button"
+                            tabIndex={0}
+                            className="group flex flex-col gap-3 p-3 -m-3 rounded-xl hover:bg-secondary/40 transition-colors duration-300 ease-out cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                        >
+                            {/* Image & Overlays */}
+                            <div className="relative aspect-square w-full rounded-xl overflow-hidden shadow-md">
                                 <Image
-                                    src={song.image?.[2]?.url || song.image?.[0]?.url}
-                                    style={styles.cover}
-                                    width={100}
-                                    height={100}
-                                    alt="Album Cover"
+                                    src={imageUrl}
+                                    fill
+                                    sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+                                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                    alt={decode(album.title || "Album Cover")}
                                 />
+
+                                {/* Hover Play Overlay */}
+                                {!isLoading && (
+                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                        <div className="bg-primary text-primary-foreground rounded-full p-3 shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out">
+                                            <Play className="w-6 h-6 fill-current ml-1" />
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Loading Overlay */}
+                                {isLoading && (
+                                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                                        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+                                    </div>
+                                )}
                             </div>
-                            <div style={{ flex: 1 }}>
-                                <p style={{ color: "white", fontSize: 16 }} >{decode(song.title)}</p>
-                                <p style={styles.subtitle} >{decode(song.artist)}</p>
-                                <p style={styles.subtitle} >{decode(song.description)}</p>
+
+                            {/* Album Info */}
+                            <div className="flex flex-col min-w-0">
+                                <h4 className="text-base font-semibold truncate text-foreground group-hover:text-primary transition-colors">
+                                    {decode(album.title || "")}
+                                </h4>
+                                {subtitle && (
+                                    <p className="text-sm text-muted-foreground truncate mt-0.5">
+                                        {decode(subtitle)}
+                                    </p>
+                                )}
                             </div>
                         </div>
-                        <Separator />
-                    </div>
-                ))
-            }
+                    );
+                })}
+            </div>
         </div>
     );
 };
-
-const styles = {
-    container: {
-        marginTop: 20
-    },
-    cover: {
-        flex: 1,
-        width: 100,
-        height: 100,
-        borderRadius: 10,
-        margin: 10
-    },
-    card: {
-        display: "flex",
-        flexDirection: "row",
-        marginBottom: 10,
-        alignItems: "center"
-    },
-    subtitle: {
-        color: "grey",
-        fontSize: 14,
-        width: "auto",
-    },
-}
 
 export default AlbumCard;
