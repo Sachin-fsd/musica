@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { Slider } from '../ui/slider';
 import { formatTime } from '@/utils/extraFunctions';
 import { decode } from "he";
+import LikeButton from '@/components/LikeButton';
 
 
 const Player = () => {
@@ -128,7 +129,7 @@ const Player = () => {
                 </Button>
 
                 {/* Download Button */}
-                <Button
+                {/* <Button
                     variant={isDownloading ? "secondary" : "simple"}
                     className="p-0"
                     onClick={downloadSong}
@@ -138,7 +139,10 @@ const Player = () => {
                     ) : (
                         <Download className="text-gray-600 dark:text-gray-300" />
                     )}
-                </Button>
+                </Button> */}
+
+                {/* Like Button */}
+                <LikeButton song={currentSong} size="md" />
             </div>
         </div>
 

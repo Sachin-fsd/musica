@@ -19,6 +19,7 @@ import RightSidebar from "../rightSidebar";
 import { Slider } from "./BottomSlider";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
+import LikeButton from "@/components/LikeButton";
 
 const Bottombar = () => {
   const pathname = usePathname();
@@ -134,10 +135,13 @@ const Bottombar = () => {
 
               {/* Controls */}
               <div className="flex items-center space-x-4">
+                {/* Like Button */}
+                <LikeButton song={currentSong} size="sm" />
+
                 <Button
                   variant="simple"
                   className="p-2 bg-pink-500 rounded-full text-white shadow-md hover:bg-pink-600"
-                  onClick={togglePlayPause}
+                  onClick={(e) => {e.stopPropagation(); togglePlayPause()}}
                   aria-label={playing ? "Pause" : "Play"}
                 >
                   {playing ? (
@@ -150,7 +154,7 @@ const Bottombar = () => {
                 <Button
                   variant="simple"
                   className="p-2 bg-gray-700 rounded-full text-white shadow-md hover:bg-gray-800"
-                  onClick={handleNext}
+                  onClick={(e) => {e.stopPropagation(); handleNext()}}
                   aria-label="Next song"
                 >
                   <StepForward className="w-6 h-6" />
