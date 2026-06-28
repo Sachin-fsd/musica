@@ -82,7 +82,7 @@ const Bottombar = () => {
   };
 
   return (
-    <div className="w-full bg-gray-900 text-white shadow-lg p-4 pt-0 flex flex-col items-center justify-between flex-grow z-10">
+    <div className="w-full bg-slate-950 text-white shadow-lg p-4 pt-0 flex flex-col items-center justify-between flex-grow z-10">
       {/* Progress Bar */}
       <div className="w-full pb-1">
         <Slider
