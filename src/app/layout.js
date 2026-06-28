@@ -5,8 +5,6 @@ import { ThemeProvider } from "@/components/themeProvider";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
 import { Toaster } from "sonner";
-import { NextUIProvider } from "@nextui-org/react";
-import InstallPopup from "@/components/leftSidebar/installApp/InstallPopup";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -40,7 +38,6 @@ export default function RootLayout({ children }) {
 
       </head>
       <body className={`${inter.className} h-all overflow-hidden `}>
-        <NextUIProvider>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
@@ -68,7 +65,6 @@ export default function RootLayout({ children }) {
             <SpeedInsights />
             <Analytics />
           </ThemeProvider>
-        </NextUIProvider>
       </body>
     </html>
   );

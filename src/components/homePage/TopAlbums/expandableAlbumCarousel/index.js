@@ -2,7 +2,7 @@
 import React, { useCallback, useContext, useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Pause, Play, X, Music2 } from "lucide-react";
-import { debounce } from "lodash";
+import debounce from 'lodash/debounce';
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { UserContext } from "@/context";
 import { GetSongsByIdAction } from "@/app/actions";

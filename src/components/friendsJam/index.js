@@ -2,7 +2,6 @@
 
 import { UserContext } from "@/context";
 import { useContext, useEffect, useRef, useState, useCallback } from "react";
-import { io } from "socket.io-client";
 import { nanoid } from "nanoid";
 
 // 🌐 SSR-safe localStorage
@@ -71,42 +70,54 @@ export default function Jam() {
       setListeningTo(null);
       setHostName(null);
       setChat([]);
-      return
+      return;
     }
-    const socket = io(process.env.NEXT_PUBLIC_JAM_BACKEND_URL, {
-      transports: ["websocket"],
-      reconnection: false
-    });
-    socketRef.current = socket;
 
-    socket.on("connect", () => {
-      setMyId(socket.id);
-      setSocketStatus("connected");
-      socket.emit("join-jam", { name: username });
-    });
+    let socket;
 
-    socket.on("connect_error", () => setSocketStatus("disconnected"));
-    socket.on("disconnect", () => setSocketStatus("disconnected"));
+    async function initSocket() {
+      const { io } = await import("socket.io-client");
 
-    socket.on("users-update", setUsers);
-    socket.on("update-listeners", setFollowers);
+      socket = io(process.env.NEXT_PUBLIC_JAM_BACKEND_URL, {
+        transports: ["websocket"],
+        reconnection: false,
+      });
 
-    socket.on("sync-state", (state) => {
-      setIncomingChange(true);
-      setSongList(state.songList || songList);
-      setCurrentSong(state.currentSong || songList[0]);
-      setPlaying(!!state.playing);
-      handleSeek(state.currentTime || 0);
-      setCurrentIndex(state.currentIndex || 0)
-    });
+      socketRef.current = socket;
+      setSocketStatus("connecting");
 
-    socket.on("chat-message", (msg) => {
-      setChat(c => [...c.slice(-49), { ...msg, id: nanoid() }]);
-      if (msg.from !== username) navigator.vibrate?.(60);
-    });
+      socket.on("connect", () => {
+        setMyId(socket.id);
+        setSocketStatus("connected");
+        socket.emit("join-jam", { name: username });
+      });
+
+      socket.on("connect_error", () => setSocketStatus("disconnected"));
+      socket.on("disconnect", () => setSocketStatus("disconnected"));
+
+      socket.on("users-update", setUsers);
+      socket.on("update-listeners", setFollowers);
+
+      socket.on("sync-state", (state) => {
+        setIncomingChange(true);
+        setSongList(state.songList || songList);
+        setCurrentSong(state.currentSong || songList[0]);
+        setPlaying(!!state.playing);
+        handleSeek(state.currentTime || 0);
+        setCurrentIndex(state.currentIndex || 0);
+      });
+
+      socket.on("chat-message", (msg) => {
+        setChat((c) => [...c.slice(-49), { ...msg, id: nanoid() }]);
+        if (msg.from !== username) navigator.vibrate?.(60);
+      });
+    }
+
+    initSocket();
 
     return () => {
-      socket.disconnect();
+      socket?.disconnect();
+      socketRef.current = null;
       setChat([]);
     };
   }, [isJamChecked, username]);

@@ -1,9 +1,17 @@
+import { Skeleton } from '@/components/ui/skeleton';
 import Jam from '@/components/friendsJam';
 import JamPage from '@/components/friendsJam/jam';
-import AlbumContent from '@/components/homePage/TopAlbums/AlbumContent';
+import dynamic from 'next/dynamic';
+const AlbumContent = dynamic(() => import('@/components/homePage/TopAlbums/AlbumContent'), {
+  loading: () => <Skeleton />,
+  ssr: false,
+});
 import SongContentCarousel from '@/components/homePage/TopSongs/SongContentCarousel';
 import Lyrics from '@/components/lyrics/lyrics';
-import ModernSearchResult from '@/components/newSearchResult/ModernSearchResult';
+const ModernSearchResult = dynamic(() => import('@/components/newSearchResult/ModernSearchResult'), {
+  loading: () => <Skeleton />,
+  ssr: false,
+});
 import { Spinner } from '@/components/ui/spinner';
 import { Suspense } from 'react';
 import StyledLyrics from '@/components/lyrics/styledLyrics';
