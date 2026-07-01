@@ -1,7 +1,7 @@
 'use client';
 import { createContext, useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { songFormat, songs } from "@/utils/cachedSongs";
-import { fetchSuggestions, mergeUniqueSongs, shuffleArray } from "@/utils/extraFunctions";
+import { fetchSuggestions, mergeUniqueSongs, shuffleArray, getQualityUrl } from "@/utils/extraFunctions";
 import { useCurrentTimeStore } from "@/store/useCurrentTimeStore";
 import { decode } from "he";
 
@@ -23,6 +23,13 @@ export default function UserState({ children }) {
     const [isJamChecked, setIsJamChecked] = useState(false);
     // const [searchQuery, setSearchQuery] = useState("");
     const audioRef = useRef(null);
+    const currentSongRef = useRef(null);
+    const manualQualityRef = useRef(manualQuality);
+    const lastKnownTimeRef = useRef(0);
+    const retryCountRef = useRef(0);
+    const stallTimerRef = useRef(null);
+    const handleNextRef = useRef(null);
+    const prefetchInFlightRef = useRef(false);
 
     const { currentTime, setCurrentTime } = useCurrentTimeStore()
 
@@ -153,21 +160,23 @@ export default function UserState({ children }) {
         const audioElement = audioRef.current;
         if (!audioElement || !currentSong?.id) return;
 
-        // Determine audio quality
-        const qualityMap = { low: 0, medium: 1, average: 2, high: 3, very_high: 4 };
-        const qualityIndex = qualityMap[manualQuality] ?? 4;
-        const qualityUrl = currentSong.downloadUrl?.[qualityIndex]?.url;
+        // Determine audio quality, falling back to the nearest available
+        // tier instead of silently producing an "undefined" src.
+        const qualityUrl = getQualityUrl(currentSong, manualQuality);
 
-        // Update audio source only if it has changed
-        if (audioElement.src !== qualityUrl) {
+        if (!qualityUrl) {
+            console.error("No playable URL found for song:", currentSong?.name);
+        } else if (audioElement.src !== qualityUrl) {
             audioElement.src = qualityUrl;
             audioElement.load();
+            // Fresh track load: reset the stall/error retry counter.
+            retryCountRef.current = 0;
         }
 
         // Handle play/pause state
-        if (playing) {
+        if (playing && qualityUrl) {
             audioElement.play().catch(e => console.error("Playback error:", e));
-        } else {
+        } else if (!playing) {
             audioElement.pause();
         }
 
@@ -188,14 +197,67 @@ export default function UserState({ children }) {
     }, [currentSong, playing, manualQuality]);
 
 
-    // Effect 4: Attach audio event listeners
+    // Keep refs in sync so recovery callbacks below never read stale values.
+    useEffect(() => { currentSongRef.current = currentSong; }, [currentSong]);
+    useEffect(() => { manualQualityRef.current = manualQuality; }, [manualQuality]);
+    useEffect(() => { handleNextRef.current = handleNext; }, [handleNext]);
+
     useEffect(() => {
         const audioElement = audioRef.current;
         if (!audioElement) return;
 
+        const MAX_RETRIES = 3;
+        const RETRY_DELAY_MS = 2000;
+        const STALL_GRACE_MS = 8000; // "waiting" fires during normal buffering too, so only act if it doesn't resolve within this window
+
+        const clearStallTimer = () => {
+            if (stallTimerRef.current) {
+                clearTimeout(stallTimerRef.current);
+                stallTimerRef.current = null;
+            }
+        };
+
+        const attemptRecovery = () => {
+            clearStallTimer();
+
+            if (retryCountRef.current >= MAX_RETRIES) {
+                console.warn("Playback recovery failed after max retries, skipping to next song.");
+                retryCountRef.current = 0;
+                handleNextRef.current?.();
+                return;
+            }
+
+            retryCountRef.current += 1;
+            const resumeTime = lastKnownTimeRef.current;
+            const delay = RETRY_DELAY_MS * retryCountRef.current;
+
+            console.warn(`Playback stalled/errored, retrying (${retryCountRef.current}/${MAX_RETRIES}) in ${delay}ms`);
+
+            setTimeout(() => {
+                const el = audioRef.current;
+                const song = currentSongRef.current;
+                if (!el || !song?.id) return;
+
+                const url = getQualityUrl(song, manualQualityRef.current);
+                if (!url) return;
+
+                const onReady = () => {
+                    el.currentTime = resumeTime;
+                    el.play().catch((err) => console.error("Recovery play failed:", err));
+                    el.removeEventListener("loadedmetadata", onReady);
+                };
+                el.addEventListener("loadedmetadata", onReady);
+
+                el.src = url;
+                el.load();
+            }, delay);
+        };
+
         const handleTimeUpdate = () => {
             setCurrentTime(audioElement.currentTime);
             setDuration(audioElement.duration || 0);
+            lastKnownTimeRef.current = audioElement.currentTime;
+            clearStallTimer(); // forward progress = healthy, cancel any pending stall check
         };
         const handleSongEnd = () => handleNext();
         const handleLoadedMetadata = () => {
@@ -204,19 +266,63 @@ export default function UserState({ children }) {
         const handleDurationChange = () => {
             setDuration(audioElement.duration || 0);
         };
+        const handlePlaying = () => {
+            retryCountRef.current = 0; // successfully playing again = healthy
+            clearStallTimer();
+        };
+        const handleWaitingOrStalled = () => {
+            clearStallTimer();
+            stallTimerRef.current = setTimeout(attemptRecovery, STALL_GRACE_MS);
+        };
+        const handleError = () => {
+            console.error("Audio element error:", audioElement.error);
+            attemptRecovery();
+        };
 
         audioElement.addEventListener("timeupdate", handleTimeUpdate);
         audioElement.addEventListener("ended", handleSongEnd);
         audioElement.addEventListener("loadedmetadata", handleLoadedMetadata);
         audioElement.addEventListener("durationchange", handleDurationChange);
+        audioElement.addEventListener("playing", handlePlaying);
+        audioElement.addEventListener("waiting", handleWaitingOrStalled);
+        audioElement.addEventListener("stalled", handleWaitingOrStalled);
+        audioElement.addEventListener("error", handleError);
 
         return () => {
+            clearStallTimer();
             audioElement.removeEventListener("timeupdate", handleTimeUpdate);
             audioElement.removeEventListener("ended", handleSongEnd);
             audioElement.removeEventListener("loadedmetadata", handleLoadedMetadata);
             audioElement.removeEventListener("durationchange", handleDurationChange);
+            audioElement.removeEventListener("playing", handlePlaying);
+            audioElement.removeEventListener("waiting", handleWaitingOrStalled);
+            audioElement.removeEventListener("stalled", handleWaitingOrStalled);
+            audioElement.removeEventListener("error", handleError);
         };
     }, [handleNext]);
+
+    useEffect(() => {
+        const songsRemaining = songList.length - 1 - currentIndex;
+        if (songsRemaining < 0 || songsRemaining > 2) return;
+        if (!currentSong?.id || prefetchInFlightRef.current) return;
+
+        let cancelled = false;
+        prefetchInFlightRef.current = true;
+
+        fetchSuggestions(currentSong.id)
+            .then((suggestions) => {
+                if (cancelled || suggestions.length === 0) return;
+                setSongList((prevList) => mergeUniqueSongs(prevList, suggestions));
+            })
+            .catch((err) => console.error("Prefetch suggestions failed:", err))
+            .finally(() => {
+                prefetchInFlightRef.current = false;
+            });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [currentIndex, songList.length, currentSong?.id]);
 
     // Effect 6: Handle spacebar play/pause
     useEffect(() => {
@@ -230,15 +336,33 @@ export default function UserState({ children }) {
         return () => window.removeEventListener("keydown", handleSpacebar);
     }, [togglePlayPause]); // Empty dependency to only attach once
 
-    // --- Setup Media Session Action Handlers ---
+    
     useEffect(() => {
-        if ("mediaSession" in navigator) {
-            navigator.mediaSession.setActionHandler("play", () => setPlaying(true));
-            navigator.mediaSession.setActionHandler("pause", () => setPlaying(false));
-            navigator.mediaSession.setActionHandler("nexttrack", handleNext);
-            navigator.mediaSession.setActionHandler("previoustrack", handlePrev);
-        }
-    }, [handleNext, handlePrev]);
+        if (!("mediaSession" in navigator)) return;
+
+        const setHandler = (action, handler) => {
+            try {
+                navigator.mediaSession.setActionHandler(action, handler);
+            } catch (err) {
+                // Not every action is supported in every browser; safe to ignore.
+            }
+        };
+
+        setHandler("play", () => setPlaying(true));
+        setHandler("pause", () => setPlaying(false));
+        setHandler("nexttrack", handleNext);
+        setHandler("previoustrack", handlePrev);
+        setHandler("stop", () => {
+            setPlaying(false);
+            audioRef.current?.pause();
+        });
+        setHandler("seekto", (details) => {
+            if (audioRef.current && details.seekTime != null) {
+                audioRef.current.currentTime = details.seekTime;
+                setCurrentTime(details.seekTime);
+            }
+        });
+    }, [handleNext, handlePrev, setCurrentTime]);
 
 
     // --- Context Value with useMemo to prevent unnecessary re-renders ---

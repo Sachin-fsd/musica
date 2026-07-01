@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/themeProvider";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
 import { Toaster } from "sonner";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -61,6 +62,7 @@ export default function RootLayout({ children }) {
             />
             {/* <NextTopLoader /> */}
             {children}
+            <ServiceWorkerRegister />
             <Toaster />
             <SpeedInsights />
             <Analytics />
