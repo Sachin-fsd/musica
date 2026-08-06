@@ -31,8 +31,8 @@ Welcome to the **Musica - Next Gen Music Site**, a platform where music comes al
 - **Framework**: [Next.js 14](https://nextjs.org/)
 - **Database**: MongoDB Atlas
 - **Styling**: Tailwind CSS, Custom Fonts, and CSS Animations
-- **Real-time Sync**: Supabase Edge Functions
-- **Jam Feature**: Supabase for real time jam connection
+- **Real-time Sync**: Socket.io
+- **Jam Feature**: Socket.io for real time jam connection
 <!-- - **Payment Integration**: Razorpay -->
 - **Image Handling**: Optimized with Next.js Image Component
 
