@@ -107,6 +107,33 @@ Welcome to the **Musica - Next Gen Music Site**, a platform where music comes al
 
 ---
 
+## 📧 Email setup (forgot password)
+
+The "Forgot password" flow sends a 6-digit OTP via nodemailer. Configure one of the
+following in `.env`:
+
+**Option A — any SMTP provider:**
+
+```
+SMTP_HOST=smtp.yourprovider.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=your-email@example.com
+SMTP_PASS=your-password
+EMAIL_FROM=Musica <your-email@example.com>
+```
+
+**Option B — Gmail (requires an App Password):**
+
+```
+GMAIL_USER=you@gmail.com
+GMAIL_APP_PASSWORD=your-16-char-app-password
+```
+
+Generate an app password at https://myaccount.google.com/apppasswords. If neither
+option is configured, password reset emails will fail to send.
+
+
 
 ## ✅ CI/CD + Testing Workflow
 

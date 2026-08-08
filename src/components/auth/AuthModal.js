@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { LogIn, X, Eye, EyeOff, Loader2 } from 'lucide-react';
-import { loginAction, registerAction } from '@/app/actions/auth';
+import { LogIn, X, Eye, EyeOff, Loader2, ArrowLeft } from 'lucide-react';
+import { loginAction, registerAction, sendPasswordResetOtpAction, resetPasswordAction } from '@/app/actions/auth';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
 
@@ -47,7 +47,19 @@ function Field({ label, type = 'text', name, value, onChange, required }) {
 
 // ─── Login Form ───────────────────────────────────────────────────────────────
 
-function LoginForm({ onSuccess, onSwitchToRegister }) {
+function BackButton({ onClick }) {
+    return (
+        <button
+            type="button"
+            onClick={onClick}
+            className="inline-flex items-center gap-1 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 mb-3"
+        >
+            <ArrowLeft size={13} /> Back
+        </button>
+    );
+}
+
+function LoginForm({ onSuccess, onSwitchToRegister, onSwitchToForgot }) {
     const { setUser } = useAuth();
     const [fields, setFields] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
@@ -83,6 +95,16 @@ function LoginForm({ onSuccess, onSwitchToRegister }) {
 
             <Field label="Email" type="email" name="email" value={fields.email} onChange={handleChange} required />
             <Field label="Password" type="password" name="password" value={fields.password} onChange={handleChange} required />
+
+            <p className="text-right -mt-2">
+                <button
+                    type="button"
+                    onClick={onSwitchToForgot}
+                    className="text-xs text-blue-600 dark:text-blue-400 hover:underline font-semibold"
+                >
+                    Forgot password?
+                </button>
+            </p>
 
             {error && (
                 <p className="text-xs text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-lg px-3 py-2">
@@ -185,10 +207,126 @@ function RegisterForm({ onSuccess, onSwitchToLogin }) {
     );
 }
 
+// ─── Forgot Password Form ─────────────────────────────────────────────────────
+
+function ForgotPasswordForm({ onBack, onSent }) {
+    const [email, setEmail] = useState('');
+    const [error, setError] = useState('');
+    const [isPending, startTransition] = useTransition();
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setError('');
+        const data = new FormData();
+        data.set('email', email);
+
+        startTransition(async () => {
+            const res = await sendPasswordResetOtpAction(data);
+            if (res.success) {
+                toast.success(res.message);
+                onSent(email);
+            } else {
+                setError(res.message);
+            }
+        });
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <BackButton onClick={onBack} />
+            <div className="text-center mb-1">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Forgot password</h2>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                    Enter your email and we&apos;ll send you an OTP to reset your password.
+                </p>
+            </div>
+
+            <Field label="Email" type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+
+            {error && (
+                <p className="text-xs text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-lg px-3 py-2">
+                    {error}
+                </p>
+            )}
+
+            <button
+                type="submit"
+                disabled={isPending}
+                className="w-full py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-60 
+                           text-white font-semibold text-sm transition-colors flex items-center justify-center gap-2"
+            >
+                {isPending ? <Loader2 size={16} className="animate-spin" /> : null}
+                {isPending ? 'Sending OTP…' : 'Send OTP'}
+            </button>
+        </form>
+    );
+}
+
+// ─── Reset Password Form (OTP + new password) ─────────────────────────────────
+
+function ResetPasswordForm({ email, onBack, onSuccess }) {
+    const [fields, setFields] = useState({ otp: '', password: '' });
+    const [error, setError] = useState('');
+    const [isPending, startTransition] = useTransition();
+
+    const handleChange = (e) => setFields(f => ({ ...f, [e.target.name]: e.target.value }));
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setError('');
+        const data = new FormData();
+        data.set('email', email);
+        data.set('otp', fields.otp);
+        data.set('password', fields.password);
+
+        startTransition(async () => {
+            const res = await resetPasswordAction(data);
+            if (res.success) {
+                toast.success(res.message);
+                onSuccess();
+            } else {
+                setError(res.message);
+            }
+        });
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <BackButton onClick={onBack} />
+            <div className="text-center mb-1">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Enter OTP</h2>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                    We sent an OTP to <span className="font-semibold text-slate-700 dark:text-slate-300">{email}</span>. Enter it below along with your new password.
+                </p>
+            </div>
+
+            <Field label="OTP" name="otp" value={fields.otp} onChange={handleChange} required />
+            <Field label="New password" type="password" name="password" value={fields.password} onChange={handleChange} required />
+
+            {error && (
+                <p className="text-xs text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-lg px-3 py-2">
+                    {error}
+                </p>
+            )}
+
+            <button
+                type="submit"
+                disabled={isPending}
+                className="w-full py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-60 
+                           text-white font-semibold text-sm transition-colors flex items-center justify-center gap-2"
+            >
+                {isPending ? <Loader2 size={16} className="animate-spin" /> : null}
+                {isPending ? 'Resetting…' : 'Reset password'}
+            </button>
+        </form>
+    );
+}
+
 // ─── Modal Shell ──────────────────────────────────────────────────────────────
 
 export default function AuthModal({ onClose }) {
-    const [view, setView] = useState('login'); // 'login' | 'register'
+    const [view, setView] = useState('login'); // 'login' | 'register' | 'forgot' | 'reset'
+    const [resetEmail, setResetEmail] = useState('');
 
     return (
         /* Backdrop */
@@ -206,15 +344,33 @@ export default function AuthModal({ onClose }) {
                     <X size={18} />
                 </button>
 
-                {view === 'login' ? (
+                {view === 'login' && (
                     <LoginForm
                         onSuccess={onClose}
                         onSwitchToRegister={() => setView('register')}
+                        onSwitchToForgot={() => setView('forgot')}
                     />
-                ) : (
+                )}
+
+                {view === 'register' && (
                     <RegisterForm
                         onSuccess={onClose}
                         onSwitchToLogin={() => setView('login')}
+                    />
+                )}
+
+                {view === 'forgot' && (
+                    <ForgotPasswordForm
+                        onBack={() => setView('login')}
+                        onSent={(email) => { setResetEmail(email); setView('reset'); }}
+                    />
+                )}
+
+                {view === 'reset' && (
+                    <ResetPasswordForm
+                        email={resetEmail}
+                        onBack={() => setView('forgot')}
+                        onSuccess={() => setView('login')}
                     />
                 )}
             </div>
