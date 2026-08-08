@@ -33,21 +33,14 @@ const InteractionSchema = new mongoose.Schema(
         },
         // Optional: snapshot of song metadata at interaction time so we can
         // display liked songs even if the upstream API later changes.
-        songMeta: {
-            name: String,
-            image: String,      // smallest thumbnail URL
-            primaryArtist: String,
-            duration: Number,
-        },
+        // songMeta: {
+        //     name: String,
+        //     image: String,      // smallest thumbnail URL
+        //     primaryArtist: String,
+        //     duration: Number,
+        // },
     },
     { timestamps: true }
-);
-
-// Compound index: one "liked" record per user+song (upsert pattern).
-// Other types (skipped, completed) are NOT unique — a user can skip many times.
-InteractionSchema.index(
-    { userId: 1, songId: 1, type: 1 },
-    { unique: false }   // We handle uniqueness in the action with findOneAndUpdate
 );
 
 const Interaction =
