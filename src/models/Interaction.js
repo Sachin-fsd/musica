@@ -31,14 +31,6 @@ const InteractionSchema = new mongoose.Schema(
             enum: ['liked', 'skipped', 'completed', 'replayed', 'downloaded'],
             required: true,
         },
-        // Optional: snapshot of song metadata at interaction time so we can
-        // display liked songs even if the upstream API later changes.
-        // songMeta: {
-        //     name: String,
-        //     image: String,      // smallest thumbnail URL
-        //     primaryArtist: String,
-        //     duration: Number,
-        // },
     },
     { timestamps: true }
 );

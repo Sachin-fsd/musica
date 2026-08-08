@@ -3,11 +3,15 @@ import { createContext, useRef, useState, useEffect, useCallback, useMemo } from
 import { songFormat, songs } from "@/utils/cachedSongs";
 import { fetchSuggestions, mergeUniqueSongs, shuffleArray, getQualityUrl } from "@/utils/extraFunctions";
 import { useCurrentTimeStore } from "@/store/useCurrentTimeStore";
+import { persistCompletedAction } from "@/app/actions/interactions";
+import { useAuth } from "@/context/AuthContext";
 import { decode } from "he";
 
 export const UserContext = createContext(null);
 
 export default function UserState({ children }) {
+    const { user } = useAuth();
+
     // --- State Definitions ---
     const [songList, setSongList] = useState([songFormat, songFormat, songFormat]);
     const [currentSong, setCurrentSong] = useState(songFormat);
@@ -30,6 +34,8 @@ export default function UserState({ children }) {
     const stallTimerRef = useRef(null);
     const handleNextRef = useRef(null);
     const prefetchInFlightRef = useRef(false);
+    const completedSongIdRef = useRef(null);
+    const userRef = useRef(user);
 
     const { currentTime, setCurrentTime } = useCurrentTimeStore()
 
@@ -198,6 +204,7 @@ export default function UserState({ children }) {
 
 
     // Keep refs in sync so recovery callbacks below never read stale values.
+    useEffect(() => { userRef.current = user; }, [user]);
     useEffect(() => { currentSongRef.current = currentSong; }, [currentSong]);
     useEffect(() => { manualQualityRef.current = manualQuality; }, [manualQuality]);
     useEffect(() => { handleNextRef.current = handleNext; }, [handleNext]);
@@ -258,6 +265,25 @@ export default function UserState({ children }) {
             setDuration(audioElement.duration || 0);
             lastKnownTimeRef.current = audioElement.currentTime;
             clearStallTimer(); // forward progress = healthy, cancel any pending stall check
+
+            if (audioElement.currentTime < 5) {
+                completedSongIdRef.current = null;
+            }
+
+            // Check for 90% completion here, where we know audioElement.currentTime matches currentSong
+            if (userRef.current?.id && currentSongRef.current?.id) {
+                const song = currentSongRef.current;
+                const totalDur = audioElement.duration || song.duration;
+                
+                if (totalDur > 0 && (audioElement.currentTime / totalDur) >= 0.9) {
+                    if (completedSongIdRef.current !== song.id) {
+                        completedSongIdRef.current = song.id;
+                        persistCompletedAction(song.id).catch((err) =>
+                            console.error('persistCompletedAction failed:', err)
+                        );
+                    }
+                }
+            }
         };
         const handleSongEnd = () => handleNext();
         const handleLoadedMetadata = () => {
@@ -336,7 +362,7 @@ export default function UserState({ children }) {
         return () => window.removeEventListener("keydown", handleSpacebar);
     }, [togglePlayPause]); // Empty dependency to only attach once
 
-    
+
     useEffect(() => {
         if (!("mediaSession" in navigator)) return;
 

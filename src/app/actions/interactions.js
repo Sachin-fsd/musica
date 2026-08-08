@@ -86,6 +86,36 @@ export async function persistLikeAction(songId, liked, songMeta = {}) {
     }
 }
 
+// ─── Completed interaction (listened to ≥90 % of a song) ──────────────────────
+
+/**
+ * Records that the user listened to a song past the 90 % completion mark.
+ * No metadata is stored; upserted once per (user, song) so replays don't spam.
+ *
+ * @param {string} songId - JioSaavn song ID
+ */
+export async function persistCompletedAction(songId) {
+    const userId = await getAuthenticatedUserId();
+    if (!userId || !songId) return { success: false };
+
+    try {
+        await connectDB();
+
+        await Interaction.updateOne(
+            { userId, songId, type: 'completed' },
+            {
+                $setOnInsert: { userId, songId, type: 'completed' },
+            },
+            { upsert: true }
+        );
+
+        return { success: true };
+    } catch (error) {
+        console.error('persistCompletedAction error:', error);
+        return { success: false };
+    }
+}
+
 // ─── Liked songs list (for a future "Liked Songs" page) ──────────────────────
 
 /**
