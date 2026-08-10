@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { getCurrentUserAction, logoutAction } from '@/app/actions/auth';
 import { getLikedSongIdsAction, persistLikeAction } from '@/app/actions/interactions';
+import { makeSongMetadata } from '@/utils/extraFunctions';
 
 const AuthContext = createContext(null);
 
@@ -50,13 +51,7 @@ export function AuthProvider({ children }) {
         });
 
         // 2. Fire and forget — DB catches up in the background
-        const meta = {
-            name: song.name || '',
-            image: song.image?.[0]?.url || '',
-            primaryArtist: song.artists?.primary?.[0]?.name || '',
-            duration: song.duration || 0,
-        };
-        persistLikeAction(song.id, newLiked, meta).catch((err) =>
+        persistLikeAction(newLiked, makeSongMetadata(song)).catch((err) =>
             console.error('persistLikeAction failed silently:', err)
         );
 

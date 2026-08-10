@@ -6,6 +6,8 @@ import Image from "next/image";
 import { UserContext } from "@/context";
 import { decode } from "he";
 import { GetSongsByIdAction, SearchSongsAction } from "@/app/actions";
+import { persistSearchedAction } from "@/app/actions/interactions";
+import { makeSongMetadata } from "@/utils/extraFunctions";
 import { Play, Loader2 } from "lucide-react";
 
 // 🔥 Universal normalizer → always detailed schema
@@ -92,6 +94,9 @@ const SongCard = ({ data, search }) => {
         
         try {
             if (song.downloadUrl && song.downloadUrl.length > 0) {
+                persistSearchedAction(song.id, makeSongMetadata(song)).catch((err) =>
+                    console.error('persistSearchedAction failed:', err)
+                );
                 playSongAndCreateQueue(song);
                 return;
             }
@@ -100,6 +105,9 @@ const SongCard = ({ data, search }) => {
             const result = await GetSongsByIdAction("song", song.id);
             
             if (result?.success && result.data?.length > 0) {
+                persistSearchedAction(result.data[0].id, makeSongMetadata(result.data[0])).catch((err) =>
+                    console.error('persistSearchedAction failed:', err)
+                );
                 playSongAndCreateQueue(result.data[0]); // already detailed
             } else {
                 console.error("Error in fetching song details", result);

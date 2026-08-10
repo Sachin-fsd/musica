@@ -49,7 +49,7 @@ export default function UserState({ children }) {
         if (!userRef.current?.id || !song?.id) return;
 
         if (playedSongIdsRef.current.has(song.id)) {
-            persistReplayedAction(song.id, makeSongMetadata(song)).catch((err) =>
+            persistReplayedAction(makeSongMetadata(song)).catch((err) =>
                 console.error('persistReplayedAction failed:', err)
             );
         }
@@ -130,7 +130,7 @@ export default function UserState({ children }) {
             timeSkipped <= 10 &&
             audioRef.current?.currentTime <= 10
         ) {
-            persistSkippedAction(leavingSong.id, makeSongMetadata(leavingSong)).catch((err) =>
+            persistSkippedAction(makeSongMetadata(leavingSong)).catch((err) =>
                 console.error('persistSkippedAction failed:', err)
             );
         }

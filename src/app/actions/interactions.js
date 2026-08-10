@@ -10,23 +10,16 @@ const SIX_MONTHS_MS = 6 * 30 * 24 * 60 * 60 * 1000;
 /**
  * Stores or updates song metadata in DB with a TTL expiration set to 6 months from now.
  *
- * @param {object} songData - { songId, id, name, image, primaryArtist, duration, language }
+ * @param {object} songData - { songId, id, name, image, primaryArtists, duration, language }
  */
-export async function touchSongAction(songData) {
-    if (!songData) return { success: false };
-    const songId = songData.songId || songData.id;
+export async function touchSongAction(songMeta) {
+    if (!songMeta) return { success: false };
+    const songId = songMeta.songId;
     if (!songId) return { success: false };
 
     try {
         await connectDB();
 
-        const name = songData.name || '';
-        const image = typeof songData.image === 'string'
-            ? songData.image
-            : (songData.image?.[2]?.url || songData.image?.[0]?.url || '');
-        const primaryArtist = songData.primaryArtist || songData.artists?.primary?.[0]?.name || songData.artists?.all?.[0]?.name || '';
-        const duration = songData.duration || 0;
-        const language = songData.language || '';
         const expireAt = new Date(Date.now() + SIX_MONTHS_MS);
 
         await Song.findOneAndUpdate(
@@ -34,11 +27,11 @@ export async function touchSongAction(songData) {
             {
                 $set: {
                     songId,
-                    name,
-                    image,
-                    primaryArtist,
-                    duration,
-                    language,
+                    name: songMeta.name || '',
+                    image: songMeta.image || '',
+                    primaryArtists: songMeta.primaryArtists || [],
+                    duration: songMeta.duration || 0,
+                    language: songMeta.language || '',
                     expireAt,
                 },
             },
@@ -95,9 +88,9 @@ export async function getLikedSongIdsAction() {
  *
  * @param {string}  songId    - JioSaavn song ID
  * @param {boolean} liked     - the NEW intended state (true = like, false = unlike)
- * @param {object}  songMeta  - { name, image, primaryArtist, duration }
+ * @param {object}  songMeta  - { name, image, primaryArtists, duration }
  */
-export async function persistLikeAction(songId, liked, songMeta = {}) {
+export async function persistLikeAction(liked, songMeta = {}) {
     const userId = await getAuthenticatedUserId();
     if (!userId) return { success: false };
 
@@ -107,26 +100,20 @@ export async function persistLikeAction(songId, liked, songMeta = {}) {
         if (liked) {
             // Upsert — safe to call multiple times
             await Interaction.updateOne(
-                { userId, songId, type: 'liked' },
+                { userId, songId: songMeta.songId, type: 'liked' },
                 {
                     $setOnInsert: {
                         userId,
-                        songId,
+                        songId: songMeta.songId,
                         type: 'liked',
-                        songMeta: {
-                            name: songMeta.name || '',
-                            image: songMeta.image || '',
-                            primaryArtist: songMeta.primaryArtist || '',
-                            duration: songMeta.duration || 0,
-                        },
                     },
                 },
                 { upsert: true }
             );
 
-            await touchSongAction({ songId, ...songMeta });
+            await touchSongAction(songMeta);
         } else {
-            await Interaction.deleteOne({ userId, songId, type: 'liked' });
+            await Interaction.deleteOne({ userId, songId: songMeta.songId, type: 'liked' });
         }
 
         return { success: true };
@@ -143,25 +130,25 @@ export async function persistLikeAction(songId, liked, songMeta = {}) {
  * No metadata is stored; upserted once per (user, song) so replays don't spam.
  *
  * @param {string} songId - JioSaavn song ID
- * @param {object} songMeta - { name, image, primaryArtist, duration }
+ * @param {object} songMeta - { name, image, primaryArtists, duration }
  */
-export async function persistSkippedAction(songId, songMeta = {}) {
+export async function persistSkippedAction(songMeta = {}) {
     const userId = await getAuthenticatedUserId();
-    if (!userId || !songId) return { success: false };
+    if (!userId || !songMeta.songId) return { success: false };
 
     try {
         await connectDB();
 
         await Interaction.updateOne(
-            { userId, songId, type: 'skipped' },
+            { userId, songId: songMeta.songId, type: 'skipped' },
             {
-                $setOnInsert: { userId, songId, type: 'skipped' },
+                $setOnInsert: { userId, songId: songMeta.songId, type: 'skipped' },
             },
             { upsert: true }
         );
 
-        if (songMeta && (songMeta.name || songMeta.image || songMeta.primaryArtist)) {
-            await touchSongAction({ songId, ...songMeta });
+        if (songMeta && (songMeta.name || songMeta.image)) {
+            await touchSongAction(songMeta);
         }
 
         return { success: true };
@@ -178,9 +165,45 @@ export async function persistSkippedAction(songId, songMeta = {}) {
  * No metadata is stored; upserted once per (user, song) so replays don't spam.
  *
  * @param {string} songId - JioSaavn song ID
- * @param {object} songMeta - { name, image, primaryArtist, duration }
+ * @param {object} songMeta - { name, image, primaryArtists, duration }
  */
-export async function persistReplayedAction(songId, songMeta = {}) {
+export async function persistReplayedAction(songMeta = {}) {
+    const userId = await getAuthenticatedUserId();
+    if (!userId || !songMeta.songId) return { success: false };
+
+    try {
+        await connectDB();
+
+        await Interaction.updateOne(
+            { userId, songId: songMeta.songId, type: 'replayed' },
+            {
+                $setOnInsert: { userId, songId: songMeta.songId, type: 'replayed' },
+            },
+            { upsert: true }
+        );
+
+        if (songMeta && (songMeta.name || songMeta.image)) {
+            await touchSongAction(songMeta);
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error('persistReplayedAction error:', error);
+        return { success: false };
+    }
+}
+
+// ─── Searched interaction (user played a song from search results) ────────────
+
+/**
+ * Records that the user played a song directly from search results, signalling
+ * interest in that song. No metadata is stored; upserted once per (user, song)
+ * so repeated plays don't spam.
+ *
+ * @param {string} songId - JioSaavn song ID
+ * @param {object} songMeta - { name, image, primaryArtists, duration }
+ */
+export async function persistSearchedAction(songId, songMeta = {}) {
     const userId = await getAuthenticatedUserId();
     if (!userId || !songId) return { success: false };
 
@@ -188,20 +211,20 @@ export async function persistReplayedAction(songId, songMeta = {}) {
         await connectDB();
 
         await Interaction.updateOne(
-            { userId, songId, type: 'replayed' },
+            { userId, songId, type: 'searched' },
             {
-                $setOnInsert: { userId, songId, type: 'replayed' },
+                $setOnInsert: { userId, songId, type: 'searched' },
             },
             { upsert: true }
         );
 
-        if (songMeta && (songMeta.name || songMeta.image || songMeta.primaryArtist)) {
+        if (songMeta && (songMeta.name || songMeta.image)) {
             await touchSongAction({ songId, ...songMeta });
         }
 
         return { success: true };
     } catch (error) {
-        console.error('persistReplayedAction error:', error);
+        console.error('persistSearchedAction error:', error);
         return { success: false };
     }
 }
@@ -213,7 +236,7 @@ export async function persistReplayedAction(songId, songMeta = {}) {
  * No metadata is stored; upserted once per (user, song) so replays don't spam.
  *
  * @param {string} songId - JioSaavn song ID
- * @param {object} songMeta - { name, image, primaryArtist, duration }
+ * @param {object} songMeta - { name, image, primaryArtists, duration }
  */
 export async function persistCompletedAction(songId, songMeta = {}) {
     const userId = await getAuthenticatedUserId();
@@ -230,7 +253,7 @@ export async function persistCompletedAction(songId, songMeta = {}) {
             { upsert: true }
         );
 
-        if (songMeta && (songMeta.name || songMeta.image || songMeta.primaryArtist)) {
+        if (songMeta && (songMeta.name || songMeta.image)) {
             await touchSongAction({ songId, ...songMeta });
         }
 

@@ -8,6 +8,7 @@ import mongoose from 'mongoose';
  *  - "skipped"    → user changed song within 10 s of playback (doesn't want to hear it)
  *  - "completed"  → user listened to ≥90 % of the song duration
  *  - "replayed"   → user looped / replayed the song
+ *  - "searched"   → user played a song directly from search results
  *  - "downloaded" → user tapped the download button
  *
  */
@@ -27,7 +28,7 @@ const InteractionSchema = new mongoose.Schema(
         },
         type: {
             type: String,
-            enum: ['liked', 'skipped', 'completed', 'replayed', 'downloaded'],
+            enum: ['liked', 'skipped', 'completed', 'replayed', 'searched', 'downloaded'],
             required: true,
         },
     },

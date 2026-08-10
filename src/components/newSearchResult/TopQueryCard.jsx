@@ -1,6 +1,8 @@
 "use client";
 
 import { GetSongsByIdAction } from "@/app/actions";
+import { persistSearchedAction } from "@/app/actions/interactions";
+import { makeSongMetadata } from "@/utils/extraFunctions";
 import { UserContext } from "@/context";
 import { decode } from "he";
 import Image from "next/image";
@@ -27,6 +29,9 @@ const TopQueryCard = ({ data }) => {
 
             if (response?.success) {
                 if (data.type === "song") {
+                    persistSearchedAction(response.data[0].id, makeSongMetadata(response.data[0])).catch((err) =>
+                        console.error('persistSearchedAction failed:', err)
+                    );
                     playSongAndCreateQueue(response.data[0]);
                 } else if (data.type === "album") {
                     setSongList(response.data.songs);

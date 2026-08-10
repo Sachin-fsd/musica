@@ -63,11 +63,26 @@ export const mergeUniqueSongs = (baseList, newSongs) => {
     ];
 };
 
+export const ARTIST_THUMB_QUALITY = '150x150';
+
+export const getArtistThumbnailUrl = (images) => {
+    if (!Array.isArray(images)) return '';
+    const thumb = images.find((img) => img?.quality === ARTIST_THUMB_QUALITY);
+    return thumb?.url || images[0]?.url || '';
+};
+
 export const makeSongMetadata = (song) => {
     return {
+        songId: song.id,
         name: song.name || '',
-        image: song.image?.[0]?.url || '',
-        primaryArtist: song.artists?.primary?.[0]?.name || '',
+        image: song.image?.[1]?.url || '',
+        language: song.language || '',
+        primaryArtists: (song.artists?.primary || [])
+            .map((artist) => ({
+                name: artist.name || '',
+                thumbnailUrl: getArtistThumbnailUrl(artist.image),
+            }))
+            .filter((artist) => artist.name && artist.thumbnailUrl),
         duration: song.duration || 0,
     }
 }
