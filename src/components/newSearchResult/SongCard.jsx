@@ -156,7 +156,7 @@ const SongCard = ({ data, search }) => {
                         onClick={() => handleSongClick(song)}
                         role="button"
                         tabIndex={0}
-                        className="group flex items-center gap-4 p-3 rounded-xl hover:bg-secondary/50 transition-colors duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                        className="group flex items-center gap-4 p-3 rounded-xl sm:hover:bg-secondary/50 transition-colors duration-200 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                     >
                         {/* Cover Image & Overlays */}
                         <div className="relative shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-md overflow-hidden shadow-sm">
@@ -170,7 +170,7 @@ const SongCard = ({ data, search }) => {
 
                             {/* Hover Play Overlay */}
                             {!isLoading && !isActive && (
-                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-200">
+                                <div className="absolute inset-0 bg-black/40 opacity-0 sm:group-hover:opacity-100 flex items-center justify-center transition-opacity duration-200">
                                     <Play className="w-6 h-6 fill-white text-white ml-1" />
                                 </div>
                             )}
@@ -184,7 +184,7 @@ const SongCard = ({ data, search }) => {
                             
                             {/* Active Playing Equalizer (when not hovering/loading) */}
                             {isActive && !isLoading && (
-                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center group-hover:opacity-0 transition-opacity">
+                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center sm:group-hover:opacity-0 transition-opacity">
                                     <div className="flex gap-[2px] items-end h-4">
                                         <span className="w-1 h-4 bg-primary animate-[bounce_1s_infinite]"></span>
                                         <span className="w-1 h-2 bg-primary animate-[bounce_1s_infinite_0.2s]"></span>

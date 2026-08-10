@@ -2,6 +2,10 @@ import { Skeleton } from '@/components/ui/skeleton';
 import Jam from '@/components/friendsJam';
 import JamPage from '@/components/friendsJam/jam';
 import dynamic from 'next/dynamic';
+const TopArtists = dynamic(() => import('@/components/homePage/TopArtists'), {
+  loading: () => null,
+  ssr: false,
+});
 const AlbumContent = dynamic(() => import('@/components/homePage/TopAlbums/AlbumContent'), {
   loading: () => <Skeleton />,
   ssr: false,
@@ -28,6 +32,8 @@ const HomePage = () => {
       <Suspense fallback={<div><Spinner /></div>}>
         <ModernSearchResult />
       </Suspense>
+
+      <TopArtists />
 
       {/* <div className='my-4 flex justify-center'>
         <Lyrics />

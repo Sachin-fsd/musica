@@ -57,7 +57,7 @@ const TopQueryCard = ({ data }) => {
             onClick={handlePlay}
             role="button"
             tabIndex={0}
-            className="group relative flex flex-col sm:flex-row items-center sm:items-start gap-6 p-6 rounded-2xl bg-secondary/30 hover:bg-secondary/60 transition-all duration-300 ease-out cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="group relative flex flex-col sm:flex-row items-center sm:items-start gap-6 p-6 rounded-2xl bg-secondary/30 sm:hover:bg-secondary/60 transition-all duration-300 ease-out cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
             {/* Image Section */}
             <div className="relative shrink-0 w-32 h-32 sm:w-40 sm:h-40 shadow-lg">
@@ -71,9 +71,9 @@ const TopQueryCard = ({ data }) => {
 
                 {/* Hover Play Button Overlay */}
                 {!loading && (
-                    <div className={`absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center ${isArtist ? "rounded-full" : "rounded-xl"}`}>
-                        <div className="bg-primary text-primary-foreground rounded-full p-3 shadow-xl transform scale-75 group-hover:scale-100 transition-transform duration-300 ease-out">
-                            {playing ? <Pause className="w-8 h-8 fill-current ml-1" /> : <Play className="w-8 h-8 fill-current ml-1" />}
+                    <div className={`absolute inset-0 bg-black/40 opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center ${isArtist ? "rounded-full" : "rounded-xl"}`}>
+                        <div className="bg-primary text-primary-foreground rounded-full p-3 shadow-xl transform scale-75 sm:group-hover:scale-100 transition-transform duration-300 ease-out">
+                            {playing && currentSong?.id === data.id ? <Pause className="w-8 h-8 fill-current ml-1" /> : <Play className="w-8 h-8 fill-current ml-1" />}
                         </div>
                     </div>
                 )}
@@ -94,7 +94,7 @@ const TopQueryCard = ({ data }) => {
                 </span>
 
                 {/* Title */}
-                <h3 className={`text-2xl sm:text-3xl font-bold truncate w-full ${isActive ? "text-primary" : "text-foreground"}`}>
+                <h3 className={`text-2xl sm:text-3xl font-bold truncate w-full ${isActive && currentSong?.id === data.id ? "text-primary" : "text-foreground"}`}>
                     {decode(data.title || "")}
                 </h3>
 
@@ -104,7 +104,7 @@ const TopQueryCard = ({ data }) => {
                 </p>
 
                 {/* Visual Indicator if actively playing */}
-                {isActive && !loading && (
+                {isActive && currentSong?.id === data.id && !loading && (
                     <div className="mt-4 flex items-center gap-2 text-primary text-sm font-medium">
                         <div className="flex gap-1 items-end h-3">
                             <span className="w-1 h-3 bg-primary animate-[bounce_1s_infinite]"></span>

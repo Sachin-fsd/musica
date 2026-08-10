@@ -79,6 +79,7 @@ export const makeSongMetadata = (song) => {
         language: song.language || '',
         primaryArtists: (song.artists?.primary || [])
             .map((artist) => ({
+                artistId: artist.id || '',
                 name: artist.name || '',
                 thumbnailUrl: getArtistThumbnailUrl(artist.image),
             }))

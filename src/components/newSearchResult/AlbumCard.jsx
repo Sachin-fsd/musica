@@ -15,11 +15,11 @@ const AlbumCard = ({ data }) => {
 
     async function handleClick(album) {
         if (loadingId === album.id || !album.id) return;
-        
+
         try {
             setLoadingId(album.id);
             const response = await GetSongsByIdAction(album.type || "album", album.id);
-            
+
             if (response?.success && response.data?.songs?.length > 0) {
                 setSongList(response.data.songs);
                 setCurrentSong(response.data.songs[0]);
@@ -49,7 +49,7 @@ const AlbumCard = ({ data }) => {
                             onClick={() => handleClick(album)}
                             role="button"
                             tabIndex={0}
-                            className="group flex flex-col gap-3 p-3 -m-3 rounded-xl hover:bg-secondary/40 transition-colors duration-300 ease-out cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                            className="group flex flex-col gap-3 p-3 -m-3 rounded-xl sm:hover:bg-secondary/40 transition-colors duration-300 ease-out cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                         >
                             {/* Image & Overlays */}
                             <div className="relative aspect-square w-full rounded-xl overflow-hidden shadow-md">
@@ -57,14 +57,14 @@ const AlbumCard = ({ data }) => {
                                     src={imageUrl}
                                     fill
                                     sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
-                                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                    className="object-cover transition-transform duration-500 sm:group-hover:scale-105"
                                     alt={decode(album.title || "Album Cover")}
                                 />
 
                                 {/* Hover Play Overlay */}
                                 {!isLoading && (
-                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                        <div className="bg-primary text-primary-foreground rounded-full p-3 shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out">
+                                    <div className="absolute inset-0 bg-black/40 opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                        <div className="bg-primary text-primary-foreground rounded-full p-3 shadow-lg transform translate-y-2 sm:group-hover:translate-y-0 transition-all duration-300 ease-out">
                                             <Play className="w-6 h-6 fill-current ml-1" />
                                         </div>
                                     </div>
@@ -80,7 +80,7 @@ const AlbumCard = ({ data }) => {
 
                             {/* Album Info */}
                             <div className="flex flex-col min-w-0">
-                                <h4 className="text-base font-semibold truncate text-foreground group-hover:text-primary transition-colors">
+                                <h4 className="text-base font-semibold truncate text-foreground sm:group-hover:text-primary transition-colors">
                                     {decode(album.title || "")}
                                 </h4>
                                 {subtitle && (

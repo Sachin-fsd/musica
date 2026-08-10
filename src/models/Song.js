@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 const PrimaryArtistSchema = new mongoose.Schema(
     {
+        artistId: String,
         name: String,
         thumbnailUrl: String,
     },
