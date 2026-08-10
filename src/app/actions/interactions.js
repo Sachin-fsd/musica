@@ -2,7 +2,55 @@
 
 import { connectDB } from '@/lib/mongodb';
 import Interaction from '@/models/Interaction';
+import Song from '@/models/Song';
 import { getAuthToken, verifyAuthToken } from './auth';
+
+const SIX_MONTHS_MS = 6 * 30 * 24 * 60 * 60 * 1000;
+
+/**
+ * Stores or updates song metadata in DB with a TTL expiration set to 6 months from now.
+ *
+ * @param {object} songData - { songId, id, name, image, primaryArtist, duration, language }
+ */
+export async function touchSongAction(songData) {
+    if (!songData) return { success: false };
+    const songId = songData.songId || songData.id;
+    if (!songId) return { success: false };
+
+    try {
+        await connectDB();
+
+        const name = songData.name || '';
+        const image = typeof songData.image === 'string'
+            ? songData.image
+            : (songData.image?.[2]?.url || songData.image?.[0]?.url || '');
+        const primaryArtist = songData.primaryArtist || songData.artists?.primary?.[0]?.name || songData.artists?.all?.[0]?.name || '';
+        const duration = songData.duration || 0;
+        const language = songData.language || '';
+        const expireAt = new Date(Date.now() + SIX_MONTHS_MS);
+
+        await Song.findOneAndUpdate(
+            { songId },
+            {
+                $set: {
+                    songId,
+                    name,
+                    image,
+                    primaryArtist,
+                    duration,
+                    language,
+                    expireAt,
+                },
+            },
+            { upsert: true, new: true }
+        );
+
+        return { success: true };
+    } catch (error) {
+        console.error('touchSongAction error:', error);
+        return { success: false };
+    }
+}
 
 // ─── Helper ──────────────────────────────────────────────────────────────────
 
@@ -75,6 +123,8 @@ export async function persistLikeAction(songId, liked, songMeta = {}) {
                 },
                 { upsert: true }
             );
+
+            await touchSongAction({ songId, ...songMeta });
         } else {
             await Interaction.deleteOne({ userId, songId, type: 'liked' });
         }
@@ -86,6 +136,41 @@ export async function persistLikeAction(songId, liked, songMeta = {}) {
     }
 }
 
+// ─── Skipped interaction (user changed song within 10 s of play) ─────────────
+
+/**
+ * Records that the user skipped a song within 10 seconds of playback.
+ * No metadata is stored; upserted once per (user, song) so replays don't spam.
+ *
+ * @param {string} songId - JioSaavn song ID
+ * @param {object} songMeta - { name, image, primaryArtist, duration }
+ */
+export async function persistSkippedAction(songId, songMeta = {}) {
+    const userId = await getAuthenticatedUserId();
+    if (!userId || !songId) return { success: false };
+
+    try {
+        await connectDB();
+
+        await Interaction.updateOne(
+            { userId, songId, type: 'skipped' },
+            {
+                $setOnInsert: { userId, songId, type: 'skipped' },
+            },
+            { upsert: true }
+        );
+
+        if (songMeta && (songMeta.name || songMeta.image || songMeta.primaryArtist)) {
+            await touchSongAction({ songId, ...songMeta });
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error('persistSkippedAction error:', error);
+        return { success: false };
+    }
+}
+
 // ─── Completed interaction (listened to ≥90 % of a song) ──────────────────────
 
 /**
@@ -93,8 +178,9 @@ export async function persistLikeAction(songId, liked, songMeta = {}) {
  * No metadata is stored; upserted once per (user, song) so replays don't spam.
  *
  * @param {string} songId - JioSaavn song ID
+ * @param {object} songMeta - { name, image, primaryArtist, duration }
  */
-export async function persistCompletedAction(songId) {
+export async function persistCompletedAction(songId, songMeta = {}) {
     const userId = await getAuthenticatedUserId();
     if (!userId || !songId) return { success: false };
 
@@ -108,6 +194,10 @@ export async function persistCompletedAction(songId) {
             },
             { upsert: true }
         );
+
+        if (songMeta && (songMeta.name || songMeta.image || songMeta.primaryArtist)) {
+            await touchSongAction({ songId, ...songMeta });
+        }
 
         return { success: true };
     } catch (error) {

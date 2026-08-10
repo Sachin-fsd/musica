@@ -10,7 +10,6 @@ import mongoose from 'mongoose';
  *  - "replayed"   → user looped / replayed the song
  *  - "downloaded" → user tapped the download button
  *
- * Only "liked" is implemented in the UI right now; the schema is ready for the rest.
  */
 
 const InteractionSchema = new mongoose.Schema(

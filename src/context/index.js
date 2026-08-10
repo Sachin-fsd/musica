@@ -3,7 +3,7 @@ import { createContext, useRef, useState, useEffect, useCallback, useMemo } from
 import { songFormat, songs } from "@/utils/cachedSongs";
 import { fetchSuggestions, mergeUniqueSongs, shuffleArray, getQualityUrl } from "@/utils/extraFunctions";
 import { useCurrentTimeStore } from "@/store/useCurrentTimeStore";
-import { persistCompletedAction } from "@/app/actions/interactions";
+import { persistCompletedAction, persistSkippedAction } from "@/app/actions/interactions";
 import { useAuth } from "@/context/AuthContext";
 import { decode } from "he";
 
@@ -35,6 +35,7 @@ export default function UserState({ children }) {
     const handleNextRef = useRef(null);
     const prefetchInFlightRef = useRef(false);
     const completedSongIdRef = useRef(null);
+    const songStartedAtRef = useRef(0);
     const userRef = useRef(user);
 
     const { currentTime, setCurrentTime } = useCurrentTimeStore()
@@ -104,6 +105,21 @@ export default function UserState({ children }) {
     }, [songList, playSongAtIndex]); // Notice we removed 'loading' from dependencies
 
     const handleNext = useCallback(async () => {
+        const leavingSong = currentSongRef.current;
+        const timeSkipped = (Date.now() - songStartedAtRef.current) / 1000;
+
+        if (
+            userRef.current?.id &&
+            leavingSong?.id &&
+            timeSkipped >= 0 &&
+            timeSkipped <= 10 &&
+            audioRef.current?.currentTime <= 10
+        ) {
+            persistSkippedAction(leavingSong.id, makeSongMetadata(leavingSong)).catch((err) =>
+                console.error('persistSkippedAction failed:', err)
+            );
+        }
+
         const nextIndex = (currentIndex + 1) % songList.length;
         playSongAtIndex(nextIndex);
         const suggestions = await fetchSuggestions(songList[nextIndex]?.id);
@@ -274,11 +290,11 @@ export default function UserState({ children }) {
             if (userRef.current?.id && currentSongRef.current?.id) {
                 const song = currentSongRef.current;
                 const totalDur = audioElement.duration || song.duration;
-                
+
                 if (totalDur > 0 && (audioElement.currentTime / totalDur) >= 0.9) {
                     if (completedSongIdRef.current !== song.id) {
                         completedSongIdRef.current = song.id;
-                        persistCompletedAction(song.id).catch((err) =>
+                        persistCompletedAction(song.id, makeSongMetadata(song)).catch((err) =>
                             console.error('persistCompletedAction failed:', err)
                         );
                     }
@@ -295,6 +311,7 @@ export default function UserState({ children }) {
         const handlePlaying = () => {
             retryCountRef.current = 0; // successfully playing again = healthy
             clearStallTimer();
+            songStartedAtRef.current = Date.now();
         };
         const handleWaitingOrStalled = () => {
             clearStallTimer();

@@ -62,3 +62,12 @@ export const mergeUniqueSongs = (baseList, newSongs) => {
         ).values()
     ];
 };
+
+export const makeSongMetadata = (song) => {
+    return {
+        name: song.name || '',
+        image: song.image?.[0]?.url || '',
+        primaryArtist: song.artists?.primary?.[0]?.name || '',
+        duration: song.duration || 0,
+    }
+}
