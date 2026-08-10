@@ -82,20 +82,20 @@ const TopArtists = ({ artists = [] }) => {
                             <div
                                 key={artist.artistId}
                                 onClick={() => handleArtistClick(artist)}
-                                className="group flex flex-col items-center gap-3 p-3 rounded-xl hover:bg-secondary/40 transition-colors duration-300 ease-out cursor-pointer min-w-[140px] max-w-[140px]"
+                                className="group flex flex-col items-center gap-3 p-3 rounded-xl sm:hover:bg-secondary/40 transition-colors duration-300 ease-out cursor-pointer min-w-[140px] max-w-[140px]"
                             >
                                 <div className="relative aspect-square w-full rounded-full overflow-hidden shadow-md">
                                     <Image
                                         src={imageUrl}
                                         fill
                                         sizes="140px"
-                                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                        className="object-cover transition-transform duration-500 sm:group-hover:scale-105"
                                         alt={decode(artist.artist)}
                                     />
 
                                     {!isLoading && (
-                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                            <div className="bg-primary text-primary-foreground rounded-full p-3 shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out">
+                                        <div className="absolute inset-0 bg-black/40 opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                            <div className="bg-primary text-primary-foreground rounded-full p-3 shadow-lg transform translate-y-2 sm:group-hover:translate-y-0 transition-all duration-300 ease-out">
                                                 <Play className="w-6 h-6 fill-current ml-1" />
                                             </div>
                                         </div>
@@ -109,7 +109,7 @@ const TopArtists = ({ artists = [] }) => {
                                 </div>
 
                                 <div className="flex flex-col items-center text-center min-w-0 w-full">
-                                    <h4 className="text-sm font-semibold truncate w-full text-foreground group-hover:text-primary transition-colors">
+                                    <h4 className="text-sm font-semibold truncate w-full text-foreground sm:group-hover:text-primary transition-colors">
                                         {decode(artist.artist)}
                                     </h4>
                                 </div>

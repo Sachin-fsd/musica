@@ -35,7 +35,7 @@ const TasteSkeleton = () => (
             </div>
             <div className="relative max-w-full">
                 <div className="flex overflow-x-auto no-scrollbar gap-4" style={{ scrollbarWidth: 'none' }}>
-                    {Array.from({ length: 6 }).map((_, i) => (
+                    {Array.from({ length: 8 }).map((_, i) => (
                         <ArtistSkeletonCard key={i} />
                     ))}
                 </div>
