@@ -1,40 +1,18 @@
 'use client';
 
-import { useContext, useEffect, useState, useRef } from 'react';
+import { useContext, useState, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Play, Loader2 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { UserContext } from '@/context';
-import { useAuth } from '@/context/AuthContext';
-import { getUserTasteProfileAction } from '@/app/actions/tasteProfile';
 import { fetchArtistSongsAction } from '@/app/actions';
 import { toast } from 'sonner';
 import { decode } from 'he';
 import Image from 'next/image';
 
-const TopArtists = () => {
-    const { user } = useAuth();
+const TopArtists = ({ artists = [] }) => {
     const { setSongList, setCurrentSong, setPlaying } = useContext(UserContext);
-    const [topArtists, setTopArtists] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [loadingArtistId, setLoadingArtistId] = useState(null);
     const scrollRef = useRef(null);
-
-    useEffect(() => {
-        if (!user) {
-            setTopArtists([]);
-            setLoading(false);
-            return;
-        }
-
-        getUserTasteProfileAction()
-            .then((res) => {
-                if (res.success && res.topArtists?.length > 0) {
-                    setTopArtists(res.topArtists);
-                }
-            })
-            .catch((err) => console.error('Failed to fetch taste profile:', err))
-            .finally(() => setLoading(false));
-    }, [user]);
 
     const handleArtistClick = async (artist) => {
         if (!artist.artistId || loadingArtistId === artist.artistId) return;
@@ -68,8 +46,7 @@ const TopArtists = () => {
         }
     };
 
-    if (!user || loading) return null;
-    if (!topArtists.length) return null;
+    if (!artists.length) return null;
 
     return (
         <div className="flex flex-col gap-4 mt-4">
@@ -97,7 +74,7 @@ const TopArtists = () => {
                     className="flex overflow-x-auto no-scrollbar gap-4"
                     style={{ scrollbarWidth: 'none' }}
                 >
-                    {topArtists.map((artist) => {
+                    {artists.map((artist) => {
                         const isLoading = loadingArtistId === artist.artistId;
                         const imageUrl = artist.image || '/fallback/artist-music.png';
 

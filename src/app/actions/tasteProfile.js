@@ -16,87 +16,122 @@ const WEIGHTS = {
     skipped: -2,
 };
 
-// ─── Compute taste profile for a single user ─────────────────────────────────
+// ─── Pure aggregation helpers (no DB calls, easy to unit test) ───────────────
 
-/**
- * Aggregates all interactions + song metadata for the given user and persists
- * the top-artist taste profile.  Called by the daily cron API route.
- *
- * @param  {string} userId - MongoDB ObjectId of the user
- * @returns {Promise<{ topArtists: Array } | null>}
- */
-export async function computeTasteProfile(userId) {
-    await connectDB();
-
-    const interactions = await Interaction.find({ userId }).lean();
-    if (interactions.length < 5) return null;
-    // Fetch all songs the user has interacted with
-    const songIds = [...new Set(interactions.map((i) => i.songId))];
-    const songs = await Song.find({ songId: { $in: songIds } }).lean();
-    const songMap = Object.fromEntries(songs.map((s) => [s.songId, s]));
-
-    // Accumulate score per artist (identified by artistId).
-    // Also track the best thumbnailUrl seen so far for each artist.
-    const artistMap = {}; // artistId -> { artist, image, score }
+function buildTopArtists(interactions, songMap) {
+    const artistMap = {}; // artistId -> { artistId, artist, image, score }
 
     for (const i of interactions) {
         const song = songMap[i.songId];
         if (!song?.primaryArtists?.length) continue;
 
         const weight = WEIGHTS[i.type] || 0;
-
         for (const pa of song.primaryArtists) {
             if (!pa.artistId || !pa.name) continue;
-
             if (!artistMap[pa.artistId]) {
                 artistMap[pa.artistId] = { artistId: pa.artistId, artist: pa.name, image: pa.thumbnailUrl, score: 0 };
             }
-
             artistMap[pa.artistId].score += weight;
         }
     }
-    console.log(artistMap);
-    const topArtists = Object.values(artistMap)
+
+    return Object.values(artistMap)
         .filter((a) => a.score > 0 && a.image)
         .sort((a, b) => b.score - a.score)
         .slice(0, 10);
+}
 
-    if (!topArtists.length) return null;
+function buildTopSongs(interactions, songMap) {
+    const songScoreMap = {}; // songId -> { songId, name, image, artist, score }
+
+    for (const i of interactions) {
+        const song = songMap[i.songId];
+        if (!song) continue;
+
+        const weight = WEIGHTS[i.type] || 0;
+        if (!songScoreMap[i.songId]) {
+            songScoreMap[i.songId] = {
+                songId: i.songId,
+                name: song.name,
+                image: song.image,
+                artist: song.primaryArtists?.[0]?.name || '',
+                duration: song.duration || 0,
+                score: 0,
+            };
+        }
+        songScoreMap[i.songId].score += weight;
+    }
+
+    return Object.values(songScoreMap)
+        .filter((s) => s.score > 0 && s.image)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 20);
+}
+
+// ─── Orchestrator: fetch once, delegate to pure helpers, persist ─────────────
+
+/**
+ * Aggregates all interactions + song metadata for the given user and persists
+ * both their top-artist and top-song taste profiles.  Called by the daily cron.
+ *
+ * @param  {string} userId - MongoDB ObjectId of the user
+ * @returns {Promise<{ topArtists: Array, topSongs: Array } | null>}
+ */
+export async function computeTasteProfile(userId) {
+    await connectDB();
+
+    const interactions = await Interaction.find({ userId }).lean();
+    if (interactions.length < 5) return null;
+
+    const songIds = [...new Set(interactions.map((i) => i.songId))];
+    const songs = await Song.find({ songId: { $in: songIds } }).lean();
+    const songMap = Object.fromEntries(songs.map((s) => [s.songId, s]));
+
+    const topArtists = buildTopArtists(interactions, songMap);
+    const topSongs = buildTopSongs(interactions, songMap);
+
+    if (!topArtists.length && !topSongs.length) return null;
 
     await TasteProfile.findOneAndUpdate(
         { userId },
-        { $set: { topArtists, computedAt: new Date() } },
+        { $set: { topArtists, topSongs, computedAt: new Date() } },
         { upsert: true }
     );
 
-    return { topArtists };
+    return { topArtists, topSongs };
 }
 
 // ─── Server action: fetch the logged-in user's taste profile ──────────────────
 
 /**
  * Returns the current user's cached taste profile from the DB.
- * If the profile doesn't exist or has no topArtists, returns an empty array.
+ * If the profile doesn't exist, returns empty arrays.
  *
- * @returns {{ success: boolean, topArtists: Array }}
+ * @returns {{ success: boolean, topArtists: Array, topSongs: Array }}
  */
 export async function getUserTasteProfileAction() {
     const token = await getAuthToken();
-    if (!token) return { success: false, topArtists: [] };
+    if (!token) return { success: false, topArtists: [], topSongs: [] };
 
     try {
         const decoded = await verifyAuthToken(token);
-        if (!decoded?.id) return { success: false, topArtists: [] };
+        if (!decoded?.id) return { success: false, topArtists: [], topSongs: [] };
 
         await connectDB();
 
         const profile = await TasteProfile.findOne({ userId: decoded.id }).lean();
-        if (!profile?.topArtists?.length) return { success: true, topArtists: [] };
+        if (!profile?.topArtists?.length && !profile?.topSongs?.length) {
+            return { success: true, topArtists: [], topSongs: [] };
+        }
 
-        return { success: true, topArtists: profile.topArtists };
+        return {
+            success: true,
+            topArtists: profile.topArtists || [],
+            topSongs: profile.topSongs || [],
+        };
     } catch (error) {
         console.error('getUserTasteProfileAction error:', error);
-        return { success: false, topArtists: [] };
+        return { success: false, topArtists: [], topSongs: [] };
     }
 }
 

@@ -26,6 +26,7 @@ const TopSongSchema = new mongoose.Schema(
         name: String,
         image: String,
         primaryArtist: String,
+        duration: Number,
         score: Number,
     },
     { _id: false }

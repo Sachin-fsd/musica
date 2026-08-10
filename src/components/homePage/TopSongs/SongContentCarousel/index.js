@@ -12,30 +12,34 @@ const SongContentCarousel = () => {
     const { songList } = useContext(UserContext);
     const softAlbumsRef = useRef(null);
 
-    // Memoize the song list rendering to avoid unnecessary re-calculations during render
+    const hasRealSongs = songList?.length > 0 && songList[0]?.id;
+
     const renderedSongs = useMemo(() => {
-        return songList?.length > 0 && typeof songList == 'object' ? (
-            songList?.map((song, index) => (
-                <div
-                    key={index}
-                    className='x-scroll mr-1 sm:hover:bg-white dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-52 max-w-52 hover:shadow-md transition'
-                >
-                    {song?.image &&
-                        <TouchableOpacity>
-                            <SongBarCarousel song={song} index={index} />
-                        </TouchableOpacity>
-                    }
+        if (!hasRealSongs) {
+            return (
+                <div className='flex gap-4 overflow-x-auto no-scrollbar scroll-smooth' style={{scrollbarWidth:'none'}}>
+                    {Array.from({ length: 5 }).map((_, i) => (
+                        <div key={i} className='flex-none min-w-52 max-w-52 flex flex-col gap-2'>
+                            <Skeleton className="aspect-square w-full rounded-lg" />
+                            <Skeleton className="h-4 w-3/4" />
+                            <Skeleton className="h-3 w-1/2" />
+                        </div>
+                    ))}
                 </div>
-            ))
-        ) : (
-            <div className='flex gap-1 overflow-x-auto scroll-smooth hide-scrollbar'>
-                <Skeleton className="h-32 w-32 rounded" />
-                <Skeleton className="h-32 w-32 rounded" />
-                <Skeleton className="h-32 w-32 rounded" />
-                <Skeleton className="h-32 w-32 rounded" />
+            );
+        }
+
+        return songList.map((song, index) => (
+            <div
+                key={index}
+                className='x-scroll mr-1 sm:hover:bg-white dark:sm:hover:bg-gray-800 rounded-lg shadow-sm min-w-52 max-w-52 hover:shadow-md transition'
+            >
+                <TouchableOpacity>
+                    <SongBarCarousel song={song} index={index} />
+                </TouchableOpacity>
             </div>
-        );
-    }, [songList]);
+        ));
+    }, [songList, hasRealSongs]);
 
     const scroll = (ref, direction) => {
         if (ref.current) {
