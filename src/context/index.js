@@ -1,9 +1,9 @@
 'use client';
 import { createContext, useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { songFormat, songs } from "@/utils/cachedSongs";
-import { fetchSuggestions, mergeUniqueSongs, shuffleArray, getQualityUrl } from "@/utils/extraFunctions";
+import { fetchSuggestions, mergeUniqueSongs, shuffleArray, getQualityUrl, makeSongMetadata } from "@/utils/extraFunctions";
 import { useCurrentTimeStore } from "@/store/useCurrentTimeStore";
-import { persistCompletedAction, persistSkippedAction } from "@/app/actions/interactions";
+import { persistCompletedAction, persistReplayedAction, persistSkippedAction } from "@/app/actions/interactions";
 import { useAuth } from "@/context/AuthContext";
 import { decode } from "he";
 
@@ -37,18 +37,32 @@ export default function UserState({ children }) {
     const completedSongIdRef = useRef(null);
     const songStartedAtRef = useRef(0);
     const userRef = useRef(user);
+    const playedSongIdsRef = useRef(new Set());
 
     const { currentTime, setCurrentTime } = useCurrentTimeStore()
 
     // --- Core Playback Logic ---
 
+    // Tracks songs the user has played in this session. Playing one again counts
+    // as a "replayed" interaction and is persisted once per (user, song).
+    const recordReplay = useCallback((song) => {
+        if (!userRef.current?.id || !song?.id) return;
+
+        if (playedSongIdsRef.current.has(song.id)) {
+            persistReplayedAction(song.id, makeSongMetadata(song)).catch((err) =>
+                console.error('persistReplayedAction failed:', err)
+            );
+        }
+    }, []);
+
     const playSongAtIndex = useCallback((index) => {
         if (index >= 0 && index < songList.length) {
+            recordReplay(songList[index]);
             setCurrentIndex(index);
             setCurrentSong(songList[index]);
             setPlaying(true);
         }
-    }, [songList]);
+    }, [songList, recordReplay]);
 
     const latestSongRequestRef = useRef(null);
 
@@ -66,6 +80,7 @@ export default function UserState({ children }) {
             if (existingSongIndex !== -1) {
                 playSongAtIndex(existingSongIndex);
             } else {
+                recordReplay(song);
                 setCurrentIndex(0);
                 setCurrentSong(song);
                 setPlaying(true);
@@ -102,7 +117,7 @@ export default function UserState({ children }) {
                 setLoading(false);
             }
         }
-    }, [songList, playSongAtIndex]); // Notice we removed 'loading' from dependencies
+    }, [songList, playSongAtIndex, recordReplay]); // Notice we removed 'loading' from dependencies
 
     const handleNext = useCallback(async () => {
         const leavingSong = currentSongRef.current;
@@ -294,6 +309,7 @@ export default function UserState({ children }) {
                 if (totalDur > 0 && (audioElement.currentTime / totalDur) >= 0.9) {
                     if (completedSongIdRef.current !== song.id) {
                         completedSongIdRef.current = song.id;
+                        playedSongIdsRef.current.add(song.id);
                         persistCompletedAction(song.id, makeSongMetadata(song)).catch((err) =>
                             console.error('persistCompletedAction failed:', err)
                         );

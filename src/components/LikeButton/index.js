@@ -12,7 +12,7 @@ export default function LikeButton({ song, size = 'md', className = '' }) {
 
     const handleClick = (e) => {
         e.stopPropagation();
-        e.preventDefault(); 
+        e.preventDefault();
 
         if (!user) {
             toast.error('Sign in to like songs');
@@ -20,7 +20,7 @@ export default function LikeButton({ song, size = 'md', className = '' }) {
         }
         if (!song?.id) return;
 
-        toggleLike(song); 
+        toggleLike(song);
     };
 
     // Clean, standard icon sizes
@@ -48,7 +48,7 @@ export default function LikeButton({ song, size = 'md', className = '' }) {
                     group-active:scale-75
                     ${liked
                         ? 'fill-pink-500 text-pink-500 scale-110 drop-shadow-sm'
-                        : 'text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300 group-hover:scale-110'
+                        : 'text-gray-400 dark:text-white group-hover:text-gray-600 dark:group-hover:text-gray-300 group-hover:scale-110'
                     }
                 `}
             />

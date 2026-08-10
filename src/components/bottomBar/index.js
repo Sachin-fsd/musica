@@ -136,12 +136,12 @@ const Bottombar = () => {
               {/* Controls */}
               <div className="flex items-center space-x-4">
                 {/* Like Button */}
-                <LikeButton song={currentSong} size="sm" />
+                <LikeButton song={currentSong} size="md" />
 
                 <Button
                   variant="simple"
                   className="p-2 bg-pink-500 rounded-full text-white shadow-md hover:bg-pink-600"
-                  onClick={(e) => {e.stopPropagation(); togglePlayPause()}}
+                  onClick={(e) => { e.stopPropagation(); togglePlayPause() }}
                   aria-label={playing ? "Pause" : "Play"}
                 >
                   {playing ? (
@@ -154,7 +154,7 @@ const Bottombar = () => {
                 <Button
                   variant="simple"
                   className="p-2 bg-gray-700 rounded-full text-white shadow-md hover:bg-gray-800"
-                  onClick={(e) => {e.stopPropagation(); handleNext()}}
+                  onClick={(e) => { e.stopPropagation(); handleNext() }}
                   aria-label="Next song"
                 >
                   <StepForward className="w-6 h-6" />

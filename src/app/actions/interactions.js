@@ -171,6 +171,41 @@ export async function persistSkippedAction(songId, songMeta = {}) {
     }
 }
 
+// ─── Replayed interaction (user played an already-listened song again) ─────────
+
+/**
+ * Records that the user played a song again that they had already listened to.
+ * No metadata is stored; upserted once per (user, song) so replays don't spam.
+ *
+ * @param {string} songId - JioSaavn song ID
+ * @param {object} songMeta - { name, image, primaryArtist, duration }
+ */
+export async function persistReplayedAction(songId, songMeta = {}) {
+    const userId = await getAuthenticatedUserId();
+    if (!userId || !songId) return { success: false };
+
+    try {
+        await connectDB();
+
+        await Interaction.updateOne(
+            { userId, songId, type: 'replayed' },
+            {
+                $setOnInsert: { userId, songId, type: 'replayed' },
+            },
+            { upsert: true }
+        );
+
+        if (songMeta && (songMeta.name || songMeta.image || songMeta.primaryArtist)) {
+            await touchSongAction({ songId, ...songMeta });
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error('persistReplayedAction error:', error);
+        return { success: false };
+    }
+}
+
 // ─── Completed interaction (listened to ≥90 % of a song) ──────────────────────
 
 /**
