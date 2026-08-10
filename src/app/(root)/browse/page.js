@@ -14,7 +14,9 @@ const HomePage = () => {
         <Greeting />
       </div>
 
-      <ModernSearchResult />
+      <Suspense fallback={<Spinner className="w-auto text-center" />}>
+        <ModernSearchResult />
+      </Suspense>
 
       <MusicSections />
 
