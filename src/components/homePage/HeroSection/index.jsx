@@ -103,8 +103,8 @@ const HeroSection = () => {
             exit={{ opacity: 0, y: -5 }}
             transition={{ duration: 0.35, ease: 'easeOut' }}
           >
-            <h1 className="font-bold tracking-tight leading-[3.05]">
-              <span className="block text-[50px] md:text-[36px] text-white">
+            <h1 className="font-bold tracking-tight leading-[1.05] pt-8">
+              <span className="block text-[40px] md:text-[50px] text-white">
                 {greetingText}
               </span>
 
