@@ -104,7 +104,10 @@ const TopArtists = ({ artists = [] }) => {
                                 onClick={() => handleArtistClick(artist)}
                                 className="group flex flex-col items-center cursor-pointer flex-shrink-0 w-[105px]"
                             >
-                                <div className="relative w-[96px] h-[96px] md:w-[104px] md:h-[104px] rounded-full p-[2px] bg-gradient-to-br from-fuchsia-500 via-purple-500 to-fuchsia-700 transition-all duration-300 sm:group-hover:scale-[1.04] sm:group-hover:shadow-[0_0_20px_rgba(192,38,211,0.25)]">
+                                <div
+                                    className="relative w-[96px] h-[96px] md:w-[104px] md:h-[104px] rounded-full p-[2px] bg-gradient-to-br from-[color:var(--song-theme-light)] via-[color:var(--song-theme)] to-[color:var(--song-theme-dark)] transition-all duration-700 sm:group-hover:scale-[1.04] sm:group-hover:shadow-[0_0_20px_var(--song-theme-soft)]"
+                                    style={{ transition: 'background 0.8s ease, box-shadow 0.8s ease, transform 0.3s ease' }}
+                                >
                                     <div className="relative w-full h-full rounded-full overflow-hidden bg-[#080611]">
                                         <Image
                                             src={imageUrl}
@@ -116,7 +119,7 @@ const TopArtists = ({ artists = [] }) => {
 
                                         {isLoading && (
                                             <div className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-[2px]">
-                                                <Loader2 className="w-7 h-7 text-fuchsia-400 animate-spin" />
+                                                <Loader2 className="w-7 h-7 text-[color:var(--song-theme-strong)] animate-spin transition-colors duration-700" />
                                             </div>
                                         )}
                                     </div>
@@ -127,7 +130,7 @@ const TopArtists = ({ artists = [] }) => {
                                                 e.stopPropagation();
                                                 handleArtistClick(artist);
                                             }}
-                                            className="absolute right-0 bottom-0 w-[27px] h-[27px] rounded-full flex items-center justify-center bg-[#151020] border border-white/10 text-white shadow-lg shadow-black/40 transition-all duration-300 sm:group-hover:bg-fuchsia-600 sm:group-hover:border-fuchsia-400/50 sm:group-hover:scale-110"
+                                            className="absolute right-0 bottom-0 w-[27px] h-[27px] rounded-full flex items-center justify-center bg-[#151020] border border-white/10 text-white shadow-lg shadow-black/40 transition-all duration-700 sm:group-hover:bg-[color:var(--song-theme)] sm:group-hover:border-[color:var(--song-theme-strong)] sm:group-hover:scale-110"
                                             aria-label={`Play ${artistName}`}
                                         >
                                             <Play className="w-[12px] h-[12px] fill-current ml-[1px]" />

@@ -14,8 +14,8 @@ const Progress = React.forwardRef(({ className, value, max = 100, ...props }, re
             className={cn("relative h-1 w-full overflow-hidden rounded-full bg-secondary", className)}
             {...props}>
             <ProgressPrimitive.Indicator
-                className="h-full bg-fuchsia-600 transition-all"
-                style={{ width: `${progressPercent}%` }} />
+                className="h-full transition-all"
+                style={{ width: `${progressPercent}%`, background: 'var(--song-theme, #d946ef)', transition: 'width 0.1s ease, background 0.8s ease' }} />
         </ProgressPrimitive.Root>
     );
 });

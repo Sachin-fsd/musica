@@ -2,6 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Dynamic song theme color — updated at runtime from the playing track's
+   artwork. Registered properties allow smooth CSS variable transitions across the entire app. */
+@property --song-theme {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #d946ef;
+}
+@property --song-theme-strong {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(217, 70, 239, 0.85);
+}
+@property --song-theme-mid {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(217, 70, 239, 0.5);
+}
+@property --song-theme-soft {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(217, 70, 239, 0.3);
+}
+@property --song-theme-faint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(217, 70, 239, 0.12);
+}
+@property --song-theme-light {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ee8bfa;
+}
+@property --song-theme-dark {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #6b1a78;
+}
+
+:root {
+  --song-theme: #d946ef;
+  --song-theme-strong: rgba(217, 70, 239, 0.85);
+  --song-theme-mid: rgba(217, 70, 239, 0.5);
+  --song-theme-soft: rgba(217, 70, 239, 0.3);
+  --song-theme-faint: rgba(217, 70, 239, 0.12);
+  --song-theme-light: #ee8bfa;
+  --song-theme-dark: #6b1a78;
+  transition: --song-theme 0.8s ease,
+              --song-theme-strong 0.8s ease,
+              --song-theme-mid 0.8s ease,
+              --song-theme-soft 0.8s ease,
+              --song-theme-faint 0.8s ease,
+              --song-theme-light 0.8s ease,
+              --song-theme-dark 0.8s ease;
+}
+
+.theme-transition {
+  transition: background-color 0.8s ease,
+              border-color 0.8s ease,
+              color 0.8s ease,
+              box-shadow 0.8s ease,
+              background 0.8s ease,
+              fill 0.8s ease,
+              stroke 0.8s ease;
+}
+
 @layer base {
   :root {
     --background: 40 7% 86%;

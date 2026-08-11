@@ -7,20 +7,22 @@ import BottomNavBar from "@/components/bottomNavBar/BottomNavBar";
 import { Suspense } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { AuthProvider } from "@/context/AuthContext";
+import ThemeColorWatcher from "@/components/ThemeColorWatcher";
 
 export default function RootLayout({ children }) {
   return (
     <AuthProvider>
       <UserState>
-        <div className="grid h-all w-screen grid-rows-[auto,1fr] overflow-hidden">
+        <ThemeColorWatcher />
+        <div className="grid h-screen w-screen grid-rows-[auto,1fr] overflow-hidden bg-[#080611]">
 
           {/* Navbar spans full width */}
-          <div className="col-span-full">
+          <div className="col-span-full z-20">
             <Navbar />
           </div>
 
           {/* Content area with sidebars */}
-          <div className="grid grid-cols-[auto,1fr] md:grid-cols-[auto,1fr] lg:grid-cols-[auto,1fr,auto] overflow-hidden">
+          <div className="grid grid-cols-[auto,1fr] md:grid-cols-[auto,1fr] lg:grid-cols-[auto,1fr,auto] overflow-hidden relative">
 
             {/* LeftSidebar - starts below navbar */}
             <div className="hidden md:block max-w-28 overflow-y-auto">
@@ -28,25 +30,26 @@ export default function RootLayout({ children }) {
             </div>
 
             {/* Main content area */}
-            <div className="overflow-y-auto overflow-x-hidden col-span-2 md:col-span-1">
+            <div className="overflow-y-auto overflow-x-hidden col-span-2 md:col-span-1 pb-36 md:pb-28">
               {children}
             </div>
 
-            {/* RightSidebar - starts below navbar */}
+            {/* RightSidebar - optional */}
             {/* <div className="hidden lg:block w-80 overflow-y-auto">
               <RightSidebar />
             </div> */}
           </div>
 
-          {/* Bottom Player for small and medium screens */}
-          <Suspense fallback={<div><Spinner /></div>}>
+          {/* Floating Player Component */}
+          <Suspense fallback={<div className="fixed bottom-4 left-1/2 -translate-x-1/2"><Spinner /></div>}>
             <Bottombar />
           </Suspense>
-          <div className="md:fixed z-10 md:bottom-0 w-full lg:hidden">
-            <div className="md:hidden">
-              <BottomNavBar />
-            </div>
+
+          {/* Fixed Mobile Bottom Navigation Bar */}
+          <div className="fixed bottom-2 left-0 right-0 z-50 px-2 md:hidden">
+            <BottomNavBar />
           </div>
+
         </div>
       </UserState>
     </AuthProvider>

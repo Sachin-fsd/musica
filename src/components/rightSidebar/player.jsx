@@ -19,8 +19,7 @@ const Player = () => {
         currentSong,
         playing,
         isLooping,
-        setIsLooping,
-        audioRef,
+        toggleLoop,
         handlePrev,
         handleNext,
         togglePlayPause
@@ -49,9 +48,9 @@ const Player = () => {
         }
     };
 
+    // Loop toggle - uses context's toggleLoop which handles both state and audio element
     const loopSong = () => {
-        audioRef.current.loop = !audioRef.current.loop;
-        setIsLooping(!isLooping);
+        toggleLoop();
     };
 
     return (

@@ -21,6 +21,7 @@ export default function UserState({ children }) {
     // const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [isLooping, setIsLooping] = useState(false);
+    const [isShuffled, setIsShuffled] = useState(false);
     const [manualQuality, setManualQuality] = useState("very_high");
     const [loading, setLoading] = useState(false);
     // const [searchResults, setSearchResults] = useState([]);
@@ -74,6 +75,11 @@ export default function UserState({ children }) {
             // 2. Track the latest song clicked
             latestSongRequestRef.current = song.id;
 
+            // Reset shuffle state when playing a new song (new queue will be created)
+            if (isShuffled) {
+                setIsShuffled(false);
+            }
+
             const existingSongIndex = songList.findIndex(s => s.id === song.id);
 
             // 3. Play the song IMMEDIATELY for instant UI feedback
@@ -117,7 +123,7 @@ export default function UserState({ children }) {
                 setLoading(false);
             }
         }
-    }, [songList, playSongAtIndex, recordReplay]); // Notice we removed 'loading' from dependencies
+    }, [songList, playSongAtIndex, recordReplay, isShuffled]);
 
     const handleNext = useCallback(async () => {
         const leavingSong = currentSongRef.current;
@@ -151,6 +157,22 @@ export default function UserState({ children }) {
     const togglePlayPause = useCallback(() => {
         setPlaying(prevPlaying => !prevPlaying);
     }, []);
+
+    // --- Loop / Shuffle Logic ---
+
+    const toggleLoop = useCallback(() => {
+        setIsLooping(prev => !prev);
+    }, []);
+
+    const toggleShuffle = useCallback(() => {
+        setIsShuffled(true);
+        const current = currentSong;
+        const otherSongs = songList.filter(s => s.id !== current.id);
+        const shuffledOthers = shuffleArray([...otherSongs]);
+        const newList = current?.id ? [current, ...shuffledOthers] : shuffleArray([...songList]);
+        setSongList(newList);
+        setCurrentIndex(0);
+    }, [songList, currentSong]);
 
     const handleSeek = useCallback((e) => {
         const seekTime = e;
@@ -427,15 +449,18 @@ export default function UserState({ children }) {
     // --- Context Value with useMemo to prevent unnecessary re-renders ---
     const value = useMemo(() => ({
         currentSong, setCurrentSong, playing, setPlaying, currentTime, setCurrentTime,
-        duration, setDuration, isLooping, setIsLooping, audioRef, handleSeek,
+        duration, setDuration, isLooping, setIsLooping, isShuffled, setIsShuffled,
+        audioRef, handleSeek,
         currentIndex, setCurrentIndex, songList, setSongList, loading, setLoading,
         handleNext, handlePrev, manualQuality, setManualQuality, togglePlayPause,
+        toggleLoop, toggleShuffle,
         isJamChecked, setIsJamChecked,
         playSongAndCreateQueue, playSongAtIndex, currentId, setCurrentId
     }), [
-        currentSong, playing, currentTime, duration, isLooping, audioRef, handleSeek,
+        currentSong, playing, currentTime, duration, isLooping, isShuffled, audioRef, handleSeek,
         currentIndex, songList, loading, handleNext, handlePrev, manualQuality,
-        isJamChecked, playSongAndCreateQueue, playSongAtIndex, currentId
+        isJamChecked, togglePlayPause, toggleLoop, toggleShuffle,
+        playSongAndCreateQueue, playSongAtIndex, currentId
     ]);
 
     return (
