@@ -9,6 +9,8 @@ import {
   Shuffle,
   Repeat,
   Volume2,
+  Volume1,
+  VolumeX,
   ListMusic,
   ChevronDown
 } from "lucide-react";
@@ -46,7 +48,6 @@ const Bottombar = () => {
   const isBarOpen = searchParams.get("bar") === "true";
   const [isSheetOpen, setIsSheetOpen] = useState(isBarOpen);
   const [imageError, setImageError] = useState(false);
-  const [volume, setVolume] = useState([70]);
 
   const {
     togglePlayPause,
@@ -61,6 +62,10 @@ const Bottombar = () => {
     isShuffled,
     toggleLoop,
     toggleShuffle,
+    volume,
+    setVolume,
+    isMuted,
+    toggleMute,
   } = useContext(UserContext);
 
   useEffect(() => {
@@ -248,11 +253,23 @@ const Bottombar = () => {
           <div className="flex items-center justify-end w-auto sm:w-56 md:w-64 flex-shrink-0">
             <div className="hidden lg:flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <Volume2 className="w-4 h-4 text-white/50" />
+                <button
+                  onClick={toggleMute}
+                  className="p-1 text-white/50 hover:text-white transition-colors rounded"
+                  aria-label={isMuted ? "Unmute" : "Mute"}
+                >
+                  {isMuted || volume === 0 ? (
+                    <VolumeX className="w-4 h-4 text-white/40" />
+                  ) : volume < 0.5 ? (
+                    <Volume1 className="w-4 h-4 text-white/70" />
+                  ) : (
+                    <Volume2 className="w-4 h-4 text-white/70" />
+                  )}
+                </button>
                 <div className="w-20">
                   <Slider
-                    value={volume}
-                    onValueChange={setVolume}
+                    value={[isMuted ? 0 : Math.round(volume * 100)]}
+                    onValueChange={(val) => setVolume(val[0] / 100)}
                     max={100}
                     className="w-full cursor-pointer"
                   />

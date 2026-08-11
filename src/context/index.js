@@ -22,6 +22,8 @@ export default function UserState({ children }) {
     const [duration, setDuration] = useState(0);
     const [isLooping, setIsLooping] = useState(false);
     const [isShuffled, setIsShuffled] = useState(false);
+    const [volume, setVolumeState] = useState(0.7);
+    const [isMuted, setIsMuted] = useState(false);
     const [manualQuality, setManualQuality] = useState("very_high");
     const [loading, setLoading] = useState(false);
     // const [searchResults, setSearchResults] = useState([]);
@@ -174,6 +176,44 @@ export default function UserState({ children }) {
         setCurrentIndex(0);
     }, [songList, currentSong]);
 
+    // --- Volume Logic ---
+
+    const setVolume = useCallback((val) => {
+        const normalized = val > 1 ? val / 100 : Math.max(0, Math.min(1, val));
+        setVolumeState(normalized);
+        if (normalized > 0) {
+            setIsMuted(false);
+        }
+        if (audioRef.current) {
+            audioRef.current.volume = normalized;
+            if (normalized > 0) audioRef.current.muted = false;
+        }
+        try {
+            localStorage.setItem("musica_volume", normalized.toString());
+        } catch (err) {
+            console.error("Failed to store volume", err);
+        }
+    }, []);
+
+    const toggleMute = useCallback(() => {
+        setIsMuted((prevMuted) => {
+            const nextMuted = !prevMuted;
+            if (audioRef.current) {
+                audioRef.current.muted = nextMuted;
+            }
+            if (!nextMuted && volume === 0) {
+                setVolumeState(0.7);
+                if (audioRef.current) audioRef.current.volume = 0.7;
+            }
+            try {
+                localStorage.setItem("musica_muted", JSON.stringify(nextMuted));
+            } catch (err) {
+                console.error("Failed to store mute state", err);
+            }
+            return nextMuted;
+        });
+    }, [volume]);
+
     const handleSeek = useCallback((e) => {
         const seekTime = e;
         if (audioRef.current) {
@@ -197,6 +237,15 @@ export default function UserState({ children }) {
             const initialIndex = initialSongs.findIndex(s => s.id === initialCurrentSong.id);
             setCurrentIndex(Math.max(0, initialIndex));
 
+            const storedVol = localStorage.getItem("musica_volume");
+            if (storedVol !== null) {
+                const parsedVol = parseFloat(storedVol);
+                if (!isNaN(parsedVol)) setVolumeState(Math.max(0, Math.min(1, parsedVol)));
+            }
+            const storedMute = localStorage.getItem("musica_muted");
+            if (storedMute !== null) {
+                setIsMuted(JSON.parse(storedMute));
+            }
         } catch (error) {
             console.error("Error initializing state from localStorage", error);
             setSongList(songs);
@@ -213,6 +262,14 @@ export default function UserState({ children }) {
             localStorage.setItem("songList", JSON.stringify(songList));
         }
     }, [currentSong, songList]);
+
+    // Effect: Keep audio element volume and muted properties in sync
+    useEffect(() => {
+        const audioElement = audioRef.current;
+        if (!audioElement) return;
+        audioElement.volume = volume;
+        audioElement.muted = isMuted;
+    }, [volume, isMuted]);
 
     // Effect 3: Main audio element and Media Session handler
     useEffect(() => {
@@ -450,6 +507,7 @@ export default function UserState({ children }) {
     const value = useMemo(() => ({
         currentSong, setCurrentSong, playing, setPlaying, currentTime, setCurrentTime,
         duration, setDuration, isLooping, setIsLooping, isShuffled, setIsShuffled,
+        volume, setVolume, isMuted, setIsMuted, toggleMute,
         audioRef, handleSeek,
         currentIndex, setCurrentIndex, songList, setSongList, loading, setLoading,
         handleNext, handlePrev, manualQuality, setManualQuality, togglePlayPause,
@@ -457,9 +515,9 @@ export default function UserState({ children }) {
         isJamChecked, setIsJamChecked,
         playSongAndCreateQueue, playSongAtIndex, currentId, setCurrentId
     }), [
-        currentSong, playing, currentTime, duration, isLooping, isShuffled, audioRef, handleSeek,
+        currentSong, playing, currentTime, duration, isLooping, isShuffled, volume, isMuted, audioRef, handleSeek,
         currentIndex, songList, loading, handleNext, handlePrev, manualQuality,
-        isJamChecked, togglePlayPause, toggleLoop, toggleShuffle,
+        isJamChecked, togglePlayPause, toggleLoop, toggleShuffle, setVolume, toggleMute,
         playSongAndCreateQueue, playSongAtIndex, currentId
     ]);
 
