@@ -5,14 +5,13 @@ import { Spinner } from '@/components/ui/spinner';
 import { Suspense } from 'react';
 import Greeting from '@/components/homePage/Greeting';
 import MusicSections from '@/components/homePage/MusicSections';
+import HeroSection from '@/components/homePage/HeroSection';
 
 const HomePage = () => {
 
   return (
     <div className=" p-4 md:p-5 mb-20 md:mb-0">
-      <div className="px-4 max-w-3xl mx-auto pt-2 pb-6">
-        <Greeting />
-      </div>
+      <HeroSection />
 
       <Suspense fallback={<Spinner className="w-auto text-center" />}>
         <ModernSearchResult />

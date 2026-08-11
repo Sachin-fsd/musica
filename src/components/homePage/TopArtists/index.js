@@ -1,7 +1,12 @@
 'use client';
 
 import { useContext, useState, useRef } from 'react';
-import { ChevronLeft, ChevronRight, Play, Loader2 } from 'lucide-react';
+import {
+    ChevronLeft,
+    ChevronRight,
+    Play,
+    Loader2,
+} from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { UserContext } from '@/context';
 import { fetchArtistSongsAction } from '@/app/actions';
@@ -10,15 +15,23 @@ import { decode } from 'he';
 import Image from 'next/image';
 
 const TopArtists = ({ artists = [] }) => {
-    const { setSongList, setCurrentSong, setPlaying } = useContext(UserContext);
+    const {
+        setSongList,
+        setCurrentSong,
+        setPlaying,
+    } = useContext(UserContext);
+
     const [loadingArtistId, setLoadingArtistId] = useState(null);
     const scrollRef = useRef(null);
 
     const handleArtistClick = async (artist) => {
-        if (!artist.artistId || loadingArtistId === artist.artistId) return;
+        if (!artist.artistId || loadingArtistId === artist.artistId) {
+            return;
+        }
 
         try {
             setLoadingArtistId(artist.artistId);
+
             const response = await fetchArtistSongsAction(artist.artistId);
 
             if (response?.success && response.data?.songs?.length >= 1) {
@@ -38,79 +51,93 @@ const TopArtists = ({ artists = [] }) => {
     };
 
     const scroll = (direction) => {
-        if (scrollRef.current) {
-            scrollRef.current.scrollBy({
-                left: direction === 'left' ? -200 : 200,
-                behavior: 'smooth',
-            });
-        }
+        if (!scrollRef.current) return;
+
+        scrollRef.current.scrollBy({
+            left: direction === 'left' ? -220 : 220,
+            behavior: 'smooth',
+        });
     };
 
     if (!artists.length) return null;
 
     return (
-        <div className="flex flex-col gap-4 mt-4">
-            <div className="flex items-center justify-between mb-2">
-                <Label className="text-2xl font-bold text-sky-900 dark:text-white">Your Top Artists</Label>
-                <div className="flex items-center space-x-2">
+        <section className="flex flex-col gap-4 mt-5">
+            <div className="flex items-center justify-between">
+                <Label className="text-xl md:text-2xl font-bold text-foreground">
+                    Your Top Artists
+                </Label>
+
+                <div className="flex items-center gap-2">
                     <button
                         onClick={() => scroll('left')}
-                        className="p-2 bg-white dark:bg-gray-800 shadow-sm rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                        className="w-9 h-9 rounded-full flex items-center justify-center bg-white/[0.06] border border-white/[0.06] text-white/60 sm:hover:text-white sm:hover:bg-white/[0.10] transition-all"
+                        aria-label="Previous artists"
                     >
-                        <ChevronLeft size={20} className="text-gray-600 dark:text-gray-300" />
+                        <ChevronLeft size={18} />
                     </button>
+
                     <button
                         onClick={() => scroll('right')}
-                        className="p-2 bg-white dark:bg-gray-800 shadow-sm rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                        className="w-9 h-9 rounded-full flex items-center justify-center bg-white/[0.06] border border-white/[0.06] text-white/60 sm:hover:text-white sm:hover:bg-white/[0.10] transition-all"
+                        aria-label="Next artists"
                     >
-                        <ChevronRight size={20} className="text-gray-600 dark:text-gray-300" />
+                        <ChevronRight size={18} />
                     </button>
                 </div>
             </div>
 
-            <div className="relative max-w-full">
+            <div className="relative w-full">
                 <div
                     ref={scrollRef}
-                    className="flex overflow-x-auto no-scrollbar gap-4"
+                    className="flex overflow-x-auto no-scrollbar gap-5 pb-1"
                     style={{ scrollbarWidth: 'none' }}
                 >
                     {artists.map((artist) => {
                         const isLoading = loadingArtistId === artist.artistId;
                         const imageUrl = artist.image || '/fallback/artist-music.png';
+                        const artistName = decode(artist.artist);
 
                         return (
                             <div
                                 key={artist.artistId}
                                 onClick={() => handleArtistClick(artist)}
-                                className="group flex flex-col items-center gap-3 p-3 rounded-xl sm:hover:bg-secondary/40 transition-colors duration-300 ease-out cursor-pointer min-w-[140px] max-w-[140px]"
+                                className="group flex flex-col items-center cursor-pointer flex-shrink-0 w-[105px]"
                             >
-                                <div className="relative aspect-square w-full rounded-full overflow-hidden shadow-md">
-                                    <Image
-                                        src={imageUrl}
-                                        fill
-                                        sizes="140px"
-                                        className="object-cover transition-transform duration-500 sm:group-hover:scale-105"
-                                        alt={decode(artist.artist)}
-                                    />
+                                <div className="relative w-[96px] h-[96px] md:w-[104px] md:h-[104px] rounded-full p-[2px] bg-gradient-to-br from-fuchsia-500 via-purple-500 to-fuchsia-700 transition-all duration-300 sm:group-hover:scale-[1.04] sm:group-hover:shadow-[0_0_20px_rgba(192,38,211,0.25)]">
+                                    <div className="relative w-full h-full rounded-full overflow-hidden bg-[#080611]">
+                                        <Image
+                                            src={imageUrl}
+                                            fill
+                                            sizes="104px"
+                                            className="object-cover transition-transform duration-500 sm:group-hover:scale-104"
+                                            alt={artistName}
+                                        />
+
+                                        {isLoading && (
+                                            <div className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-[2px]">
+                                                <Loader2 className="w-7 h-7 text-fuchsia-400 animate-spin" />
+                                            </div>
+                                        )}
+                                    </div>
 
                                     {!isLoading && (
-                                        <div className="absolute inset-0 bg-black/40 opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                            <div className="bg-primary text-primary-foreground rounded-full p-3 shadow-lg transform translate-y-2 sm:group-hover:translate-y-0 transition-all duration-300 ease-out">
-                                                <Play className="w-6 h-6 fill-current ml-1" />
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {isLoading && (
-                                        <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                                            <Loader2 className="w-8 h-8 text-primary animate-spin" />
-                                        </div>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleArtistClick(artist);
+                                            }}
+                                            className="absolute right-0 bottom-0 w-[27px] h-[27px] rounded-full flex items-center justify-center bg-[#151020] border border-white/10 text-white shadow-lg shadow-black/40 transition-all duration-300 sm:group-hover:bg-fuchsia-600 sm:group-hover:border-fuchsia-400/50 sm:group-hover:scale-110"
+                                            aria-label={`Play ${artistName}`}
+                                        >
+                                            <Play className="w-[12px] h-[12px] fill-current ml-[1px]" />
+                                        </button>
                                     )}
                                 </div>
 
-                                <div className="flex flex-col items-center text-center min-w-0 w-full">
-                                    <h4 className="text-sm font-semibold truncate w-full text-foreground sm:group-hover:text-primary transition-colors">
-                                        {decode(artist.artist)}
+                                <div className="mt-2.5 w-full text-center">
+                                    <h4 className="text-[11px] md:text-xs font-medium text-white/85 truncate transition-colors duration-200 sm:group-hover:text-white">
+                                        {artistName}
                                     </h4>
                                 </div>
                             </div>
@@ -118,7 +145,7 @@ const TopArtists = ({ artists = [] }) => {
                     })}
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
 
