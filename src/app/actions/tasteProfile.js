@@ -43,7 +43,6 @@ function buildTopArtists(interactions, songMap) {
 
 function buildTopSongs(interactions, songMap) {
     const songScoreMap = {}; // songId -> { songId, name, image, artist, score }
-
     for (const i of interactions) {
         const song = songMap[i.songId];
         if (!song) continue;
@@ -89,7 +88,7 @@ export async function computeTasteProfile(userId) {
 
     const topArtists = buildTopArtists(interactions, songMap);
     const topSongs = buildTopSongs(interactions, songMap);
-
+    console.log(topSongs)
     if (!topArtists.length && !topSongs.length) return null;
 
     await TasteProfile.findOneAndUpdate(
