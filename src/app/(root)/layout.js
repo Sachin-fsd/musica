@@ -42,7 +42,7 @@ export default function RootLayout({ children }) {
             </div>
 
             {/* Main content area */}
-            <div className="overflow-y-auto overflow-x-hidden col-span-2 md:col-span-1 pb-36 md:pb-28">
+            <div className="overflow-y-auto overflow-x-hidden col-span-2 md:col-span-1 pb-36 md:pb-24 lyrics-scroll">
               {children}
             </div>
 
@@ -61,7 +61,7 @@ export default function RootLayout({ children }) {
           </Suspense>
 
           {/* Fixed Mobile Bottom Navigation Bar */}
-          <div className="fixed bottom-0 left-0 right-0 z-50 px-2 md:hidden">
+          <div className="fixed bottom-0 left-0 right-0 z-50 px-0 md:hidden">
             <BottomNavBar />
           </div>
 

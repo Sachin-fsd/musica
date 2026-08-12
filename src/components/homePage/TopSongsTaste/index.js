@@ -63,7 +63,6 @@ const TopSongsTaste = ({ songs = [] }) => {
                     <Label className="text-xl font-bold tracking-tight text-foreground cursor-pointer group-hover:text-[color:var(--song-theme,#d946ef)] transition-colors">
                         Your Top Songs
                     </Label>
-                    <ChevronRight className="w-5 h-5 text-foreground/70 group-hover:text-[color:var(--song-theme,#d946ef)] transition-colors" />
                 </div>
 
                 <div className="flex items-center gap-1">

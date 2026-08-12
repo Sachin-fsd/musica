@@ -55,9 +55,6 @@ export function mixColor(hexA, hexB, ratio) {
     return rgbToHex(mix(a.r, b.r), mix(a.g, b.g), mix(a.b, b.b));
 }
 
-export const lighten = (hex, ratio) => mixColor(hex, '#ffffff', ratio);
-export const darken = (hex, ratio) => mixColor(hex, '#000000', ratio);
-
 /**
  * Extract a vibrant accent color from a loaded <img> element.
  * @param {HTMLImageElement} imgEl - fully loaded image (use crossOrigin="anonymous")

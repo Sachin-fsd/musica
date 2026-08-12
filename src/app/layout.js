@@ -12,7 +12,7 @@ export const metadata = {
   title: "Musica NextGen Music",
   description: "Made with 💖 ",
   icons: {
-    icon: 'favicon.ico'
+    icon: 'favicon.png'
   }
 };
 
