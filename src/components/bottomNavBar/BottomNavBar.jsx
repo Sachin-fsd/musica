@@ -9,7 +9,7 @@ const BottomNavBar = () => {
     const pathname = usePathname();
 
     return (
-        <nav className="w-full bg-[#0d0818]/90 backdrop-blur-2xl border border-white/10 rounded-2xl flex items-center justify-around shadow-2xl relative">
+        <nav className="w-full bg-white/80 dark:bg-[#0d0818]/90 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-2xl flex items-center justify-around shadow-2xl relative transition-colors duration-700">
             {leftIcons.map((icon, index) => (
                 <NavItem
                     key={index}
@@ -44,14 +44,14 @@ export const NavItem = ({ icon: Icon, label, link, active = false, show = true }
 
             {/* Active Background Capsule / Glow */}
             <div
-                className={`relative w-12 h-10 rounded-xl transition-all duration-500 flex items-center justify-center ${active ? 'bg-white/10' : 'hover:bg-white/5'
+                className={`relative w-12 h-10 rounded-xl transition-all duration-500 flex items-center justify-center ${active ? 'bg-foreground/10' : 'hover:bg-foreground/5'
                     }`}
             >
                 <div
                     className={`w-6 h-6 flex items-center justify-center transition-transform duration-300 ${active ? 'scale-110' : 'group-hover:scale-105'
                         }`}
                     style={{
-                        color: active ? 'var(--song-theme, #d946ef)' : 'rgba(255, 255, 255, 0.5)',
+                        color: active ? 'var(--song-theme, #d946ef)' : 'currentColor',
                         transition: 'color 0.8s ease, transform 0.3s ease'
                     }}
                 >
@@ -64,7 +64,7 @@ export const NavItem = ({ icon: Icon, label, link, active = false, show = true }
             </div>
 
             <span
-                className={`text-[10px] font-medium tracking-tight mt-0.5 transition-colors duration-700 ${active ? 'text-white font-semibold' : 'text-white/40 group-hover:text-white/70'
+                className={`text-[10px] font-medium tracking-tight mt-0.5 transition-colors duration-700 ${active ? 'text-foreground font-semibold' : 'text-foreground/40 group-hover:text-foreground/70'
                     }`}
                 style={{
                     color: active ? 'var(--song-theme, #d946ef)' : undefined,

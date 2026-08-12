@@ -113,11 +113,13 @@ const Player = () => {
                 >
                     {playing ? (
                         <Pause
-                            className="size-14 bg-pink-500 p-4 text-white rounded-full shadow-lg transform transition-transform duration-200 ease-in-out hover:scale-110 active:scale-100 flex items-center justify-center"
+                            className="size-14 p-4 text-white rounded-full shadow-lg transform transition-all duration-700 hover:scale-110 active:scale-100 flex items-center justify-center"
+                            style={{ background: 'var(--song-theme, #d946ef)', transition: 'background 0.8s ease' }}
                         />
                     ) : (
                         <Play
-                            className="size-14 bg-green-500 p-4 text-white rounded-full shadow-lg transform transition-transform duration-200 ease-in-out hover:scale-110 active:scale-100 flex items-center justify-center"
+                            className="size-14 p-4 text-white rounded-full shadow-lg transform transition-all duration-700 hover:scale-110 active:scale-100 flex items-center justify-center"
+                            style={{ background: 'var(--song-theme, #d946ef)', transition: 'background 0.8s ease' }}
                         />
                     )}
                 </Button>

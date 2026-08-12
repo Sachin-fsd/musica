@@ -80,7 +80,7 @@ const LeftSidebarIcons = ({ setIsSheetOpen, collapsed = false }) => {
                     </Link>
                 ))}
 
-                <div className={`w-full border-t border-white/10 ${isCollapsed ? "my-1" : "my-2"}`} />
+                <div className={`w-full border-t border-foreground/10 ${isCollapsed ? "my-1" : "my-2"}`} />
 
                 <AdjustSongQuality setIsSheetOpen={setIsSheetOpen} collapsed={isCollapsed} />
                 <InstallPromptIcon collapsed={isCollapsed} />

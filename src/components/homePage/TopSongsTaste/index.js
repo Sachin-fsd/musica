@@ -60,23 +60,23 @@ const TopSongsTaste = ({ songs = [] }) => {
             {/* Header & Scroll Actions */}
             <div className="flex items-center justify-between px-1">
                 <div className="flex items-center gap-1.5 cursor-pointer group">
-                    <Label className="text-xl font-bold tracking-tight text-white cursor-pointer group-hover:text-[color:var(--song-theme,#d946ef)] transition-colors">
+                    <Label className="text-xl font-bold tracking-tight text-foreground cursor-pointer group-hover:text-[color:var(--song-theme,#d946ef)] transition-colors">
                         Your Top Songs
                     </Label>
-                    <ChevronRight className="w-5 h-5 text-white/70 group-hover:text-[color:var(--song-theme,#d946ef)] transition-colors" />
+                    <ChevronRight className="w-5 h-5 text-foreground/70 group-hover:text-[color:var(--song-theme,#d946ef)] transition-colors" />
                 </div>
 
                 <div className="flex items-center gap-1">
                     <button
                         onClick={() => handleScroll('left')}
-                        className="p-1.5 rounded-full hover:bg-white/10 text-white/60 hover:text-white transition-all active:scale-95"
+                        className="p-1.5 rounded-full hover:bg-foreground/10 text-foreground/60 hover:text-foreground transition-all active:scale-95"
                         aria-label="Scroll left"
                     >
                         <ChevronLeft className="w-5 h-5" />
                     </button>
                     <button
                         onClick={() => handleScroll('right')}
-                        className="p-1.5 rounded-full hover:bg-white/10 text-white/60 hover:text-white transition-all active:scale-95"
+                        className="p-1.5 rounded-full hover:bg-foreground/10 text-foreground/60 hover:text-foreground transition-all active:scale-95"
                         aria-label="Scroll right"
                     >
                         <ChevronRight className="w-5 h-5" />
@@ -102,15 +102,15 @@ const TopSongsTaste = ({ songs = [] }) => {
                         <div
                             key={song.songId}
                             onClick={() => handleSongClick(song)}
-                            className={`group relative flex items-center justify-between p-2.5 rounded-2xl  border transition-all duration-300 cursor-pointer backdrop-blur-xl ${isCurrent
-                                ? 'bg-white/[0.08] border-white/20 shadow-xl'
-                                : 'bg-white/[0.03] border-white/5 hover:bg-white/[0.06] hover:border-white/10'
+                            className={`group relative flex items-center justify-between p-2.5 rounded-2xl border transition-all duration-300 cursor-pointer backdrop-blur-xl ${isCurrent
+                                ? 'bg-foreground/[0.08] border-foreground/20 shadow-xl'
+                                : 'bg-foreground/[0.03] border-foreground/5 hover:bg-foreground/[0.06] hover:border-foreground/10'
                                 }`}
                         >
                             {/* Left Side: Artwork, Index & Meta */}
                             <div className="flex items-center gap-3.5 min-w-0 flex-1">
                                 {/* Song Cover Artwork */}
-                                <div className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-white/5 shadow-md border border-white/10">
+                                <div className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-foreground/5 shadow-md border border-foreground/10">
                                     <Image
                                         src={imageUrl}
                                         fill
@@ -121,19 +121,19 @@ const TopSongsTaste = ({ songs = [] }) => {
                                 </div>
 
                                 {/* Track Number */}
-                                <div className="flex-shrink-0 w-4 text-center font-bold text-sm text-white/40 group-hover:text-white/70 transition-colors">
+                                <div className="flex-shrink-0 w-4 text-center font-bold text-sm text-foreground/40 group-hover:text-foreground/70 transition-colors">
                                     {index + 1}
                                 </div>
 
                                 {/* Title and Artist */}
                                 <div className="flex flex-col min-w-0 flex-1 justify-center">
                                     <h4
-                                        className={`text-sm font-semibold truncate transition-colors ${isCurrent ? 'text-[color:var(--song-theme,#d946ef)]' : 'text-white'
+                                        className={`text-sm font-semibold truncate transition-colors ${isCurrent ? 'text-[color:var(--song-theme,#d946ef)]' : 'text-foreground'
                                             }`}
                                     >
                                         {decode(song.name)}
                                     </h4>
-                                    <p className="text-xs text-white/50 truncate font-normal mt-0.5">
+                                    <p className="text-xs text-foreground/50 truncate font-normal mt-0.5">
                                         {song.artist ? decode(song.artist) : 'Unknown Artist'}
                                     </p>
                                 </div>
@@ -149,7 +149,7 @@ const TopSongsTaste = ({ songs = [] }) => {
                                     }}
                                     className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 active:scale-95 ${isCurrent
                                         ? 'text-white shadow-md scale-100'
-                                        : 'bg-white/10 text-white/80 hover:bg-white/20 hover:text-white hover:scale-105'
+                                        : 'bg-foreground/10 text-foreground/80 hover:bg-foreground/20 hover:text-foreground hover:scale-105'
                                         }`}
                                     style={
                                         isCurrent
@@ -175,7 +175,7 @@ const TopSongsTaste = ({ songs = [] }) => {
                                     onClick={(e) => {
                                         e.stopPropagation();
                                     }}
-                                    className="p-1.5 rounded-full text-white/30 hover:text-white hover:bg-white/10 transition-colors"
+                                    className="p-1.5 rounded-full text-foreground/30 hover:text-foreground hover:bg-foreground/10 transition-colors"
                                     aria-label="More options"
                                 >
                                     <MoreVertical className="w-4 h-4" />

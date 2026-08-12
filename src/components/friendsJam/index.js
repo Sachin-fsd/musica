@@ -296,7 +296,12 @@ export default function Jam() {
             chat.map(c => (
               <div
                 key={c.id}
-                className={`p-2.5 rounded-xl max-w-[85%] ${c.from === username ? "ml-auto bg-blue-600/20 border border-blue-600/30" : "bg-slate-800/60"}`}
+                className={`p-2.5 rounded-xl max-w-[85%] ${c.from === username ? "ml-auto border" : "bg-slate-800/60"}`}
+                style={c.from === username ? {
+                    background: 'var(--song-theme-soft)',
+                    borderColor: 'var(--song-theme-mid)',
+                    transition: 'background 0.8s ease, border-color 0.8s ease'
+                } : undefined}
               >
                 <div className="flex items-center gap-2 mb-0.5">
                   <Avatar name={c.from} size="w-5 h-5" />

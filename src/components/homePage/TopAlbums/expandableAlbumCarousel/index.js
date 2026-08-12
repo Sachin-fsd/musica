@@ -158,13 +158,13 @@ export function ExpandableAlbumCarousel({ albums = [], softAlbumsRef }) {
                             ref={modalRef}
                             variants={modalVariants}
                             initial="hidden" animate="visible" exit="exit"
-                            className="relative w-full sm:max-w-md bg-[#0f0f0f] sm:rounded-2xl overflow-hidden shadow-2xl flex flex-col"
+                            className="relative w-full sm:max-w-md bg-white dark:bg-[#0f0f0f] sm:rounded-2xl overflow-hidden shadow-2xl flex flex-col"
                             style={{ maxHeight: "90dvh" }}
                         >
                             {/* close btn */}
                             <button
                                 onClick={() => closeModal()}
-                                className="absolute top-3 right-3 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                                className="absolute top-3 right-3 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-foreground/10 hover:bg-foreground/20 transition-colors"
                                 aria-label="Close"
                             >
                                 <X size={15} className="text-white" />
@@ -192,7 +192,7 @@ export function ExpandableAlbumCarousel({ albums = [], softAlbumsRef }) {
                                             {decode(active.title)}
                                         </h2>
                                         {active.description && (
-                                            <p className="text-white/60 text-xs mt-0.5 line-clamp-2">
+                                            <p className="text-foreground/60 text-xs mt-0.5 line-clamp-2">
                                                 {decode(active.description)}
                                             </p>
                                         )}
@@ -219,12 +219,12 @@ export function ExpandableAlbumCarousel({ albums = [], softAlbumsRef }) {
                                         <React.Fragment key={song?.id ?? i}>
                                             <SongBar song={song} />
                                             {i < songs.length - 1 && (
-                                                <div className="mx-4 h-px bg-white/5" />
+                                                <div className="mx-4 h-px bg-foreground/5" />
                                             )}
                                         </React.Fragment>
                                     ))
                                 ) : (
-                                    <div className="flex items-center justify-center h-24 text-white/30 text-sm">
+                                    <div className="flex items-center justify-center h-24 text-foreground/30 text-sm">
                                         No songs found
                                     </div>
                                 )}
@@ -302,7 +302,7 @@ function AlbumCard({ album, layoutId, isPlaying, onClick }) {
             </div>
             {/* title */}
             <div className="px-2.5 py-2">
-                <p className="text-white/90 text-xs font-medium leading-snug truncate">
+                                        <p className="text-foreground/90 text-xs font-medium leading-snug truncate">
                     {decode(album.title) || <span className="block h-3 bg-neutral-700 rounded animate-pulse w-3/4" />}
                 </p>
             </div>

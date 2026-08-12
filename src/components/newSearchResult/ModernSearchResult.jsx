@@ -110,7 +110,7 @@ const ModernSearchResult = () => {
   );
 
   return (
-    <div className="flex-1 w-full py-2" ref={searchContainerRef}>
+    <div className="flex-1 w-full" ref={searchContainerRef}>
 
       {/* Transparent Frosted Glass Capsule Search Bar */}
       <div className="w-full max-w-3xl mx-auto px-4 relative group">
@@ -124,7 +124,7 @@ const ModernSearchResult = () => {
         <div className="relative flex items-center w-full">
           {/* Left Search Icon */}
           <div
-            className="absolute left-4 z-10 pointer-events-none flex items-center justify-center text-white/40 group-focus-within:text-white transition-colors duration-300"
+            className="absolute left-4 z-10 pointer-events-none flex items-center justify-center text-foreground/40 group-focus-within:text-foreground transition-colors duration-300"
             aria-label="Search"
           >
             <Search className="w-5 h-5" />
@@ -134,7 +134,7 @@ const ModernSearchResult = () => {
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full h-14 pl-12 pr-12 text-base font-normal rounded-2xl bg-white/[0.04] backdrop-blur-xl border border-white/10 text-white placeholder:text-white/35 focus-visible:ring-1 focus-visible:ring-white/25 focus-visible:ring-offset-0 focus-visible:border-white/25 shadow-2xl transition-all duration-300"
+            className="w-full h-14 pl-12 pr-12 text-base font-normal rounded-2xl bg-black/5 dark:bg-white/[0.04] backdrop-blur-xl border border-black/10 dark:border-white/10 text-foreground placeholder:text-foreground/35 focus-visible:ring-1 focus-visible:ring-[color:var(--song-theme-strong)] focus-visible:ring-offset-0 focus-visible:border-[color:var(--song-theme-mid)] shadow-2xl transition-all duration-300"
             placeholder="Search for songs, artists, or albums..."
             autoComplete="off"
           />
@@ -143,13 +143,13 @@ const ModernSearchResult = () => {
           {search ? (
             <button
               onClick={clearSearch}
-              className="absolute right-3.5 z-10 p-1.5 rounded-full text-white/50 hover:text-white hover:bg-white/10 active:scale-95 transition-all"
+              className="absolute right-3.5 z-10 p-1.5 rounded-full text-foreground/50 hover:text-foreground hover:bg-foreground/10 active:scale-95 transition-all"
               aria-label="Clear search text"
             >
               <X className="w-5 h-5" />
             </button>
           ) : (
-            <div className="absolute right-4 z-10 pointer-events-none flex items-center justify-center text-white/35">
+            <div className="absolute right-4 z-10 pointer-events-none flex items-center justify-center text-foreground/35">
               <SlidersHorizontal className="w-4 h-4" />
             </div>
           )}
@@ -161,17 +161,17 @@ const ModernSearchResult = () => {
         <div className="w-full max-w-6xl mx-auto mt-12 px-4 space-y-12">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4">
-              <Skeleton className="h-8 w-40 rounded-md bg-white/5" />
-              <Skeleton className="h-[200px] w-full rounded-xl bg-white/5" />
+              <Skeleton className="h-8 w-40 rounded-md bg-foreground/5" />
+              <Skeleton className="h-[200px] w-full rounded-xl bg-foreground/5" />
             </div>
             <div className="space-y-4">
-              <Skeleton className="h-8 w-24 rounded-md bg-white/5" />
+              <Skeleton className="h-8 w-24 rounded-md bg-foreground/5" />
               {[1, 2, 3, 4].map((i) => (
                 <div key={`song-skeleton-${i}`} className="flex flex-row items-center space-x-4">
-                  <Skeleton className="w-14 h-14 rounded-md flex-shrink-0 bg-white/5" />
+                  <Skeleton className="w-14 h-14 rounded-md flex-shrink-0 bg-foreground/5" />
                   <div className="flex-1 space-y-2">
-                    <Skeleton className="h-4 w-3/4 rounded-md bg-white/5" />
-                    <Skeleton className="h-3 w-1/2 rounded-md bg-white/5" />
+                    <Skeleton className="h-4 w-3/4 rounded-md bg-foreground/5" />
+                    <Skeleton className="h-3 w-1/2 rounded-md bg-foreground/5" />
                   </div>
                 </div>
               ))}
@@ -179,13 +179,13 @@ const ModernSearchResult = () => {
           </div>
 
           <div className="space-y-4 mt-8">
-            <Skeleton className="h-8 w-32 rounded-md bg-white/5" />
+            <Skeleton className="h-8 w-32 rounded-md bg-foreground/5" />
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {[1, 2, 3, 4, 5].map((i) => (
                 <div key={`album-skeleton-${i}`} className="space-y-3">
-                  <Skeleton className="w-full aspect-square rounded-xl bg-white/5" />
-                  <Skeleton className="h-4 w-full rounded-md bg-white/5" />
-                  <Skeleton className="h-3 w-2/3 rounded-md bg-white/5" />
+                  <Skeleton className="w-full aspect-square rounded-xl bg-foreground/5" />
+                  <Skeleton className="h-4 w-full rounded-md bg-foreground/5" />
+                  <Skeleton className="h-3 w-2/3 rounded-md bg-foreground/5" />
                 </div>
               ))}
             </div>
@@ -195,17 +195,19 @@ const ModernSearchResult = () => {
 
       {/* Error State */}
       {error && (
-        <div className="text-center mt-16 p-6 max-w-md mx-auto bg-red-950/20 backdrop-blur-md rounded-xl border border-red-500/20 text-red-200">
+        <div className="text-center mt-16 p-6 max-w-md mx-auto rounded-xl border transition-colors duration-700"
+          style={{ background: 'var(--song-theme-faint)', borderColor: 'var(--song-theme-soft)', color: 'var(--song-theme-strong)' }}
+        >
           <p className="font-medium">{error}</p>
         </div>
       )}
 
       {/* Empty State */}
       {!loading && !error && results && !hasResults && (
-        <div className="flex flex-col items-center justify-center mt-20 text-white/50">
+        <div className="flex flex-col items-center justify-center mt-20 text-foreground/50">
           <Inbox className="w-16 h-16 mb-4 opacity-40 text-[color:var(--song-theme,#d946ef)]" />
-          <h3 className="text-xl font-semibold text-white">No results found</h3>
-          <p className="mt-1 text-sm text-white/60">We couldn&apos;t find anything matching &quot;{search}&quot;.</p>
+          <h3 className="text-xl font-semibold text-foreground">No results found</h3>
+          <p className="mt-1 text-sm text-foreground/60">We couldn&apos;t find anything matching &quot;{search}&quot;.</p>
         </div>
       )}
 

@@ -110,7 +110,7 @@ const Bottombar = () => {
 
         {/* Main Floating Deck */}
         <div
-          className="pointer-events-auto relative w-full max-w-7xl mx-auto h-16 sm:h-20 rounded-2xl bg-[#080512]/90 backdrop-blur-2xl border border-white/10 shadow-2xl flex items-center justify-between px-3 sm:px-6 overflow-hidden transition-all duration-300"
+          className="pointer-events-auto relative w-full max-w-7xl mx-auto h-16 sm:h-20 rounded-2xl bg-white/80 dark:bg-[#080512]/90 backdrop-blur-2xl border border-black/5 dark:border-white/10 shadow-2xl flex items-center justify-between px-3 sm:px-6 overflow-hidden transition-all duration-700"
           style={{
             boxShadow: "0 10px 40px -10px rgba(0,0,0,0.8), inset 0 1px 0 0 rgba(255,255,255,0.1)"
           }}
@@ -140,7 +140,7 @@ const Bottombar = () => {
                       onError={() => setImageError(true)}
                     />
                   ) : (
-                    <Skeleton className="w-full h-full bg-white/10" />
+                    <Skeleton className="w-full h-full bg-foreground/10" />
                   )}
                 </div>
 
@@ -150,15 +150,15 @@ const Bottombar = () => {
                       {decode(currentSong.name)}
                     </Label>
                   ) : (
-                    <Skeleton className="w-24 h-4 mb-1 bg-white/10" />
+                    <Skeleton className="w-24 h-4 mb-1 bg-foreground/10" />
                   )}
 
                   {currentSong?.artists?.primary?.[0]?.name ? (
-                    <p className="text-[11px] sm:text-xs text-white/50 truncate font-normal">
+                    <p className="text-[11px] sm:text-xs text-foreground/50 truncate font-normal">
                       {decode(currentSong.artists.primary[0].name)}
                     </p>
                   ) : (
-                    <Skeleton className="w-16 h-3 bg-white/10" />
+                    <Skeleton className="w-16 h-3 bg-foreground/10" />
                   )}
                 </div>
 
@@ -175,7 +175,7 @@ const Bottombar = () => {
               <Button
                 variant="ghost"
                 onClick={(e) => { e.stopPropagation(); toggleShuffle?.(); }}
-                className={`transition-colors duration-700 hidden md:block ${isShuffled ? 'text-[color:var(--song-theme,#d946ef)]' : 'text-white/40 hover:text-white'}`}
+                className={`transition-colors duration-700 hidden md:block ${isShuffled ? 'text-[color:var(--song-theme,#d946ef)]' : 'text-foreground/40 hover:text-foreground'}`}
                 aria-label="Shuffle"
               >
                 <Shuffle className="w-4 h-4" />
@@ -184,7 +184,7 @@ const Bottombar = () => {
               <Button
                 variant="ghost"
                 onClick={(e) => { e.stopPropagation(); handlePrev?.(); }}
-                className="text-white/70 hover:text-white transition-colors active:scale-95"
+                className="text-foreground/70 hover:text-foreground transition-colors active:scale-95"
                 aria-label="Previous"
               >
                 <SkipBack className="w-5 h-5 fill-current" />
@@ -212,7 +212,7 @@ const Bottombar = () => {
               <Button
                 variant="ghost"
                 onClick={(e) => { e.stopPropagation(); handleNext(); }}
-                className="text-white/70 hover:text-white transition-colors active:scale-95"
+                className="text-foreground/70 hover:text-foreground transition-colors active:scale-95"
                 aria-label="Next"
               >
                 <SkipForward className="w-5 h-5 fill-current" />
@@ -221,7 +221,7 @@ const Bottombar = () => {
               <Button
                 variant="ghost"
                 onClick={(e) => { e.stopPropagation(); toggleLoop?.(); }}
-                className={`transition-colors duration-700 hidden md:block ${isLooping ? 'text-[color:var(--song-theme,#d946ef)]' : 'text-white/40 hover:text-white'}`}
+                className={`transition-colors duration-700 hidden md:block ${isLooping ? 'text-[color:var(--song-theme,#d946ef)]' : 'text-foreground/40 hover:text-foreground'}`}
                 aria-label="Repeat"
               >
                 <Repeat className={`w-4 h-4 ${isLooping ? 'fill-current' : ''}`} />
@@ -230,7 +230,7 @@ const Bottombar = () => {
 
             {/* Desktop Scrubber */}
             <div className="w-full hidden md:flex items-center space-x-2.5">
-              <span className="text-[11px] font-mono text-white/40 min-w-[32px] text-right">
+              <span className="text-[11px] font-mono text-foreground/40 min-w-[32px] text-right">
                 {formatTime(currentTime)}
               </span>
 
@@ -243,7 +243,7 @@ const Bottombar = () => {
                 />
               </div>
 
-              <span className="text-[11px] font-mono text-white/40 min-w-[32px]">
+              <span className="text-[11px] font-mono text-foreground/40 min-w-[32px]">
                 {formatTime(duration)}
               </span>
             </div>
@@ -255,15 +255,15 @@ const Bottombar = () => {
               <div className="flex items-center space-x-2">
                 <button
                   onClick={toggleMute}
-                  className="p-1 text-white/50 hover:text-white transition-colors rounded"
+                  className="p-1 text-foreground/50 hover:text-foreground transition-colors rounded"
                   aria-label={isMuted ? "Unmute" : "Mute"}
                 >
                   {isMuted || volume === 0 ? (
-                    <VolumeX className="w-4 h-4 text-white/40" />
+                    <VolumeX className="w-4 h-4 text-foreground/40" />
                   ) : volume < 0.5 ? (
-                    <Volume1 className="w-4 h-4 text-white/70" />
+                    <Volume1 className="w-4 h-4 text-foreground/70" />
                   ) : (
-                    <Volume2 className="w-4 h-4 text-white/70" />
+                    <Volume2 className="w-4 h-4 text-foreground/70" />
                   )}
                 </button>
                 <div className="w-20">
@@ -278,7 +278,7 @@ const Bottombar = () => {
 
               <SheetTrigger asChild>
                 <button
-                  className="p-2 text-white/50 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+                  className="p-2 text-foreground/50 hover:text-foreground hover:bg-foreground/5 rounded-lg transition-all"
                   aria-label="Open Queue"
                 >
                   <ListMusic className="w-5 h-5" />
@@ -290,14 +290,14 @@ const Bottombar = () => {
       </div>
 
       {/* Expanded Sheet Modal */}
-      <SheetContent side="bottom" className="h-full w-full border-none p-0 bg-[#080611] text-white">
+      <SheetContent side="bottom" className="h-full w-full border-none p-0 bg-white dark:bg-[#080611] text-foreground transition-colors duration-700">
         <SheetTitle className="sr-only">Now Playing</SheetTitle>
         <div className="flex flex-col h-full relative">
           <div className="flex justify-between items-center p-4 z-20">
             <SheetClose asChild>
               <Button
                 variant="ghost"
-                className="p-2 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-all"
+                className="p-2 rounded-full text-foreground/70 hover:text-foreground hover:bg-foreground/10 transition-all"
                 aria-label="Close"
               >
                 <ChevronDown className="w-7 h-7" />

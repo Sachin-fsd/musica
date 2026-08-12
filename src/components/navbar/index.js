@@ -69,7 +69,7 @@ const Navbar = () => {
                                     <SheetTitle>
                                         <div className="cursor-pointer mb-8">
                                             <p className="text-2xl font-bold text-gray-800 dark:text-gray-100">
-                                                Musi<span className="text-blue-500">ca</span>
+                                                Musi<span className="transition-colors duration-700" style={{ color: 'var(--song-theme, #3b82f6)' }}>ca</span>
                                             </p>
                                         </div>
                                     </SheetTitle>

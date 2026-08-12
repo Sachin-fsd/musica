@@ -54,9 +54,9 @@ const HeroSection = () => {
 
   return (
     <section
-      className="relative w-full h-[195px] overflow-hidden rounded-t-xl"
+      className="relative w-full h-[195px] overflow-hidden rounded-t-xl transition-colors duration-700"
       style={{
-        background: 'linear-gradient(120deg, #080611, #07040d 60%, #0b0614)',
+        background: 'linear-gradient(120deg, hsl(var(--background)), hsl(var(--background)))',
         WebkitMaskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)',
         maskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)',
       }}
@@ -133,7 +133,7 @@ const HeroSection = () => {
             transition={{ duration: 0.35, ease: 'easeOut' }}
           >
             <h1 className="font-bold tracking-tight leading-[1.05] pt-8">
-              <span className="block text-[40px] md:text-[50px] text-white">
+              <span className="block text-[40px] md:text-[50px] text-foreground drop-shadow-sm">
                 {greetingText}
               </span>
             </h1>

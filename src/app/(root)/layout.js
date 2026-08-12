@@ -14,7 +14,17 @@ export default function RootLayout({ children }) {
     <AuthProvider>
       <UserState>
         <ThemeColorWatcher />
-        <div className="grid h-screen w-screen grid-rows-[auto,1fr] overflow-hidden bg-[#080611]">
+        <div className="grid h-screen w-screen grid-rows-[auto,1fr] overflow-hidden relative bg-slate-50 dark:bg-[#080611] transition-colors duration-700">
+
+          {/* Site-wide ambient aura — mild dynamic glow from the playing song */}
+          <div
+            className="pointer-events-none absolute inset-0 z-0 opacity-50 dark:opacity-30"
+            style={{
+              background: `radial-gradient(ellipse at 50% -20%, var(--song-theme-soft) 0%, transparent 60%),
+                           radial-gradient(ellipse at 100% 100%, var(--song-theme-faint) 0%, transparent 55%)`,
+              transition: 'background 0.8s ease'
+            }}
+          />
 
           {/* Navbar spans full width */}
           <div className="col-span-full z-20">

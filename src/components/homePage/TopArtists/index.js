@@ -71,7 +71,7 @@ const TopArtists = ({ artists = [] }) => {
                 <div className="flex items-center gap-2">
                     <button
                         onClick={() => scroll('left')}
-                        className="w-9 h-9 rounded-full flex items-center justify-center bg-white/[0.06] border border-white/[0.06] text-white/60 sm:hover:text-white sm:hover:bg-white/[0.10] transition-all"
+                        className="w-9 h-9 rounded-full flex items-center justify-center bg-foreground/[0.06] border border-foreground/[0.06] text-foreground/60 sm:hover:text-foreground sm:hover:bg-foreground/[0.10] transition-all"
                         aria-label="Previous artists"
                     >
                         <ChevronLeft size={18} />
@@ -79,7 +79,7 @@ const TopArtists = ({ artists = [] }) => {
 
                     <button
                         onClick={() => scroll('right')}
-                        className="w-9 h-9 rounded-full flex items-center justify-center bg-white/[0.06] border border-white/[0.06] text-white/60 sm:hover:text-white sm:hover:bg-white/[0.10] transition-all"
+                        className="w-9 h-9 rounded-full flex items-center justify-center bg-foreground/[0.06] border border-foreground/[0.06] text-foreground/60 sm:hover:text-foreground sm:hover:bg-foreground/[0.10] transition-all"
                         aria-label="Next artists"
                     >
                         <ChevronRight size={18} />
@@ -108,7 +108,7 @@ const TopArtists = ({ artists = [] }) => {
                                     className="relative w-[96px] h-[96px] md:w-[104px] md:h-[104px] rounded-full p-[2px] bg-gradient-to-br from-[color:var(--song-theme-light)] via-[color:var(--song-theme)] to-[color:var(--song-theme-dark)] transition-all duration-700 sm:group-hover:scale-[1.04] sm:group-hover:shadow-[0_0_20px_var(--song-theme-soft)]"
                                     style={{ transition: 'background 0.8s ease, box-shadow 0.8s ease, transform 0.3s ease' }}
                                 >
-                                    <div className="relative w-full h-full rounded-full overflow-hidden bg-[#080611]">
+                                    <div className="relative w-full h-full rounded-full overflow-hidden bg-slate-100 dark:bg-[#080611]">
                                         <Image
                                             src={imageUrl}
                                             fill
@@ -139,7 +139,7 @@ const TopArtists = ({ artists = [] }) => {
                                 </div>
 
                                 <div className="mt-2.5 w-full text-center">
-                                    <h4 className="text-[11px] md:text-xs font-medium text-white/85 truncate transition-colors duration-200 sm:group-hover:text-white">
+                                    <h4 className="text-[11px] md:text-xs font-medium text-foreground/85 truncate transition-colors duration-200 sm:group-hover:text-foreground">
                                         {artistName}
                                     </h4>
                                 </div>
