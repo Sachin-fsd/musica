@@ -1,77 +1,37 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Download } from "lucide-react"; // Icon
-import { toast } from 'sonner'; // Toast notifications
+import { Download } from "lucide-react";
+import { useInstallPrompt } from "./useInstallPrompt";
+import { useThemeColorStore } from "@/store/useThemeColorStore";
+import {
+    sidebarContainerClass,
+    sidebarIconWrapClass,
+    sidebarLabelClass,
+    sidebarIconStyle,
+    sidebarLabelStyle,
+} from "../sidebarItemStyles";
 
-const InstallPromptIcon = () => {
-  const [isAndroid, setIsAndroid] = useState(false);
-  const [isIOS, setIsIOS] = useState(false);
-  const [isStandalone, setIsStandalone] = useState(false);
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
+const InstallPromptIcon = ({ collapsed = false }) => {
+    const { isStandalone, handleDownloadClick } = useInstallPrompt();
+    const themeColor = useThemeColorStore((s) => s.themeColor);
 
-  useEffect(() => {
-    // Check if the app is in standalone mode
-    setIsStandalone(window.matchMedia("(display-mode: standalone)").matches);
+    // Hide the button if the app is already installed
+    if (isStandalone) return null;
 
-    const handleBeforeInstallPrompt = (e) => {
-      e.preventDefault(); // Prevent automatic prompt display
-      setDeferredPrompt(e);
-    };
-
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-    }
-
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-
-    return () => {
-      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-    };
-  }, [deferredPrompt]);
-
-  useEffect(() => {
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    setIsAndroid(/android/i.test(userAgent));
-    setIsIOS(/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream);
-  }, []);
-
-  const handleDownloadClick = () => {
-    if (isAndroid) {
-      // Download APK
-      const apkUrl = "/Musica.apk"; // Replace with your APK URL
-      const link = document.createElement("a");
-      link.href = apkUrl;
-      link.download = "Musica.apk"; // Optional: Default file name
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      toast.success("Downloading APK...");
-    } else if (isIOS) {
-      // Show iOS instructions
-      toast("To install this app on your iPhone, tap the share button and select 'Add to Home Screen'.");
-    } else {
-      // Show instructions for desktop or other devices
-      toast("To install this app, use the 'Install' option in your browser settings.");
-    }
-  };
-
-  // Hide the button if the app is already installed
-  if (isStandalone) return null;
-
-  return (
-    <div
-      onClick={handleDownloadClick}
-      className="flex md:flex-col items-center w-full p-1 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 transition-transform duration-200 ease-in-out group cursor-pointer"
-    >
-      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300">
-        <Download />
-      </div>
-      <span className="flex-1 text-center md:text-xs text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300 font-bold">
-        Install App
-      </span>
-    </div>
-  );
+    return (
+        <div
+            onClick={handleDownloadClick}
+            title={collapsed ? "Install App" : undefined}
+            className={sidebarContainerClass(collapsed, false)}
+        >
+            <div className={sidebarIconWrapClass(collapsed)} style={sidebarIconStyle(themeColor, false)}>
+                <Download size={collapsed ? 22 : 20} />
+            </div>
+            <span className={sidebarLabelClass(collapsed)} style={sidebarLabelStyle(themeColor, false)}>
+                {collapsed ? "Install" : "Install App"}
+            </span>
+        </div>
+    );
 };
 
 export default InstallPromptIcon;

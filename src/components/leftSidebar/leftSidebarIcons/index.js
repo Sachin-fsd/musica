@@ -5,45 +5,90 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import AdjustSongQuality from "../AdjustSongQuality";
 import InstallPromptIcon from "../installApp/installPrompt";
+import InstallPromoCard from "../installApp/InstallPromoCard";
 import JamOnOff from "../jamOnOff";
 import { ThemeSwitch } from "@/components/themeSwitch";
+import { useThemeColorStore } from "@/store/useThemeColorStore";
 import React from "react";
+import { Disc3, Mic2, ListMusic } from "lucide-react";
+import {
+    sidebarContainerClass,
+    sidebarIconWrapClass,
+    sidebarLabelClass,
+    sidebarIconStyle,
+    sidebarLabelStyle,
+} from "../sidebarItemStyles";
 
-const LeftSidebarIcons = ({ setIsSheetOpen }) => {
+// Browse-only destinations: the app doesn't have dedicated /albums,
+// /artists or /playlists routes yet, so these route to /browse for now
+// and are never shown as "active" (no single route to match against).
+// Swap `link` here once dedicated pages exist.
+const browseOnlyIcons = [
+    { label: "Albums", link: "/browse", Icon: Disc3 },
+    { label: "Artists", link: "/browse", Icon: Mic2 },
+    { label: "Playlists", link: "/browse", Icon: ListMusic },
+];
+
+const LeftSidebarIcons = ({ setIsSheetOpen, collapsed = false }) => {
     const pathname = usePathname();
+    const themeColor = useThemeColorStore((s) => s.themeColor);
+    // Inside the mobile Sheet drawer we always want the full, labelled
+    // layout — collapsing only applies to the persistent desktop sidebar.
+    const isCollapsed = setIsSheetOpen ? false : collapsed;
+
     return (
         <div className="flex flex-col items-center w-full">
-            <div className="flex flex-col items-centre space-y-4">
-                {leftIcons.map((icon) => (
-                    <Link
-                        onClick={setIsSheetOpen ? ()=>setIsSheetOpen(false) : null}
-                        key={icon.label}
-                        href={icon.link}
-                        className={`flex md:flex-col items-center w-full p-1 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 transition-transform duration-200 ease-in-out group ${
-                            pathname === icon.link ? 'bg-slate-300 dark:bg-slate-700' : ''
-                        }`}
-                    >
-                        <div className={`flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-white group-hover:text-slate-900 dark:group-hover:text-slate-300 ${
-                            pathname === icon.link ? 'text-white' : ''
-                        }`}>
-                            {React.cloneElement(icon.image, {
-                                fill: pathname === icon.link ? "currentColor" : "none",
-                                stroke: pathname === icon.link ? "none" : "currentColor"
-                            })}
-                        </div>
-                        <span
-                            className={`flex-1 text-center md:text-left md:text-xs text-white group-hover:text-slate-900 dark:group-hover:text-slate-300 font-bold ${
-                                pathname === icon.link ? 'text-white' : ''
-                            }`}
+            <div className={`flex flex-col w-full ${isCollapsed ? "items-center gap-2" : "gap-1"}`}>
+                {leftIcons.map((icon) => {
+                    const active = pathname === icon.link;
+                    return (
+                        <Link
+                            onClick={setIsSheetOpen ? () => setIsSheetOpen(false) : null}
+                            key={icon.label}
+                            href={icon.link}
+                            title={isCollapsed ? icon.label : undefined}
+                            className={sidebarContainerClass(isCollapsed, active)}
                         >
-                            {icon.label}
+                            <div className={sidebarIconWrapClass(isCollapsed)} style={sidebarIconStyle(themeColor, active)}>
+                                {React.cloneElement(icon.image, {
+                                    fill: active ? "currentColor" : "none",
+                                    stroke: active ? "none" : "currentColor",
+                                    style: { width: "100%", height: "100%" },
+                                })}
+                            </div>
+                            <span className={sidebarLabelClass(isCollapsed)} style={sidebarLabelStyle(themeColor, active)}>
+                                {icon.label}
+                            </span>
+                        </Link>
+                    );
+                })}
+
+                {browseOnlyIcons.map(({ label, link, Icon }) => (
+                    <Link
+                        onClick={setIsSheetOpen ? () => setIsSheetOpen(false) : null}
+                        key={label}
+                        href={link}
+                        title={isCollapsed ? label : undefined}
+                        className={sidebarContainerClass(isCollapsed, false)}
+                    >
+                        <div className={sidebarIconWrapClass(isCollapsed)} style={sidebarIconStyle(themeColor, false)}>
+                            <Icon size={isCollapsed ? 22 : 20} />
+                        </div>
+                        <span className={sidebarLabelClass(isCollapsed)} style={sidebarLabelStyle(themeColor, false)}>
+                            {label}
                         </span>
                     </Link>
                 ))}
-                <AdjustSongQuality setIsSheetOpen={setIsSheetOpen}/>
-                <InstallPromptIcon />
-                <JamOnOff setIsSheetOpen={setIsSheetOpen}/>
-                <ThemeSwitch />
+
+                <div className={`w-full border-t border-white/10 ${isCollapsed ? "my-1" : "my-2"}`} />
+
+                <AdjustSongQuality setIsSheetOpen={setIsSheetOpen} collapsed={isCollapsed} />
+                <InstallPromptIcon collapsed={isCollapsed} />
+                <JamOnOff setIsSheetOpen={setIsSheetOpen} collapsed={isCollapsed} />
+                <ThemeSwitch collapsed={isCollapsed} />
+
+                {/* No room for the copy in the collapsed rail */}
+                {!isCollapsed && <InstallPromoCard />}
             </div>
         </div>
     );

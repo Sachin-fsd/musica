@@ -1,8 +1,7 @@
 "use client"
 
-import { Check, Cog } from "lucide-react"
+import { Check, Gem } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
 import {
   Command,
   CommandEmpty,
@@ -18,6 +17,14 @@ import {
 import { useContext, useState } from "react"
 import { UserContext } from "@/context"
 import { Label } from "@/components/ui/label"
+import { useThemeColorStore } from "@/store/useThemeColorStore"
+import {
+  sidebarContainerClass,
+  sidebarIconWrapClass,
+  sidebarLabelClass,
+  sidebarIconStyle,
+  sidebarLabelStyle,
+} from "../sidebarItemStyles"
 
 const qualities = [
   { value: "low", label: "Low" },
@@ -29,9 +36,10 @@ const qualities = [
 
 const labels = {"low":"Low", "medium":"Medium", "average":"Average", "high":"High", "very_high": "Very High"}
 
-export default function AdjustSongQuality({setIsSheetOpen}) {
+export default function AdjustSongQuality({setIsSheetOpen, collapsed = false}) {
   const { setManualQuality, manualQuality } = useContext(UserContext)
   const [open, setOpen] = useState(false)
+  const themeColor = useThemeColorStore((s) => s.themeColor)
 
   const handleSelect = (currentValue) => {
     setManualQuality(currentValue)  // Set the manual quality
@@ -46,13 +54,14 @@ export default function AdjustSongQuality({setIsSheetOpen}) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="flex md:flex-col items-center w-full p-1 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 transition-transform duration-200 ease-in-out group"
+          title={collapsed ? `Quality (${labels[manualQuality]})` : undefined}
+          className={sidebarContainerClass(collapsed, false)}
         >
-          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300">
-            <Cog />
+          <div className={sidebarIconWrapClass(collapsed)} style={sidebarIconStyle(themeColor, false)}>
+            <Gem size={collapsed ? 22 : 20} />
           </div>
-          <span className="flex-1 text-center md:text-xs text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300 font-bold">
-            Quality {`(${labels[manualQuality]})`}
+          <span className={sidebarLabelClass(collapsed)} style={sidebarLabelStyle(themeColor, false)}>
+            {collapsed ? "Quality" : `Quality (${labels[manualQuality]})`}
           </span>
         </Label>
       </PopoverTrigger>

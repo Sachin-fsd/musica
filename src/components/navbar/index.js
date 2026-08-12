@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "../ui/button";
-import { LogOut, Menu, User, X } from "lucide-react";
+import { LogOut, Menu, PanelLeftClose, PanelLeftOpen, User, X } from "lucide-react";
+import { useSidebarStore } from "@/store/useSidebarStore";
 import LeftSidebarIcons from "../leftSidebar/leftSidebarIcons";
 import { usePathname } from "next/navigation";
 import { toast } from "sonner";
@@ -25,6 +26,8 @@ const Navbar = () => {
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
     const { user, logout, authLoading } = useAuth();
+    const sidebarCollapsed = useSidebarStore((state) => state.collapsed);
+    const toggleSidebarCollapsed = useSidebarStore((state) => state.toggleCollapsed);
 
     function showName() {
         toast("Made by Sachin Singh");
@@ -40,6 +43,20 @@ const Navbar = () => {
             <div className="flex items-center justify-between p-2 shadow-md">
                 {/* Left: hamburger + logo */}
                 <div className="flex items-center">
+                    {/* Desktop sidebar collapse/expand toggle */}
+                    <button
+                        onClick={toggleSidebarCollapsed}
+                        className="hidden md:flex p-2 rounded-md hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
+                        title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                        aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                    >
+                        {sidebarCollapsed ? (
+                            <PanelLeftOpen className="text-gray-900 dark:text-gray-300" size={20} />
+                        ) : (
+                            <PanelLeftClose className="text-gray-900 dark:text-gray-300" size={20} />
+                        )}
+                    </button>
+
                     <div className="block md:hidden">
                         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                             <SheetTrigger asChild>

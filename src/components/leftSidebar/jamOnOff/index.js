@@ -1,11 +1,21 @@
 'use client'
 
+import { Radio } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { UserContext } from '@/context';
+import { useThemeColorStore } from '@/store/useThemeColorStore';
 import React, { useContext } from 'react';
+import {
+    sidebarContainerClass,
+    sidebarIconWrapClass,
+    sidebarLabelClass,
+    sidebarIconStyle,
+    sidebarLabelStyle,
+} from "../sidebarItemStyles";
 
-const JamOnOff = ({ setIsSheetOpen }) => {
+const JamOnOff = ({ setIsSheetOpen, collapsed = false }) => {
     const { isJamChecked, setIsJamChecked } = useContext(UserContext);
+    const themeColor = useThemeColorStore((s) => s.themeColor);
 
     function ToogleJam() {
         setIsJamChecked(!isJamChecked);
@@ -19,20 +29,26 @@ const JamOnOff = ({ setIsSheetOpen }) => {
 
     return (
         <div
-            // onClick={setIsChecked}
-            className="flex md:flex-col items-center w-full p-1 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 transition-transform duration-200 ease-in-out group cursor-pointer"
+            title={collapsed ? `Jam ${isJamChecked ? "On" : "Off"}` : undefined}
+            // When collapsed there's no room for the Switch, so the whole
+            // row becomes the toggle instead.
+            onClick={collapsed ? ToogleJam : undefined}
+            className={sidebarContainerClass(collapsed, false)}
         >
-            <div className="flex items-center justify-center w-8 h-8 text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300">
+            <div className={sidebarIconWrapClass(collapsed)} style={sidebarIconStyle(themeColor, isJamChecked)}>
+                <Radio size={collapsed ? 22 : 20} />
+            </div>
+            <span className={sidebarLabelClass(collapsed)} style={sidebarLabelStyle(themeColor, isJamChecked)}>
+                Jam {isJamChecked ? "On" : "Off"}
+            </span>
+
+            {!collapsed && (
                 <Switch
                     checked={isJamChecked}
                     onCheckedChange={ToogleJam}
-                    className="bg-slate-100 dark:bg-slate-500 rounded-full"
-                // disabled={false}
+                    className="ml-auto bg-slate-100 dark:bg-slate-500 rounded-full shrink-0"
                 />
-            </div>
-            <span className="flex-1 text-center md:text-xs text-slate-800 dark:text-slate-200 group-hover:text-slate-900 dark:group-hover:text-slate-300 font-bold">
-                Jam {isJamChecked ? "On" : "Off"}
-            </span>
+            )}
         </div>
     );
 };

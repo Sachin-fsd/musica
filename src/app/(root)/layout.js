@@ -24,8 +24,10 @@ export default function RootLayout({ children }) {
           {/* Content area with sidebars */}
           <div className="grid grid-cols-[auto,1fr] md:grid-cols-[auto,1fr] lg:grid-cols-[auto,1fr,auto] overflow-hidden relative">
 
-            {/* LeftSidebar - starts below navbar */}
-            <div className="hidden md:block max-w-28 overflow-y-auto">
+            {/* LeftSidebar - starts below navbar. Width is controlled by
+                LeftSidebar itself (collapsed vs expanded), so this wrapper
+                just needs to not clip it and not grow (flex-shrink-0). */}
+            <div className="hidden md:block flex-shrink-0 overflow-y-auto">
               <LeftSidebar />
             </div>
 

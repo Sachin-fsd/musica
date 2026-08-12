@@ -56,7 +56,7 @@ const TopSongsTaste = ({ songs = [] }) => {
     if (!songs.length) return null;
 
     return (
-        <div className="flex flex-col gap-2 my-6 w-full">
+        <div className="flex flex-col gap-2 w-full">
             {/* Header & Scroll Actions */}
             <div className="flex items-center justify-between px-1">
                 <div className="flex items-center gap-1.5 cursor-pointer group">
