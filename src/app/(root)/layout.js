@@ -46,7 +46,7 @@ export default function RootLayout({ children }) {
           </Suspense>
 
           {/* Fixed Mobile Bottom Navigation Bar */}
-          <div className="fixed bottom-2 left-0 right-0 z-50 px-2 md:hidden">
+          <div className="fixed bottom-0 left-0 right-0 z-50 px-2 md:hidden">
             <BottomNavBar />
           </div>
 

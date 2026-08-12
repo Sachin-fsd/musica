@@ -106,7 +106,7 @@ const Bottombar = () => {
   return (
     <Sheet open={isSheetOpen} onOpenChange={handleSheetChange}>
       {/* Container raised up on mobile for bottom navigation spacing */}
-      <div className="w-full px-2 sm:px-4 fixed bottom-[72px] md:bottom-3 left-0 right-0 z-40 pointer-events-none">
+      <div className="w-full px-2 sm:px-4 fixed bottom-[68px] md:bottom-2 left-0 right-0 z-40 pointer-events-none">
 
         {/* Main Floating Deck */}
         <div
