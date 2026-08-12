@@ -52,14 +52,15 @@ const NowPlayingPanel = () => {
         <>
             {/* Mobile: fixed full-screen overlay (covers navbar, content, everything) */}
             <div
-                className={`md:hidden fixed inset-0 z-50 transition-[transform,opacity] duration-300 ease-out will-change-transform ${
-                    isOpen
-                        ? "translate-y-0 opacity-100"
-                        : "translate-y-full opacity-0 pointer-events-none"
-                }`}
+                className={`md:hidden fixed bottom-[130px] inset-0 z-50 transition-[transform,opacity] duration-300 ease-out will-change-transform ${isOpen
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-full opacity-0 pointer-events-none"
+                    }`}
                 aria-hidden={!isOpen}
             >
-                <div className="h-full w-full bg-white dark:bg-[#080611] flex flex-col">
+                <div className="h-full w-full bg-white dark:bg-[#080611] flex flex-col"
+                    style={{ backgroundImage: `linear-gradient(180deg, var(--song-theme-faint) 0%, transparent 40%)` }}
+                >
                     {/* Close header bar — sits above the image, not on it */}
                     <div className="flex items-center px-3 pt-3 pb-1 flex-shrink-0">
                         <button
@@ -78,13 +79,11 @@ const NowPlayingPanel = () => {
 
             {/* Desktop: absolute within the content column */}
             <div
-                className={`hidden md:block absolute top-0 right-0 bottom-[76px] left-0 ${
-                    collapsed ? "md:left-20" : "md:left-60"
-                } z-30 transition-[transform,opacity] duration-300 ease-out will-change-transform ${
-                    isOpen
+                className={`hidden md:block absolute top-0 right-0 bottom-[68px] left-0 ${collapsed ? "md:left-20" : "md:left-60"
+                    } z-30 transition-[transform,opacity] duration-300 ease-out will-change-transform ${isOpen
                         ? "translate-y-0 opacity-100"
                         : "translate-y-full opacity-0 pointer-events-none"
-                }`}
+                    }`}
                 aria-hidden={!isOpen}
             >
                 <div className="h-full w-full">
