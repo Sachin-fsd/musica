@@ -12,7 +12,6 @@ import {
   Volume1,
   VolumeX,
   ListMusic,
-  ChevronDown
 } from "lucide-react";
 import { useContext, useState, useEffect } from "react";
 import { Skeleton } from "../ui/skeleton";
@@ -20,14 +19,6 @@ import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { decode } from "he";
 
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetTrigger,
-  SheetTitle,
-} from "../ui/sheet";
-import RightSidebar from "../rightSidebar";
 import { Slider } from "./BottomSlider";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
@@ -104,9 +95,9 @@ const Bottombar = () => {
   };
 
   return (
-    <Sheet open={isSheetOpen} onOpenChange={handleSheetChange}>
+    <>
       {/* Container raised up on mobile for bottom navigation spacing */}
-      <div className="w-full px-2 sm:px-4 fixed bottom-[68px] md:bottom-2 left-0 right-0 z-40 pointer-events-none">
+      <div className="w-full px-2 sm:px-4 fixed bottom-[68px] md:bottom-2 left-0 right-0 z-50 sm:z-40 pointer-events-none">
 
         {/* Main Floating Deck */}
         <div
@@ -126,47 +117,51 @@ const Bottombar = () => {
 
           {/* Left Side: Artwork & Info (Fixed width so layout structure never shifts) */}
           <div className="flex items-center min-w-0 w-36 sm:w-56 md:w-64 flex-shrink-0">
-            <SheetTrigger asChild>
-              <div className="flex items-center space-x-3 cursor-pointer group min-w-0 w-full">
-                <div className="relative w-11 h-11 sm:w-12 sm:h-12 flex-shrink-0 rounded-xl overflow-hidden shadow-lg border border-white/10">
-                  {currentSong?.image?.[0]?.url && !imageError ? (
-                    <Image
-                      height={48}
-                      width={48}
-                      src={currentSong.image[currentSong.image.length - 1]?.url || currentSong.image[0].url}
-                      alt={`${currentSong.name} cover`}
-                      className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-                      loading="lazy"
-                      onError={() => setImageError(true)}
-                    />
-                  ) : (
-                    <Skeleton className="w-full h-full bg-foreground/10" />
-                  )}
-                </div>
-
-                <div className="flex flex-col min-w-0 flex-1">
-                  {currentSong?.name ? (
-                    <Label className="font-semibold text-white truncate text-xs sm:text-base cursor-pointer tracking-tight group-hover:text-[color:var(--song-theme,#d946ef)] transition-colors duration-700">
-                      {decode(currentSong.name)}
-                    </Label>
-                  ) : (
-                    <Skeleton className="w-24 h-4 mb-1 bg-foreground/10" />
-                  )}
-
-                  {currentSong?.artists?.primary?.[0]?.name ? (
-                    <p className="text-[11px] sm:text-xs text-foreground/50 truncate font-normal">
-                      {decode(currentSong.artists.primary[0].name)}
-                    </p>
-                  ) : (
-                    <Skeleton className="w-16 h-3 bg-foreground/10" />
-                  )}
-                </div>
-
-                <div className="pl-1 hidden md:block flex-shrink-0" onClick={(e) => e.stopPropagation()}>
-                  <LikeButton song={currentSong} size="sm" />
-                </div>
+            <div
+              className="flex items-center space-x-3 cursor-pointer group min-w-0 w-full"
+              onClick={() => handleSheetChange(!isSheetOpen)}
+              role="button"
+              aria-expanded={isSheetOpen}
+              aria-label={isSheetOpen ? "Collapse now playing" : "Expand now playing"}
+            >
+              <div className="relative w-11 h-11 sm:w-12 sm:h-12 flex-shrink-0 rounded-xl overflow-hidden shadow-lg border border-white/10">
+                {currentSong?.image?.[0]?.url && !imageError ? (
+                  <Image
+                    height={48}
+                    width={48}
+                    src={currentSong.image[currentSong.image.length - 1]?.url || currentSong.image[0].url}
+                    alt={`${currentSong.name} cover`}
+                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                    onError={() => setImageError(true)}
+                  />
+                ) : (
+                  <Skeleton className="w-full h-full bg-foreground/10" />
+                )}
               </div>
-            </SheetTrigger>
+
+              <div className="flex flex-col min-w-0 flex-1">
+                {currentSong?.name ? (
+                  <Label className="font-semibold text-white truncate text-xs sm:text-base cursor-pointer tracking-tight group-hover:text-[color:var(--song-theme,#d946ef)] transition-colors duration-700">
+                    {decode(currentSong.name)}
+                  </Label>
+                ) : (
+                  <Skeleton className="w-24 h-4 mb-1 bg-foreground/10" />
+                )}
+
+                {currentSong?.artists?.primary?.[0]?.name ? (
+                  <p className="text-[11px] sm:text-xs text-foreground/50 truncate font-normal">
+                    {decode(currentSong.artists.primary[0].name)}
+                  </p>
+                ) : (
+                  <Skeleton className="w-16 h-3 bg-foreground/10" />
+                )}
+              </div>
+
+              <div className="pl-1 hidden md:block flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+                <LikeButton song={currentSong} size="sm" />
+              </div>
+            </div>
           </div>
 
           {/* Center: Mobile Simplified Controls & Desktop Expanded Controls */}
@@ -276,41 +271,19 @@ const Bottombar = () => {
                 </div>
               </div>
 
-              <SheetTrigger asChild>
-                <button
-                  className="p-2 text-foreground/50 hover:text-foreground hover:bg-foreground/5 rounded-lg transition-all"
-                  aria-label="Open Queue"
-                >
-                  <ListMusic className="w-5 h-5" />
-                </button>
-              </SheetTrigger>
+              <button
+                onClick={() => handleSheetChange(!isSheetOpen)}
+                className="p-2 text-foreground/50 hover:text-foreground hover:bg-foreground/5 rounded-lg transition-all"
+                aria-label={isSheetOpen ? "Close now playing" : "Open now playing"}
+                aria-expanded={isSheetOpen}
+              >
+                <ListMusic className="w-5 h-5" />
+              </button>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Expanded Sheet Modal */}
-      <SheetContent side="bottom" className="h-full w-full border-none p-0 bg-white dark:bg-[#080611] text-foreground transition-colors duration-700">
-        <SheetTitle className="sr-only">Now Playing</SheetTitle>
-        <div className="flex flex-col h-full relative">
-          <div className="flex justify-between items-center p-4 z-20">
-            <SheetClose asChild>
-              <Button
-                variant="ghost"
-                className="p-2 rounded-full text-foreground/70 hover:text-foreground hover:bg-foreground/10 transition-all"
-                aria-label="Close"
-              >
-                <ChevronDown className="w-7 h-7" />
-              </Button>
-            </SheetClose>
-          </div>
-
-          <div className="flex-1 overflow-hidden">
-            <RightSidebar />
-          </div>
-        </div>
-      </SheetContent>
-    </Sheet>
+    </>
   );
 };
 

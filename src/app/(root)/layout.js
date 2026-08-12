@@ -1,5 +1,5 @@
 import LeftSidebar from "@/components/leftSidebar";
-import RightSidebar from "@/components/rightSidebar";
+import NowPlayingPanel from "@/components/rightSidebar/nowPlayingPanel";
 import Navbar from "@/components/navbar";
 import UserState from "@/context";
 import Bottombar from "@/components/bottomBar";
@@ -46,10 +46,13 @@ export default function RootLayout({ children }) {
               {children}
             </div>
 
-            {/* RightSidebar - optional */}
-            {/* <div className="hidden lg:block w-80 overflow-y-auto">
-              <RightSidebar />
-            </div> */}
+            {/* Now Playing panel — slides up over the main content column
+                only (never the left sidebar) and docks just above the
+                floating bottom bar. Always mounted; visibility is purely a
+                CSS transform so it opens/closes instantly. */}
+            <Suspense fallback={null}>
+              <NowPlayingPanel />
+            </Suspense>
           </div>
 
           {/* Floating Player Component */}

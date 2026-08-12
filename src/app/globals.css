@@ -5,37 +5,37 @@
 /* Dynamic song theme color — updated at runtime from the playing track's
    artwork. Registered properties allow smooth CSS variable transitions across the entire app. */
 @property --song-theme {
-  syntax: '<color>';
+  syntax: "<color>";
   inherits: true;
   initial-value: #d946ef;
 }
 @property --song-theme-strong {
-  syntax: '<color>';
+  syntax: "<color>";
   inherits: true;
   initial-value: rgba(217, 70, 239, 0.85);
 }
 @property --song-theme-mid {
-  syntax: '<color>';
+  syntax: "<color>";
   inherits: true;
   initial-value: rgba(217, 70, 239, 0.5);
 }
 @property --song-theme-soft {
-  syntax: '<color>';
+  syntax: "<color>";
   inherits: true;
   initial-value: rgba(217, 70, 239, 0.3);
 }
 @property --song-theme-faint {
-  syntax: '<color>';
+  syntax: "<color>";
   inherits: true;
   initial-value: rgba(217, 70, 239, 0.12);
 }
 @property --song-theme-light {
-  syntax: '<color>';
+  syntax: "<color>";
   inherits: true;
   initial-value: #ee8bfa;
 }
 @property --song-theme-dark {
-  syntax: '<color>';
+  syntax: "<color>";
   inherits: true;
   initial-value: #6b1a78;
 }
@@ -48,23 +48,25 @@
   --song-theme-faint: rgba(217, 70, 239, 0.12);
   --song-theme-light: #ee8bfa;
   --song-theme-dark: #6b1a78;
-  transition: --song-theme 0.8s ease,
-              --song-theme-strong 0.8s ease,
-              --song-theme-mid 0.8s ease,
-              --song-theme-soft 0.8s ease,
-              --song-theme-faint 0.8s ease,
-              --song-theme-light 0.8s ease,
-              --song-theme-dark 0.8s ease;
+  transition:
+    --song-theme 0.8s ease,
+    --song-theme-strong 0.8s ease,
+    --song-theme-mid 0.8s ease,
+    --song-theme-soft 0.8s ease,
+    --song-theme-faint 0.8s ease,
+    --song-theme-light 0.8s ease,
+    --song-theme-dark 0.8s ease;
 }
 
 .theme-transition {
-  transition: background-color 0.8s ease,
-              border-color 0.8s ease,
-              color 0.8s ease,
-              box-shadow 0.8s ease,
-              background 0.8s ease,
-              fill 0.8s ease,
-              stroke 0.8s ease;
+  transition:
+    background-color 0.8s ease,
+    border-color 0.8s ease,
+    color 0.8s ease,
+    box-shadow 0.8s ease,
+    background 0.8s ease,
+    fill 0.8s ease,
+    stroke 0.8s ease;
 }
 
 @layer base {
@@ -95,8 +97,8 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
   }
-  
-.dark {
+
+  .dark {
     --background: 218 43% 6%;
     --foreground: 210 40% 98%;
     --card: 222.2 84% 4.9%;
@@ -125,19 +127,15 @@
 }
 
 @layer utilities {
-/* Hide scrollbar for Chrome, Safari, and Opera */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
+  /* Hide scrollbar for Chrome, Safari, and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 
-.no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;     /* Firefox */
-}
-}
-
-html {
-  scroll-behavior: smooth;
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }
 
 @layer base {
@@ -200,10 +198,11 @@ html {
   }
 }
 
-
 .song-prev,
 .song-next {
-  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  transition:
+    transform 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
   opacity: 0.7;
 }
 
@@ -255,7 +254,6 @@ html {
 }
 
 @keyframes wave {
-
   0%,
   100% {
     height: 10px;
@@ -337,7 +335,6 @@ button,
 
 /* Pulse animation for play button */
 @keyframes pulse {
-
   0%,
   100% {
     transform: scale(1);
