@@ -9,7 +9,7 @@ const BigPhotoComponent = () => {
                 <MainSongPhoto />
             </div>
 
-            <div className="flex-1 min-w-0 px-1 overflow-visible md:overflow-auto md:lyrics-scroll">
+            <div className="flex-1 min-w-0 px-1 overflow-visible sm:overflow-auto scrollbar-none">
                 <RightSidebarTabs />
             </div>
         </div>
