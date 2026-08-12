@@ -115,6 +115,7 @@ const TopArtists = ({ artists = [] }) => {
                                             sizes="104px"
                                             className="object-cover transition-transform duration-500 sm:group-hover:scale-104"
                                             alt={artistName}
+                                            loading="lazy"
                                         />
 
                                         {isLoading && (
