@@ -7,15 +7,42 @@ import { toast } from "sonner";
 import { fetchArtistSongsAction } from "@/app/actions";
 import { Play, Loader2 } from "lucide-react";
 import { decode } from "he";
+import { useQuery } from "@tanstack/react-query";
 
 const ArtistCard = ({ data }) => {
     const [loadingId, setLoadingId] = useState(null);
     const { setSongList, setCurrentSong, setPlaying } = useContext(UserContext);
 
+    const { data: artistSongsMap } = useQuery({
+        queryKey: ['artist-songs-search', data?.map(a => a.id) || []],
+        queryFn: async () => {
+            const entries = await Promise.all(
+                data.map(async (artist) => {
+                    if (!artist?.id) return [artist.id, null];
+                    const response = await fetchArtistSongsAction(artist.id);
+                    return [artist.id, response?.success ? response.data?.songs || [] : []];
+                })
+            );
+            return Object.fromEntries(entries);
+        },
+        enabled: !!data && data.length > 0,
+        staleTime: 10 * 60 * 1000,
+        gcTime: 60 * 60 * 1000,
+    });
+
     if (!data || data.length === 0) return null;
 
     async function handleClick(artist) {
         if (!artist?.id || loadingId === artist.id) return;
+
+        const songs = artistSongsMap?.[artist.id];
+
+        if (songs && songs.length >= 1) {
+            setSongList(songs);
+            setCurrentSong(songs[0]);
+            setPlaying(true);
+            return;
+        }
 
         try {
             setLoadingId(artist.id);

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/context/AuthContext';
 import { getUserTasteProfileAction } from '@/app/actions/tasteProfile';
 import TopArtists from '../TopArtists';
@@ -10,45 +10,18 @@ import TasteSkeleton from './TasteSkeleton';
 
 const MusicSections = () => {
     const { user, authLoading } = useAuth();
-    const [loading, setLoading] = useState(true);
-    const [topArtists, setTopArtists] = useState([]);
-    const [topSongs, setTopSongs] = useState([]);
-    const [profileFetched, setProfileFetched] = useState(false);
 
-    useEffect(() => {
-        if (authLoading) return;
+    const { data, isLoading } = useQuery({
+        queryKey: ['taste-profile', user?.id],
+        queryFn: () => getUserTasteProfileAction(),
+        enabled: !!user && !authLoading,
+        staleTime: 10 * 60 * 1000,
+        gcTime: 60 * 60 * 1000,
+    });
 
-        if (!user) {
-            setTopArtists([]);
-            setTopSongs([]);
-            setProfileFetched(true);
-            setLoading(false);
-            return;
-        }
-
-        let cancelled = false;
-        setLoading(true);
-
-        getUserTasteProfileAction()
-            .then((res) => {
-                if (cancelled) return;
-                setTopArtists(res?.topArtists || []);
-                setTopSongs(res?.topSongs || []);
-            })
-            .catch((err) => {
-                console.error('Failed to fetch taste profile:', err);
-            })
-            .finally(() => {
-                if (!cancelled) {
-                    setLoading(false);
-                    setProfileFetched(true);
-                }
-            });
-
-        return () => { cancelled = true; };
-    }, [user, authLoading]);
-
-    const showSkeleton = authLoading || (user && loading && !profileFetched);
+    const topArtists = data?.topArtists || [];
+    const topSongs = data?.topSongs || [];
+    const showSkeleton = authLoading || (!!user && isLoading);
     const hasTaste = topArtists.length > 0 || topSongs.length > 0;
 
     return (

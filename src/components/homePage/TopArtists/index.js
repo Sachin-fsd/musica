@@ -13,6 +13,7 @@ import { fetchArtistSongsAction } from '@/app/actions';
 import { toast } from 'sonner';
 import { decode } from 'he';
 import Image from 'next/image';
+import { useQuery } from '@tanstack/react-query';
 
 const TopArtists = ({ artists = [] }) => {
     const {
@@ -24,14 +25,39 @@ const TopArtists = ({ artists = [] }) => {
     const [loadingArtistId, setLoadingArtistId] = useState(null);
     const scrollRef = useRef(null);
 
+    const { data: artistSongsMap } = useQuery({
+        queryKey: ['artist-songs', artists.map(a => a.artistId)],
+        queryFn: async () => {
+            const entries = await Promise.all(
+                artists.map(async (artist) => {
+                    if (!artist.artistId) return [artist.artistId, null];
+                    const response = await fetchArtistSongsAction(artist.artistId);
+                    return [artist.artistId, response?.success ? response.data?.songs || [] : []];
+                })
+            );
+            return Object.fromEntries(entries);
+        },
+        enabled: artists.length > 0,
+        staleTime: 10 * 60 * 1000,
+        gcTime: 60 * 60 * 1000,
+    });
+
     const handleArtistClick = async (artist) => {
         if (!artist.artistId || loadingArtistId === artist.artistId) {
             return;
         }
 
+        const songs = artistSongsMap?.[artist.artistId];
+
+        if (songs && songs.length >= 1) {
+            setSongList(songs);
+            setCurrentSong(songs[0]);
+            setPlaying(true);
+            return;
+        }
+
         try {
             setLoadingArtistId(artist.artistId);
-
             const response = await fetchArtistSongsAction(artist.artistId);
 
             if (response?.success && response.data?.songs?.length >= 1) {

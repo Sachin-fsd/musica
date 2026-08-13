@@ -6,6 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
 import { Toaster } from "sonner";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import QueryProvider from "@/components/QueryProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -61,11 +62,13 @@ export default function RootLayout({ children }) {
             showAtBottom={false}
           />
           {/* <NextTopLoader /> */}
-          {children}
-          <ServiceWorkerRegister />
-          <Toaster />
-          <SpeedInsights />
-          <Analytics />
+          <QueryProvider>
+            {children}
+            <ServiceWorkerRegister />
+            <Toaster />
+            <SpeedInsights />
+            <Analytics />
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

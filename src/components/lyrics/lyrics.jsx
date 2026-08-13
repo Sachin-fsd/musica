@@ -2,16 +2,13 @@
 
 import { UserContext } from '@/context'
 import React, { useContext, useState, useEffect, useRef } from 'react'
-import { Music, AlertCircle, Loader2 } from 'lucide-react'
+import { Music, Loader2 } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
 import { fetchLyricsAction } from '@/app/actions'
-import { useLyricsStore } from '@/store/useLyricsStore'
 import Image from 'next/image'
 
 function Lyrics() {
     const { currentSong, playing, currentTime, handleSeek, setPlaying } = useContext(UserContext);
-    const [lyrics, setLyrics] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [currentLineIndex, setCurrentLineIndex] = useState(-1);
     const [autoScroll, setAutoScroll] = useState(true);
     const [isVisible, setIsVisible] = useState(false);
@@ -42,47 +39,19 @@ function Lyrics() {
         }, 3000);
     };
 
-    // Fetch lyrics when song changes
+    const { data: lyrics, isLoading: loading, error } = useQuery({
+        queryKey: ['lyrics', currentSong?.id],
+        queryFn: () => fetchLyricsAction(currentSong),
+        enabled: !!currentSong?.id,
+        staleTime: 60 * 60 * 1000,
+        gcTime: 24 * 60 * 60 * 1000,
+    });
+
     useEffect(() => {
-        if (!currentSong || !currentSong.id) {
-            setIsVisible(false);
-            setTimeout(() => setLyrics(null), 300);
-            return;
-        }
-
-        const fetchLyrics = async () => {
-            const { getLyrics, setLyrics: setCachedLyrics } = useLyricsStore.getState();
-            const cached = getLyrics(currentSong.id);
-            if (cached) {
-                setLyrics(cached);
-                setIsVisible(true);
-                setLoading(false);
-                return;
-            }
-
-            setLoading(true);
-            setError(null);
-            setCurrentLineIndex(-1);
-            setAutoScroll(true);
-
-            try {
-                const data = await fetchLyricsAction(currentSong);
-
-                setLyrics(data);
-                setCachedLyrics(currentSong.id, data);
-                setIsVisible(true);
-            } catch (err) {
-                console.error('Error fetching lyrics:', err, currentSong);
-                setError(err.message);
-                setIsVisible(false);
-                setTimeout(() => setLyrics(null), 300);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchLyrics();
-    }, [currentSong]);
+        setCurrentLineIndex(-1);
+        setAutoScroll(true);
+        setIsVisible(!!lyrics);
+    }, [currentSong?.id, lyrics]);
 
     // Update current line based on currentTime - optimized with binary search
     useEffect(() => {
@@ -164,14 +133,6 @@ function Lyrics() {
         );
     }
 
-    // if (lyrics.instrumental) {
-    //     return (
-    //         <div className="w-[90vw] h-[80vh] flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-lg">
-    //             <Music className="w-16 h-16 mb-4 opacity-50" />
-    //             <p className="text-lg">Instrumental Track</p>
-    //         </div>
-    //     );
-    // }
 
     return (
         <div className={`w-[100%] h-[65vh] flex flex-col rounded-xl shadow-lg overflow-hidden border-2 transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'

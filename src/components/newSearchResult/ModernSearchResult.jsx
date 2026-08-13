@@ -9,6 +9,7 @@ import { Input } from "../ui/input";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "../ui/skeleton";
 import { SearchGlobalAction } from "@/app/actions";
 
@@ -28,66 +29,45 @@ const ModernSearchResult = () => {
   const queryFromUrl = searchParams?.get("query") || "";
 
   const [search, setSearch] = useState(queryFromUrl);
-  const [results, setResults] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
   const searchContainerRef = useRef(null);
   const debouncedSearch = useDebounce(search, 500);
 
-  // Fetch results when debounced search changes
   useEffect(() => {
     if (!router) return;
 
-    const executeSearch = async () => {
-      if (!debouncedSearch) {
-        setResults(null);
-        setError("");
-        setLoading(false);
-        if (window.location.pathname !== "/browse" || window.location.search) {
-          router.push("/browse", { scroll: false });
-        }
-        return;
+    if (!debouncedSearch) {
+      if (window.location.pathname !== "/browse" || window.location.search) {
+        router.push("/browse", { scroll: false });
       }
+      return;
+    }
 
-      if (searchContainerRef.current) {
-        searchContainerRef.current.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }
+    if (searchContainerRef.current) {
+      searchContainerRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
 
-      const url = `/browse?query=${encodeURIComponent(debouncedSearch)}`;
-      const currentUrl = `${window.location.pathname}${window.location.search}`;
+    const url = `/browse?query=${encodeURIComponent(debouncedSearch)}`;
+    const currentUrl = `${window.location.pathname}${window.location.search}`;
 
-      if (currentUrl !== url) {
-        router.push(url, { scroll: false });
-      }
-
-      setLoading(true);
-      setError("");
-      setResults(null);
-
-      try {
-        const data = await SearchGlobalAction(debouncedSearch);
-        if (!data) throw new Error(`API error: ${data.statusText}`);
-
-        if (data.success) {
-          setResults(data);
-        } else {
-          throw new Error("API returned unsuccessful response.");
-        }
-      } catch (err) {
-        console.error("Search fetch error:", err);
-        setError("Failed to fetch results. Please try again.");
-        setResults(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    executeSearch();
+    if (currentUrl !== url) {
+      router.push(url, { scroll: false });
+    }
   }, [debouncedSearch, router]);
+
+  const { data: results, isLoading: loading, error } = useQuery({
+    queryKey: ['global-search', debouncedSearch],
+    queryFn: async () => {
+      const data = await SearchGlobalAction(debouncedSearch);
+      if (!data?.success) throw new Error("Failed to fetch results. Please try again.");
+      return data;
+    },
+    enabled: !!debouncedSearch,
+    staleTime: 10 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
+  });
 
   const clearSearch = useCallback(() => {
     setSearch("");
@@ -198,7 +178,7 @@ const ModernSearchResult = () => {
         <div className="text-center mt-16 p-6 max-w-md mx-auto rounded-xl border transition-colors duration-700"
           style={{ background: 'var(--song-theme-faint)', borderColor: 'var(--song-theme-soft)', color: 'var(--song-theme-strong)' }}
         >
-          <p className="font-medium">{error}</p>
+          <p className="font-medium">{error?.message || 'Failed to fetch results. Please try again.'}</p>
         </div>
       )}
 

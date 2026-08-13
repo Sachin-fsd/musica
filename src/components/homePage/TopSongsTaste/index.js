@@ -8,6 +8,7 @@ import { GetSongsByIdAction } from '@/app/actions';
 import { toast } from 'sonner';
 import { decode } from 'he';
 import Image from 'next/image';
+import { useQuery } from '@tanstack/react-query';
 
 const FALLBACK_IMAGE = '/fallback/artist-music.png';
 
@@ -15,6 +16,23 @@ const TopSongsTaste = ({ songs = [] }) => {
     const { currentSong, playing, setPlaying, playSongAndCreateQueue } = useContext(UserContext);
     const [loadingSongId, setLoadingSongId] = useState(null);
     const scrollContainerRef = useRef(null);
+
+    const { data: songDetailsMap } = useQuery({
+        queryKey: ['song-details', songs.map(s => s.songId)],
+        queryFn: async () => {
+            const entries = await Promise.all(
+                songs.map(async (song) => {
+                    if (!song.songId) return [song.songId, null];
+                    const res = await GetSongsByIdAction('song', song.songId);
+                    return [song.songId, res?.data?.[0] || null];
+                })
+            );
+            return Object.fromEntries(entries);
+        },
+        enabled: songs.length > 0,
+        staleTime: 10 * 60 * 1000,
+        gcTime: 60 * 60 * 1000,
+    });
 
     const handleScroll = (direction) => {
         if (scrollContainerRef.current) {
@@ -31,6 +49,12 @@ const TopSongsTaste = ({ songs = [] }) => {
 
         if (currentSong?.id === song.songId) {
             setPlaying(!playing);
+            return;
+        }
+
+        const cachedSong = songDetailsMap?.[song.songId];
+        if (cachedSong) {
+            await playSongAndCreateQueue(cachedSong);
             return;
         }
 
@@ -60,7 +84,7 @@ const TopSongsTaste = ({ songs = [] }) => {
             {/* Header & Scroll Actions */}
             <div className="flex items-center justify-between px-1">
                 <div className="flex items-center gap-1.5 cursor-pointer group">
-                    <Label className="text-xl font-bold tracking-tight text-foreground cursor-pointer group-hover:text-[color:var(--song-theme,#d946ef)] transition-colors">
+                    <Label className="text-xl md:text-2xl font-bold tracking-tight text-foreground cursor-pointer group-hover:text-[color:var(--song-theme,#d946ef)] transition-colors">
                         Your Top Songs
                     </Label>
                 </div>

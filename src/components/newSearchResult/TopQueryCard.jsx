@@ -8,11 +8,24 @@ import { decode } from "he";
 import Image from "next/image";
 import { useContext, useState } from "react";
 import { Play, Loader2, Pause } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 const TopQueryCard = ({ data }) => {
     const { playing, playSongAndCreateQueue, setSongList, setCurrentSong, setPlaying, currentSong } =
         useContext(UserContext);
     const [loading, setLoading] = useState(false);
+
+    const { data: actionData } = useQuery({
+        queryKey: ['action', data?.type, data?.id],
+        queryFn: async () => {
+            const response = await GetSongsByIdAction(data.type, data.id);
+            if (!response?.success) throw new Error("Failed to fetch top query");
+            return response;
+        },
+        enabled: !!data?.id && !!data?.type,
+        staleTime: 10 * 60 * 1000,
+        gcTime: 60 * 60 * 1000,
+    });
 
     if (!data) return null;
 
@@ -23,32 +36,25 @@ const TopQueryCard = ({ data }) => {
     async function handlePlay() {
         if (!data.id || loading) return;
 
-        try {
-            setLoading(true);
-            const response = await GetSongsByIdAction(data.type, data.id);
+        const response = actionData;
 
-            if (response?.success) {
-                if (data.type === "song") {
-                    persistSearchedAction(response.data[0].id, makeSongMetadata(response.data[0])).catch((err) =>
-                        console.error('persistSearchedAction failed:', err)
-                    );
-                    playSongAndCreateQueue(response.data[0]);
-                } else if (data.type === "album") {
-                    setSongList(response.data.songs);
-                    setCurrentSong(response.data.songs[0]);
-                    setPlaying(true);
-                } else if (data.type === "artist") {
-                    setSongList(response.data.topSongs);
-                    setCurrentSong(response.data.topSongs[0]);
-                    setPlaying(true);
-                }
-            } else {
-                console.error("Error fetching top query", response);
+        if (response?.success) {
+            if (data.type === "song") {
+                persistSearchedAction(response.data[0].id, makeSongMetadata(response.data[0])).catch((err) =>
+                    console.error('persistSearchedAction failed:', err)
+                );
+                playSongAndCreateQueue(response.data[0]);
+            } else if (data.type === "album") {
+                setSongList(response.data.songs);
+                setCurrentSong(response.data.songs[0]);
+                setPlaying(true);
+            } else if (data.type === "artist") {
+                setSongList(response.data.topSongs);
+                setCurrentSong(response.data.topSongs[0]);
+                setPlaying(true);
             }
-        } catch (error) {
-            console.error("Error in top query card click", error);
-        } finally {
-            setLoading(false);
+        } else {
+            console.error("Error fetching top query", response);
         }
     }
 

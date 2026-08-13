@@ -6,15 +6,42 @@ import { useContext, useState } from "react";
 import { UserContext } from "@/context";
 import { GetSongsByIdAction } from "@/app/actions";
 import { Play, Loader2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 const AlbumCard = ({ data }) => {
     const [loadingId, setLoadingId] = useState(null);
     const { setSongList, setCurrentSong, setPlaying } = useContext(UserContext);
 
+    const { data: albumSongsMap } = useQuery({
+        queryKey: ['album-songs', data?.map(a => a.id) || []],
+        queryFn: async () => {
+            const entries = await Promise.all(
+                data.map(async (album) => {
+                    if (!album.id) return [album.id, null];
+                    const response = await GetSongsByIdAction(album.type || "album", album.id);
+                    return [album.id, response?.success ? response.data?.songs || [] : []];
+                })
+            );
+            return Object.fromEntries(entries);
+        },
+        enabled: !!data && data.length > 0,
+        staleTime: 10 * 60 * 1000,
+        gcTime: 60 * 60 * 1000,
+    });
+
     if (!data || data.length === 0) return null;
 
     async function handleClick(album) {
         if (loadingId === album.id || !album.id) return;
+
+        const songs = albumSongsMap?.[album.id];
+
+        if (songs && songs.length > 0) {
+            setSongList(songs);
+            setCurrentSong(songs[0]);
+            setPlaying(true);
+            return;
+        }
 
         try {
             setLoadingId(album.id);

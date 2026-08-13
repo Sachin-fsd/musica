@@ -9,6 +9,7 @@ import { GetSongsByIdAction, SearchSongsAction } from "@/app/actions";
 import { persistSearchedAction } from "@/app/actions/interactions";
 import { makeSongMetadata } from "@/utils/extraFunctions";
 import { Play, Loader2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 // 🔥 Universal normalizer → always detailed schema
 const toDetailedSong = (song) => {
@@ -77,6 +78,22 @@ const SongCard = ({ data, search }) => {
     const [songDetailsLoading, setSongDetailsLoading] = useState(null);
     const { playSongAndCreateQueue, currentSong } = useContext(UserContext);
 
+    const { data: songDetailsMap } = useQuery({
+        queryKey: ['song-details-search', songs.map(s => s.id)],
+        queryFn: async () => {
+            const entries = await Promise.all(
+                songs.filter(s => s && s.id).map(async (song) => {
+                    const result = await GetSongsByIdAction("song", song.id);
+                    return [song.id, result?.success ? result.data?.[0] || null : null];
+                })
+            );
+            return Object.fromEntries(entries);
+        },
+        enabled: songs.length > 0,
+        staleTime: 10 * 60 * 1000,
+        gcTime: 60 * 60 * 1000,
+    });
+
     // Normalize initial data
     useEffect(() => {
         if (data && data.length > 0) {
@@ -91,24 +108,33 @@ const SongCard = ({ data, search }) => {
     // Handle click → always safe detailed schema
     const handleSongClick = async (song) => {
         if (songDetailsLoading === song.id) return;
-        
+
+        if (song.downloadUrl && song.downloadUrl.length > 0) {
+            persistSearchedAction(song.id, makeSongMetadata(song)).catch((err) =>
+                console.error('persistSearchedAction failed:', err)
+            );
+            playSongAndCreateQueue(song);
+            return;
+        }
+
+        const cachedSong = songDetailsMap?.[song.id];
+        if (cachedSong) {
+            persistSearchedAction(cachedSong.id, makeSongMetadata(cachedSong)).catch((err) =>
+                console.error('persistSearchedAction failed:', err)
+            );
+            playSongAndCreateQueue(cachedSong);
+            return;
+        }
+
         try {
-            if (song.downloadUrl && song.downloadUrl.length > 0) {
-                persistSearchedAction(song.id, makeSongMetadata(song)).catch((err) =>
-                    console.error('persistSearchedAction failed:', err)
-                );
-                playSongAndCreateQueue(song);
-                return;
-            }
-            
             setSongDetailsLoading(song.id);
             const result = await GetSongsByIdAction("song", song.id);
-            
+
             if (result?.success && result.data?.length > 0) {
                 persistSearchedAction(result.data[0].id, makeSongMetadata(result.data[0])).catch((err) =>
                     console.error('persistSearchedAction failed:', err)
                 );
-                playSongAndCreateQueue(result.data[0]); // already detailed
+                playSongAndCreateQueue(result.data[0]);
             } else {
                 console.error("Error in fetching song details", result);
             }
