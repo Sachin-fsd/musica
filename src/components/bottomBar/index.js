@@ -13,7 +13,7 @@ import {
   VolumeX,
   ListMusic,
 } from "lucide-react";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { Label } from "../ui/label";
 import { Button } from "../ui/button";
@@ -36,61 +36,29 @@ const Bottombar = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const isBarOpen = searchParams.get("bar") === "true";
-  const [isSheetOpen, setIsSheetOpen] = useState(isBarOpen);
+  const isOpen = searchParams.get("bar") === "true";
   const [imageError, setImageError] = useState(false);
 
   const {
-    togglePlayPause,
-    currentSong,
-    playing,
-    handleSeek,
-    currentTime,
-    duration,
-    handleNext,
-    handlePrev,
-    isLooping,
-    isShuffled,
-    toggleLoop,
-    toggleShuffle,
-    volume,
-    setVolume,
-    isMuted,
-    toggleMute,
-  } = useContext(UserContext);
-
-  useEffect(() => {
-    setIsSheetOpen(isBarOpen);
-  }, [isBarOpen]);
-
-  useEffect(() => {
-    const handlePop = () => {
-      if (isSheetOpen) {
-        setIsSheetOpen(false);
-        return;
-      }
-    };
-
-    window.addEventListener("popstate", handlePop);
-    return () => window.removeEventListener("popstate", handlePop);
-  }, [isSheetOpen]);
+    togglePlayPause, currentSong, playing, handleSeek, currentTime, duration, handleNext, handlePrev, isLooping, isShuffled, toggleLoop, toggleShuffle, volume, setVolume, isMuted, toggleMute } = useContext(UserContext);
 
   if (pathname === "/vibes") return null;
   if (!currentSong) return null;
 
-  const handleSheetChange = (open) => {
-    setIsSheetOpen(open);
+  const handleToggle = () => {
     const params = new URLSearchParams(window.location.search);
 
-    if (open) {
-      params.set("bar", "true");
-      router.push(`${window.location.pathname}?${params.toString()}`, { scroll: false });
-    } else {
+    if (isOpen) {
+      // Close: strip bar param via replace (no new history entry)
       params.delete("bar");
       router.replace(
         `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ""}`,
         { scroll: false }
       );
+    } else {
+      // Open: push bar=true so back button closes panel, not app
+      params.set("bar", "true");
+      router.push(`${window.location.pathname}?${params.toString()}`, { scroll: false });
     }
   };
 
@@ -119,10 +87,10 @@ const Bottombar = () => {
           <div className="flex items-center min-w-0 w-36 sm:w-56 md:w-64 flex-shrink-0">
             <div
               className="flex items-center space-x-3 cursor-pointer group min-w-0 w-full"
-              onClick={() => handleSheetChange(!isSheetOpen)}
+              onClick={handleToggle}
               role="button"
-              aria-expanded={isSheetOpen}
-              aria-label={isSheetOpen ? "Collapse now playing" : "Expand now playing"}
+              aria-expanded={isOpen}
+              aria-label={isOpen ? "Collapse now playing" : "Expand now playing"}
             >
               <div className="relative w-11 h-11 sm:w-12 sm:h-12 flex-shrink-0 rounded-xl overflow-hidden shadow-lg border border-white/10">
                 {currentSong?.image?.[0]?.url && !imageError ? (
@@ -165,7 +133,7 @@ const Bottombar = () => {
           </div>
 
           {/* Center: Mobile Simplified Controls & Desktop Expanded Controls */}
-          <div className="flex-1 max-w-xl mx-1 sm:mx-4 flex flex-col items-center justify-center space-y-1.5 min-w-0">
+          <div className="flex-1 max-w-xl mx-1 sm:mx-4 flex flex-col items-end justify-center space-y-1.5 min-w-0">
             <div className="flex items-center space-x-1 sm:space-x-3">
               <Button
                 variant="ghost"
@@ -272,10 +240,10 @@ const Bottombar = () => {
               </div>
 
               <button
-                onClick={() => handleSheetChange(!isSheetOpen)}
+                onClick={handleToggle}
                 className="p-2 text-foreground/50 hover:text-foreground hover:bg-foreground/5 rounded-lg transition-all"
-                aria-label={isSheetOpen ? "Close now playing" : "Open now playing"}
-                aria-expanded={isSheetOpen}
+                aria-label={isOpen ? "Close now playing" : "Open now playing"}
+                aria-expanded={isOpen}
               >
                 <ListMusic className="w-5 h-5" />
               </button>
