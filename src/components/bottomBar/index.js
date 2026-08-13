@@ -133,7 +133,7 @@ const Bottombar = () => {
           </div>
 
           {/* Center: Mobile Simplified Controls & Desktop Expanded Controls */}
-          <div className="flex-1 max-w-xl mx-1 sm:mx-4 flex flex-col items-end justify-center space-y-1.5 min-w-0">
+          <div className="flex-1 max-w-xl mx-1 sm:mx-4 flex flex-col items-end md:items-center justify-center space-y-1.5 min-w-0">
             <div className="flex items-center space-x-1 sm:space-x-3">
               <Button
                 variant="ghost"
