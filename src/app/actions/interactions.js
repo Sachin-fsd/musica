@@ -98,7 +98,7 @@ export async function persistLikeAction(liked, songMeta = {}) {
         await connectDB();
 
         if (liked) {
-            // Upsert — safe to call multiple times
+            // Upsert — safe to call multiple times; increments count on repeat
             await Interaction.updateOne(
                 { userId, songId: songMeta.songId, type: 'liked' },
                 {
@@ -107,6 +107,7 @@ export async function persistLikeAction(liked, songMeta = {}) {
                         songId: songMeta.songId,
                         type: 'liked',
                     },
+                    $inc: { count: 1 },
                 },
                 { upsert: true }
             );
@@ -127,7 +128,7 @@ export async function persistLikeAction(liked, songMeta = {}) {
 
 /**
  * Records that the user skipped a song within 10 seconds of playback.
- * No metadata is stored; upserted once per (user, song) so replays don't spam.
+ * Increments count each time so repeated skips carry more negative weight.
  *
  * @param {string} songId - JioSaavn song ID
  * @param {object} songMeta - { name, image, primaryArtists, duration }
@@ -143,6 +144,7 @@ export async function persistSkippedAction(songMeta = {}) {
             { userId, songId: songMeta.songId, type: 'skipped' },
             {
                 $setOnInsert: { userId, songId: songMeta.songId, type: 'skipped' },
+                $inc: { count: 1 },
             },
             { upsert: true }
         );
@@ -162,7 +164,7 @@ export async function persistSkippedAction(songMeta = {}) {
 
 /**
  * Records that the user played a song again that they had already listened to.
- * No metadata is stored; upserted once per (user, song) so replays don't spam.
+ * Increments count each time so replays carry more weight.
  *
  * @param {string} songId - JioSaavn song ID
  * @param {object} songMeta - { name, image, primaryArtists, duration }
@@ -178,6 +180,7 @@ export async function persistReplayedAction(songMeta = {}) {
             { userId, songId: songMeta.songId, type: 'replayed' },
             {
                 $setOnInsert: { userId, songId: songMeta.songId, type: 'replayed' },
+                $inc: { count: 1 },
             },
             { upsert: true }
         );
@@ -197,8 +200,7 @@ export async function persistReplayedAction(songMeta = {}) {
 
 /**
  * Records that the user played a song directly from search results, signalling
- * interest in that song. No metadata is stored; upserted once per (user, song)
- * so repeated plays don't spam.
+ * interest in that song. Increments count each time so repeated plays carry more weight.
  *
  * @param {string} songId - JioSaavn song ID
  * @param {object} songMeta - { name, image, primaryArtists, duration }
@@ -214,6 +216,7 @@ export async function persistSearchedAction(songId, songMeta = {}) {
             { userId, songId, type: 'searched' },
             {
                 $setOnInsert: { userId, songId, type: 'searched' },
+                $inc: { count: 1 },
             },
             { upsert: true }
         );
@@ -233,7 +236,7 @@ export async function persistSearchedAction(songId, songMeta = {}) {
 
 /**
  * Records that the user listened to a song past the 90 % completion mark.
- * No metadata is stored; upserted once per (user, song) so replays don't spam.
+ * Increments count each time so repeated completions carry more weight.
  *
  * @param {string} songId - JioSaavn song ID
  * @param {object} songMeta - { name, image, primaryArtists, duration }
@@ -249,6 +252,7 @@ export async function persistCompletedAction(songId, songMeta = {}) {
             { userId, songId, type: 'completed' },
             {
                 $setOnInsert: { userId, songId, type: 'completed' },
+                $inc: { count: 1 },
             },
             { upsert: true }
         );

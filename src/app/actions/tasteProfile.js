@@ -25,7 +25,7 @@ function buildTopArtists(interactions, songMap) {
         const song = songMap[i.songId];
         if (!song?.primaryArtists?.length) continue;
 
-        const weight = WEIGHTS[i.type] || 0;
+        const weight = (WEIGHTS[i.type] || 0) * (i.count || 1);
         for (const pa of song.primaryArtists) {
             if (!pa.artistId || !pa.name) continue;
             if (!artistMap[pa.artistId]) {
@@ -40,14 +40,14 @@ function buildTopArtists(interactions, songMap) {
         .sort((a, b) => b.score - a.score)
         .slice(0, 10);
 }
-
 function buildTopSongs(interactions, songMap) {
     const songScoreMap = {}; // songId -> { songId, name, image, artist, score }
+
     for (const i of interactions) {
         const song = songMap[i.songId];
         if (!song) continue;
 
-        const weight = WEIGHTS[i.type] || 0;
+        const weight = (WEIGHTS[i.type] || 0) * (i.count || 1);
         if (!songScoreMap[i.songId]) {
             songScoreMap[i.songId] = {
                 songId: i.songId,
@@ -88,7 +88,7 @@ export async function computeTasteProfile(userId) {
 
     const topArtists = buildTopArtists(interactions, songMap);
     const topSongs = buildTopSongs(interactions, songMap);
-    console.log(topSongs)
+
     if (!topArtists.length && !topSongs.length) return null;
 
     await TasteProfile.findOneAndUpdate(

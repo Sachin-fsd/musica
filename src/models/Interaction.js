@@ -31,9 +31,16 @@ const InteractionSchema = new mongoose.Schema(
             enum: ['liked', 'skipped', 'completed', 'replayed', 'searched', 'downloaded'],
             required: true,
         },
+        count: {
+            type: Number,
+            default: 1,
+            min: 1,
+        },
     },
     { timestamps: true }
 );
+
+InteractionSchema.index({ userId: 1, songId: 1, type: 1 }, { unique: true });
 
 const Interaction =
     mongoose.models.Interaction || mongoose.model('Interaction', InteractionSchema);
