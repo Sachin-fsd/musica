@@ -127,7 +127,7 @@ const Bottombar = () => {
               </div>
 
               <div className="pl-1 hidden md:block flex-shrink-0" onClick={(e) => e.stopPropagation()}>
-                <LikeButton song={currentSong} size="sm" />
+                <LikeButton song={currentSong} size="md" />
               </div>
             </div>
           </div>
@@ -147,11 +147,12 @@ const Bottombar = () => {
               <Button
                 variant="ghost"
                 onClick={(e) => { e.stopPropagation(); handlePrev?.(); }}
-                className="text-foreground/70 hover:text-foreground transition-colors active:scale-95"
+                className="hidden md:block text-foreground/70 hover:text-foreground transition-colors active:scale-95 px-2"
                 aria-label="Previous"
               >
                 <SkipBack className="w-5 h-5 fill-current" />
               </Button>
+              <LikeButton className="md:hidden m-0 pr-3" song={currentSong} size="md" />
 
               {/* Play / Pause Glow Button */}
               <Button
@@ -175,7 +176,7 @@ const Bottombar = () => {
               <Button
                 variant="ghost"
                 onClick={(e) => { e.stopPropagation(); handleNext(); }}
-                className="text-foreground/70 hover:text-foreground transition-colors active:scale-95"
+                className="text-foreground/70 hover:text-foreground transition-colors active:scale-95 px-2"
                 aria-label="Next"
               >
                 <SkipForward className="w-5 h-5 fill-current" />
