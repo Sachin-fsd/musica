@@ -39,16 +39,16 @@ const TopQueryCard = ({ data }) => {
         const response = actionData;
 
         if (response?.success) {
-            if (data.type === "song") {
+            if (data.type === "song" && response.data?.length > 0) {
                 persistSearchedAction(response.data[0].id, makeSongMetadata(response.data[0])).catch((err) =>
                     console.error('persistSearchedAction failed:', err)
                 );
                 playSongAndCreateQueue(response.data[0]);
-            } else if (data.type === "album") {
+            } else if (data.type === "album" && response.data.songs?.length > 0) {
                 setSongList(response.data.songs);
                 setCurrentSong(response.data.songs[0]);
                 setPlaying(true);
-            } else if (data.type === "artist") {
+            } else if (data.type === "artist" && response.data?.topSongs?.length > 0) {
                 setSongList(response.data.topSongs);
                 setCurrentSong(response.data.topSongs[0]);
                 setPlaying(true);
