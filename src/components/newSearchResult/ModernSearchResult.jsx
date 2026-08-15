@@ -113,7 +113,7 @@ const ModernSearchResult = () => {
           {/* Translucent Frosted Glass Input */}
           <Input
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => setSearch(e.target.value.trim())}
             className="w-full h-14 pl-12 pr-12 text-base font-normal rounded-2xl bg-black/5 dark:bg-white/[0.04] backdrop-blur-xl border border-black/10 dark:border-white/10 text-foreground placeholder:text-foreground/35 focus-visible:ring-1 focus-visible:ring-[color:var(--song-theme-strong)] focus-visible:ring-offset-0 focus-visible:border-[color:var(--song-theme-mid)] shadow-2xl transition-all duration-300"
             placeholder="Search for songs, artists, or albums..."
             autoComplete="off"
