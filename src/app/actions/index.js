@@ -270,6 +270,8 @@ export async function fetchLyricsAction(currentSong) {
             }
         }
 
+        return null;
+
         throw new Error('Lyrics not found');
     } catch (error) {
         console.error('Error fetching lyrics:', error.message);
