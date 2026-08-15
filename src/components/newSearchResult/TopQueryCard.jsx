@@ -8,120 +8,169 @@ import { decode } from "he";
 import Image from "next/image";
 import { useContext, useState } from "react";
 import { Play, Loader2, Pause } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 const TopQueryCard = ({ data }) => {
-    const { playing, playSongAndCreateQueue, setSongList, setCurrentSong, setPlaying, currentSong } =
-        useContext(UserContext);
-    const [loading, setLoading] = useState(false);
+    const {
+        playing,
+        playSongAndCreateQueue,
+        setSongList,
+        setCurrentSong,
+        setPlaying,
+        currentSong,
+    } = useContext(UserContext);
 
-    const { data: actionData } = useQuery({
-        queryKey: ['action', data?.type, data?.id],
-        queryFn: async () => {
-            const response = await GetSongsByIdAction(data.type, data.id);
-            if (!response?.success) throw new Error("Failed to fetch top query");
-            return response;
-        },
-        enabled: !!data?.id && !!data?.type,
-        staleTime: 10 * 60 * 1000,
-        gcTime: 60 * 60 * 1000,
-    });
+    const [loading, setLoading] = useState(false);
+    const queryClient = useQueryClient();
 
     if (!data) return null;
 
     const isArtist = data.type === "artist";
-    const imageUrl = data.image?.[2]?.url || data.image?.[1]?.url || data.image?.[0]?.url || "/placeholder-image.jpg";
+
+    const imageUrl =
+        data.image?.[2]?.url ||
+        data.image?.[1]?.url ||
+        data.image?.[0]?.url ||
+        "/placeholder-image.jpg";
+
     const isActive = currentSong?.id === data.id;
 
-    async function handlePlay() {
-        if (!data.id || loading) return;
+    const handlePlay = async () => {
+        if (!data?.id || !data?.type || loading) return;
 
-        const response = actionData;
+        try {
+            setLoading(true);
 
-        if (response?.success) {
-            if (data.type === "song" && response.data?.length > 0) {
-                persistSearchedAction(response.data[0].id, makeSongMetadata(response.data[0])).catch((err) =>
-                    console.error('persistSearchedAction failed:', err)
-                );
-                playSongAndCreateQueue(response.data[0]);
-            } else if (data.type === "album" && response.data.songs?.length > 0) {
-                setSongList(response.data.songs);
-                setCurrentSong(response.data.songs[0]);
-                setPlaying(true);
-            } else if (data.type === "artist" && response.data?.topSongs?.length > 0) {
-                setSongList(response.data.topSongs);
-                setCurrentSong(response.data.topSongs[0]);
-                setPlaying(true);
+            const response = await queryClient.fetchQuery({
+                queryKey: ["top-query", data.type, data.id],
+
+                queryFn: async () => {
+                    const result = await GetSongsByIdAction(data.type, data.id);
+
+                    if (!result?.success) {
+                        throw new Error("Failed to fetch top query");
+                    }
+
+                    return result;
+                },
+
+                staleTime: 10 * 60 * 1000,
+                gcTime: 60 * 60 * 1000,
+            });
+
+            if (!response?.success) {
+                throw new Error("Failed to fetch top query");
             }
-        } else {
-            console.error("Error fetching top query", response);
+
+            // SONG
+            if (data.type === "song" && response.data?.length > 0) {
+                const song = response.data[0];
+
+                persistSearchedAction(song.id, makeSongMetadata(song)).catch((err) =>
+                    console.error("persistSearchedAction failed:", err)
+                );
+
+                playSongAndCreateQueue(song);
+                return;
+            }
+
+            // ALBUM
+            if (data.type === "album" && response.data?.songs?.length > 0) {
+                const songs = response.data.songs;
+
+                setSongList(songs);
+                setCurrentSong(songs[0]);
+                setPlaying(true);
+                return;
+            }
+
+            // ARTIST
+            if (data.type === "artist" && response.data?.topSongs?.length > 0) {
+                const songs = response.data.topSongs;
+
+                setSongList(songs);
+                setCurrentSong(songs[0]);
+                setPlaying(true);
+                return;
+            }
+
+            console.warn("No playable content found:", response);
+        } catch (error) {
+            console.error("Error fetching top query:", error);
+        } finally {
+            setLoading(false);
         }
-    }
+    };
 
     return (
-        <div
+        <button
+            type="button"
             onClick={handlePlay}
-            role="button"
-            tabIndex={0}
-            className="group relative flex flex-col sm:flex-row items-center sm:items-start gap-6 p-6 rounded-2xl bg-secondary/30 sm:hover:bg-secondary/60 transition-all duration-300 ease-out cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            disabled={loading}
+            className="group relative flex w-full cursor-pointer flex-col items-center gap-6 rounded-2xl bg-secondary/30 p-6 text-left transition-all duration-300 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-wait sm:flex-row sm:items-start sm:hover:bg-secondary/60"
         >
             {/* Image Section */}
-            <div className="relative shrink-0 w-32 h-32 sm:w-40 sm:h-40 shadow-lg">
+            <div className={`relative h-32 w-32 shrink-0 overflow-hidden shadow-lg sm:h-40 sm:w-40 ${isArtist ? "rounded-full" : "rounded-xl"}`}>
                 <Image
                     src={imageUrl}
                     fill
                     sizes="(max-width: 640px) 128px, 160px"
-                    className={`object-cover ${isArtist ? "rounded-full" : "rounded-xl"}`}
+                    className="object-cover"
                     alt={decode(data.title || "Cover art")}
                 />
 
-                {/* Hover Play Button Overlay */}
+                {/* Hover Play Button */}
                 {!loading && (
-                    <div className={`absolute inset-0 bg-black/40 opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center ${isArtist ? "rounded-full" : "rounded-xl"}`}>
-                        <div className="bg-primary text-primary-foreground rounded-full p-3 shadow-xl transform scale-75 sm:group-hover:scale-100 transition-transform duration-300 ease-out">
-                            {playing && currentSong?.id === data.id ? <Pause className="w-8 h-8 fill-current ml-1" /> : <Play className="w-8 h-8 fill-current ml-1" />}
+                    <div className={`absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 sm:group-hover:opacity-100 ${isArtist ? "rounded-full" : "rounded-xl"}`}>
+                        <div className="scale-75 transform rounded-full bg-primary p-3 text-primary-foreground shadow-xl transition-transform duration-300 ease-out sm:group-hover:scale-100">
+                            {playing && isActive ? (
+                                <Pause className="ml-1 h-8 w-8 fill-current" />
+                            ) : (
+                                <Play className="ml-1 h-8 w-8 fill-current" />
+                            )}
                         </div>
                     </div>
                 )}
 
-                {/* Loading State Overlay */}
+                {/* Loading Overlay */}
                 {loading && (
-                    <div className={`absolute inset-0 bg-black/60 flex items-center justify-center ${isArtist ? "rounded-full" : "rounded-xl"}`}>
-                        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+                    <div className={`absolute inset-0 flex items-center justify-center bg-black/60 ${isArtist ? "rounded-full" : "rounded-xl"}`}>
+                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
                     </div>
                 )}
             </div>
 
-            {/* Text & Meta Section */}
-            <div className="flex flex-col flex-1 items-center sm:items-start text-center sm:text-left min-w-0 pt-2">
+            {/* Text & Meta */}
+            <div className="flex min-w-0 flex-1 flex-col items-center pt-2 text-center sm:items-start sm:text-left">
                 {/* Type Badge */}
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-primary/10 text-primary mb-3">
+                <span className="mb-3 inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
                     {decode(data.type || "Unknown")}
                 </span>
 
                 {/* Title */}
-                <h3 className={`text-2xl sm:text-3xl font-bold truncate w-full ${isActive && currentSong?.id === data.id ? "text-primary" : "text-foreground"}`}>
+                <h3 className={`w-full truncate text-2xl font-bold sm:text-3xl ${isActive ? "text-primary" : "text-foreground"}`}>
                     {decode(data.title || "")}
                 </h3>
 
-                {/* Subtitle / Artists */}
-                <p className="text-muted-foreground mt-2 text-base sm:text-lg line-clamp-1">
+                {/* Subtitle */}
+                <p className="mt-2 line-clamp-1 text-base text-muted-foreground sm:text-lg">
                     {decode(data.primaryArtists || data.album || data.description || "")}
                 </p>
 
-                {/* Visual Indicator if actively playing */}
-                {isActive && currentSong?.id === data.id && !loading && (
-                    <div className="mt-4 flex items-center gap-2 text-primary text-sm font-medium">
-                        <div className="flex gap-1 items-end h-3">
-                            <span className="w-1 h-3 bg-primary animate-[bounce_1s_infinite]"></span>
-                            <span className="w-1 h-2 bg-primary animate-[bounce_1s_infinite_0.2s]"></span>
-                            <span className="w-1 h-3 bg-primary animate-[bounce_1s_infinite_0.4s]"></span>
+                {/* Now Playing */}
+                {isActive && !loading && (
+                    <div className="mt-4 flex items-center gap-2 text-sm font-medium text-primary">
+                        <div className="flex h-3 items-end gap-1">
+                            <span className="h-3 w-1 animate-[bounce_1s_infinite] bg-primary" />
+                            <span className="h-2 w-1 animate-[bounce_1s_infinite_0.2s] bg-primary" />
+                            <span className="h-3 w-1 animate-[bounce_1s_infinite_0.4s] bg-primary" />
                         </div>
+
                         Now Playing
                     </div>
                 )}
             </div>
-        </div>
+        </button>
     );
 };
 

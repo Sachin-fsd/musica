@@ -30,7 +30,7 @@ const ModernSearchResult = () => {
 
   const [search, setSearch] = useState(queryFromUrl);
   const searchContainerRef = useRef(null);
-  const debouncedSearch = useDebounce(search, 500);
+  const debouncedSearch = useDebounce(search, 1000);
 
   useEffect(() => {
     if (!router) return;

@@ -17,7 +17,7 @@ const ArtistCard = ({ data = [] }) => {
 
     if (!data.length) return null;
 
-    async function handleClick(artist) {
+    const handleClick = async (artist) => {
         if (!artist?.id || loadingId === artist.id) return;
 
         try {
@@ -52,7 +52,7 @@ const ArtistCard = ({ data = [] }) => {
         } finally {
             setLoadingId(null);
         }
-    }
+    };
 
     return (
         <div className="w-full">
@@ -61,11 +61,7 @@ const ArtistCard = ({ data = [] }) => {
                     const isLoading = loadingId === artist.id;
                     const subtitle = artist.type || artist.description || "Artist";
 
-                    let imageUrl = artist.image?.[2]?.url || artist.image?.[1]?.url || artist.image?.[0]?.url;
-
-                    if (!imageUrl || imageUrl.includes("artist-default")) {
-                        imageUrl = "/fallback/artist-music.png";
-                    }
+                    const imageUrl = artist.image?.[2]?.url || artist.image?.[1]?.url || artist.image?.[0]?.url || "/fallback/artist-music.png";
 
                     return (
                         <button
@@ -86,7 +82,7 @@ const ArtistCard = ({ data = [] }) => {
 
                                 {!isLoading && (
                                     <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                                        <div className="rounded-full bg-primary p-3 text-primary-foreground shadow-lg transition-all duration-300 ease-out group-hover:translate-y-0">
+                                        <div className="rounded-full bg-primary p-3 text-primary-foreground shadow-lg transition-transform duration-300 ease-out group-hover:scale-100">
                                             <Play className="ml-1 h-6 w-6 fill-current" />
                                         </div>
                                     </div>
