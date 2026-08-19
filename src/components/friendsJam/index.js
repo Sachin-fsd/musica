@@ -1,6 +1,7 @@
 "use client";
 
 import { UserContext } from "@/context";
+import { useCurrentTimeStore } from "@/store/useCurrentTimeStore";
 import { useContext, useEffect, useRef, useState, useCallback } from "react";
 import { nanoid } from "nanoid";
 
@@ -44,9 +45,10 @@ const useUsername = () => {
 
 export default function Jam() {
   const {
-    songList, currentSong, playing, currentTime,
+    songList, currentSong, playing,
     setSongList, setCurrentSong, setPlaying, isJamChecked, currentIndex, setCurrentIndex, handleSeek
   } = useContext(UserContext);
+  const currentTime = useCurrentTimeStore((state) => state.currentTime);
 
   const socketRef = useRef(null);
   const [username, setUsername] = useUsername();

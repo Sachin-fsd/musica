@@ -503,9 +503,8 @@ export default function UserState({ children }) {
     }, [handleNext, handlePrev, setCurrentTime]);
 
 
-    // --- Context Value with useMemo to prevent unnecessary re-renders ---
     const value = useMemo(() => ({
-        currentSong, setCurrentSong, playing, setPlaying, currentTime, setCurrentTime,
+        currentSong, setCurrentSong, playing, setPlaying, setCurrentTime,
         duration, setDuration, isLooping, setIsLooping, isShuffled, setIsShuffled,
         volume, setVolume, isMuted, setIsMuted, toggleMute,
         audioRef, handleSeek,
@@ -515,7 +514,7 @@ export default function UserState({ children }) {
         isJamChecked, setIsJamChecked,
         playSongAndCreateQueue, playSongAtIndex, currentId, setCurrentId
     }), [
-        currentSong, playing, currentTime, duration, isLooping, isShuffled, volume, isMuted, audioRef, handleSeek,
+        currentSong, playing, duration, isLooping, isShuffled, volume, isMuted, audioRef, handleSeek,
         currentIndex, songList, loading, handleNext, handlePrev, manualQuality,
         isJamChecked, togglePlayPause, toggleLoop, toggleShuffle, setVolume, toggleMute,
         playSongAndCreateQueue, playSongAtIndex, currentId

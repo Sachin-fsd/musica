@@ -1,6 +1,7 @@
 "use client";
 
 import { UserContext } from "@/context";
+import { useCurrentTimeStore } from "@/store/useCurrentTimeStore";
 import {
   Play,
   Pause,
@@ -40,7 +41,8 @@ const Bottombar = () => {
   const [imageError, setImageError] = useState(false);
 
   const {
-    togglePlayPause, currentSong, playing, handleSeek, currentTime, duration, handleNext, handlePrev, isLooping, isShuffled, toggleLoop, toggleShuffle, volume, setVolume, isMuted, toggleMute } = useContext(UserContext);
+    togglePlayPause, currentSong, playing, handleSeek, duration, handleNext, handlePrev, isLooping, isShuffled, toggleLoop, toggleShuffle, volume, setVolume, isMuted, toggleMute } = useContext(UserContext);
+  const currentTime = useCurrentTimeStore((state) => state.currentTime);
 
   if (pathname === "/vibes") return null;
   if (!currentSong) return null;

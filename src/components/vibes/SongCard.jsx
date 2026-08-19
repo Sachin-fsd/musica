@@ -1,6 +1,7 @@
 import React, { memo, useState, useContext, useMemo } from 'react';
 import { Play, Pause, Heart, MessageCircle, Share, MoreHorizontal } from 'lucide-react';
 import { UserContext } from '@/context';
+import { useCurrentTimeStore } from '@/store/useCurrentTimeStore';
 import { formatTime } from '@/utils/extraFunctions';
 import { decode } from 'he';
 import { cn } from '@/lib/utils';
@@ -8,21 +9,27 @@ import { Slider } from '../ui/slider';
 
 const SongCard = memo(({ song, isActive, isPlaying }) => {
     // 1. Get global state.
-    const { currentTime, duration, togglePlayPause, handleSeek } = useContext(UserContext);
+    const { duration, togglePlayPause, handleSeek } = useContext(UserContext);
+    // Read the live playhead from the zustand store directly (not via UserContext), and
+    // only subscribe to updates when this card is the active one — inactive cards in the
+    // feed pin the selector to 0 so they don't re-render on every timeupdate tick.
+    const currentTime = useCurrentTimeStore((state) => (isActive ? state.currentTime : 0));
     const [liked, setLiked] = useState(false);
 
-    // If for some reason a null/undefined song gets passed, return nothing to prevent a crash.
-    if (!song) {
-        return null;
-    }
-
     // 2. Calculate progress (this was already safe)
+    // NOTE: kept above the `!song` early return below — hooks must run in the same
+    // order on every render, so this can't come after a conditional return.
     const progress = useMemo(() => {
         if (isActive && duration > 0) {
             return (currentTime / duration) * 100;
         }
         return 0;
     }, [isActive, currentTime, duration]);
+
+    // If for some reason a null/undefined song gets passed, return nothing to prevent a crash.
+    if (!song) {
+        return null;
+    }
 
     // Utility to format numbers (this was already safe)
     const formatPlayCount = (count) => {

@@ -1,6 +1,7 @@
 "use client";
 
 import { UserContext } from "@/context";
+import { useCurrentTimeStore } from "@/store/useCurrentTimeStore";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Music, Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -10,10 +11,10 @@ function Lyrics() {
     const {
         currentSong,
         playing,
-        currentTime,
         handleSeek,
         setPlaying,
     } = useContext(UserContext);
+    const currentTime = useCurrentTimeStore((state) => state.currentTime);
 
     const [currentLineIndex, setCurrentLineIndex] = useState(-1);
     const [autoScroll, setAutoScroll] = useState(true);
